@@ -10,12 +10,8 @@ class Components(object):
         excludeList = ('Chunks', 'failed')
         self.names = [n for n in os.listdir(path) if os.path.isdir(path + '/' + n) and n not in excludeList]
 
-    def __iter__(self):
-        return self._next()
-
-    def _next(self):
-        for name in self.names:
-            yield Component(self.path, name)
+    def __getitem__(self, i):
+        return Component(self.path, self.names[i])
 
 ##____________________________________________________________________________||
 class Component(object):
