@@ -1,9 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
-import os
-
-##____________________________________________________________________________||
 class Events(object):
     def __init__(self, tree, maxEvents):
         self.file = tree.GetDirectory() # so a file won't close
