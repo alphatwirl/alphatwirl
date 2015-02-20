@@ -40,6 +40,9 @@ class Component(object):
             self._anaDict[name] = Analyzer(path)
         return self._anaDict[name]
 
+    def analyzers(self):
+        return [getattr(self, n) for n in self.analyzerNames]
+
 ##____________________________________________________________________________||
 class Analyzer(object):
     def __init__(self, path):
