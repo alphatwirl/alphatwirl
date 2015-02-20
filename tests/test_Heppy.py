@@ -60,7 +60,7 @@ class TestHeppy(unittest.TestCase):
         comp2 = self.heppy.QCD_HT_100To250
         self.assertIs(comp1, comp2)
 
-    def test_getattr(self):
+    def test_AttributeError(self):
         self.assertRaises(AttributeError, self.heppy.__getattr__, 'WrongName')
 
     def test_components(self):
@@ -91,6 +91,18 @@ class TestComponent(unittest.TestCase):
     def test_analyzerNames(self):
         expected = ['PileUpAnalyzer', 'skimAnalyzerCount','treeProducerSusyAlphaT']
         self.assertEqual(expected, self.component.analyzerNames)
+
+    def test_analyzers_theSameObject(self):
+        ana1 = self.component.skimAnalyzerCount
+        ana2 = self.component.skimAnalyzerCount
+        self.assertIs(ana1, ana2)
+
+    def test_AttributeError(self):
+        self.assertRaises(AttributeError, self.component.__getattr__, 'WrongName')
+
+    def test_analyzers(self):
+        expected = [self.component.PileUpAnalyzer, self.component.skimAnalyzerCount, self.component.treeProducerSusyAlphaT]
+        self.assertEqual(expected, self.component.analyzers())
 
 ##____________________________________________________________________________||
 class TestAnalyzer(unittest.TestCase):
