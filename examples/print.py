@@ -25,7 +25,7 @@ def main():
     heppy = AlphaTwirl.Heppy.Heppy(options.inputDir)
     for component in heppy.components():
         print component.name
-        inputPath = component.treeProducerSusyAlphaT.path + '/tree.root'
+        inputPath = os.path.join(component.treeProducerSusyAlphaT.path, 'tree.root')
         print inputPath
         count(inputPath)
 
