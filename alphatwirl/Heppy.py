@@ -30,11 +30,15 @@ class Component(object):
         self.name = os.path.basename(path)
         self.analyzerNames = [n for n in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, n))]
 
+        self._anaDict = { }
+
     def __getattr__(self, name):
-        if name not in self.analyzerNames:
-            raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
-        path = os.path.join(self.path, name)
-        return Analyzer(path)
+        if name not in self._anaDict:
+            if name not in self.analyzerNames:
+                raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
+            path = os.path.join(self.path, name)
+            self._anaDict[name] = Analyzer(path)
+        return self._anaDict[name]
 
 ##____________________________________________________________________________||
 class Analyzer(object):
