@@ -16,8 +16,8 @@ class Heppy(object):
         if name not in self._compDict:
             if name not in self.componentNames:
                 raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
-            compPath = os.path.join(self.path, name)
-            self._compDict[name] = Component(compPath)
+            path = os.path.join(self.path, name)
+            self._compDict[name] = Component(path)
         return self._compDict[name]
 
     def components(self):
@@ -33,12 +33,14 @@ class Component(object):
     def __getattr__(self, name):
         if name not in self.analyzerNames:
             raise AttributeError("'%s' object has no attribute '%s'" % (self.__class__.__name__, name))
-        return Analyzer(self.path, name)
+        path = os.path.join(self.path, name)
+        return Analyzer(path)
 
 ##____________________________________________________________________________||
 class Analyzer(object):
-    def __init__(self, path, name):
-        self.path = os.path.join(path, name)
+    def __init__(self, path):
+        self.path = path
+        self.name = os.path.basename(path)
 
 ##____________________________________________________________________________||
 if __name__ == '__main__':

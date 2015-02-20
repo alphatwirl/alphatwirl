@@ -95,7 +95,22 @@ class TestComponent(unittest.TestCase):
 ##____________________________________________________________________________||
 class TestAnalyzer(unittest.TestCase):
 
+    def setUp(self):
+        self.listdir_org = Heppy.os.listdir
+        self.isdir_org = Heppy.os.path.isdir
+        Heppy.os.listdir = mock_listdir
+        Heppy.os.path.isdir = mock_isdir
+
+        path = 'dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer'
+        self.analyzer = Heppy.Analyzer(path)
+
+    def tearDown(self):
+        Heppy.os.listdir = self.listdir_org
+        Heppy.os.path.isdir = self.isdir_org
+
     def test_init(self):
-        a = Heppy.Analyzer("path", "name")
+        self.assertEqual('dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer', self.analyzer.path)
+        self.assertEqual('PileUpAnalyzer', self.analyzer.name)
+
 
 ##____________________________________________________________________________||
