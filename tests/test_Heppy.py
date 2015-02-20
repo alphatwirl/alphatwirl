@@ -133,7 +133,7 @@ class TestReadComponentConfig(unittest.TestCase):
     def test_read(self):
         readConfig = Heppy.ReadComponentConfig()
         file = cStringIO.StringIO(sample_cmp_cfg)
-        expected = {'addWeight': '1.0', 'efficiency': 'CFG: eff', 'triggers': '[]', 'xSection': '28730000'}
+        expected = {'addWeight': 1.0, 'efficiency': 'CFG: eff', 'triggers': [], 'xSection': 28730000}
         self.assertEqual(expected, readConfig._readImp(file))
 
 ##____________________________________________________________________________||
