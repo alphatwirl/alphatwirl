@@ -2,6 +2,7 @@
 import os
 from alphatwirl import Heppy
 import unittest
+import cStringIO
 
 ##____________________________________________________________________________||
 def mock_listdir(path):
@@ -31,6 +32,18 @@ def mock_isdir(path):
     dirsInComponent = [os.path.join(c, d) for c in componentDirs for d in dirsInComponent]
     if path in dirsInComponent: return True
     return False
+
+##____________________________________________________________________________||
+def mock_readComponentConfig(path):
+    return { "isMC" : "True", 'xSection': '670500' }
+
+##____________________________________________________________________________||
+sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
+	addWeight      :   1.0
+	efficiency     :   CFG: eff
+	triggers       :   []
+	xSection       :   28730000
+"""
 
 ##____________________________________________________________________________||
 class TestHeppy(unittest.TestCase):
@@ -73,12 +86,14 @@ class TestComponent(unittest.TestCase):
 
     def setUp(self):
         self.listdir_org = Heppy.os.listdir
-        self.isdir_org = Heppy.os.path.isdir
         Heppy.os.listdir = mock_listdir
+
+        self.isdir_org = Heppy.os.path.isdir
         Heppy.os.path.isdir = mock_isdir
 
         path = 'dir/201522_SingleMu/QCD_HT_100To250'
         self.component = Heppy.Component(path)
+        self.component._readConfig = mock_readComponentConfig
 
     def tearDown(self):
         Heppy.os.listdir = self.listdir_org
@@ -103,6 +118,23 @@ class TestComponent(unittest.TestCase):
     def test_analyzers(self):
         expected = [self.component.PileUpAnalyzer, self.component.skimAnalyzerCount, self.component.treeProducerSusyAlphaT]
         self.assertEqual(expected, self.component.analyzers())
+
+    def test_config(self):
+        expected = { "isMC" : "True", 'xSection': '670500' }
+        self.assertEqual(expected, self.component.config())
+
+    def test_config_theSameObject(self):
+        cfg1 = self.component.config()
+        cfg2 = self.component.config()
+        self.assertIs(cfg1, cfg2)
+
+##____________________________________________________________________________||
+class TestReadComponentConfig(unittest.TestCase):
+    def test_read(self):
+        readConfig = Heppy.ReadComponentConfig()
+        file = cStringIO.StringIO(sample_cmp_cfg)
+        expected = {'addWeight': '1.0', 'efficiency': 'CFG: eff', 'triggers': '[]', 'xSection': '28730000'}
+        self.assertEqual(expected, readConfig._readImp(file))
 
 ##____________________________________________________________________________||
 class TestAnalyzer(unittest.TestCase):

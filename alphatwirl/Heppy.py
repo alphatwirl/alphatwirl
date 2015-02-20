@@ -31,6 +31,8 @@ class Component(object):
         self.analyzerNames = [n for n in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, n))]
 
         self._anaDict = { }
+        self._cfg = None
+        self._readConfig = ReadComponentConfig()
 
     def __getattr__(self, name):
         if name not in self._anaDict:
@@ -42,6 +44,22 @@ class Component(object):
 
     def analyzers(self):
         return [getattr(self, n) for n in self.analyzerNames]
+
+    def config(self):
+        if self._cfg is None:
+            path = os.path.join(self.path, 'config.txt')
+            self._cfg = self._readConfig(path)
+        return self._cfg
+
+##____________________________________________________________________________||
+class ReadComponentConfig(object):
+    def __call__(self, path):
+        file = open(path)
+        return self._readImp(file)
+
+    def _readImp(self, file):
+        file.readline() # skip the 1st line
+        return dict([[e.strip() for e in l.split(":", 1)] for l in file])
 
 ##____________________________________________________________________________||
 class Analyzer(object):
