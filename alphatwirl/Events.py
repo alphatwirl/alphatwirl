@@ -8,9 +8,6 @@ class Events(object):
         self.nEvents = min(self.tree.GetEntries(), maxEvents) if (maxEvents > -1) else self.tree.GetEntries()
 
     def __iter__(self):
-        return self._next()
-
-    def _next(self):
         iEvent = 0
         while iEvent < self.nEvents:
             if self.tree.GetEntry(iEvent) <= 0: return
