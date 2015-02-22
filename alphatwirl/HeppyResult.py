@@ -5,7 +5,7 @@ import os
 import ast
 
 ##____________________________________________________________________________||
-class Heppy(object):
+class HeppyResult(object):
     def __init__(self, path):
         self.path = path
         excludeList = ('Chunks', 'failed')

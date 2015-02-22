@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from alphatwirl import Heppy
+from alphatwirl import HeppyResult
 import unittest
 import cStringIO
 
@@ -46,20 +46,20 @@ sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
 """
 
 ##____________________________________________________________________________||
-class TestHeppy(unittest.TestCase):
+class TestHeppyResult(unittest.TestCase):
 
     def setUp(self):
-        self.listdir_org = Heppy.os.listdir
-        self.isdir_org = Heppy.os.path.isdir
-        Heppy.os.listdir = mock_listdir
-        Heppy.os.path.isdir = mock_isdir
+        self.listdir_org = HeppyResult.os.listdir
+        self.isdir_org = HeppyResult.os.path.isdir
+        HeppyResult.os.listdir = mock_listdir
+        HeppyResult.os.path.isdir = mock_isdir
 
         path = 'dir/201522_SingleMu'
-        self.heppy = Heppy.Heppy(path)
+        self.heppy = HeppyResult.HeppyResult(path)
 
     def tearDown(self):
-        Heppy.os.listdir = self.listdir_org
-        Heppy.os.path.isdir = self.isdir_org
+        HeppyResult.os.listdir = self.listdir_org
+        HeppyResult.os.path.isdir = self.isdir_org
 
     def test_init(self):
         self.assertEqual('dir/201522_SingleMu', self.heppy.path)
@@ -85,19 +85,19 @@ class TestHeppy(unittest.TestCase):
 class TestComponent(unittest.TestCase):
 
     def setUp(self):
-        self.listdir_org = Heppy.os.listdir
-        Heppy.os.listdir = mock_listdir
+        self.listdir_org = HeppyResult.os.listdir
+        HeppyResult.os.listdir = mock_listdir
 
-        self.isdir_org = Heppy.os.path.isdir
-        Heppy.os.path.isdir = mock_isdir
+        self.isdir_org = HeppyResult.os.path.isdir
+        HeppyResult.os.path.isdir = mock_isdir
 
         path = 'dir/201522_SingleMu/QCD_HT_100To250'
-        self.component = Heppy.Component(path)
+        self.component = HeppyResult.Component(path)
         self.component._readConfig = mock_readComponentConfig
 
     def tearDown(self):
-        Heppy.os.listdir = self.listdir_org
-        Heppy.os.path.isdir = self.isdir_org
+        HeppyResult.os.listdir = self.listdir_org
+        HeppyResult.os.path.isdir = self.isdir_org
 
     def test_init(self):
         self.assertEqual('dir/201522_SingleMu/QCD_HT_100To250', self.component.path)
@@ -131,7 +131,7 @@ class TestComponent(unittest.TestCase):
 ##____________________________________________________________________________||
 class TestReadComponentConfig(unittest.TestCase):
     def test_read(self):
-        readConfig = Heppy.ReadComponentConfig()
+        readConfig = HeppyResult.ReadComponentConfig()
         file = cStringIO.StringIO(sample_cmp_cfg)
         expected = {'addWeight': 1.0, 'efficiency': 'CFG: eff', 'triggers': [], 'xSection': 28730000}
         self.assertEqual(expected, readConfig._readImp(file))
@@ -140,17 +140,17 @@ class TestReadComponentConfig(unittest.TestCase):
 class TestAnalyzer(unittest.TestCase):
 
     def setUp(self):
-        self.listdir_org = Heppy.os.listdir
-        self.isdir_org = Heppy.os.path.isdir
-        Heppy.os.listdir = mock_listdir
-        Heppy.os.path.isdir = mock_isdir
+        self.listdir_org = HeppyResult.os.listdir
+        self.isdir_org = HeppyResult.os.path.isdir
+        HeppyResult.os.listdir = mock_listdir
+        HeppyResult.os.path.isdir = mock_isdir
 
         path = 'dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer'
-        self.analyzer = Heppy.Analyzer(path)
+        self.analyzer = HeppyResult.Analyzer(path)
 
     def tearDown(self):
-        Heppy.os.listdir = self.listdir_org
-        Heppy.os.path.isdir = self.isdir_org
+        HeppyResult.os.listdir = self.listdir_org
+        HeppyResult.os.path.isdir = self.isdir_org
 
     def test_init(self):
         self.assertEqual('dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer', self.analyzer.path)
