@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os
-from alphatwirl import HeppyResult
+from AlphaTwirl import HeppyResult
 import unittest
 import cStringIO
 

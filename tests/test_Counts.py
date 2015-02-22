@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from alphatwirl import Counts, countsToDataFrame
+from AlphaTwirl import Counts, countsToDataFrame
 import pandas
 import unittest
 

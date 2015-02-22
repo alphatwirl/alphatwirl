@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import alphatwirl
+import AlphaTwirl
 import unittest
 
 ##____________________________________________________________________________||

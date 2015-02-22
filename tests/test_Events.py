@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from alphatwirl import Events
+from AlphaTwirl import Events
 import unittest
 
 ##____________________________________________________________________________||
