@@ -22,7 +22,7 @@ parser.add_option("-n", "--nevents", action = "store", default = -1, type = 'lon
 ##____________________________________________________________________________||
 def main():
 
-    heppy = AlphaTwirl.Heppy.Heppy(options.inputDir)
+    heppy = AlphaTwirl.HeppyResult.HeppyResult(options.inputDir)
     for component in heppy.components():
         print component.name
         inputPath = os.path.join(component.treeProducerSusyAlphaT.path, 'tree.root')
