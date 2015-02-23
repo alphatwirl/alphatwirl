@@ -4,7 +4,6 @@ import ROOT
 import sys
 from optparse import OptionParser
 
-from Counter import *
 import AlphaTwirl
 
 ##____________________________________________________________________________||
@@ -22,7 +21,7 @@ file = ROOT.TFile.Open(options.inputPath)
 tree = file.Get(options.treeName)
 events = AlphaTwirl.Events(tree, options.nevents)
 
-counter_nvtx = Counter_nvtx()
+counter_nvtx = AlphaTwirl.Counter_nvtx()
 
 for event in events:
     run = event.run
