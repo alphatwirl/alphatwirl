@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from AlphaTwirl import Binning, Echo
+from AlphaTwirl.Binning import Binning, Echo
 import unittest
 
 ##____________________________________________________________________________||
