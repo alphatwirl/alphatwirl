@@ -44,9 +44,8 @@ class CounterBuilder(Counter):
 
 ##____________________________________________________________________________||
 class keyComposer_alphaT(object):
-    def __init__(self):
-        tbl_bin = pandas.read_table("tbl/tbl_bin_alphaT.txt", delim_whitespace=True)
-        self.binning = buildBinningFromTbl(tbl_bin)
+    def __init__(self, binning):
+        self.binning = binning
 
     def __call__(self, event):
         alphaT = event.alphaT
@@ -55,9 +54,8 @@ class keyComposer_alphaT(object):
 
 ##____________________________________________________________________________||
 class keyComposer_met(object):
-    def __init__(self):
-        tbl_bin = pandas.read_table("tbl/tbl_bin.txt", delim_whitespace=True)
-        self.binning = buildBinningFromTbl(tbl_bin)
+    def __init__(self, binning):
+        self.binning = binning
 
     def __call__(self, event):
         met_pt = event.met_pt
@@ -72,9 +70,8 @@ class keyComposer_nvtx(object):
 
 ##____________________________________________________________________________||
 class keyComposer_met_nvtx(object):
-    def __init__(self):
-        tbl_bin = pandas.read_table("tbl/tbl_bin.txt", delim_whitespace=True)
-        self.binning = buildBinningFromTbl(tbl_bin)
+    def __init__(self, binning):
+        self.binning = binning
 
     def __call__(self, event):
         met_pt = event.met_pt
