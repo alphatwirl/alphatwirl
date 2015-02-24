@@ -10,74 +10,87 @@ def buildBinningFromTbl(tbl_bin):
 ##____________________________________________________________________________||
 class CounterBase(object):
     def __init__(self):
-        self.counts = AlphaTwirl.Counts()
+        pass
 
-    def _count(self, key, weight):
-        self.counts.count(key, weight)
+    def event(self, event):
+        key = self._keyComposer(event)
+        weight = self._weightCalculator(event)
+        self._countMethod.count(key, weight)
 
     def keynames(self):
         return self._keynames
 
     def results(self):
-        return self.counts.counts
+        return self._countMethod.results()
 
 ##____________________________________________________________________________||
 class Counter_alphaT(CounterBase):
     def __init__(self):
         CounterBase.__init__(self)
+        self._countMethod = AlphaTwirl.Counts()
         tbl_bin = pandas.read_table("tbl/tbl_bin_alphaT.txt", delim_whitespace=True)
         self.binning = buildBinningFromTbl(tbl_bin)
 
         self._keynames = ('alphaT_bin', )
 
-    def event(self, event):
+    def _keyComposer(self, event):
         alphaT = event.alphaT
         alphaT_bin = self.binning(alphaT)
-        key = (alphaT_bin, )
-        self._count(key, 1.0)
+        return (alphaT_bin, )
 
+    def _weightCalculator(self, event):
+        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_met(CounterBase):
     def __init__(self):
         CounterBase.__init__(self)
+        self._countMethod = AlphaTwirl.Counts()
         tbl_bin = pandas.read_table("tbl/tbl_bin.txt", delim_whitespace=True)
         self.binning = buildBinningFromTbl(tbl_bin)
 
         self._keynames = ('met_bin', )
 
-    def event(self, event):
+    def _keyComposer(self, event):
         met_pt = event.met_pt
         met_bin = self.binning(met_pt)
-        key = (met_bin, )
-        self._count(key, 1.0)
+        return (met_bin, )
+
+    def _weightCalculator(self, event):
+        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_nvtx(CounterBase):
     def __init__(self):
         CounterBase.__init__(self)
+        self._countMethod = AlphaTwirl.Counts()
 
         self._keynames = ('nvtx', )
 
-    def event(self, event):
+    def _keyComposer(self, event):
         nVert = event.nVert
-        key = (nVert, )
-        self._count(key, 1.0)
+        return (nVert, )
+
+    def _weightCalculator(self, event):
+        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_met_nvtx(CounterBase):
     def __init__(self):
         CounterBase.__init__(self)
+        self._countMethod = AlphaTwirl.Counts()
         tbl_bin = pandas.read_table("tbl/tbl_bin.txt", delim_whitespace=True)
         self.binning = buildBinningFromTbl(tbl_bin)
 
         self._keynames = ('met_bin', 'nvtx', )
 
-    def event(self, event):
+    def _keyComposer(self, event):
         met_pt = event.met_pt
         met_bin = self.binning(met_pt)
         nVert = event.nVert
-        key = (met_bin, nVert)
-        self._count(key, 1.0)
+        return (met_bin, nVert)
+
+    def _weightCalculator(self, event):
+        return 1.0
 
 ##____________________________________________________________________________||
