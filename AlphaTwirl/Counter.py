@@ -48,6 +48,21 @@ class KeyComposer_SingleVariable(object):
         return (var_bin, )
 
 ##____________________________________________________________________________||
+class KeyComposer_TwoVariables(object):
+    def __init__(self, varName1, binning1, varName2, binning2):
+        self._varName1 = varName1
+        self._binning1 = binning1
+        self._varName2 = varName2
+        self._binning2 = binning2
+
+    def __call__(self, event):
+        var1 = getattr(event, self._varName1)
+        var1_bin = self._binning1(var1)
+        var2 = getattr(event, self._varName2)
+        var2_bin = self._binning2(var2)
+        return (var1_bin, var2_bin)
+
+##____________________________________________________________________________||
 class keyComposer_met_nvtx(object):
     def __init__(self, binning):
         self.binning = binning
