@@ -83,23 +83,3 @@ class keyComposer_met_nvtx(object):
         return (met_bin, nVert)
 
 ##____________________________________________________________________________||
-class Counter_alphaT(Counter):
-    def __init__(self):
-        Counter.__init__(self, ('alphaT_bin', ), keyComposer_alphaT(), AlphaTwirl.Counts())
-
-##____________________________________________________________________________||
-class Counter_met(Counter):
-    def __init__(self):
-        Counter.__init__(self, ('met_bin', ), keyComposer_met(), AlphaTwirl.Counts())
-
-##____________________________________________________________________________||
-class Counter_nvtx(Counter):
-    def __init__(self):
-        Counter.__init__(self, ('nvtx', ), keyComposer_nvtx(), AlphaTwirl.Counts())
-
-##____________________________________________________________________________||
-class Counter_met_nvtx(Counter):
-    def __init__(self):
-        Counter.__init__(self, ('met_bin', 'nvtx', ), keyComposer_met_nvtx(), AlphaTwirl.Counts())
-
-##____________________________________________________________________________||
