@@ -48,36 +48,6 @@ class KeyComposer_SingleVariable(object):
         return (var_bin, )
 
 ##____________________________________________________________________________||
-class keyComposer_alphaT(object):
-    def __init__(self, binning):
-        self.binning = binning
-
-    def __call__(self, event):
-        alphaT = event.alphaT
-        alphaT_bin = self.binning(alphaT)
-        return (alphaT_bin, )
-
-##____________________________________________________________________________||
-class keyComposer_met(object):
-    def __init__(self, binning):
-        self.binning = binning
-
-    def __call__(self, event):
-        met_pt = event.met_pt
-        met_bin = self.binning(met_pt)
-        return (met_bin, )
-
-##____________________________________________________________________________||
-class keyComposer_nvtx(object):
-    def __init__(self, binning):
-        self.binning = binning
-
-    def __call__(self, event):
-        nVert = event.nVert
-        nVert_bin = self.binning(nVert)
-        return (nVert_bin, )
-
-##____________________________________________________________________________||
 class keyComposer_met_nvtx(object):
     def __init__(self, binning):
         self.binning = binning
