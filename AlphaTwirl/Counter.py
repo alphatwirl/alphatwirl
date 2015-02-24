@@ -13,7 +13,7 @@ class WeightCalculatorOne(object):
         return 1.0
 
 ##____________________________________________________________________________||
-class CounterBase(object):
+class Counter(object):
     def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
         self._keyComposer = keyComposer
@@ -72,23 +72,23 @@ class keyComposer_met_nvtx(object):
         return (met_bin, nVert)
 
 ##____________________________________________________________________________||
-class Counter_alphaT(CounterBase):
+class Counter_alphaT(Counter):
     def __init__(self):
-        CounterBase.__init__(self, ('alphaT_bin', ), keyComposer_alphaT(), AlphaTwirl.Counts())
+        Counter.__init__(self, ('alphaT_bin', ), keyComposer_alphaT(), AlphaTwirl.Counts())
 
 ##____________________________________________________________________________||
-class Counter_met(CounterBase):
+class Counter_met(Counter):
     def __init__(self):
-        CounterBase.__init__(self, ('met_bin', ), keyComposer_met(), AlphaTwirl.Counts())
+        Counter.__init__(self, ('met_bin', ), keyComposer_met(), AlphaTwirl.Counts())
 
 ##____________________________________________________________________________||
-class Counter_nvtx(CounterBase):
+class Counter_nvtx(Counter):
     def __init__(self):
-        CounterBase.__init__(self, ('nvtx', ), keyComposer_nvtx(), AlphaTwirl.Counts())
+        Counter.__init__(self, ('nvtx', ), keyComposer_nvtx(), AlphaTwirl.Counts())
 
 ##____________________________________________________________________________||
-class Counter_met_nvtx(CounterBase):
+class Counter_met_nvtx(Counter):
     def __init__(self):
-        CounterBase.__init__(self, ('met_bin', 'nvtx', ), keyComposer_met_nvtx(), AlphaTwirl.Counts())
+        Counter.__init__(self, ('met_bin', 'nvtx', ), keyComposer_met_nvtx(), AlphaTwirl.Counts())
 
 ##____________________________________________________________________________||
