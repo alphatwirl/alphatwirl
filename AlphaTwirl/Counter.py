@@ -37,6 +37,17 @@ class CounterBuilder(Counter):
         return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
 
 ##____________________________________________________________________________||
+class KeyComposer_SingleVariable(object):
+    def __init__(self, varName, binning):
+        self._varName = varName
+        self._binning = binning
+
+    def __call__(self, event):
+        var = getattr(event, self._varName)
+        var_bin = self._binning(var)
+        return (var_bin, )
+
+##____________________________________________________________________________||
 class keyComposer_alphaT(object):
     def __init__(self, binning):
         self.binning = binning
