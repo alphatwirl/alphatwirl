@@ -63,14 +63,3 @@ class KeyComposer_TwoVariables(object):
         return (var1_bin, var2_bin)
 
 ##____________________________________________________________________________||
-class keyComposer_met_nvtx(object):
-    def __init__(self, binning):
-        self.binning = binning
-
-    def __call__(self, event):
-        met_pt = event.met_pt
-        met_bin = self.binning(met_pt)
-        nVert = event.nVert
-        return (met_bin, nVert)
-
-##____________________________________________________________________________||
