@@ -24,6 +24,11 @@ class CounterBase(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
+class WeightCalculatorOne(object):
+    def __call__(self, event):
+        return 1.0
+
+##____________________________________________________________________________||
 class Counter_alphaT(CounterBase):
     def __init__(self):
         CounterBase.__init__(self)
@@ -33,13 +38,12 @@ class Counter_alphaT(CounterBase):
 
         self._keynames = ('alphaT_bin', )
 
+        self._weightCalculator = WeightCalculatorOne()
+
     def _keyComposer(self, event):
         alphaT = event.alphaT
         alphaT_bin = self.binning(alphaT)
         return (alphaT_bin, )
-
-    def _weightCalculator(self, event):
-        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_met(CounterBase):
@@ -51,13 +55,12 @@ class Counter_met(CounterBase):
 
         self._keynames = ('met_bin', )
 
+        self._weightCalculator = WeightCalculatorOne()
+
     def _keyComposer(self, event):
         met_pt = event.met_pt
         met_bin = self.binning(met_pt)
         return (met_bin, )
-
-    def _weightCalculator(self, event):
-        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_nvtx(CounterBase):
@@ -67,12 +70,11 @@ class Counter_nvtx(CounterBase):
 
         self._keynames = ('nvtx', )
 
+        self._weightCalculator = WeightCalculatorOne()
+
     def _keyComposer(self, event):
         nVert = event.nVert
         return (nVert, )
-
-    def _weightCalculator(self, event):
-        return 1.0
 
 ##____________________________________________________________________________||
 class Counter_met_nvtx(CounterBase):
@@ -84,13 +86,12 @@ class Counter_met_nvtx(CounterBase):
 
         self._keynames = ('met_bin', 'nvtx', )
 
+        self._weightCalculator = WeightCalculatorOne()
+
     def _keyComposer(self, event):
         met_pt = event.met_pt
         met_bin = self.binning(met_pt)
         nVert = event.nVert
         return (met_bin, nVert)
-
-    def _weightCalculator(self, event):
-        return 1.0
 
 ##____________________________________________________________________________||
