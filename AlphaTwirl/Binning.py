@@ -39,3 +39,8 @@ class Binning(object):
         return ret + "\n".join("%5s %10s %10s" % (str(b), str(l), str(u)) for b, l, u in zip(self.bins, self.lows, self.ups))
 
 ##____________________________________________________________________________||
+class Echo(object):
+    def __call__(self, val):
+        return val
+
+##____________________________________________________________________________||

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from AlphaTwirl import Binning
+from AlphaTwirl import Binning, Echo
 import unittest
 
 ##____________________________________________________________________________||
@@ -63,5 +63,14 @@ class TestBinning(unittest.TestCase):
         lows = (10.0, 20.0, 30.0, 45.0)
         ups = (20.0, 30.0, 40.0, 50.0)
         self.assertRaises(ValueError, Binning, lows = lows, ups = ups)
+
+##____________________________________________________________________________||
+class TestEcho(unittest.TestCase):
+    def test_call(self):
+        binning = Echo()
+        self.assertEqual(1, binning(1))
+        self.assertEqual(2, binning(2))
+        self.assertEqual(0, binning(0))
+        self.assertEqual(5, binning(5))
 
 ##____________________________________________________________________________||
