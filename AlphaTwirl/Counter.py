@@ -1,11 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
-import pandas
-
 import AlphaTwirl
-
-##____________________________________________________________________________||
-def buildBinningFromTbl(tbl_bin):
-    return AlphaTwirl.Binning(bins = tbl_bin.bin.tolist(), lows = tbl_bin.low.tolist(), ups = tbl_bin.up.tolist())
 
 ##____________________________________________________________________________||
 class WeightCalculatorOne(object):
