@@ -32,6 +32,17 @@ class Counter(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
+class CounterBuilder(Counter):
+    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne()):
+        self._keynames = keyNames
+        self._keyComposer = keyComposer
+        self._countMethodClass = countMethodClass
+        self._weightCalculator = weightCalculator
+
+    def __call__(self):
+        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
+
+##____________________________________________________________________________||
 class keyComposer_alphaT(object):
     def __init__(self):
         tbl_bin = pandas.read_table("tbl/tbl_bin_alphaT.txt", delim_whitespace=True)
