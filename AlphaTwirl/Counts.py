@@ -4,13 +4,16 @@ import pandas
 ##____________________________________________________________________________||
 class Counts(object):
     def __init__(self):
-        self.counts = { }
+        self._counts = { }
 
     def count(self, key, w = 1, nvar = None):
         if nvar is None: nvar = w**2
-        if key not in self.counts: self.counts[key] = {'n': 0.0, 'nvar': 0.0 }
-        self.counts[key]['n'] += w
-        self.counts[key]['nvar'] += nvar
+        if key not in self._counts: self._counts[key] = {'n': 0.0, 'nvar': 0.0 }
+        self._counts[key]['n'] += w
+        self._counts[key]['nvar'] += nvar
+
+    def results(self):
+        return self._counts
 
 ##____________________________________________________________________________||
 def countsToDataFrame(counts, keyNames, valNames = ('n', 'nvar')):

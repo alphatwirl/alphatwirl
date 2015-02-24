@@ -18,19 +18,19 @@ class TestCounts(unittest.TestCase):
 
         counts.count(1)
         expected  = {1: {'n': 1.0, 'nvar': 1.0}}
-        self.assertEqual(expected, counts.counts)
+        self.assertEqual(expected, counts.results())
 
         counts.count(1)
         expected  = {1: {'n': 2.0, 'nvar': 2.0}}
-        self.assertEqual(expected, counts.counts)
+        self.assertEqual(expected, counts.results())
 
         counts.count(1, 2)
         expected  = {1: {'n': 4.0, 'nvar': 6.0}}
-        self.assertEqual(expected, counts.counts)
+        self.assertEqual(expected, counts.results())
 
         counts.count(2, 3)
         expected  = {1: {'n': 4.0, 'nvar': 6.0}, 2: {'n': 3.0, 'nvar': 9.0}}
-        self.assertEqual(expected, counts.counts)
+        self.assertEqual(expected, counts.results())
 
         counts.count(3, 2, 3)
         expected  = {
@@ -38,7 +38,7 @@ class TestCounts(unittest.TestCase):
             2: {'n': 3.0, 'nvar': 9.0},
             3: {'n': 2.0, 'nvar': 3.0},
             }
-        self.assertEqual(expected, counts.counts)
+        self.assertEqual(expected, counts.results())
 
     def test_countsToDataFrame(self):
 
