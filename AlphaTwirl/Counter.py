@@ -58,9 +58,13 @@ class keyComposer_met(object):
 
 ##____________________________________________________________________________||
 class keyComposer_nvtx(object):
+    def __init__(self, binning):
+        self.binning = binning
+
     def __call__(self, event):
         nVert = event.nVert
-        return (nVert, )
+        nVert_bin = self.binning(nVert)
+        return (nVert_bin, )
 
 ##____________________________________________________________________________||
 class keyComposer_met_nvtx(object):
