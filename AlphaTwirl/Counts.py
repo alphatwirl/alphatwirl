@@ -12,6 +12,9 @@ class Counts(object):
         self._counts[key]['n'] += w
         self._counts[key]['nvar'] += nvar
 
+    def valNames(self):
+        return ('n', 'nvar')
+
     def results(self):
         return self._counts
 

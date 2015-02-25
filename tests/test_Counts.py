@@ -68,4 +68,9 @@ class TestCounts(unittest.TestCase):
             }
         self.assertEqual(expected, counts.results())
 
+    def test_valNames(self):
+        counts = Counts()
+        self.assertEqual(('n', 'nvar'), counts.valNames())
+
+
 ##____________________________________________________________________________||
