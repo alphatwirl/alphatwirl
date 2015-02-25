@@ -4,12 +4,12 @@
 class Collector(object):
     def __init__(self, method):
         self._method = method
-        self._readers = [ ]
+        self._datasetReaderPairs = [ ]
 
     def addReader(self, datasetName, reader):
-        self._readers.append((datasetName, reader))
+        self._datasetReaderPairs.append((datasetName, reader))
 
     def collect(self):
-        self._method.collect(self._readers)
+        self._method.collect(self._datasetReaderPairs)
 
 ##____________________________________________________________________________||
