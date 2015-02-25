@@ -32,6 +32,26 @@ class TestCountsToDataFrame(unittest.TestCase):
         columns = ("v1", )
         self.assertEqual(expected, countsToDataFrame(counts, columns))
 
+    def test_valNames(self):
+
+        counts  = {
+            (1, ): {'x': 4.0, 'var_x': 6.0},
+            (2, ): {'x': 3.0, 'var_x': 9.0},
+            (3, ): {'x': 2.0, 'var_x': 3.0},
+            }
+
+        expected = pandas.DataFrame(
+            {
+                'v1': [1, 2, 3],
+                'x': [4.0, 3.0, 2.0],
+                'var_x': [6.0, 9.0, 3.0],
+                }
+            )
+
+        columns = ("v1", )
+        valNames = ('x', 'var_x')
+        self.assertEqual(expected, countsToDataFrame(counts, columns, valNames))
+
     def test_emptyCounts(self):
         counts  = { }
         expected = pandas.DataFrame({'v1': [ ], 'n': [ ], 'nvar': [ ]})

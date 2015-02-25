@@ -24,7 +24,7 @@ def countsToDataFrame(counts, keyNames, valNames = ('n', 'nvar')):
     if not counts:
         return pandas.DataFrame(columns = columns)
         return
-    d = [k + (v['n'], v['nvar']) for k, v in counts.iteritems()]
+    d = [k + (v[valNames[0]], v[valNames[1]]) for k, v in counts.iteritems()]
     d.sort()
     return pandas.DataFrame(d, columns = columns)
 
