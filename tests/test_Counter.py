@@ -41,6 +41,10 @@ class TestCounter(unittest.TestCase):
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
+    def test_keynames(self):
+        counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
+        self.assertEqual(('var', ), counter.keynames())
+
 ##____________________________________________________________________________||
 class TestKeyComposer_SingleVariable(unittest.TestCase):
 
