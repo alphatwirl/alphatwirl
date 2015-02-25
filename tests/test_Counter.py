@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 import AlphaTwirl.Counter as Counter
 import unittest
 

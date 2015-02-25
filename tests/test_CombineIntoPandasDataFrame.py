@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from AlphaTwirl import countsToDataFrame, CombineIntoPandasDataFrame
 import pandas
 import unittest

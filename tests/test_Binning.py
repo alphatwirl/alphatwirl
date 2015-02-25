@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 from AlphaTwirl.Binning import Binning, Echo
 import unittest
 
