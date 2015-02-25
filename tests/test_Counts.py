@@ -13,7 +13,7 @@ class TestCountsToDataFrame(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)
 
-    def test_countsToDataFrame(self):
+    def test_call(self):
 
         counts  = {
             (1, ): {'n': 4.0, 'nvar': 6.0},
@@ -32,7 +32,7 @@ class TestCountsToDataFrame(unittest.TestCase):
         columns = ("v1", )
         self.assertEqual(expected, countsToDataFrame(counts, columns))
 
-    def test_countsToDataFrame_emptyCounts(self):
+    def test_emptyCounts(self):
         counts  = { }
         expected = pandas.DataFrame({'v1': [ ], 'n': [ ], 'nvar': [ ]})
         columns = ("v1", )
