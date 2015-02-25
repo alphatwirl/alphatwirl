@@ -9,9 +9,37 @@ def assertDataFrameEqual(df1, df2, **kwds):
     return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1), check_names = True)
 
 ##____________________________________________________________________________||
-class TestCounts(unittest.TestCase):
+class TestCountsToDataFrame(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)
+
+    def test_countsToDataFrame(self):
+
+        counts  = {
+            (1, ): {'n': 4.0, 'nvar': 6.0},
+            (2, ): {'n': 3.0, 'nvar': 9.0},
+            (3, ): {'n': 2.0, 'nvar': 3.0},
+            }
+
+        expected = pandas.DataFrame(
+            {
+                'v1': [1, 2, 3],
+                'n': [4.0, 3.0, 2.0],
+                'nvar': [6.0, 9.0, 3.0],
+                }
+            )
+
+        columns = ("v1", )
+        self.assertEqual(expected, countsToDataFrame(counts, columns))
+
+    def test_countsToDataFrame_emptyCounts(self):
+        counts  = { }
+        expected = pandas.DataFrame({'v1': [ ], 'n': [ ], 'nvar': [ ]})
+        columns = ("v1", )
+        self.assertEqual(expected, countsToDataFrame(counts, columns))
+
+##____________________________________________________________________________||
+class TestCounts(unittest.TestCase):
 
     def test_counts(self):
         counts = Counts()
@@ -39,30 +67,5 @@ class TestCounts(unittest.TestCase):
             3: {'n': 2.0, 'nvar': 3.0},
             }
         self.assertEqual(expected, counts.results())
-
-    def test_countsToDataFrame(self):
-
-        counts  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0},
-            (2, ): {'n': 3.0, 'nvar': 9.0},
-            (3, ): {'n': 2.0, 'nvar': 3.0},
-            }
-
-        expected = pandas.DataFrame(
-            {
-                'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
-                }
-            )
-
-        columns = ("v1", )
-        self.assertEqual(expected, countsToDataFrame(counts, columns))
-
-    def test_countsToDataFrame_emptyCounts(self):
-        counts  = { }
-        expected = pandas.DataFrame({'v1': [ ], 'n': [ ], 'nvar': [ ]})
-        columns = ("v1", )
-        self.assertEqual(expected, countsToDataFrame(counts, columns))
 
 ##____________________________________________________________________________||
