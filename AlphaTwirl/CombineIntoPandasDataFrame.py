@@ -21,7 +21,7 @@ class CombineIntoPandasDataFrame(object):
         for datasetName, reader in datasetReaderPairs:
             tbl_c = countsToDataFrame(reader.results(), reader.keynames())
             tbl_c.insert(0, self.datasetColumnName, datasetName)
-            df = df.append(tbl_c)
+            df = df.append(tbl_c, ignore_index = True)
         return df
 
 ##____________________________________________________________________________||
