@@ -42,7 +42,7 @@ class TestCounter(unittest.TestCase):
         self.assertEqual([((11, ), 1.0)], counter.results())
 
 ##____________________________________________________________________________||
-class KeyComposer_SingleVariable(unittest.TestCase):
+class TestKeyComposer_SingleVariable(unittest.TestCase):
 
     def test_call(self):
         keyComposer = Counter.KeyComposer_SingleVariable('var1', MockBinning())
@@ -52,7 +52,7 @@ class KeyComposer_SingleVariable(unittest.TestCase):
         self.assertEqual((12, ), keyComposer(event))
 
 ##____________________________________________________________________________||
-class KeyComposer_TwoVariables(unittest.TestCase):
+class TestKeyComposer_TwoVariables(unittest.TestCase):
 
     def test_call(self):
         keyComposer = Counter.KeyComposer_TwoVariables('var1', MockBinning(), 'var2', MockBinning())
