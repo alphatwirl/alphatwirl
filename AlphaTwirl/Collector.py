@@ -2,14 +2,17 @@
 
 ##____________________________________________________________________________||
 class Collector(object):
-    def __init__(self, method):
-        self._method = method
+    def __init__(self, resultsCombinationMethod, deliveryMethod):
+        self.resultsCombinationMethod = resultsCombinationMethod
+        self.deliveryMethod = deliveryMethod
+
         self._datasetReaderPairs = [ ]
 
     def addReader(self, datasetName, reader):
         self._datasetReaderPairs.append((datasetName, reader))
 
     def collect(self):
-        self._method.collect(self._datasetReaderPairs)
+        results = self.resultsCombinationMethod.combine(self._datasetReaderPairs)
+        self.deliveryMethod.deliver(results)
 
 ##____________________________________________________________________________||
