@@ -7,3 +7,4 @@ from EventReaderPackage import *
 from Collector import *
 from CombineIntoPandasDataFrame import *
 from WritePandasDataFrameToFile import *
+from EventReaderBundle import *
