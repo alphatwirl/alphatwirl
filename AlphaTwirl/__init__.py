@@ -6,3 +6,4 @@ import Counter
 from TreeReaderPackage import *
 from Collector import *
 from CollectionMethod import *
+from CombineIntoPandasDataFrame import *
