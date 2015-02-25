@@ -1,5 +1,4 @@
 # Tai Sakuma <sakuma@fnal.gov>
-import pandas
 
 ##____________________________________________________________________________||
 class Counts(object):
@@ -17,15 +16,5 @@ class Counts(object):
 
     def results(self):
         return self._counts
-
-##____________________________________________________________________________||
-def countsToDataFrame(counts, keyNames, valNames = ('n', 'nvar')):
-    columns = tuple(keyNames) + tuple(valNames)
-    if not counts:
-        return pandas.DataFrame(columns = columns)
-        return
-    d = [k + (v[valNames[0]], v[valNames[1]]) for k, v in counts.iteritems()]
-    d.sort()
-    return pandas.DataFrame(d, columns = columns)
 
 ##____________________________________________________________________________||
