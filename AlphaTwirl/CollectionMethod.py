@@ -6,8 +6,8 @@ class CollectionMethod(object):
         self.resultsCombinationMethod = resultsCombinationMethod
         self.deliveryMethod = deliveryMethod
 
-    def collect(self, rpairs):
-        results = self.resultsCombinationMethod.combine(rpairs)
+    def collect(self, datasetReaderPairs):
+        results = self.resultsCombinationMethod.combine(datasetReaderPairs)
         self.deliveryMethod.deliver(results)
 
 ##____________________________________________________________________________||
