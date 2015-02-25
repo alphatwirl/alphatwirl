@@ -2,16 +2,16 @@
 
 ##____________________________________________________________________________||
 class TreeReaderPackage(object):
-    def __init__(self, CounterClass, collector):
-        self._CounterClass = CounterClass
-        self._collector = collector
+    def __init__(self, ReaderClass, resultCollector):
+        self._ReaderClass = ReaderClass
+        self._resultCollector = resultCollector
 
     def make(self, datasetName):
-        reader = self._CounterClass()
-        self._collector.addReader(datasetName, reader)
+        reader = self._ReaderClass()
+        self._resultCollector.addReader(datasetName, reader)
         return reader
 
     def collect(self):
-        self._collector.collect()
+        self._resultCollector.collect()
 
 ##____________________________________________________________________________||
