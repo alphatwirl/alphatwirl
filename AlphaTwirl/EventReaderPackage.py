@@ -1,7 +1,7 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class TreeReaderPackage(object):
+class EventReaderPackage(object):
     def __init__(self, ReaderClass, resultCollector):
         self._ReaderClass = ReaderClass
         self._resultCollector = resultCollector

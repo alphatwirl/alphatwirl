@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from AlphaTwirl import TreeReaderPackage
+from AlphaTwirl import EventReaderPackage
 import unittest
 
 ##____________________________________________________________________________||
@@ -19,11 +19,11 @@ class MockCollector(object):
         self.collected = True
 
 ##____________________________________________________________________________||
-class TestTreeReaderPackage(unittest.TestCase):
+class TestEventReaderPackage(unittest.TestCase):
 
     def test_make(self):
         collector = MockCollector()
-        package = TreeReaderPackage(MockReader, collector)
+        package = EventReaderPackage(MockReader, collector)
 
         reader = package.make("data1")
         self.assertIsInstance(reader, MockReader)
@@ -32,7 +32,7 @@ class TestTreeReaderPackage(unittest.TestCase):
 
     def test_collect(self):
         collector = MockCollector()
-        package = TreeReaderPackage(MockReader, collector)
+        package = EventReaderPackage(MockReader, collector)
 
         self.assertFalse(collector.collected)
         package.collect()
