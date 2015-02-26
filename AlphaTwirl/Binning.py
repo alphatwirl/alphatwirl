@@ -39,6 +39,21 @@ class Binning(object):
         return ret + "\n".join("%5s %10s %10s" % (str(b), str(l), str(u)) for b, l, u in zip(self.bins, self.lows, self.ups))
 
 ##____________________________________________________________________________||
+class Round(object):
+    def __init__(self, width = 1, aBoundary = None):
+        self.width = width
+        halfWidth = float(width)/2
+        self.aBoundary = halfWidth if aBoundary is None else aBoundary % width
+        self.shift = halfWidth - self.aBoundary
+
+    def __call__(self, val):
+        try:
+            return [self.__call__(v) for v in val]
+        except TypeError:
+            pass
+        return round(float(val + self.shift)/self.width)*self.width - self.shift
+
+##____________________________________________________________________________||
 class Echo(object):
     def __call__(self, val):
         return val
