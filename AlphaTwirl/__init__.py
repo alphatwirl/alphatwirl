@@ -9,3 +9,4 @@ from CombineIntoPandasDataFrame import *
 from WritePandasDataFrameToFile import *
 from EventReaderBundle import *
 from EventBuilder import *
+from buildBinningFromTbl import *
