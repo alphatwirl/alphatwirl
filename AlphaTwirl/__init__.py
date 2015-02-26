@@ -10,3 +10,4 @@ from WritePandasDataFrameToFile import *
 from EventReaderBundle import *
 from EventBuilder import *
 from buildBinningFromTbl import *
+from TblXsecNevt import TblXsecNevt
