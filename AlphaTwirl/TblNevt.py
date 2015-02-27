@@ -3,7 +3,7 @@ import os
 import pandas
 
 ##____________________________________________________________________________||
-class TblXsecNevt(object):
+class TblNevt(object):
     def __init__(self, outPath):
         self._outPath = outPath
         self._tbl = pandas.DataFrame()
@@ -11,9 +11,8 @@ class TblXsecNevt(object):
     def begin(self): pass
 
     def read(self, component):
-        xsec = component.config()['xSection']
         nevt = getNEventsFor(component)
-        self._tbl = self._tbl.append(pandas.DataFrame({'component': (component.name, ), 'xsec': (xsec, ), 'nevt': (nevt, )}))
+        self._tbl = self._tbl.append(pandas.DataFrame({'component': (component.name, ), 'nevt': (nevt, )}))
 
     def end(self):
         self._tbl.nevt = self._tbl.nevt.apply(lambda x: '%.3f' % x)
