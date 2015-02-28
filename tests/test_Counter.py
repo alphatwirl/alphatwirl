@@ -28,8 +28,20 @@ class MockWeightCalculator(object):
 
 ##____________________________________________________________________________||
 class MockKeyComposer(object):
+    def __init__(self):
+        self._keys = [(13, ), (11, )]
+        pass
+
     def __call__(self, event):
-        return (11, )
+        return self._keys.pop()
+
+##____________________________________________________________________________||
+class TestMockKeyComposer(unittest.TestCase):
+
+    def test_call(self):
+        keycomposer = MockKeyComposer()
+        self.assertEqual((11, ), keycomposer(MockEvent()))
+        self.assertEqual((13, ), keycomposer(MockEvent()))
 
 ##____________________________________________________________________________||
 class TestCounter(unittest.TestCase):
