@@ -45,6 +45,24 @@ class TestCounter(unittest.TestCase):
         self.assertEqual(('var', ), counter.keynames())
 
 ##____________________________________________________________________________||
+class TestCounterBuilder(unittest.TestCase):
+
+    def test_call(self):
+        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
+        counter1 = builder()
+        self.assertEqual(('var_bin', ), counter1._keynames)
+        self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
+        self.assertIsInstance(counter1._countMethod, MockCounts)
+
+        counter2 = builder()
+        self.assertEqual(('var_bin', ), counter2._keynames)
+        self.assertIsInstance(counter2._keyComposer, MockKeyComposer)
+        self.assertIsInstance(counter2._countMethod, MockCounts)
+
+        self.assertIs(counter1._keyComposer, counter2._keyComposer)
+        self.assertIsNot(counter1._countMethod, counter2._countMethod)
+
+##____________________________________________________________________________||
 class TestKeyComposer_SingleVariable(unittest.TestCase):
 
     def test_call(self):
