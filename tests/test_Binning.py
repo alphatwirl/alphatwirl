@@ -67,60 +67,26 @@ class TestBinning(unittest.TestCase):
 class TestRound(unittest.TestCase):
 
     def test_boundary(self):
-        binning = Round()
-        self.assertEqual(0.5, binning.aBoundary)
-
-        binning = Round(2)
-        self.assertEqual(1, binning.aBoundary)
-
-        binning = Round(10)
-        self.assertEqual(5, binning.aBoundary)
-
-        binning = Round(2, 0)
-        self.assertEqual(0, binning.aBoundary)
-
-        binning = Round(2, -0.5)
-        self.assertEqual(1.5, binning.aBoundary)
-
-        binning = Round(2, 0.5)
-        self.assertEqual(0.5, binning.aBoundary)
-
-        binning = Round(2, 19.5)
-        self.assertEqual(1.5, binning.aBoundary)
-
-        binning = Round(2, 20.5)
-        self.assertEqual(0.5, binning.aBoundary)
-
-        binning = Round(2, -2.5)
-        self.assertEqual(1.5, binning.aBoundary)
-
-        binning = Round(2, -20.5)
-        self.assertEqual(1.5, binning.aBoundary)
+        self.assertEqual(0.5, Round().aBoundary)
+        self.assertEqual(1, Round(2).aBoundary)
+        self.assertEqual(5, Round(10).aBoundary)
+        self.assertEqual(0, Round(2, 0).aBoundary)
+        self.assertEqual(1.5, Round(2, -0.5).aBoundary)
+        self.assertEqual(0.5, Round(2, 0.5).aBoundary)
+        self.assertEqual(1.5, Round(2, 19.5).aBoundary)
+        self.assertEqual(0.5, Round(2, 20.5).aBoundary)
+        self.assertEqual(1.5, Round(2, -2.5).aBoundary)
+        self.assertEqual(1.5, Round(2, -20.5).aBoundary)
 
     def test_shift(self):
-        binning = Round(2)
-        self.assertEqual(0, binning.shift)
-
-        binning = Round(2, 0)
-        self.assertEqual(1, binning.shift)
-
-        binning = Round(2, 2)
-        self.assertEqual(1, binning.shift)
-
-        binning = Round(2, 20)
-        self.assertEqual(1, binning.shift)
-
-        binning = Round(2, -20)
-        self.assertEqual(1, binning.shift)
-
-        binning = Round(2, 0.5)
-        self.assertEqual(0.5, binning.shift)
-
-        binning = Round(2, 2.5)
-        self.assertEqual(0.5, binning.shift)
-
-        binning = Round(2, 4.5)
-        self.assertEqual(0.5, binning.shift)
+        self.assertEqual(0, Round(2).shift)
+        self.assertEqual(1, Round(2, 0).shift)
+        self.assertEqual(1, Round(2, 2).shift)
+        self.assertEqual(1, Round(2, 20).shift)
+        self.assertEqual(1, Round(2, -20).shift)
+        self.assertEqual(0.5, Round(2, 0.5).shift)
+        self.assertEqual(0.5, Round(2, 2.5).shift)
+        self.assertEqual(0.5, Round(2, 4.5).shift)
 
     def test_call(self):
         binning = Round()
@@ -140,28 +106,12 @@ class TestRound(unittest.TestCase):
     def test_call_width_2(self):
         binning = Round(2)
         self.assertEqual(1, binning.aBoundary)
-        self.assertEqual(-2, binning(-2.9))
-        self.assertEqual(-2, binning(-2))
-        self.assertEqual(-2, binning(-1.1))
-        self.assertEqual(0, binning(-0.9))
-        self.assertEqual(0, binning(0))
-        self.assertEqual(0, binning(0.9))
-        self.assertEqual(2, binning(1.1))
-        self.assertEqual(2, binning(2))
-        self.assertEqual(2, binning(2.9))
+        self.assertEqual([-2, -2, -2, 0, 0, 0, 2, 2, 2], binning((-2.9, -2, -1.1, -0.9, 0, 0.9, 1.1, 2, 2.9)))
 
     def test_call_width_2_aboundary_0(self):
         binning = Round(2, 0)
         self.assertEqual(0, binning.aBoundary)
-        self.assertEqual(-1, binning(-1.9))
-        self.assertEqual(-1, binning(-1))
-        self.assertEqual(-1, binning(-0.1))
-        self.assertEqual(1, binning(0.1))
-        self.assertEqual(1, binning(1))
-        self.assertEqual(1, binning(1.9))
-        self.assertEqual(3, binning(2.1))
-        self.assertEqual(3, binning(3))
-        self.assertEqual(3, binning(3.9))
+        self.assertEqual([-1, -1, -1, 1, 1, 1, 3, 3, 3], binning((-1.9, -1, -0.1, 0.1, 1, 1.9, 2.1, 3, 3.9)))
 
     def test_call_decimal_width(self):
         binning = Round(0.02, 0.005)
