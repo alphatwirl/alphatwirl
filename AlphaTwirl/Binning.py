@@ -1,4 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
+import decimal
 
 ##____________________________________________________________________________||
 class Binning(object):
@@ -41,20 +42,34 @@ class Binning(object):
 ##____________________________________________________________________________||
 class Round(object):
     def __init__(self, width = 1, aBoundary = None, lowedge = False):
-        self.width = width
-        self.halfWidth = float(width)/2
-        self.aBoundary = self.halfWidth if aBoundary is None else aBoundary % width
+        self.width = decimal.Decimal(str(width))
+        self.halfWidth = self.width/2
+
+        # take Decimal after the modulo because the modulo on Decimals returns a
+        # negetive number when aBoundary is negative
+        self.aBoundary = self.halfWidth if aBoundary is None else decimal.Decimal(str(aBoundary % width))
+
         self.shift = self.halfWidth - self.aBoundary
         self.lowedge = lowedge
+
+        self._context_ROUND_HALF_UP = decimal.Context(rounding = decimal.ROUND_HALF_UP)
+        self._context_ROUND_HALF_DOWN = decimal.Context(rounding= decimal.ROUND_HALF_DOWN)
 
     def __call__(self, val):
         try:
             return [self.__call__(v) for v in val]
         except TypeError:
             pass
-        ret = round(float(val + self.shift)/self.width)*self.width - self.shift
+        val = decimal.Decimal(str(val))
+        ret = (val + self.shift)/self.width
+
+        # the context ensures to include the lower edge in the bin
+        context = self._context_ROUND_HALF_DOWN if val.is_signed() else self._context_ROUND_HALF_UP
+        ret = ret.to_integral_value(context = context)
+
+        ret = ret*self.width - self.shift
         if self.lowedge: ret = ret - self.halfWidth
-        return ret
+        return float(ret)
 
 ##____________________________________________________________________________||
 class Echo(object):
