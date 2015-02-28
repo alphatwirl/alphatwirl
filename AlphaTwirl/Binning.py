@@ -40,18 +40,21 @@ class Binning(object):
 
 ##____________________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None):
+    def __init__(self, width = 1, aBoundary = None, lowedge = False):
         self.width = width
-        halfWidth = float(width)/2
-        self.aBoundary = halfWidth if aBoundary is None else aBoundary % width
-        self.shift = halfWidth - self.aBoundary
+        self.halfWidth = float(width)/2
+        self.aBoundary = self.halfWidth if aBoundary is None else aBoundary % width
+        self.shift = self.halfWidth - self.aBoundary
+        self.lowedge = lowedge
 
     def __call__(self, val):
         try:
             return [self.__call__(v) for v in val]
         except TypeError:
             pass
-        return round(float(val + self.shift)/self.width)*self.width - self.shift
+        ret = round(float(val + self.shift)/self.width)*self.width - self.shift
+        if self.lowedge: ret = ret - self.halfWidth
+        return ret
 
 ##____________________________________________________________________________||
 class Echo(object):

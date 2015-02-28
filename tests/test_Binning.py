@@ -166,6 +166,9 @@ class TestRound(unittest.TestCase):
         binning = Round(0.02, 0.005)
         self.assertEqual([0.015, 0.035, 0.075, -0.045], binning((0.006, 0.0251, 0.081, -0.048)))
 
+    def test_lowedge(self):
+        binning = Round(lowedge = True)
+        self.assertEqual([0.5, 0.5, 104.5, -0.5, -1.5, -1.5, -2.5], binning((0.5, 1.4, 104.5, -0.4, -0.5, -1.4, -1.5 )))
 
 ##____________________________________________________________________________||
 class TestEcho(unittest.TestCase):
