@@ -128,13 +128,14 @@ class TestRound(unittest.TestCase):
         self.assertEqual(1, binning(1.4))
         self.assertEqual(105, binning(104.5))
         self.assertEqual(0, binning(-0.4))
-        self.assertEqual(-1, binning(-0.5))
+        self.assertEqual(0, binning(-0.5))
         self.assertEqual(-1, binning(-1.4))
-        self.assertEqual(-2, binning(-1.5))
+        self.assertEqual(-1, binning(-1.5))
+        self.assertEqual(-2, binning(-1.6))
 
     def test_call_with_list(self):
         binning = Round()
-        self.assertEqual([1, 1, 105, 0, -1, -1, -2], binning((0.5, 1.4, 104.5, -0.4, -0.5, -1.4, -1.5 )))
+        self.assertEqual([1, 1, 105, 0, 0, -1, -1], binning((0.5, 1.4, 104.5, -0.4, -0.5, -1.4, -1.5 )))
 
     def test_call_width_2(self):
         binning = Round(2)
@@ -164,11 +165,21 @@ class TestRound(unittest.TestCase):
 
     def test_call_decimal_width(self):
         binning = Round(0.02, 0.005)
-        self.assertEqual([0.015, 0.035, 0.075, -0.045], binning((0.006, 0.0251, 0.081, -0.048)))
+        self.assertEqual([0.015, 0.035, 0.075, -0.045, -0.005], binning((0.005, 0.025, 0.081, -0.048, -0.015)))
 
     def test_lowedge(self):
         binning = Round(lowedge = True)
-        self.assertEqual([0.5, 0.5, 104.5, -0.5, -1.5, -1.5, -2.5], binning((0.5, 1.4, 104.5, -0.4, -0.5, -1.4, -1.5 )))
+        self.assertEqual([0.5, 0.5, 104.5, -0.5, -1.5, -1.5, -1.5], binning((0.51, 1.41, 104.6, -0.4, -0.51, -1.4, -1.5 )))
+
+        binning = Round(0.02, 0.005, lowedge = True)
+        self.assertEqual([0.005, 0.025, 0.065, -0.055, -0.015], binning((0.005, 0.025, 0.081, -0.048, -0.015)))
+
+    def test_onBoundary(self):
+        binning = Round()
+        self.assertEqual([-1, 0, 1, 2], binning((-1.5, -0.5, 0.5, 1.5)))
+
+        binning = Round(lowedge = True)
+        self.assertEqual([-1.5, -0.5, 0.5, 1.5], binning((-1.5, -0.5, 0.5, 1.5)))
 
 ##____________________________________________________________________________||
 class TestEcho(unittest.TestCase):
