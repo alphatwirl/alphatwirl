@@ -41,7 +41,7 @@ class Binning(object):
 
 ##____________________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None, lowedge = False):
+    def __init__(self, width = 1, aBoundary = None, retvalue = 'center'):
         self.width = decimal.Decimal(str(width))
         self.halfWidth = self.width/2
 
@@ -50,7 +50,12 @@ class Round(object):
         self.aBoundary = self.halfWidth if aBoundary is None else decimal.Decimal(str(aBoundary % width))
 
         self.shift = self.halfWidth - self.aBoundary
-        self.lowedge = lowedge
+
+        supportedRetvalues = ('center', 'lowedge')
+        if retvalue not in supportedRetvalues:
+            raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
+
+        self.lowedge = (retvalue == 'lowedge')
 
         self._context_ROUND_HALF_UP = decimal.Context(rounding = decimal.ROUND_HALF_UP)
         self._context_ROUND_HALF_DOWN = decimal.Context(rounding= decimal.ROUND_HALF_DOWN)

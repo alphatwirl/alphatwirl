@@ -66,6 +66,12 @@ class TestBinning(unittest.TestCase):
 ##____________________________________________________________________________||
 class TestRound(unittest.TestCase):
 
+    def test_init(self):
+        self.assertRaises(ValueError, Binning, boundaries = 1, lows = 1, ups = 1)
+        Round(retvalue = 'center')
+        Round(retvalue = 'lowedge')
+        self.assertRaises(ValueError, Round, retvalue = 'yyy')
+
     def test_boundary(self):
         self.assertEqual(0.5, Round().aBoundary)
         self.assertEqual(1, Round(2).aBoundary)
@@ -118,23 +124,23 @@ class TestRound(unittest.TestCase):
         self.assertEqual([0.015, 0.035, 0.075, -0.045, -0.005], binning((0.005, 0.025, 0.081, -0.048, -0.015)))
 
     def test_lowedge(self):
-        binning = Round(lowedge = True)
+        binning = Round(retvalue = 'lowedge') # 'lowedge' 'upedge'
         self.assertEqual([0.5, 0.5, 104.5, -0.5, -1.5, -1.5, -1.5], binning((0.51, 1.41, 104.6, -0.4, -0.51, -1.4, -1.5 )))
 
-        binning = Round(0.02, 0.005, lowedge = True)
+        binning = Round(0.02, 0.005, retvalue = 'lowedge')
         self.assertEqual([0.005, 0.025, 0.065, -0.055, -0.015], binning((0.005, 0.025, 0.081, -0.048, -0.015)))
 
     def test_onBoundary(self):
         binning = Round()
         self.assertEqual([-1, 0, 1, 2], binning((-1.5, -0.5, 0.5, 1.5)))
 
-        binning = Round(lowedge = True)
+        binning = Round(retvalue = 'lowedge')
         self.assertEqual([-1.5, -0.5, 0.5, 1.5], binning((-1.5, -0.5, 0.5, 1.5)))
 
         binning = Round(0.02, 0.005)
         self.assertEqual([-0.025, -0.005, 0.015, 0.035, 0.055], binning((-0.035, -0.015, 0.005, 0.025, 0.045)))
 
-        binning = Round(0.02, 0.005, lowedge = True)
+        binning = Round(0.02, 0.005, retvalue = 'lowedge')
         self.assertEqual([-0.035, -0.015, 0.005, 0.025, 0.045], binning((-0.035, -0.015, 0.005, 0.025, 0.045)))
 
 ##____________________________________________________________________________||
