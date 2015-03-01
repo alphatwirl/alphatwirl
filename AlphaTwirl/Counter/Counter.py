@@ -7,15 +7,23 @@ class WeightCalculatorOne(object):
         return 1.0
 
 ##____________________________________________________________________________||
+class NullKeyMaxKeeper(object):
+    def __init__(self, binnings):
+        pass
+
+    def update(self, key):
+        return [ ]
+
+##____________________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False):
+    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False, keyMaxKeeper = None):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
         self._addEmptyKeys = addEmptyKeys
-        if self._addEmptyKeys: self._keyMaxKeeper = KeyMaxKeeper(self._keyComposer.binnings())
+        self._keyMaxKeeper = keyMaxKeeper
 
     def event(self, event):
         key = self._keyComposer(event)
@@ -35,15 +43,16 @@ class Counter(object):
 
 ##____________________________________________________________________________||
 class CounterBuilder(Counter):
-    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False):
+    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False, keyMaxKeeperClass = NullKeyMaxKeeper):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethodClass = countMethodClass
         self._weightCalculator = weightCalculator
         self._addEmptyKeys = addEmptyKeys
+        self._keyMaxKeeperClass = keyMaxKeeperClass
 
     def __call__(self):
-        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator, self._addEmptyKeys)
+        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator, self._addEmptyKeys, self._keyMaxKeeperClass(self._keyComposer.binnings()))
 
 ##____________________________________________________________________________||
 class KeyMaxKeeper(object):
