@@ -37,10 +37,13 @@ class MockWeightCalculator(object):
 class MockKeyComposer(object):
     def __init__(self):
         self._keys = [(13, ), (11, )]
-        pass
+        self._binning = MockBinning()
 
     def __call__(self, event):
         return self._keys.pop()
+
+    def binnings(self):
+        return (self._binning, )
 
 ##____________________________________________________________________________||
 class TestMockKeyComposer(unittest.TestCase):

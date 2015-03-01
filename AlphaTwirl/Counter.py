@@ -15,7 +15,7 @@ class Counter(object):
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
-        self._keyMaxKeeper = KeyMaxKeeper()
+        self._keyMaxKeeper = KeyMaxKeeper(self._keyComposer.binnings())
 
     def event(self, event):
         key = self._keyComposer(event)
