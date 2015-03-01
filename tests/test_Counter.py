@@ -14,9 +14,13 @@ class MockBinning(object):
 class MockCounts(object):
     def __init__(self):
         self._counts = [ ]
+        self._keys = [ ]
 
     def count(self, key, weight):
         self._counts.append((key, weight))
+
+    def addKeys(self, keys):
+        self._keys.extend(keys)
 
     def results(self):
         return self._counts
@@ -118,14 +122,27 @@ class TestKeyMaxKeeper(unittest.TestCase):
 class TestCounter(unittest.TestCase):
 
     def test_results(self):
-        counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
+        counts = MockCounts()
+        counter = Counter.Counter(('var', ), MockKeyComposer(), counts, MockWeightCalculator())
         event = MockEvent()
         counter.event(event)
+        self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
     def test_keynames(self):
         counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
         self.assertEqual(('var', ), counter.keynames())
+
+    def test_addKeys(self):
+        counts = MockCounts()
+        counter = Counter.Counter(('var', ), MockKeyComposer(), counts, MockWeightCalculator())
+        counter.event(MockEvent())
+        self.assertEqual([((11, ), 1.0)], counts._counts)
+        self.assertEqual([ ], counts._keys)
+
+        counter.event(MockEvent())
+        self.assertEqual([((11, ), 1.0), ((13, ), 1.0)], counts._counts)
+        self.assertEqual([(12,), (13,)], counts._keys)
 
 ##____________________________________________________________________________||
 class TestCounterBuilder(unittest.TestCase):
