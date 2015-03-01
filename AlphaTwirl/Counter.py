@@ -9,19 +9,21 @@ class WeightCalculatorOne(object):
 
 ##____________________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne()):
+    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
-        self._keyMaxKeeper = KeyMaxKeeper(self._keyComposer.binnings())
+        self._addEmptyKeys = addEmptyKeys
+        if self._addEmptyKeys: self._keyMaxKeeper = KeyMaxKeeper(self._keyComposer.binnings())
 
     def event(self, event):
         key = self._keyComposer(event)
 
-        newkeys = self._keyMaxKeeper.update(key)
-        self._countMethod.addKeys(newkeys)
+        if self._addEmptyKeys:
+            newkeys = self._keyMaxKeeper.update(key)
+            self._countMethod.addKeys(newkeys)
 
         weight = self._weightCalculator(event)
         self._countMethod.count(key, weight)

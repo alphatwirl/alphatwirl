@@ -142,7 +142,7 @@ class TestCounter(unittest.TestCase):
 
     def test_addKeys(self):
         counts = MockCounts()
-        counter = Counter.Counter(('var', ), MockKeyComposer(), counts, MockWeightCalculator())
+        counter = Counter.Counter(('var', ), MockKeyComposer(), counts, MockWeightCalculator(), addEmptyKeys = True)
         counter.event(MockEvent())
         self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([ ], counts._keys)
@@ -150,6 +150,17 @@ class TestCounter(unittest.TestCase):
         counter.event(MockEvent())
         self.assertEqual([((11, ), 1.0), ((13, ), 1.0)], counts._counts)
         self.assertEqual([(12,), (13,)], counts._keys)
+
+    def test_addKeys_disabled(self):
+        counts = MockCounts()
+        counter = Counter.Counter(('var', ), MockKeyComposer(), counts, MockWeightCalculator())
+        counter.event(MockEvent())
+        self.assertEqual([((11, ), 1.0)], counts._counts)
+        self.assertEqual([ ], counts._keys)
+
+        counter.event(MockEvent())
+        self.assertEqual([((11, ), 1.0), ((13, ), 1.0)], counts._counts)
+        self.assertEqual([ ], counts._keys)
 
 ##____________________________________________________________________________||
 class TestCounterBuilder(unittest.TestCase):
