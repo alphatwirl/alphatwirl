@@ -35,14 +35,15 @@ class Counter(object):
 
 ##____________________________________________________________________________||
 class CounterBuilder(Counter):
-    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne()):
+    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethodClass = countMethodClass
         self._weightCalculator = weightCalculator
+        self._addEmptyKeys = addEmptyKeys
 
     def __call__(self):
-        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
+        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator, self._addEmptyKeys)
 
 ##____________________________________________________________________________||
 class KeyMaxKeeper(object):

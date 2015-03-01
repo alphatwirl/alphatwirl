@@ -106,4 +106,19 @@ class TestCounterBuilder(unittest.TestCase):
         counter2 = builder()
         self.assertIsNot(counter1._countMethod, counter2._countMethod)
 
+    def test_addEmptyKeys_default(self):
+        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
+        counter1 = builder()
+        self.assertFalse(counter1._addEmptyKeys)
+
+    def test_addEmptyKeys_True(self):
+        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts, addEmptyKeys = True)
+        counter1 = builder()
+        self.assertTrue(counter1._addEmptyKeys)
+
+    def test_addEmptyKeys_False(self):
+        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts, addEmptyKeys = False)
+        counter1 = builder()
+        self.assertFalse(counter1._addEmptyKeys)
+
 ##____________________________________________________________________________||
