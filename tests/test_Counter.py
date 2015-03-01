@@ -172,6 +172,11 @@ class TestKeyComposer_SingleVariable(unittest.TestCase):
         event.var1 = 12
         self.assertEqual((12, ), keyComposer(event))
 
+    def test_binnings(self):
+        binning1 = MockBinning()
+        keyComposer = Counter.KeyComposer_SingleVariable('var1', binning1)
+        self.assertEqual((binning1, ), keyComposer.binnings())
+
 ##____________________________________________________________________________||
 class TestKeyComposer_TwoVariables(unittest.TestCase):
 
@@ -182,5 +187,11 @@ class TestKeyComposer_TwoVariables(unittest.TestCase):
         event.var1 = 15
         event.var2 = 22
         self.assertEqual((15, 22), keyComposer(event))
+
+    def test_binnings(self):
+        binning1 = MockBinning()
+        binning2 = MockBinning()
+        keyComposer = Counter.KeyComposer_TwoVariables('var1', binning1, 'var2', binning2)
+        self.assertEqual((binning1, binning2), keyComposer.binnings())
 
 ##____________________________________________________________________________||

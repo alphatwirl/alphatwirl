@@ -82,6 +82,9 @@ class KeyComposer_SingleVariable(object):
         var_bin = self._binning(var)
         return (var_bin, )
 
+    def binnings(self):
+        return (self._binning, )
+
 ##____________________________________________________________________________||
 class KeyComposer_TwoVariables(object):
     def __init__(self, varName1, binning1, varName2, binning2):
@@ -96,5 +99,8 @@ class KeyComposer_TwoVariables(object):
         var2 = getattr(event, self._varName2)
         var2_bin = self._binning2(var2)
         return (var1_bin, var2_bin)
+
+    def binnings(self):
+        return (self._binning1, self._binning2)
 
 ##____________________________________________________________________________||
