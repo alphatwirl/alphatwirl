@@ -100,12 +100,10 @@ class TestCounterBuilder(unittest.TestCase):
         self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
         self.assertIsInstance(counter1._countMethod, MockCounts)
 
+    def test_counterMethods_differentInstances(self):
+        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
+        counter1 = builder()
         counter2 = builder()
-        self.assertEqual(('var_bin', ), counter2._keynames)
-        self.assertIsInstance(counter2._keyComposer, MockKeyComposer)
-        self.assertIsInstance(counter2._countMethod, MockCounts)
-
-        self.assertIs(counter1._keyComposer, counter2._keyComposer)
         self.assertIsNot(counter1._countMethod, counter2._countMethod)
 
 ##____________________________________________________________________________||
