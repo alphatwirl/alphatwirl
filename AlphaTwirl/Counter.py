@@ -1,5 +1,6 @@
 # Tai Sakuma <sakuma@fnal.gov>
 import AlphaTwirl
+import itertools
 
 ##____________________________________________________________________________||
 class WeightCalculatorOne(object):
@@ -35,6 +36,34 @@ class CounterBuilder(Counter):
 
     def __call__(self):
         return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
+
+##____________________________________________________________________________||
+class KeyMaxKeeper(object):
+    def __init__(self):
+        self._keyMax = None
+
+    def update(self, key):
+        if self._keyMax is None:
+            self._keyMax = key
+            return [ ]
+        newMax = tuple([max(e) for e in zip(self._keyMax, key)])
+        ret = self.createAllKeysBetween(self._keyMax, newMax)
+        self._keyMax = newMax
+        return ret
+
+    def createAllKeysBetween(self, oldMax, newMax):
+        newBins = [ ]
+        for i in range(len(newMax)):
+            newBin = [ ]
+            b = oldMax[i]
+            while b <= newMax[i]:
+                newBin.append(b)
+                b = b + 1
+            newBins.append(newBin)
+
+        ret = list(itertools.product(*newBins))
+        ret.remove(self._keyMax)
+        return ret
 
 ##____________________________________________________________________________||
 class KeyComposer_SingleVariable(object):
