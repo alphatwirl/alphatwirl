@@ -45,8 +45,9 @@ class CounterBuilder(Counter):
 
 ##____________________________________________________________________________||
 class KeyMaxKeeper(object):
-    def __init__(self):
+    def __init__(self, binnings):
         self._keyMax = None
+        self._binnings = binnings
 
     def update(self, key):
         if self._keyMax is None:

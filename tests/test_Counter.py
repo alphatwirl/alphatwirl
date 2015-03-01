@@ -51,11 +51,12 @@ class TestMockKeyComposer(unittest.TestCase):
 class TestKeyMaxKeeper(unittest.TestCase):
 
     def setUp(self):
-        self.keeper = Counter.KeyMaxKeeper()
+        self.binnings = (MockBinning(), MockBinning())
+        self.keeper = Counter.KeyMaxKeeper(self.binnings)
         self.keeper.update((11, 8))
 
     def test_None_at_beginning(self):
-        keyMax = Counter.KeyMaxKeeper()
+        keyMax = Counter.KeyMaxKeeper((MockBinning(), ))
         self.assertIsNone(keyMax._keyMax)
 
     def test_two_elements_lower_lower(self):
