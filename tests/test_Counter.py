@@ -10,6 +10,9 @@ class MockBinning(object):
     def __call__(self, val):
         return val
 
+    def next(self, val):
+        return val + 1
+
 ##____________________________________________________________________________||
 class MockCounts(object):
     def __init__(self):

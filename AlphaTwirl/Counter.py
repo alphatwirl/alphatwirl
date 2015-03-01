@@ -65,7 +65,7 @@ class KeyMaxKeeper(object):
             b = oldMax[i]
             while b <= newMax[i]:
                 newBin.append(b)
-                b = b + 1
+                b = self._binnings[i].next(b)
             newBins.append(newBin)
 
         ret = list(itertools.product(*newBins))
