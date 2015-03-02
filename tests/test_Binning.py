@@ -23,6 +23,11 @@ class TestBinning(unittest.TestCase):
         self.assertEqual([1, 2, 2, 0, 5], binning([15, 21, 20, 5, 55]))
         self.assertEqual([1, [3, 2], 2, 0, 5], binning([15, (32, 22), 20, 5, 55]))
 
+    def test_onBoundary(self):
+        boundaries = (0.000001, 0.00001, 0.0001)
+        binning = Binning(boundaries = boundaries)
+        self.assertEqual([1, 2, 3], binning((0.000001, 0.00001, 0.0001)))
+
     def test_lowedge(self):
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
