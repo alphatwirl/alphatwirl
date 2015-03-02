@@ -18,6 +18,8 @@ class Binning(object):
         if boundaries is not None:
             if lows is not None or ups is not None:
                 raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
+            if len(boundaries) < 2:
+                raise ValueError("Needs at least one bin! boundaries = " + str(boundaries))
             self.boundaries = tuple(boundaries)
             self.lows = tuple(boundaries[:-1])
             self.ups = tuple(boundaries[1:])

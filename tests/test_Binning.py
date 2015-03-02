@@ -86,6 +86,10 @@ class TestBinning(unittest.TestCase):
         ups = (20.0, 30.0, 40.0, 50.0)
         self.assertRaises(ValueError, Binning, lows = lows, ups = ups)
 
+    def test_init_exceptions_nobin(self):
+        boundaries = (10, )
+        self.assertRaises(ValueError, Binning, boundaries = boundaries)
+
     def test_next_number(self):
         boundaries = (10, 20, 30, 40, 50)
         binning = Binning(boundaries = boundaries)
