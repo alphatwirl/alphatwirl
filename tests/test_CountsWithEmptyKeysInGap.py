@@ -18,11 +18,14 @@ class MockKeyMaxKeeper(object):
     def __init__(self):
         self.keys = [ ]
         self.updates = [ ]
-        pass
+        self.nexts = [ ]
 
     def update(self, key):
         self.keys.append(key)
         return self.updates.pop()
+
+    def next(self, key):
+        return self.nexts.pop()
 
 ##____________________________________________________________________________||
 class TestCountsWithEmptyKeysInGap(unittest.TestCase):
@@ -43,6 +46,28 @@ class TestCountsWithEmptyKeysInGap(unittest.TestCase):
         self.assertEqual([(11, ), (14, )], keyMaxKeeper.keys)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([[()], [(11, ), (12, ), (13, ), (14, )]], counts._keys)
+
+##____________________________________________________________________________||
+class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
+
+    def test_count(self):
+        counts = MockCounts()
+        keyMaxKeeper = MockKeyMaxKeeper()
+        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts, keyMaxKeeper)
+
+        keyMaxKeeper.updates = [[()], [()]]
+        keyMaxKeeper.nexts = [(12, )]
+        countsWEKIG.count((11, ), 1)
+        self.assertEqual([(11,), (12,)], keyMaxKeeper.keys)
+        self.assertEqual([((11,), 1.0)], counts._counts)
+        self.assertEqual([[()]], counts._keys)
+
+        keyMaxKeeper.updates = [[(12, ), (13, ), (14, ), (15, )]]
+        keyMaxKeeper.nexts = [(15, )]
+        countsWEKIG.count((14, ), 1)
+        self.assertEqual([(11, ), (12, ), (15, )], keyMaxKeeper.keys)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
+        self.assertEqual([[()], [(12, ), (13, ), (14, ), (15, )]], counts._keys)
 
 ##____________________________________________________________________________||
 class TestCountsWithEmptyKeysInGapBulder(unittest.TestCase):

@@ -17,6 +17,27 @@ class CountsWithEmptyKeysInGap(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
+class CountsWithEmptyKeysInGapAndNext(object):
+
+    def __init__(self, countMethod, keyMaxKeeper):
+        self._countMethod = countMethod
+        self._keyMaxKeeper = keyMaxKeeper
+
+        self._first = True
+
+    def count(self, key, weight):
+        if self._first:
+            self._first = False
+            self._keyMaxKeeper.update(key)
+        nextKey = self._keyMaxKeeper.next(key)
+        newkeys = self._keyMaxKeeper.update(nextKey)
+        self._countMethod.addKeys(newkeys)
+        self._countMethod.count(key, weight)
+
+    def results(self):
+        return self._countMethod.results()
+
+##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapBulder(object):
 
     def __init__(self, countMethodClass, keyMaxKeeperClass):
