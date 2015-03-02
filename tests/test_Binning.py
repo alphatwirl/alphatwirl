@@ -143,6 +143,19 @@ class TestRound(unittest.TestCase):
         binning = Round(0.02, 0.005, retvalue = 'lowedge')
         self.assertEqual([-0.035, -0.015, 0.005, 0.025, 0.045], binning((-0.035, -0.015, 0.005, 0.025, 0.045)))
 
+    def test_next(self):
+        binning = Round()
+        self.assertEqual([0, 1, 2, 3], binning.next([-1, 0, 1, 2]))
+
+        binning = Round(retvalue = 'lowedge')
+        self.assertEqual([-0.5, 0.5, 1.5, 2.5], binning.next([-1.5, -0.5, 0.5, 1.5]))
+
+        binning = Round(0.02, 0.005)
+        self.assertEqual([-0.005, 0.015, 0.035, 0.055, 0.075], binning.next([-0.025, -0.005, 0.015, 0.035, 0.055]))
+
+        binning = Round(0.02, 0.005, retvalue = 'lowedge')
+        self.assertEqual([-0.015, 0.005, 0.025, 0.045, 0.065], binning.next([-0.035, -0.015, 0.005, 0.025, 0.045]))
+
 ##____________________________________________________________________________||
 class TestEcho(unittest.TestCase):
     def test_call(self):

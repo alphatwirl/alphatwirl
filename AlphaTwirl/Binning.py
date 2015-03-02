@@ -79,6 +79,22 @@ class Round(object):
         if self.lowedge: ret = ret - self.halfWidth
         return ret
 
+    def next(self, bin):
+        try:
+            return [self.next(v) for v in bin]
+        except TypeError:
+            pass
+
+        # call self._callImpDecimal() to ensure that the 'bin' is indeed one of
+        # the bins. As long as the retvalue is 'center' or 'lowedge', which are
+        # all implemented at the moment, theBin will be the bin regardless of
+        # whether the 'bin' is a value or a bin. This won't be true for the
+        # retvalue 'upedge', which is not implemented, because the upedge
+        # belongs to the next bin.
+        theBin = self._callImpDecimal(bin)
+        theNextBin = theBin + self.width
+        return float(theNextBin)
+
 ##____________________________________________________________________________||
 class Echo(object):
     def __call__(self, val):
