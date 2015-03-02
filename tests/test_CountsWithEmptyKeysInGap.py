@@ -70,10 +70,10 @@ class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
         self.assertEqual([[()], [(12, ), (13, ), (14, ), (15, )]], counts._keys)
 
 ##____________________________________________________________________________||
-class TestCountsWithEmptyKeysInGapBulder(unittest.TestCase):
+class TestCountsWithEmptyKeysInGapBuilder(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CountsWithEmptyKeysInGapBulder(MockCounts, MockKeyMaxKeeper)
+        builder = Counter.CountsWithEmptyKeysInGapBuilder(MockCounts, MockKeyMaxKeeper)
         counts1 = builder()
         counts2 = builder()
         self.assertIsInstance(counts1, Counter.CountsWithEmptyKeysInGap)

@@ -38,7 +38,7 @@ class CountsWithEmptyKeysInGapAndNext(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
-class CountsWithEmptyKeysInGapBulder(object):
+class CountsWithEmptyKeysInGapBuilder(object):
 
     def __init__(self, countMethodClass, keyMaxKeeperClass):
         self._countMethodClass = countMethodClass
