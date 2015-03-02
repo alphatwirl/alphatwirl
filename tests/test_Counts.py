@@ -1,4 +1,5 @@
-from AlphaTwirl import Counts, countsToDataFrame
+from AlphaTwirl import countsToDataFrame
+from AlphaTwirl.Counter import Counts
 import unittest
 
 ##____________________________________________________________________________||
