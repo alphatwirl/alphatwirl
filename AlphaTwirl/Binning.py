@@ -131,6 +131,10 @@ class Round(object):
 ##____________________________________________________________________________||
 class Echo(object):
     def __call__(self, val):
+        try:
+            return [self.__call__(v) for v in val]
+        except TypeError:
+            pass
         return val
 
 ##____________________________________________________________________________||

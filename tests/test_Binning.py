@@ -213,4 +213,9 @@ class TestEcho(unittest.TestCase):
         self.assertEqual(0, binning(0))
         self.assertEqual(5, binning(5))
 
+    def test_call_with_list(self):
+        binning = Echo()
+        self.assertEqual([-5, 0, 1, 3, 10], binning([-5, 0, 1, 3, 10]))
+        self.assertEqual([-5, 0, 1, 3, 10], binning((-5, 0, 1, 3, 10)))
+
 ##____________________________________________________________________________||
