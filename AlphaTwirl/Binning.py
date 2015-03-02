@@ -3,8 +3,8 @@ import decimal
 
 ##____________________________________________________________________________||
 class Binning(object):
-    def __init__(self, boundaries = None, lows = None, ups = None, bins = None,
-                 underflow_bin = None, overflow_bin = None):
+    def __init__(self, boundaries = None, lows = None, ups = None,
+                 retvalue = 'number', bins = None, underflow_bin = None, overflow_bin = None):
 
         if boundaries is None:
             if lows is None or ups is None:
@@ -22,9 +22,24 @@ class Binning(object):
             self.lows = tuple(boundaries[:-1])
             self.ups = tuple(boundaries[1:])
 
-        self.bins = bins if bins is not None else tuple(range(1, len(self.lows) + 1))
-        self.underflow_bin = underflow_bin if underflow_bin is not None else min(self.bins) - 1
-        self.overflow_bin = overflow_bin if overflow_bin is not None else max(self.bins) + 1
+        supportedRetvalues = ('number', 'lowedge')
+        if retvalue not in supportedRetvalues:
+            raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
+
+        self.lowedge = (retvalue == 'lowedge')
+        if self.lowedge:
+            if bins is not None: raise ValueError("bins cannot be given when retvalue is '" + retvalue + "'!")
+            if underflow_bin is not None: raise ValueError("underflow_bin cannot be given when retvalue is '" + retvalue + "'!")
+            if overflow_bin is not None: raise ValueError("overflow_bin cannot be given when retvalue is '" + retvalue + "'!")
+
+        if self.lowedge:
+            self.bins = self.lows
+            self.underflow_bin = float("-inf")
+            self.overflow_bin = self.ups[-1]
+        else:
+            self.bins = bins if bins is not None else tuple(range(1, len(self.lows) + 1))
+            self.underflow_bin = underflow_bin if underflow_bin is not None else min(self.bins) - 1
+            self.overflow_bin = overflow_bin if overflow_bin is not None else max(self.bins) + 1
 
     def __call__(self, val):
         try:

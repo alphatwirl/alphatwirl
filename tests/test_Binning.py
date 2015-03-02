@@ -23,6 +23,24 @@ class TestBinning(unittest.TestCase):
         self.assertEqual([1, 2, 2, 0, 5], binning([15, 21, 20, 5, 55]))
         self.assertEqual([1, [3, 2], 2, 0, 5], binning([15, (32, 22), 20, 5, 55]))
 
+    def test_lowedge(self):
+        lows = (10.0, 20.0, 30.0, 40.0)
+        ups = (20.0, 30.0, 40.0, 50.0)
+        binning = Binning(lows = lows, ups = ups, retvalue = 'lowedge')
+        self.assertEqual([10, 20, 20, float("-inf"), 50], binning((15, 21, 20, 5, 55)))
+
+    def test_init_retvalue(self):
+        boundaries = (10, 20, 30, 40, 50)
+        Binning(boundaries = boundaries)
+        Binning(boundaries = boundaries, retvalue = 'number')
+        Binning(boundaries = boundaries, retvalue = 'lowedge')
+        self.assertRaises(ValueError, Binning, boundaries = boundaries, retvalue = 'center')
+        self.assertRaises(ValueError, Binning, boundaries = boundaries, retvalue = 'yyy')
+
+        self.assertRaises(ValueError, Binning, boundaries = boundaries, retvalue = 'lowedge', bins = (1, 2, 3, 4))
+        self.assertRaises(ValueError, Binning, boundaries = boundaries, retvalue = 'lowedge', underflow_bin = -1)
+        self.assertRaises(ValueError, Binning, boundaries = boundaries, retvalue = 'lowedge', overflow_bin = -1)
+
     def test_init_with_bins_lows_ups(self):
         bins = (1, 2, 3, 4)
         lows = (10.0, 20.0, 30.0, 40.0)
