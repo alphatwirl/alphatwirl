@@ -65,6 +65,9 @@ class Round(object):
             return [self.__call__(v) for v in val]
         except TypeError:
             pass
+        return float(self._callImpDecimal(val))
+
+    def _callImpDecimal(self, val):
         val = decimal.Decimal(str(val))
         ret = (val + self.shift)/self.width
 
@@ -74,7 +77,7 @@ class Round(object):
 
         ret = ret*self.width - self.shift
         if self.lowedge: ret = ret - self.halfWidth
-        return float(ret)
+        return ret
 
 ##____________________________________________________________________________||
 class Echo(object):
