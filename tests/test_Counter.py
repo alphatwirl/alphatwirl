@@ -30,7 +30,7 @@ class MockCounts(object):
 
 ##____________________________________________________________________________||
 class MockKeyMaxKeeper(object):
-    def __init__(self, binnings):
+    def __init__(self):
         self.keys = [ ]
         self.updates = [ ]
         pass
@@ -71,9 +71,9 @@ class TestMockKeyComposer(unittest.TestCase):
 ##____________________________________________________________________________||
 class TestCounter(unittest.TestCase):
 
-    def test_results(self):
+    def test_events(self):
         counts = MockCounts()
-        keys = [(11, )]
+        keys = [(14, ), (11, )]
         keycomposer = MockKeyComposer(keys)
         counter = Counter.Counter(('var', ), keycomposer, counts, MockWeightCalculator())
         event = MockEvent()
@@ -81,78 +81,63 @@ class TestCounter(unittest.TestCase):
         self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
+        counter.event(MockEvent())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+
+
     def test_keynames(self):
         counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
         self.assertEqual(('var', ), counter.keynames())
 
-    def test_addKeys(self):
+##____________________________________________________________________________||
+class TestCountsWithEmptyKeysInGap(unittest.TestCase):
+
+    def test_count(self):
         counts = MockCounts()
         keys = [(14, ), (11, )]
-        keyComposer = MockKeyComposer(keys)
-        keyMaxKeeper = MockKeyMaxKeeper(keyComposer.binnings())
+        keyMaxKeeper = MockKeyMaxKeeper()
         keyMaxKeeper.updates = [[(11, ), (12, ), (13, ), (14, )], [()]]
-        counter = Counter.Counter(('var', ), keyComposer, counts, MockWeightCalculator(), addEmptyKeys = True, keyMaxKeeper = keyMaxKeeper)
-        counter.event(MockEvent())
+        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts, keyMaxKeeper)
+
+        countsWEKIG.count((11, ), 1)
         self.assertEqual([(11,)], keyMaxKeeper.keys)
         self.assertEqual([((11,), 1.0)], counts._counts)
         self.assertEqual([[()]], counts._keys)
 
-        counter.event(MockEvent())
+        countsWEKIG.count((14, ), 1)
         self.assertEqual([(11, ), (14, )], keyMaxKeeper.keys)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([[()], [(11, ), (12, ), (13, ), (14, )]], counts._keys)
 
-    def test_addKeys_disabled(self):
-        counts = MockCounts()
-        keys = [(14, ), (11, )]
-        keyComposer = MockKeyComposer(keys)
-        keyMaxKeeper = MockKeyMaxKeeper(keyComposer.binnings())
-        keyMaxKeeper.updates = [[(11, ), (12, ), (13, ), (14, )], [()]]
-        counter = Counter.Counter(('var', ), keyComposer, counts, MockWeightCalculator(), addEmptyKeys = False, keyMaxKeeper = keyMaxKeeper)
-        counter.event(MockEvent())
-        self.assertEqual([ ], keyMaxKeeper.keys)
-        self.assertEqual([((11,), 1.0)], counts._counts)
-        self.assertEqual([ ], counts._keys)
+##____________________________________________________________________________||
+class TestCountsWithEmptyKeysInGapBulder(unittest.TestCase):
 
-        counter.event(MockEvent())
-        self.assertEqual([ ], keyMaxKeeper.keys)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
-        self.assertEqual([ ], counts._keys)
+    def test_call(self):
+        builder = Counter.CountsWithEmptyKeysInGapBulder(MockCounts, MockKeyMaxKeeper)
+        counts1 = builder()
+        counts2 = builder()
+        self.assertIsInstance(counts1, Counter.CountsWithEmptyKeysInGap)
+        self.assertIsInstance(counts1._countMethod, MockCounts)
+        self.assertIsInstance(counts1._keyMaxKeeper, MockKeyMaxKeeper)
+        self.assertIsNot(counts1, counts2)
+        self.assertIsNot(counts1._countMethod, counts2._countMethod)
+        self.assertIsNot(counts1._keyMaxKeeper, counts2._keyMaxKeeper)
 
 ##____________________________________________________________________________||
 class TestCounterBuilder(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
+        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer())
         counter1 = builder()
         self.assertEqual(('var_bin', ), counter1._keynames)
         self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
         self.assertIsInstance(counter1._countMethod, MockCounts)
 
     def test_counterMethods_differentInstances(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
+        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer())
         counter1 = builder()
         counter2 = builder()
         self.assertIsNot(counter1._countMethod, counter2._countMethod)
-
-    def test_addEmptyKeys_default(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts)
-        counter1 = builder()
-        self.assertFalse(counter1._addEmptyKeys)
-
-    def test_addEmptyKeys_True(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts, addEmptyKeys = True)
-        counter1 = builder()
-        self.assertTrue(counter1._addEmptyKeys)
-
-    def test_addEmptyKeys_False(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts, addEmptyKeys = False)
-        counter1 = builder()
-        self.assertFalse(counter1._addEmptyKeys)
-
-    def test_keyMaxKeeper(self):
-        builder = Counter.CounterBuilder(('var_bin', ), MockKeyComposer(), MockCounts, addEmptyKeys = True, keyMaxKeeperClass = MockKeyMaxKeeper)
-        counter1 = builder()
-        self.assertIsInstance(counter1._keyMaxKeeper, MockKeyMaxKeeper)
 
 ##____________________________________________________________________________||

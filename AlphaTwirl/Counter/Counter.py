@@ -7,30 +7,15 @@ class WeightCalculatorOne(object):
         return 1.0
 
 ##____________________________________________________________________________||
-class NullKeyMaxKeeper(object):
-    def __init__(self, binnings):
-        pass
-
-    def update(self, key):
-        return [ ]
-
-##____________________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False, keyMaxKeeper = None):
+    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
-        self._addEmptyKeys = addEmptyKeys
-        self._keyMaxKeeper = keyMaxKeeper
-
     def event(self, event):
         key = self._keyComposer(event)
-
-        if self._addEmptyKeys:
-            newkeys = self._keyMaxKeeper.update(key)
-            self._countMethod.addKeys(newkeys)
 
         weight = self._weightCalculator(event)
         self._countMethod.count(key, weight)
@@ -42,17 +27,40 @@ class Counter(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
+class CountsWithEmptyKeysInGap(object):
+
+    def __init__(self, countMethod, keyMaxKeeper):
+        self._countMethod = countMethod
+        self._keyMaxKeeper = keyMaxKeeper
+
+    def count(self, key, weight):
+        newkeys = self._keyMaxKeeper.update(key)
+        self._countMethod.addKeys(newkeys)
+        self._countMethod.count(key, weight)
+
+    def results(self):
+        return self._countMethod.results()
+
+##____________________________________________________________________________||
+class CountsWithEmptyKeysInGapBulder(object):
+
+    def __init__(self, countMethodClass, keyMaxKeeperClass):
+        self._countMethodClass = countMethodClass
+        self._keyMaxKeeperClass = keyMaxKeeperClass
+
+    def __call__(self):
+        return CountsWithEmptyKeysInGap(self._countMethodClass(), self._keyMaxKeeperClass())
+
+##____________________________________________________________________________||
 class CounterBuilder(Counter):
-    def __init__(self, keyNames, keyComposer, countMethodClass, weightCalculator = WeightCalculatorOne(), addEmptyKeys = False, keyMaxKeeperClass = NullKeyMaxKeeper):
+    def __init__(self, countMethodClass, keyNames, keyComposer, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethodClass = countMethodClass
         self._weightCalculator = weightCalculator
-        self._addEmptyKeys = addEmptyKeys
-        self._keyMaxKeeperClass = keyMaxKeeperClass
 
     def __call__(self):
-        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator, self._addEmptyKeys, self._keyMaxKeeperClass(self._keyComposer.binnings()))
+        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
 
 ##____________________________________________________________________________||
 class KeyMaxKeeper(object):
