@@ -48,6 +48,16 @@ class CountsWithEmptyKeysInGapBulder(object):
         return CountsWithEmptyKeysInGap(self._countMethodClass(), self._keyMaxKeeperClass())
 
 ##____________________________________________________________________________||
+class CountsWithEmptyKeysInGapAndNextBuilder(object):
+
+    def __init__(self, countMethodClass, keyMaxKeeperClass):
+        self._countMethodClass = countMethodClass
+        self._keyMaxKeeperClass = keyMaxKeeperClass
+
+    def __call__(self):
+        return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyMaxKeeperClass())
+
+##____________________________________________________________________________||
 class KeyMaxKeeper(object):
     def __init__(self, binnings):
         self._keyMax = None

@@ -84,3 +84,17 @@ class TestCountsWithEmptyKeysInGapBulder(unittest.TestCase):
         self.assertIsNot(counts1._keyMaxKeeper, counts2._keyMaxKeeper)
 
 ##____________________________________________________________________________||
+class TestCountsWithEmptyKeysInGapAndNextBuilder(unittest.TestCase):
+
+    def test_call(self):
+        builder = Counter.CountsWithEmptyKeysInGapAndNextBuilder(MockCounts, MockKeyMaxKeeper)
+        counts1 = builder()
+        counts2 = builder()
+        self.assertIsInstance(counts1, Counter.CountsWithEmptyKeysInGapAndNext)
+        self.assertIsInstance(counts1._countMethod, MockCounts)
+        self.assertIsInstance(counts1._keyMaxKeeper, MockKeyMaxKeeper)
+        self.assertIsNot(counts1, counts2)
+        self.assertIsNot(counts1._countMethod, counts2._countMethod)
+        self.assertIsNot(counts1._keyMaxKeeper, counts2._keyMaxKeeper)
+
+##____________________________________________________________________________||
