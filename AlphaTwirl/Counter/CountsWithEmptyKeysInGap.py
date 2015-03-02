@@ -90,3 +90,12 @@ class KeyMaxKeeper(object):
         return tuple([binning.next(bin) for bin, binning in zip(key, self._binnings)])
 
 ##____________________________________________________________________________||
+class KeyMaxKeeperBuilder(object):
+
+    def __init__(self, binnings):
+        self.binnings = binnings
+
+    def __call__(self):
+        return KeyMaxKeeper(self.binnings)
+
+##____________________________________________________________________________||

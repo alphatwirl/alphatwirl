@@ -87,3 +87,16 @@ class TestKeyMaxKeeper(unittest.TestCase):
         self.assertEqual((12, 9), keeper.next((11, 8)))
 
 ##____________________________________________________________________________||
+class TestKeyMaxKeeperBuilder(unittest.TestCase):
+
+    def test_call(self):
+        binnings = (MockBinning(), )
+        builder = Counter.KeyMaxKeeperBuilder(binnings)
+        keeper1 = builder()
+        keeper2 = builder()
+        self.assertIsInstance(keeper1, Counter.KeyMaxKeeper)
+        self.assertIsInstance(keeper2, Counter.KeyMaxKeeper)
+        self.assertEqual(keeper1._binnings, binnings)
+        self.assertIsNot(keeper1, keeper2)
+
+##____________________________________________________________________________||
