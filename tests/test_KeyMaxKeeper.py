@@ -81,4 +81,9 @@ class TestKeyMaxKeeper(unittest.TestCase):
         self.assertEqual(expected, self.keeper.update(key))
         self.assertEqual((15, 13), self.keeper._keyMax)
 
+    def test_next(self):
+        binnings = (MockBinning(), MockBinning())
+        keeper = Counter.KeyMaxKeeper(self.binnings)
+        self.assertEqual((12, 9), keeper.next((11, 8)))
+
 ##____________________________________________________________________________||

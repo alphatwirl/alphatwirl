@@ -76,4 +76,7 @@ class KeyMaxKeeper(object):
         ret.remove(self._keyMax)
         return ret
 
+    def next(self, key):
+        return tuple([binning.next(bin) for bin, binning in zip(key, self._binnings)])
+
 ##____________________________________________________________________________||
