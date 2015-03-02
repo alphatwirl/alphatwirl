@@ -86,6 +86,27 @@ class TestBinning(unittest.TestCase):
         ups = (20.0, 30.0, 40.0, 50.0)
         self.assertRaises(ValueError, Binning, lows = lows, ups = ups)
 
+    def test_next_number(self):
+        boundaries = (10, 20, 30, 40, 50)
+        binning = Binning(boundaries = boundaries)
+        self.assertEqual([1, 2, 3, 4, 5, 5], binning.next((0, 1, 2, 3, 4, 5)))
+
+        self.assertEqual(5, binning.next(5)) # overflow_bin returns the same
+
+        self.assertRaises(ValueError, binning.next, 2.5)
+        self.assertRaises(ValueError, binning.next, 6)
+
+    def test_next_lowedge(self):
+        boundaries = (10, 20, 30, 40, 50)
+        binning = Binning(boundaries = boundaries, retvalue = 'lowedge')
+        self.assertEqual([20, 30, 40, 50, 50], binning.next((10, 20, 30, 40, 50))) # on the boundaries
+
+        self.assertEqual(10, binning.next(float('-inf'))) # underflow_bin
+
+        boundaries = (0.001, 0.002, 0.003, 0.004, 0.005)
+        binning = Binning(boundaries = boundaries, retvalue = 'lowedge')
+        self.assertEqual([0.002, 0.003, 0.004, 0.005, 0.005], binning.next((0.001, 0.002, 0.003, 0.004, 0.005)))
+
 ##____________________________________________________________________________||
 class TestRound(unittest.TestCase):
 

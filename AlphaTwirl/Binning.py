@@ -50,6 +50,20 @@ class Binning(object):
         if self.ups[-1] <= val: return self.overflow_bin
         return [b for b, l, u in zip(self.bins, self.lows, self.ups) if l <= val < u][0]
 
+    def next(self, bin):
+        try:
+            return [self.next(v) for v in bin]
+        except TypeError:
+            pass
+
+        if self.lowedge:
+            bin = self.__call__(bin)
+
+        if bin == self.underflow_bin: return self.bins[0]
+        if bin == self.overflow_bin: return self.overflow_bin
+        if bin == self.bins[-1]: return self.overflow_bin
+        return self.bins[self.bins.index(bin) + 1]
+
     def __str__(self):
         ret = "%5s %10s %10s\n" % ("bin", "low", "up")
         return ret + "\n".join("%5s %10s %10s" % (str(b), str(l), str(u)) for b, l, u in zip(self.bins, self.lows, self.ups))
