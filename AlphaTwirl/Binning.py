@@ -59,6 +59,8 @@ class Binning(object):
             pass
 
         if self.lowedge:
+            # call self._call__() to ensure that the 'bin' is indeed one of the
+            # bins.
             bin = self.__call__(bin)
 
         if bin == self.underflow_bin: return self.bins[0]
