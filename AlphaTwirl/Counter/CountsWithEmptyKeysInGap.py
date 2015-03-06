@@ -55,38 +55,6 @@ class CountsWithEmptyKeysInGapAndNextBuilder(object):
         return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyMaxKeeperClass())
 
 ##____________________________________________________________________________||
-class KeyMaxKeeper(object):
-    def __init__(self, binnings):
-        self._keyMax = None
-        self._binnings = binnings
-
-    def update(self, key):
-        if self._keyMax is None:
-            self._keyMax = key
-            return [ ]
-        newMax = tuple([max(e) for e in zip(self._keyMax, key)])
-        ret = self.createAllKeysBetween(self._keyMax, newMax)
-        self._keyMax = newMax
-        return ret
-
-    def createAllKeysBetween(self, oldMax, newMax):
-        newBins = [ ]
-        for i in range(len(newMax)):
-            newBin = [ ]
-            b = oldMax[i]
-            while b <= newMax[i]:
-                newBin.append(b)
-                b = self._binnings[i].next(b)
-            newBins.append(newBin)
-
-        ret = list(itertools.product(*newBins))
-        ret.remove(self._keyMax)
-        return ret
-
-    def next(self, key):
-        return tuple([binning.next(bin) for bin, binning in zip(key, self._binnings)])
-
-##____________________________________________________________________________||
 class KeyMinMaxKeeper(object):
     def __init__(self, binnings):
         self._binnings = binnings
@@ -132,15 +100,6 @@ class KeyMinMaxKeeper(object):
 
     def next(self, key):
         return tuple([binning.next(bin) for bin, binning in zip(key, self._binnings)])
-
-##____________________________________________________________________________||
-class KeyMaxKeeperBuilder(object):
-
-    def __init__(self, binnings):
-        self.binnings = binnings
-
-    def __call__(self):
-        return KeyMaxKeeper(self.binnings)
 
 ##____________________________________________________________________________||
 class KeyMinMaxKeeperBuilder(object):
