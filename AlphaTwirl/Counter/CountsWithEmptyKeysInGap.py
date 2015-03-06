@@ -23,12 +23,9 @@ class CountsWithEmptyKeysInGapAndNext(object):
         self._countMethod = countMethod
         self._keyMaxKeeper = keyMaxKeeper
 
-        self._first = True
-
     def count(self, key, weight):
-        if self._first:
-            self._first = False
-            self._keyMaxKeeper.update(key)
+        newkeys = self._keyMaxKeeper.update(key)
+        self._countMethod.addKeys(newkeys)
         nextKey = self._keyMaxKeeper.next(key)
         newkeys = self._keyMaxKeeper.update(nextKey)
         self._countMethod.addKeys(newkeys)
@@ -142,5 +139,14 @@ class KeyMaxKeeperBuilder(object):
 
     def __call__(self):
         return KeyMaxKeeper(self.binnings)
+
+##____________________________________________________________________________||
+class KeyMinMaxKeeperBuilder(object):
+
+    def __init__(self, binnings):
+        self.binnings = binnings
+
+    def __call__(self):
+        return KeyMinMaxKeeper(self.binnings)
 
 ##____________________________________________________________________________||

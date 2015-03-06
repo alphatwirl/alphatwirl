@@ -60,14 +60,14 @@ class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
         countsWEKIG.count((11, ), 1)
         self.assertEqual([(11,), (12,)], keyMaxKeeper.keys)
         self.assertEqual([((11,), 1.0)], counts._counts)
-        self.assertEqual([[()]], counts._keys)
+        self.assertEqual([[()], [()]], counts._keys)
 
-        keyMaxKeeper.updates = [[(12, ), (13, ), (14, ), (15, )]]
+        keyMaxKeeper.updates = [[(15, )], [(13, ), (14, )]]
         keyMaxKeeper.nexts = [(15, )]
         countsWEKIG.count((14, ), 1)
-        self.assertEqual([(11, ), (12, ), (15, )], keyMaxKeeper.keys)
+        self.assertEqual([(11, ), (12, ), (14, ), (15, )], keyMaxKeeper.keys)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
-        self.assertEqual([[()], [(12, ), (13, ), (14, ), (15, )]], counts._keys)
+        self.assertEqual([[()], [()], [(13, ), (14, )], [(15, )]], counts._keys)
 
 ##____________________________________________________________________________||
 class TestCountsWithEmptyKeysInGapBuilder(unittest.TestCase):

@@ -171,3 +171,16 @@ class TestKeyMaxKeeperBuilder(unittest.TestCase):
         self.assertIsNot(keeper1, keeper2)
 
 ##____________________________________________________________________________||
+class TestKeyMinMaxKeeperBuilder(unittest.TestCase):
+
+    def test_call(self):
+        binnings = (MockBinning(), )
+        builder = Counter.KeyMinMaxKeeperBuilder(binnings)
+        keeper1 = builder()
+        keeper2 = builder()
+        self.assertIsInstance(keeper1, Counter.KeyMinMaxKeeper)
+        self.assertIsInstance(keeper2, Counter.KeyMinMaxKeeper)
+        self.assertEqual(keeper1._binnings, binnings)
+        self.assertIsNot(keeper1, keeper2)
+
+##____________________________________________________________________________||
