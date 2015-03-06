@@ -10,6 +10,18 @@ class MockBinning(object):
         return val + 1
 
 ##____________________________________________________________________________||
+class MockBinningWithMax(object):
+    def __init__(self, max):
+        self._max = max
+
+    def __call__(self, val):
+        return val
+
+    def next(self, val):
+        if val == self._max: return val
+        return val + 1
+
+##____________________________________________________________________________||
 class TestKeyMaxKeeper(unittest.TestCase):
 
     def setUp(self):
@@ -151,6 +163,26 @@ class TestKeyMinMaxKeeper(unittest.TestCase):
         self.assertEqual(expected, keeper.update(key))
         self.assertEqual(keyMin, keeper._keyMin)
         self.assertEqual(keyMax, keeper._keyMax)
+
+    def test_same_next(self):
+        keeper = Counter.KeyMinMaxKeeper((MockBinning(), MockBinningWithMax(10)))
+        key = (5, 9)
+        keyMin = (5, 9)
+        keyMax = (5, 9)
+        expected = [ ]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+        key = (5, 10)
+        keyMin = (5, 9)
+        keyMax = (5, 10)
+        expected = [(5, 10)]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+
 
     def test_next(self):
         binnings = (MockBinning(), MockBinning())

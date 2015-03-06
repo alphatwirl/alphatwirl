@@ -123,7 +123,9 @@ class KeyMinMaxKeeper(object):
             b = key1[i]
             while b <= key2[i]:
                 newBin.append(b)
-                b = self._binnings[i].next(b)
+                b_ = self._binnings[i].next(b)
+                if b == b_: break
+                b = b_
             newBins.append(newBin)
         ret = list(itertools.product(*newBins))
         return ret
