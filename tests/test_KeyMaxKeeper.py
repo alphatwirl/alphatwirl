@@ -87,6 +87,77 @@ class TestKeyMaxKeeper(unittest.TestCase):
         self.assertEqual((12, 9), keeper.next((11, 8)))
 
 ##____________________________________________________________________________||
+class TestKeyMinMaxKeeper(unittest.TestCase):
+
+    def test_None_at_beginning(self):
+        keeper = Counter.KeyMinMaxKeeper((MockBinning(), ))
+        self.assertIsNone(keeper._keyMin)
+        self.assertIsNone(keeper._keyMax)
+
+    def test_the_first_update(self):
+        keeper = Counter.KeyMinMaxKeeper((MockBinning(), ))
+        self.assertEqual([ ], keeper.update((11, )))
+        self.assertEqual((11, ), keeper._keyMin)
+        self.assertEqual((11, ), keeper._keyMax)
+
+    def test_two_elements(self):
+        keeper = Counter.KeyMinMaxKeeper((MockBinning(), MockBinning()))
+        key = (25, 150)
+        keyMin = (25, 150)
+        keyMax = (25, 150)
+        expected = [ ]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+        key = (23, 148)
+        keyMin = (23, 148)
+        keyMax = (25, 150)
+        expected = [(23, 148), (23, 149), (23, 150),
+                    (24, 148), (24, 149), (24, 150),
+                    (25, 148), (25, 149)]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+        key = (23, 150)
+        keyMin = (23, 148)
+        keyMax = (25, 150)
+        expected = [ ]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+        key = (21, 152)
+        keyMin = (21, 148)
+        keyMax = (25, 152)
+        expected = [(21, 148), (21, 149), (21, 150), (21, 151), (21, 152),
+                    (22, 148), (22, 149), (22, 150), (22, 151), (22, 152),
+                                                     (23, 151), (23, 152),
+                                                     (24, 151), (24, 152),
+                                                     (25, 151), (25, 152)]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+        key = (24, 146)
+        keyMin = (21, 146)
+        keyMax = (25, 152)
+        expected = [(21, 146), (21, 147),
+                    (22, 146), (22, 147),
+                    (23, 146), (23, 147),
+                    (24, 146), (24, 147),
+                    (25, 146), (25, 147)]
+        self.assertEqual(expected, keeper.update(key))
+        self.assertEqual(keyMin, keeper._keyMin)
+        self.assertEqual(keyMax, keeper._keyMax)
+
+    def test_next(self):
+        binnings = (MockBinning(), MockBinning())
+        keeper = Counter.KeyMinMaxKeeper(binnings)
+        self.assertEqual((12, 9), keeper.next((11, 8)))
+
+##____________________________________________________________________________||
 class TestKeyMaxKeeperBuilder(unittest.TestCase):
 
     def test_call(self):
