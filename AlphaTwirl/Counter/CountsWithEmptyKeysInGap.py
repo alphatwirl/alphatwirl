@@ -4,12 +4,12 @@ import itertools
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGap(object):
 
-    def __init__(self, countMethod, keyMaxKeeper):
+    def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
-        self._keyMaxKeeper = keyMaxKeeper
+        self._keyGapKeeper = keyGapKeeper
 
     def count(self, key, weight):
-        newkeys = self._keyMaxKeeper.update(key)
+        newkeys = self._keyGapKeeper.update(key)
         self._countMethod.addKeys(newkeys)
         self._countMethod.count(key, weight)
 
@@ -19,15 +19,15 @@ class CountsWithEmptyKeysInGap(object):
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapAndNext(object):
 
-    def __init__(self, countMethod, keyMaxKeeper):
+    def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
-        self._keyMaxKeeper = keyMaxKeeper
+        self._keyGapKeeper = keyGapKeeper
 
     def count(self, key, weight):
-        newkeys = self._keyMaxKeeper.update(key)
+        newkeys = self._keyGapKeeper.update(key)
         self._countMethod.addKeys(newkeys)
-        nextKey = self._keyMaxKeeper.next(key)
-        newkeys = self._keyMaxKeeper.update(nextKey)
+        nextKey = self._keyGapKeeper.next(key)
+        newkeys = self._keyGapKeeper.update(nextKey)
         self._countMethod.addKeys(newkeys)
         self._countMethod.count(key, weight)
 
@@ -37,22 +37,22 @@ class CountsWithEmptyKeysInGapAndNext(object):
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapBuilder(object):
 
-    def __init__(self, countMethodClass, keyMaxKeeperClass):
+    def __init__(self, countMethodClass, keyGapKeeperClass):
         self._countMethodClass = countMethodClass
-        self._keyMaxKeeperClass = keyMaxKeeperClass
+        self._keyGapKeeperClass = keyGapKeeperClass
 
     def __call__(self):
-        return CountsWithEmptyKeysInGap(self._countMethodClass(), self._keyMaxKeeperClass())
+        return CountsWithEmptyKeysInGap(self._countMethodClass(), self._keyGapKeeperClass())
 
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapAndNextBuilder(object):
 
-    def __init__(self, countMethodClass, keyMaxKeeperClass):
+    def __init__(self, countMethodClass, keyGapKeeperClass):
         self._countMethodClass = countMethodClass
-        self._keyMaxKeeperClass = keyMaxKeeperClass
+        self._keyGapKeeperClass = keyGapKeeperClass
 
     def __call__(self):
-        return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyMaxKeeperClass())
+        return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyGapKeeperClass())
 
 ##____________________________________________________________________________||
 class KeyMinMaxKeeper(object):
