@@ -55,7 +55,7 @@ class CountsWithEmptyKeysInGapAndNextBuilder(object):
         return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyGapKeeperClass())
 
 ##____________________________________________________________________________||
-class KeyMinMaxKeeper(object):
+class KeyGapKeeper(object):
     def __init__(self, binnings):
         self._binnings = binnings
 
@@ -102,12 +102,12 @@ class KeyMinMaxKeeper(object):
         return tuple([binning.next(bin) for bin, binning in zip(key, self._binnings)])
 
 ##____________________________________________________________________________||
-class KeyMinMaxKeeperBuilder(object):
+class KeyGapKeeperBuilder(object):
 
     def __init__(self, binnings):
         self.binnings = binnings
 
     def __call__(self):
-        return KeyMinMaxKeeper(self.binnings)
+        return KeyGapKeeper(self.binnings)
 
 ##____________________________________________________________________________||

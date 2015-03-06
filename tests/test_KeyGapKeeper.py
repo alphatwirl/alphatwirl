@@ -22,21 +22,21 @@ class MockBinningWithMax(object):
         return val + 1
 
 ##____________________________________________________________________________||
-class TestKeyMinMaxKeeper(unittest.TestCase):
+class TestKeyGapKeeper(unittest.TestCase):
 
     def test_None_at_beginning(self):
-        keeper = Counter.KeyMinMaxKeeper((MockBinning(), ))
+        keeper = Counter.KeyGapKeeper((MockBinning(), ))
         self.assertIsNone(keeper._keyMin)
         self.assertIsNone(keeper._keyMax)
 
     def test_the_first_update(self):
-        keeper = Counter.KeyMinMaxKeeper((MockBinning(), ))
+        keeper = Counter.KeyGapKeeper((MockBinning(), ))
         self.assertEqual([ ], keeper.update((11, )))
         self.assertEqual((11, ), keeper._keyMin)
         self.assertEqual((11, ), keeper._keyMax)
 
     def test_two_elements(self):
-        keeper = Counter.KeyMinMaxKeeper((MockBinning(), MockBinning()))
+        keeper = Counter.KeyGapKeeper((MockBinning(), MockBinning()))
         key = (25, 150)
         keyMin = (25, 150)
         keyMax = (25, 150)
@@ -88,7 +88,7 @@ class TestKeyMinMaxKeeper(unittest.TestCase):
         self.assertEqual(keyMax, keeper._keyMax)
 
     def test_same_next(self):
-        keeper = Counter.KeyMinMaxKeeper((MockBinning(), MockBinningWithMax(10)))
+        keeper = Counter.KeyGapKeeper((MockBinning(), MockBinningWithMax(10)))
         key = (5, 9)
         keyMin = (5, 9)
         keyMax = (5, 9)
@@ -109,19 +109,19 @@ class TestKeyMinMaxKeeper(unittest.TestCase):
 
     def test_next(self):
         binnings = (MockBinning(), MockBinning())
-        keeper = Counter.KeyMinMaxKeeper(binnings)
+        keeper = Counter.KeyGapKeeper(binnings)
         self.assertEqual((12, 9), keeper.next((11, 8)))
 
 ##____________________________________________________________________________||
-class TestKeyMinMaxKeeperBuilder(unittest.TestCase):
+class TestKeyGapKeeperBuilder(unittest.TestCase):
 
     def test_call(self):
         binnings = (MockBinning(), )
-        builder = Counter.KeyMinMaxKeeperBuilder(binnings)
+        builder = Counter.KeyGapKeeperBuilder(binnings)
         keeper1 = builder()
         keeper2 = builder()
-        self.assertIsInstance(keeper1, Counter.KeyMinMaxKeeper)
-        self.assertIsInstance(keeper2, Counter.KeyMinMaxKeeper)
+        self.assertIsInstance(keeper1, Counter.KeyGapKeeper)
+        self.assertIsInstance(keeper2, Counter.KeyGapKeeper)
         self.assertEqual(keeper1._binnings, binnings)
         self.assertIsNot(keeper1, keeper2)
 
