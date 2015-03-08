@@ -115,7 +115,6 @@ class TestBinning(unittest.TestCase):
 class TestRound(unittest.TestCase):
 
     def test_init(self):
-        self.assertRaises(ValueError, Binning, boundaries = 1, lows = 1, ups = 1)
         Round(retvalue = 'center')
         Round(retvalue = 'lowedge')
         self.assertRaises(ValueError, Round, retvalue = 'yyy')
