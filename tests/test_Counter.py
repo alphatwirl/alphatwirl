@@ -46,7 +46,7 @@ class TestCounter(unittest.TestCase):
 
     def test_events(self):
         counts = MockCounts()
-        keys = [(14, ), (11, )]
+        keys = [(12, ), None, (14, ), (11, )]
         keycomposer = MockKeyComposer(keys)
         counter = Counter.Counter(('var', ), keycomposer, counts, MockWeightCalculator())
         event = MockEvent()
@@ -58,6 +58,13 @@ class TestCounter(unittest.TestCase):
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
 
+        counter.event(MockEvent())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+
+        counter.event(MockEvent())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts.results())
 
     def test_keynames(self):
         counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())

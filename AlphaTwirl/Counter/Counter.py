@@ -15,7 +15,7 @@ class Counter(object):
 
     def event(self, event):
         key = self._keyComposer(event)
-
+        if key is None: return
         weight = self._weightCalculator(event)
         self._countMethod.count(key, weight)
 
