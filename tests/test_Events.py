@@ -90,7 +90,7 @@ class TestEvents(unittest.TestCase):
         event = next(it)
         self.assertEqual(3, tree.iEvent)
         self.assertRaises(StopIteration, next, it)
-        self.assertEqual(3, tree.iEvent) # it remains at the last event
+        self.assertEqual(-1, tree.iEvent)
 
     def test_iEvent(self):
         entreis = 4
