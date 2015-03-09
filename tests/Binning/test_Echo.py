@@ -28,4 +28,8 @@ class TestEcho(unittest.TestCase):
         binning = Echo(nextFunc = lambda x: x + 0.1)
         self.assertEqual([-4.9, 0.1, 1.1, 3.1, 10.1], binning.next([-5, 0, 1, 3, 10]))
 
+    def test_valid(self):
+        binning = Echo(valid = lambda x: x >= 10)
+        self.assertEqual([13, 10, None], binning((13, 10, 7)))
+
 ##____________________________________________________________________________||
