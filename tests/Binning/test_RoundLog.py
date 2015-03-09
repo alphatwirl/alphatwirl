@@ -29,4 +29,8 @@ class TestRoundLog(unittest.TestCase):
         binning = RoundLog()
         self.assertRaises(ValueError, binning, -1)
 
+    def test_valid(self):
+        binning = RoundLog(valid = lambda x: x >= 10)
+        self.assertEqual([14.12537544622754, 11.220184543019636, None], binning((13, 10, 7)))
+
 ##____________________________________________________________________________||
