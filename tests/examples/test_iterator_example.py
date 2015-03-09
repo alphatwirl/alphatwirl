@@ -11,7 +11,7 @@ def genFunc():
 class IteClass(object):
     def __init__(self):
         self.val = 100
-        pass 
+        pass
 
     def __iter__(self):
         self.val = 101
