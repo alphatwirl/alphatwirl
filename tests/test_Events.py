@@ -58,7 +58,7 @@ class TestEvents(unittest.TestCase):
 
         self.assertIs(tree, events.tree)
 
-    def test_nEevent(self):
+    def test_nEvents(self):
         entreis = 100
         tree = MockTree(entreis)
         events = Events(tree)
