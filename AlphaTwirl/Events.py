@@ -18,5 +18,3 @@ class Events(object):
         return getattr(self.tree, name)
 
 ##____________________________________________________________________________||
-if __name__ == '__main__':
-    pass
