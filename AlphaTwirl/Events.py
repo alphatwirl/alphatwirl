@@ -8,10 +8,10 @@ class Events(object):
         self.nEvents = min(self.tree.GetEntries(), maxEvents) if (maxEvents > -1) else self.tree.GetEntries()
 
     def __iter__(self):
-        iEvent = 0
-        while iEvent < self.nEvents:
-            if self.tree.GetEntry(iEvent) <= 0: return
-            iEvent += 1
+        self.iEvent = 0
+        while self.iEvent < self.nEvents:
+            if self.tree.GetEntry(self.iEvent) <= 0: return
+            self.iEvent += 1
             yield self
 
     def __getattr__(self, name):
