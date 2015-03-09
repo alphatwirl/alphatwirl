@@ -23,11 +23,11 @@ class TestRoundLog(unittest.TestCase):
 
     def test_call_zero(self):
         binning = RoundLog()
-        self.assertRaises(ValueError, binning, 0)
+        self.assertIsNone(binning(0))
 
     def test_call_negative(self):
         binning = RoundLog()
-        self.assertRaises(ValueError, binning, -1)
+        self.assertIsNone(binning(-1))
 
     def test_valid(self):
         binning = RoundLog(valid = lambda x: x >= 10)

@@ -15,6 +15,7 @@ class RoundLog(object):
         except TypeError:
             pass
         if not self.valid(val): return None
+        if val <= 0: return None
         val = math.log10(val)
         return 10**self._round(val)
 
