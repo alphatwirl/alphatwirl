@@ -2,9 +2,9 @@
 
 ##____________________________________________________________________________||
 class EventReaderPackage(object):
-    def __init__(self, ReaderClass, resultCollector):
+    def __init__(self, ReaderClass, resultCollector = None):
         self._ReaderClass = ReaderClass
-        self._resultCollector = resultCollector
+        self._resultCollector = resultCollector if resultCollector is not None else NullCollector()
 
     def make(self, datasetName):
         reader = self._ReaderClass()
@@ -13,5 +13,9 @@ class EventReaderPackage(object):
 
     def collect(self):
         self._resultCollector.collect()
+
+##____________________________________________________________________________||
+class NullCollector(object):
+    def collect(self): pass
 
 ##____________________________________________________________________________||

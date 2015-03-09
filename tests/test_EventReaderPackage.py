@@ -37,4 +37,8 @@ class TestEventReaderPackage(unittest.TestCase):
         package.collect()
         self.assertTrue(collector.collected)
 
+    def test_no_collector(self):
+        package = EventReaderPackage(MockReader)
+        package.collect()
+
 ##____________________________________________________________________________||
