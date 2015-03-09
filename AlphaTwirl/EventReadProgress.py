@@ -20,3 +20,12 @@ class EventReadProgress(object):
             print("{0:{1}} / {2}".format(iEvent, self.length, self.nEvents), file = self.out)
 
 ##____________________________________________________________________________||
+class EventReadProgressBuilder(object):
+    def __init__(self, pernevents = 1000, out = sys.stdout):
+        self.pernevents = pernevents
+        self.out = out
+
+    def __call__(self):
+        return EventReadProgress(pernevents = self.pernevents, out = self.out)
+
+##____________________________________________________________________________||

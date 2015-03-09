@@ -1,4 +1,4 @@
-from AlphaTwirl import EventReadProgress
+from AlphaTwirl import EventReadProgress, EventReadProgressBuilder
 import unittest
 import cStringIO
 
@@ -43,5 +43,21 @@ class TestEventReadProgress(unittest.TestCase):
         progress.out = cStringIO.StringIO()
         progress.event(event)
         self.assertEqual('124344 / 124344\n', progress.out.getvalue())
+
+##____________________________________________________________________________||
+class TestEventReadProgressBuilder(unittest.TestCase):
+    def test_call(self):
+        out = cStringIO.StringIO()
+        builder = EventReadProgressBuilder(2345, out)
+        progress1 = builder()
+        progress2 = builder()
+        self.assertIsInstance(progress1, EventReadProgress)
+        self.assertIsInstance(progress2, EventReadProgress)
+        self.assertIsNot(progress1, progress2)
+        self.assertIs(out, progress1.out)
+        self.assertIs(out, progress2.out)
+        self.assertIs(2345, progress1.pernevents)
+        self.assertIs(2345, progress2.pernevents)
+
 
 ##____________________________________________________________________________||
