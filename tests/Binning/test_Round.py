@@ -93,4 +93,8 @@ class TestRound(unittest.TestCase):
         binning = Round(0.02, 0.005, retvalue = 'lowedge')
         self.assertEqual([-0.015, 0.005, 0.025, 0.045, 0.065], binning.next([-0.035, -0.015, 0.005, 0.025, 0.045]))
 
+    def test_valid(self):
+        binning = Round(valid = lambda x: x >= 0)
+        self.assertEqual([1, 0, None], binning((1, 0, -1)))
+
 ##____________________________________________________________________________||

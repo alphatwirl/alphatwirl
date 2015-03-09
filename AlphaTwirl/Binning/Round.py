@@ -3,7 +3,7 @@ import decimal
 
 ##____________________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None, retvalue = 'center'):
+    def __init__(self, width = 1, aBoundary = None, retvalue = 'center', valid = lambda x: True):
         self.width = decimal.Decimal(str(width))
         self.halfWidth = self.width/2
 
@@ -19,6 +19,8 @@ class Round(object):
 
         self.lowedge = (retvalue == 'lowedge')
 
+        self.valid = valid
+
         self._context_ROUND_HALF_UP = decimal.Context(rounding = decimal.ROUND_HALF_UP)
         self._context_ROUND_HALF_DOWN = decimal.Context(rounding= decimal.ROUND_HALF_DOWN)
 
@@ -27,6 +29,7 @@ class Round(object):
             return [self.__call__(v) for v in val]
         except TypeError:
             pass
+        if not self.valid(val): return None
         return float(self._callImpDecimal(val))
 
     def _callImpDecimal(self, val):
