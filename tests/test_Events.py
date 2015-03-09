@@ -92,6 +92,20 @@ class TestEvents(unittest.TestCase):
         self.assertRaises(StopIteration, next, it)
         self.assertEqual(3, tree.iEvent) # it remains at the last event
 
+    def test_iEvent(self):
+        entreis = 4
+        tree = MockTree(entreis)
+        events = Events(tree)
+        it = iter(events)
+        event = next(it)
+        self.assertEqual(0, event.iEvent)
+        event = next(it)
+        self.assertEqual(1, event.iEvent)
+        event = next(it)
+        self.assertEqual(2, event.iEvent)
+        event = next(it)
+        self.assertEqual(3, event.iEvent)
+
     def test_getattr(self):
         entreis = 5
         tree = MockTree(entreis)
