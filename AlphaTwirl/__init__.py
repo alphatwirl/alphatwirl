@@ -1,5 +1,6 @@
 import HeppyResult
 from Events import *
+from EventReadProgress import *
 import Binning
 import Counter
 from EventReaderPackage import *
