@@ -3,7 +3,8 @@
 ##____________________________________________________________________________||
 class Binning(object):
     def __init__(self, boundaries = None, lows = None, ups = None,
-                 retvalue = 'number', bins = None, underflow_bin = None, overflow_bin = None):
+                 retvalue = 'number', bins = None, underflow_bin = None, overflow_bin = None,
+                 valid = lambda x: True):
 
         if boundaries is None:
             if lows is None or ups is None:
@@ -42,11 +43,14 @@ class Binning(object):
             self.underflow_bin = underflow_bin if underflow_bin is not None else min(self.bins) - 1
             self.overflow_bin = overflow_bin if overflow_bin is not None else max(self.bins) + 1
 
+        self._valid = valid
+
     def __call__(self, val):
         try:
             return [self.__call__(v) for v in val]
         except TypeError:
             pass
+        if not self._valid(val): return None
         if val < self.lows[0]: return self.underflow_bin
         if self.ups[-1] <= val: return self.overflow_bin
         return [b for b, l, u in zip(self.bins, self.lows, self.ups) if l <= val < u][0]

@@ -111,4 +111,8 @@ class TestBinning(unittest.TestCase):
         binning = Binning(boundaries = boundaries, retvalue = 'lowedge')
         self.assertEqual([0.002, 0.003, 0.004, 0.005, 0.005], binning.next((0.001, 0.002, 0.003, 0.004, 0.005)))
 
+    def test_valid(self):
+        binning = Binning(boundaries = (30, 40, 50), valid = lambda x: x >= 10)
+        self.assertEqual([1, 2, None], binning((33, 45, 9)))
+
 ##____________________________________________________________________________||
