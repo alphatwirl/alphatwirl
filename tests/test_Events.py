@@ -105,6 +105,8 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(2, event.iEvent)
         event = next(it)
         self.assertEqual(3, event.iEvent)
+        self.assertRaises(StopIteration, next, it)
+        self.assertEqual(-1, event.iEvent)
 
     def test_getattr(self):
         entreis = 5

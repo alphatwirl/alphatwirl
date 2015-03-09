@@ -11,7 +11,9 @@ class Events(object):
         self.iEvent = -1
         while self.iEvent < self.nEvents:
             self.iEvent += 1
-            if self.tree.GetEntry(self.iEvent) <= 0: return
+            if self.tree.GetEntry(self.iEvent) <= 0:
+                self.iEvent = -1
+                return
             yield self
 
     def __getattr__(self, name):
