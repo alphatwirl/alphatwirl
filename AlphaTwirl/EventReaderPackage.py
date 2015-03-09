@@ -17,5 +17,6 @@ class EventReaderPackage(object):
 ##____________________________________________________________________________||
 class NullCollector(object):
     def collect(self): pass
+    def addReader(self, datasetName, reader): pass
 
 ##____________________________________________________________________________||
