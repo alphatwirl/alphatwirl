@@ -1,38 +1,43 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class KeyComposer_SingleVariable(object):
-    def __init__(self, varName, binning):
-        self._varName = varName
-        self._binning = binning
+class GenericKeyComposer(object):
+    def __init__(self, varNames, binnings):
+        self._varNames = varNames
+        self._binnings = binnings
 
     def __call__(self, event):
-        var = getattr(event, self._varName)
-        var_bin = self._binning(var)
-        if var_bin is None: return None
-        return (var_bin, )
+        ret = [ ]
+        for varName, binning in zip(self._varNames, self._binnings):
+            var = getattr(event, varName)
+            var_bin = binning(var)
+            if var_bin is None: return None
+            ret.append(var_bin)
+        return tuple(ret)
 
     def binnings(self):
-        return (self._binning, )
+        return self._binnings
+
+##____________________________________________________________________________||
+class KeyComposer_SingleVariable(object):
+    def __init__(self, varName, binning):
+        self._composer = GenericKeyComposer((varName, ), (binning, ))
+
+    def __call__(self, event):
+        return self._composer(event)
+
+    def binnings(self):
+        return self._composer.binnings()
 
 ##____________________________________________________________________________||
 class KeyComposer_TwoVariables(object):
     def __init__(self, varName1, binning1, varName2, binning2):
-        self._varName1 = varName1
-        self._binning1 = binning1
-        self._varName2 = varName2
-        self._binning2 = binning2
+        self._composer = GenericKeyComposer((varName1, varName2), (binning1, binning2))
 
     def __call__(self, event):
-        var1 = getattr(event, self._varName1)
-        var1_bin = self._binning1(var1)
-        if var1_bin is None: return None
-        var2 = getattr(event, self._varName2)
-        var2_bin = self._binning2(var2)
-        if var2_bin is None: return None
-        return (var1_bin, var2_bin)
+        return self._composer(event)
 
     def binnings(self):
-        return (self._binning1, self._binning2)
+        return self._composer.binnings()
 
 ##____________________________________________________________________________||
