@@ -43,6 +43,12 @@ class Component(object):
             self._anaDict[name] = Analyzer(path)
         return self._anaDict[name]
 
+    def __getstate__(self):
+        return self.__dict__
+
+    def __setstate__(self, dict):
+        self.__dict__ = dict
+
     def analyzers(self):
         return [getattr(self, n) for n in self.analyzerNames]
 

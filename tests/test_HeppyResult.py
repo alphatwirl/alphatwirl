@@ -2,6 +2,7 @@ import os
 from AlphaTwirl import HeppyResult
 import unittest
 import cStringIO
+import pickle
 
 ##____________________________________________________________________________||
 def mock_listdir(path):
@@ -126,6 +127,10 @@ class TestComponent(unittest.TestCase):
         cfg1 = self.component.config()
         cfg2 = self.component.config()
         self.assertIs(cfg1, cfg2)
+
+    def test_pickle(self):
+        dumps = pickle.dumps(self.component)
+        obj = pickle.loads(dumps)
 
 ##____________________________________________________________________________||
 class TestReadComponentConfig(unittest.TestCase):
