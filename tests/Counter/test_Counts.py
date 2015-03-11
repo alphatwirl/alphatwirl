@@ -1,4 +1,3 @@
-from AlphaTwirl import countsToDataFrame
 from AlphaTwirl.Counter import Counts
 import unittest
 
@@ -50,6 +49,5 @@ class TestCounts(unittest.TestCase):
                      5: {'n': 0.0, 'nvar': 0.0}
                      }
         self.assertEqual(expected, counts.results())
-
 
 ##____________________________________________________________________________||
