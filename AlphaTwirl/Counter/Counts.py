@@ -20,6 +20,9 @@ class Counts(object):
     def valNames(self):
         return ('n', 'nvar')
 
+    def setResults(self, results):
+        self._counts = results
+
     def results(self):
         return self._counts
 

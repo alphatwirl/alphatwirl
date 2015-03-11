@@ -31,6 +31,14 @@ class TestCounts(unittest.TestCase):
             }
         self.assertEqual(expected, counts.results())
 
+        expected  = {
+            10: {'n': 24.0, 'nvar': 3.0},
+            20: {'n': 33.0, 'nvar': 5.0},
+            30: {'n': 21.0, 'nvar': 4.0},
+            }
+        counts.setResults(expected)
+        self.assertEqual(expected, counts.results())
+
     def test_valNames(self):
         counts = Counts()
         self.assertEqual(('n', 'nvar'), counts.valNames())
