@@ -12,7 +12,7 @@ class TestEventReadProgress(unittest.TestCase):
 
     def test_init(self):
         out = cStringIO.StringIO()
-        progress = EventReadProgress(1000, out = out)
+        progress = EventReadProgress(1000)
 
     def test_event(self):
         progress = EventReadProgress(1000)
@@ -47,15 +47,12 @@ class TestEventReadProgress(unittest.TestCase):
 ##____________________________________________________________________________||
 class TestEventReadProgressBuilder(unittest.TestCase):
     def test_call(self):
-        out = cStringIO.StringIO()
-        builder = EventReadProgressBuilder(2345, out)
+        builder = EventReadProgressBuilder(2345)
         progress1 = builder()
         progress2 = builder()
         self.assertIsInstance(progress1, EventReadProgress)
         self.assertIsInstance(progress2, EventReadProgress)
         self.assertIsNot(progress1, progress2)
-        self.assertIs(out, progress1.out)
-        self.assertIs(out, progress2.out)
         self.assertIs(2345, progress1.pernevents)
         self.assertIs(2345, progress2.pernevents)
 
@@ -63,8 +60,7 @@ class TestEventReadProgressBuilder(unittest.TestCase):
 class TestEventReadProgressB(unittest.TestCase):
 
     def test_init(self):
-        out = cStringIO.StringIO()
-        progress = EventReadProgressB(1000, out = out)
+        progress = EventReadProgressB(1000)
 
     def test_event(self):
         progress = EventReadProgressB(1000)
@@ -97,17 +93,14 @@ class TestEventReadProgressB(unittest.TestCase):
         self.assertEqual('\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08\x08124344 / 124344\n', progress.out.getvalue())
 
 ##____________________________________________________________________________||
-class TestEventReadProgressBuilder(unittest.TestCase):
+class TestEventReadProgressBBuilder(unittest.TestCase):
     def test_call(self):
-        out = cStringIO.StringIO()
-        builder = EventReadProgressBBuilder(2345, out)
+        builder = EventReadProgressBBuilder(2345)
         progress1 = builder()
         progress2 = builder()
         self.assertIsInstance(progress1, EventReadProgressB)
         self.assertIsInstance(progress2, EventReadProgressB)
         self.assertIsNot(progress1, progress2)
-        self.assertIs(out, progress1.out)
-        self.assertIs(out, progress2.out)
         self.assertIs(2345, progress1.pernevents)
         self.assertIs(2345, progress2.pernevents)
 
