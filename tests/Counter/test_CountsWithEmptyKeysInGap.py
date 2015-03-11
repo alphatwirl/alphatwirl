@@ -13,6 +13,12 @@ class MockCounts(object):
     def addKeys(self, keys):
         self._keys.append(keys)
 
+    def setResults(self, results):
+        self._counts = results
+
+    def results(self):
+        return self._counts
+
 ##____________________________________________________________________________||
 class MockKeyGapKeeper(object):
     def __init__(self):
@@ -47,6 +53,15 @@ class TestCountsWithEmptyKeysInGap(unittest.TestCase):
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([[()], [(11, ), (12, ), (13, ), (14, )]], counts._keys)
 
+    def test_results(self):
+        counts = MockCounts()
+        keyGapKeeper = MockKeyGapKeeper()
+        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts, keyGapKeeper)
+        self.assertEqual([ ], countsWEKIG.results())
+
+        countsWEKIG.setResults([((15,), 3.0)])
+        self.assertEqual([((15,), 3.0)], countsWEKIG.results())
+
 ##____________________________________________________________________________||
 class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
 
@@ -68,6 +83,15 @@ class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
         self.assertEqual([(11, ), (12, ), (14, ), (15, )], keyGapKeeper.keys)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([[()], [()], [(13, ), (14, )], [(15, )]], counts._keys)
+
+    def test_results(self):
+        counts = MockCounts()
+        keyGapKeeper = MockKeyGapKeeper()
+        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts, keyGapKeeper)
+        self.assertEqual([ ], countsWEKIG.results())
+
+        countsWEKIG.setResults([((15,), 3.0)])
+        self.assertEqual([((15,), 3.0)], countsWEKIG.results())
 
 ##____________________________________________________________________________||
 class TestCountsWithEmptyKeysInGapBuilder(unittest.TestCase):

@@ -13,6 +13,9 @@ class CountsWithEmptyKeysInGap(object):
         self._countMethod.addKeys(newkeys)
         self._countMethod.count(key, weight)
 
+    def setResults(self, results):
+        self._countMethod.setResults(results)
+
     def results(self):
         return self._countMethod.results()
 
@@ -30,6 +33,9 @@ class CountsWithEmptyKeysInGapAndNext(object):
         newkeys = self._keyGapKeeper.update(nextKey)
         self._countMethod.addKeys(newkeys)
         self._countMethod.count(key, weight)
+
+    def setResults(self, results):
+        self._countMethod.setResults(results)
 
     def results(self):
         return self._countMethod.results()
