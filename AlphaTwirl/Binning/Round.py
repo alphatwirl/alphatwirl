@@ -2,8 +2,11 @@
 import decimal
 
 ##____________________________________________________________________________||
+def returnTrue(x): return True
+
+##____________________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None, retvalue = 'center', valid = lambda x: True):
+    def __init__(self, width = 1, aBoundary = None, retvalue = 'center', valid = returnTrue):
         self.width = decimal.Decimal(str(width))
         self.halfWidth = self.width/2
 

@@ -1,8 +1,14 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
+def returnTrue(x): return True
+
+##____________________________________________________________________________||
+def plusOne(x): return x + 1
+
+##____________________________________________________________________________||
 class Echo(object):
-    def __init__(self, nextFunc = lambda x: x + 1, valid = lambda x: True):
+    def __init__(self, nextFunc = plusOne, valid = returnTrue):
         self._nextFunc = nextFunc
 
         self._valid = valid
