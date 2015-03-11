@@ -1,5 +1,6 @@
 import AlphaTwirl.Counter as Counter
 import unittest
+import pickle
 
 ##____________________________________________________________________________||
 class MockEvent(object):
@@ -12,6 +13,9 @@ class MockCounts(object):
 
     def count(self, key, weight):
         self._counts.append((key, weight))
+
+    def setResults(self, results):
+        self._counts = results
 
     def results(self):
         return self._counts
@@ -69,6 +73,12 @@ class TestCounter(unittest.TestCase):
     def test_keynames(self):
         counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
         self.assertEqual(('var', ), counter.keynames())
+
+    def test_setResults(self):
+        counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
+        self.assertEqual([ ], counter.results())
+        counter.setResults([((11, ), 1.0)])
+        self.assertEqual([((11,), 1.0)], counter.results())
 
 ##____________________________________________________________________________||
 class TestCounterBuilder(unittest.TestCase):
