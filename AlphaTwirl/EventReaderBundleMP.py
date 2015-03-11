@@ -10,7 +10,6 @@ class Worker(multiprocessing.Process):
         self.lock = lock
 
     def run(self):
-        proc_name = self.name
         while True:
             task = self.task_queue.get()
             if task is None:
