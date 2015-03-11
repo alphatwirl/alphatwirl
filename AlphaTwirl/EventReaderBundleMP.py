@@ -3,10 +3,11 @@ import multiprocessing
 
 ##____________________________________________________________________________||
 class Worker(multiprocessing.Process):
-    def __init__(self, task_queue, result_queue):
+    def __init__(self, task_queue, result_queue, lock):
         multiprocessing.Process.__init__(self)
         self.task_queue = task_queue
         self.result_queue = result_queue
+        self.lock = lock
 
     def run(self):
         proc_name = self.name
@@ -49,9 +50,10 @@ class EventReaderBundleMP(object):
         self._tasks = multiprocessing.JoinableQueue()
         self._results = multiprocessing.Queue()
         self._ntasks = 0
+        self._lock = multiprocessing.Lock()
 
         for i in xrange(self._nprocesses):
-            worker = Worker(self._tasks, self._results)
+            worker = Worker(self._tasks, self._results, self._lock)
             worker.start()
 
     def read(self, component):
