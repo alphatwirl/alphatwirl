@@ -1,11 +1,5 @@
-from AlphaTwirl.EventReader import EventReaderBundle, EventLoopRunner, EventLoop
+from AlphaTwirl.EventReader import EventReaderBundle, EventLoop
 import unittest
-
-
-##____________________________________________________________________________||
-class MockEvent(object):
-    def __init__(self, id):
-        self.id = id
 
 ##____________________________________________________________________________||
 class MockEventBuilder(object):
@@ -54,53 +48,6 @@ class MockEventLoopRunner(object):
 
     def end(self):
         self.ended = True
-
-##____________________________________________________________________________||
-class MockEventLoop(object):
-    def __init__(self):
-        self.called = False
-
-    def __call__(self):
-        self.called = True
-
-##____________________________________________________________________________||
-class TestEventLoop(unittest.TestCase):
-
-    def test_call(self):
-        eventBuilder = MockEventBuilder()
-        component = MockComponent()
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        component._events = [event1, event2, event3]
-
-        reader1 = MockReader('1')
-        reader2 = MockReader('2')
-        readers = [reader1, reader2]
-
-        loop = EventLoop(eventBuilder, component, readers)
-
-        self.assertEqual(readers, loop())
-        self.assertEqual([101, 102, 103], reader1._eventIds)
-        self.assertEqual([101, 102, 103], reader2._eventIds)
-
-##____________________________________________________________________________||
-class TestEventLoopRunner(unittest.TestCase):
-
-    def setUp(self):
-        self.runner = EventLoopRunner()
-
-    def test_begin(self):
-        self.runner.begin()
-
-    def test_run(self):
-        loop = MockEventLoop()
-        self.assertFalse(loop.called)
-        self.runner.run(loop)
-        self.assertTrue(loop.called)
-
-    def test_end(self):
-        self.runner.end()
 
 ##____________________________________________________________________________||
 class TestEventReaderEventReaderBundle(unittest.TestCase):
