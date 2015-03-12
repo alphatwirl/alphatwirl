@@ -1,6 +1,20 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
+class EventLooper(object):
+    def __init__(self, eventBuilder, component, readers):
+        self.eventBuilder = eventBuilder
+        self.component = component
+        self.readers = readers
+
+    def __call__(self):
+        events = self.eventBuilder.build(self.component)
+        for event in events:
+            for reader in self.readers:
+                reader.event(event)
+        return self.readers
+
+##____________________________________________________________________________||
 class EventLooperRunner(object):
     def begin(self): pass
 
