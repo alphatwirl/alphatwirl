@@ -8,7 +8,7 @@ from Collector import *
 from CombineIntoPandasDataFrame import *
 from WritePandasDataFrameToFile import *
 from EventReaderBundle import *
-from EventReaderBundleMP import EventReaderBundleMP
+from EventReaderBundleMP import EventReaderBundleMP, EventLooperMP
 from EventBuilder import *
 from buildBinningFromTbl import *
 from TblXsec import TblXsec

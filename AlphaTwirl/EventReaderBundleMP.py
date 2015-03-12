@@ -75,10 +75,10 @@ class EventLooperMP(object):
 ##____________________________________________________________________________||
 class EventReaderBundleMP(object):
 
-    def __init__(self, eventBuilder, nprocesses = 16):
+    def __init__(self, eventBuilder, eventLooper):
         self._eventBuilder = eventBuilder
+        self._eventLooper = eventLooper
         self._packages = [ ]
-        self._eventLooper = EventLooperMP(nprocesses)
 
     def addReaderPackage(self, package):
         self._packages.append(package)
