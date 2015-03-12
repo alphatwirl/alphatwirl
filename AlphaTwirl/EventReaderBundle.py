@@ -2,6 +2,8 @@
 
 ##____________________________________________________________________________||
 class EventLooper(object):
+    def begin(self): pass
+
     def read(self, eventBuilder, component, readers):
         events = eventBuilder.build(component)
         for event in events:
@@ -16,12 +18,13 @@ class EventReaderBundle(object):
     def __init__(self, eventBuilder):
         self._eventBuilder = eventBuilder
         self._packages = [ ]
+        self._eventLooper = EventLooper()
 
     def addReaderPackage(self, package):
         self._packages.append(package)
 
     def begin(self):
-        self._eventLooper = EventLooper()
+        self._eventLooper.begin()
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
