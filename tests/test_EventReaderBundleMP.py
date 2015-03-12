@@ -1,4 +1,5 @@
-from AlphaTwirl import EventReaderBundle, MPEventLoopRunner
+from AlphaTwirl.EventReader import EventReaderBundle
+from AlphaTwirl.EventReaderBundleMP import MPEventLoopRunner
 import unittest
 
 

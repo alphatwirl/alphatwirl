@@ -1,4 +1,4 @@
-from AlphaTwirl import EventReaderBundle, EventLoopRunner
+from AlphaTwirl.EventReader import EventReaderBundle, EventLoopRunner
 import unittest
 
 
