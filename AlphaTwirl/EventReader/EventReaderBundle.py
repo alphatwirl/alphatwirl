@@ -18,9 +18,8 @@ class EventLoop(object):
 class EventLoopRunner(object):
     def begin(self): pass
 
-    def run(self, eventBuilder, component, readers):
-        task = EventLoop(eventBuilder, component, readers)
-        task()
+    def run(self, eventLoop):
+        eventLoop()
 
     def end(self): pass
 
@@ -40,7 +39,8 @@ class EventReaderBundle(object):
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
-        self._eventLoopRunner.run(self._eventBuilder, component, readers)
+        eventLoop = EventLoop(self._eventBuilder, component, readers)
+        self._eventLoopRunner.run(eventLoop)
 
     def end(self):
         self._eventLoopRunner.end()
