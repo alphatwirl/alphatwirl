@@ -14,7 +14,8 @@ class MockEventBuilder(object):
 
 ##____________________________________________________________________________||
 class MockReader(object):
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self._eventIds = [ ]
 
     def event(self, event):
@@ -23,13 +24,12 @@ class MockReader(object):
 ##____________________________________________________________________________||
 class MockReaderPackage(object):
     def __init__(self):
-        self._readers = [ ]
+        self.reader = None
         self.collected = False
 
     def make(self, name):
-        reader = MockReader()
-        self._readers.append(reader)
-        return reader
+        self.reader = MockReader(name)
+        return self.reader
 
     def collect(self):
         self.collected = True
@@ -74,8 +74,8 @@ class TestEventLoop(unittest.TestCase):
         event3 = MockEvent(103)
         component._events = [event1, event2, event3]
 
-        reader1 = MockReader()
-        reader2 = MockReader()
+        reader1 = MockReader('1')
+        reader2 = MockReader('2')
         readers = [reader1, reader2]
 
         loop = EventLoop(eventBuilder, component, readers)
@@ -110,37 +110,46 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         self.eventLoopRunner = MockEventLoopRunner()
         self.bundle = EventReaderBundle(self.eventBuilder, self.eventLoopRunner)
 
-    def test_addReaderPackage(self):
+    def test_begin_read_end(self):
+
         package1 = MockReaderPackage()
         self.bundle.addReaderPackage(package1)
 
-    def test_begin_end(self):
+        package2 = MockReaderPackage()
+        self.bundle.addReaderPackage(package2)
 
         self.assertFalse(self.eventLoopRunner.began)
-        self.assertFalse(self.eventLoopRunner.ended)
         self.bundle.begin()
         self.assertTrue(self.eventLoopRunner.began)
-        self.assertFalse(self.eventLoopRunner.ended)
-        self.bundle.end()
-        self.assertTrue(self.eventLoopRunner.began)
-        self.assertTrue(self.eventLoopRunner.ended)
-
-    def test_read(self):
-
-        package1 = MockReaderPackage()
-        self.bundle.addReaderPackage(package1)
-
-        self.bundle.begin()
 
         component1 = MockComponent()
         component1.name = "compName1"
 
         self.assertIsNone(self.eventLoopRunner.eventLoop)
         self.bundle.read(component1)
+
         self.assertIsInstance(self.eventLoopRunner.eventLoop, EventLoop)
         self.assertIs(self.eventBuilder, self.eventLoopRunner.eventLoop.eventBuilder)
         self.assertIs(component1, self.eventLoopRunner.eventLoop.component)
         self.assertIs("compName1", self.eventLoopRunner.eventLoop.component.name)
-        self.assertEqual(package1._readers, self.eventLoopRunner.eventLoop.readers)
+        self.assertEqual([package1.reader, package2.reader], self.eventLoopRunner.eventLoop.readers)
+
+        component2 = MockComponent()
+        component2.name = "compName2"
+        self.bundle.read(component2)
+
+        self.assertIsInstance(self.eventLoopRunner.eventLoop, EventLoop)
+        self.assertIs(self.eventBuilder, self.eventLoopRunner.eventLoop.eventBuilder)
+        self.assertIs(component2, self.eventLoopRunner.eventLoop.component)
+        self.assertIs("compName2", self.eventLoopRunner.eventLoop.component.name)
+        self.assertEqual([package1.reader, package2.reader], self.eventLoopRunner.eventLoop.readers)
+
+        self.assertFalse(self.eventLoopRunner.ended)
+        self.assertFalse(package1.collected)
+        self.assertFalse(package2.collected)
+        self.bundle.end()
+        self.assertTrue(self.eventLoopRunner.ended)
+        self.assertTrue(package1.collected)
+        self.assertTrue(package2.collected)
 
 ##____________________________________________________________________________||
