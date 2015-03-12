@@ -15,10 +15,10 @@ class EventLooper(object):
 ##____________________________________________________________________________||
 class EventReaderBundle(object):
 
-    def __init__(self, eventBuilder):
+    def __init__(self, eventBuilder, eventLooper):
         self._eventBuilder = eventBuilder
+        self._eventLooper = eventLooper
         self._packages = [ ]
-        self._eventLooper = EventLooper()
 
     def addReaderPackage(self, package):
         self._packages.append(package)
