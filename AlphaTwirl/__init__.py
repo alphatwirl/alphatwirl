@@ -8,7 +8,6 @@ from Collector import *
 from CombineIntoPandasDataFrame import *
 from WritePandasDataFrameToFile import *
 import EventReader
-from EventReaderBundleMP import MPEventLoopRunner
 from EventBuilder import *
 from buildBinningFromTbl import *
 from TblXsec import TblXsec

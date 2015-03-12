@@ -1,5 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
-from EventReader import EventLoop
+from EventReaderBundle import EventLoop
 import multiprocessing
 
 ##____________________________________________________________________________||
