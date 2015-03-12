@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderBundle, EventLoopRunner
+from AlphaTwirl.EventReader import EventReaderBundle, EventLoopRunner, EventLoop
 import unittest
 
 
@@ -41,25 +41,45 @@ class MockComponent(object):
         self._events = None
 
 ##____________________________________________________________________________||
+class MockEventLoopRunner(object):
+    def __init__(self):
+        self.began = False
+        self.ended = False
+        self.eventLoop = None
+
+    def begin(self):
+        self.began = True
+
+    def run(self, eventLoop):
+        self.eventLoop = eventLoop
+
+    def end(self):
+        self.ended = True
+
+##____________________________________________________________________________||
 class TestEventReaderEventReaderBundle(unittest.TestCase):
 
     def setUp(self):
         self.eventBuilder = MockEventBuilder()
-        self.eventLoopRunner = EventLoopRunner()
+        self.eventLoopRunner = MockEventLoopRunner()
         self.bundle = EventReaderBundle(self.eventBuilder, self.eventLoopRunner)
 
     def test_addReaderPackage(self):
         package1 = MockReaderPackage()
         self.bundle.addReaderPackage(package1)
 
-        package2 = MockReaderPackage()
-        self.bundle.addReaderPackage(package2)
-
     def test_begin_end(self):
-        self.bundle.begin()
-        self.bundle.end()
 
-    def test_OneComponent_OnePackage(self):
+        self.assertFalse(self.eventLoopRunner.began)
+        self.assertFalse(self.eventLoopRunner.ended)
+        self.bundle.begin()
+        self.assertTrue(self.eventLoopRunner.began)
+        self.assertFalse(self.eventLoopRunner.ended)
+        self.bundle.end()
+        self.assertTrue(self.eventLoopRunner.began)
+        self.assertTrue(self.eventLoopRunner.ended)
+
+    def test_read(self):
 
         package1 = MockReaderPackage()
         self.bundle.addReaderPackage(package1)
@@ -68,132 +88,13 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
 
         component1 = MockComponent()
         component1.name = "compName1"
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        component1._events = [event1, event2, event3]
+
+        self.assertIsNone(self.eventLoopRunner.eventLoop)
         self.bundle.read(component1)
-
-        self.assertEqual(1, len(package1._readers))
-        self.assertEqual("compName1", package1._readers[0].name)
-
-        self.assertFalse(package1.collected)
-        self.bundle.end()
-        self.assertEqual([event1.id, event2.id, event3.id], package1._readers[0]._eventIds)
-        self.assertTrue(package1.collected)
-
-    def test_OneComponent_TwoPackages(self):
-
-        package1 = MockReaderPackage()
-        self.bundle.addReaderPackage(package1)
-
-        package2 = MockReaderPackage()
-        self.bundle.addReaderPackage(package2)
-
-        self.bundle.begin()
-
-        component1 = MockComponent()
-        component1.name = "compName1"
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        component1._events = [event1, event2, event3]
-        self.bundle.read(component1)
-
-        self.assertEqual(1, len(package1._readers))
-        self.assertEqual("compName1", package1._readers[0].name)
-
-        self.assertEqual(1, len(package2._readers))
-        self.assertEqual("compName1", package2._readers[0].name)
-
-        self.assertFalse(package1.collected)
-        self.assertFalse(package2.collected)
-        self.bundle.end()
-
-        self.assertEqual([event1.id, event2.id, event3.id], package1._readers[0]._eventIds)
-        self.assertEqual([event1.id, event2.id, event3.id], package2._readers[0]._eventIds)
-
-        self.assertTrue(package1.collected)
-        self.assertTrue(package2.collected)
-
-    def test_TwoComponents_OnePackage(self):
-
-        package1 = MockReaderPackage()
-        self.bundle.addReaderPackage(package1)
-
-        self.bundle.begin()
-
-        component1 = MockComponent()
-        component1.name = "compName1"
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        component1._events = [event1, event2, event3]
-        self.bundle.read(component1)
-
-        component2 = MockComponent()
-        component2.name = "compName2"
-        event11 = MockEvent(201)
-        event12 = MockEvent(202)
-        event13 = MockEvent(203)
-        component2._events = [event11, event12, event13]
-        self.bundle.read(component2)
-
-        self.assertEqual(2, len(package1._readers))
-        self.assertEqual("compName1", package1._readers[0].name)
-        self.assertEqual("compName2", package1._readers[1].name)
-
-        self.assertFalse(package1.collected)
-        self.bundle.end()
-
-        self.assertEqual([event1.id, event2.id, event3.id], package1._readers[0]._eventIds)
-        self.assertEqual([event11.id, event12.id, event13.id], package1._readers[1]._eventIds)
-        self.assertTrue(package1.collected)
-
-    def test_TwoComponents_TwoPackages(self):
-
-        package1 = MockReaderPackage()
-        self.bundle.addReaderPackage(package1)
-
-        package2 = MockReaderPackage()
-        self.bundle.addReaderPackage(package2)
-
-        self.bundle.begin()
-
-        component1 = MockComponent()
-        component1.name = "compName1"
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        component1._events = [event1, event2, event3]
-        self.bundle.read(component1)
-
-        component2 = MockComponent()
-        component2.name = "compName2"
-        event11 = MockEvent(201)
-        event12 = MockEvent(202)
-        event13 = MockEvent(203)
-        component2._events = [event11, event12, event13]
-        self.bundle.read(component2)
-
-        self.assertEqual(2, len(package1._readers))
-        self.assertEqual("compName1", package1._readers[0].name)
-        self.assertEqual("compName2", package1._readers[1].name)
-
-        self.assertEqual(2, len(package2._readers))
-        self.assertEqual("compName1", package2._readers[0].name)
-        self.assertEqual("compName2", package2._readers[1].name)
-
-        self.assertFalse(package1.collected)
-        self.assertFalse(package2.collected)
-        self.bundle.end()
-
-        self.assertEqual([event1.id, event2.id, event3.id], package1._readers[0]._eventIds)
-        self.assertEqual([event11.id, event12.id, event13.id], package1._readers[1]._eventIds)
-        self.assertEqual([event1.id, event2.id, event3.id], package2._readers[0]._eventIds)
-        self.assertEqual([event11.id, event12.id, event13.id], package2._readers[1]._eventIds)
-
-        self.assertTrue(package1.collected)
-        self.assertTrue(package2.collected)
+        self.assertIsInstance(self.eventLoopRunner.eventLoop, EventLoop)
+        self.assertIs(self.eventBuilder, self.eventLoopRunner.eventLoop.eventBuilder)
+        self.assertIs(component1, self.eventLoopRunner.eventLoop.component)
+        self.assertIs("compName1", self.eventLoopRunner.eventLoop.component.name)
+        self.assertEqual(package1._readers, self.eventLoopRunner.eventLoop.readers)
 
 ##____________________________________________________________________________||
