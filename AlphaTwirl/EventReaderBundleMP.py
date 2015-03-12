@@ -34,49 +34,60 @@ class Task(object):
         return self.readers
 
 ##____________________________________________________________________________||
+class EventLooperMP(object):
+    def __init__(self, nprocesses = 16):
+        self._nprocesses = nprocesses
+        self._allReaders = { }
+        self._tasks = multiprocessing.JoinableQueue()
+        self._results = multiprocessing.Queue()
+        self._ntasks = 0
+        self._lock = multiprocessing.Lock()
+        for i in xrange(self._nprocesses):
+            worker = Worker(self._tasks, self._results, self._lock)
+            worker.start()
+
+    def read(self, eventBuilder, component, readers):
+        # add ids so can collect later
+        for reader in readers:
+            reader.id = id(reader)
+            self._allReaders[id(reader)] = reader
+
+        task = Task(eventBuilder, component, readers)
+        self._tasks.put(task)
+        self._ntasks += 1
+
+    def end(self):
+        # end processes
+        for i in xrange(self._nprocesses):
+            self._tasks.put(None)
+        self._tasks.join()
+
+        # collect readers from processes
+        for i in xrange(self._ntasks):
+            readers = self._results.get()
+            for reader in readers:
+                self._allReaders[reader.id].setResults(reader.results())
+
+##____________________________________________________________________________||
 class EventReaderBundleMP(object):
 
     def __init__(self, eventBuilder, nprocesses = 16):
         self._eventBuilder = eventBuilder
-        self._nprocesses = nprocesses
         self._packages = [ ]
-        self._readers = { }
+        self._nprocesses = nprocesses
 
     def addReaderPackage(self, package):
         self._packages.append(package)
 
     def begin(self):
-        self._tasks = multiprocessing.JoinableQueue()
-        self._results = multiprocessing.Queue()
-        self._ntasks = 0
-        self._lock = multiprocessing.Lock()
-
-        for i in xrange(self._nprocesses):
-            worker = Worker(self._tasks, self._results, self._lock)
-            worker.start()
+        self._eventLooper = EventLooperMP(self._nprocesses)
 
     def read(self, component):
-
-        readers = [ ]
-        for package in self._packages:
-            reader = package.make(component.name)
-            reader.id = id(reader)
-            self._readers[id(reader)] = reader
-            readers.append(reader)
-
-        task = Task(self._eventBuilder, component, readers)
-        self._tasks.put(task)
-        self._ntasks += 1
+        readers = [package.make(component.name) for package in self._packages]
+        self._eventLooper.read(self._eventBuilder, component, readers)
 
     def end(self):
-        for i in xrange(self._nprocesses):
-            self._tasks.put(None)
-        self._tasks.join()
-
-        for i in xrange(self._ntasks):
-            readers = self._results.get()
-            for reader in readers:
-                self._readers[reader.id].setResults(reader.results())
+        self._eventLooper.end()
 
         for package in self._packages:
             package.collect()
