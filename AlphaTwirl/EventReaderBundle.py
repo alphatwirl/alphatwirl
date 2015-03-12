@@ -1,7 +1,7 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class EventLooper(object):
+class EventLoop(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
         self.component = component
@@ -15,11 +15,11 @@ class EventLooper(object):
         return self.readers
 
 ##____________________________________________________________________________||
-class EventLooperRunner(object):
+class EventLoopRunner(object):
     def begin(self): pass
 
     def read(self, eventBuilder, component, readers):
-        task = EventLooper(eventBuilder, component, readers)
+        task = EventLoop(eventBuilder, component, readers)
         task()
 
     def end(self): pass
@@ -27,23 +27,23 @@ class EventLooperRunner(object):
 ##____________________________________________________________________________||
 class EventReaderBundle(object):
 
-    def __init__(self, eventBuilder, eventLooperRunner):
+    def __init__(self, eventBuilder, eventLoopRunner):
         self._eventBuilder = eventBuilder
-        self._eventLooperRunner = eventLooperRunner
+        self._eventLoopRunner = eventLoopRunner
         self._packages = [ ]
 
     def addReaderPackage(self, package):
         self._packages.append(package)
 
     def begin(self):
-        self._eventLooperRunner.begin()
+        self._eventLoopRunner.begin()
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
-        self._eventLooperRunner.read(self._eventBuilder, component, readers)
+        self._eventLoopRunner.read(self._eventBuilder, component, readers)
 
     def end(self):
-        self._eventLooperRunner.end()
+        self._eventLoopRunner.end()
 
         for package in self._packages:
             package.collect()

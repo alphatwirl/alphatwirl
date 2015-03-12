@@ -1,4 +1,4 @@
-from AlphaTwirl import EventReaderBundle, EventLooperRunner
+from AlphaTwirl import EventReaderBundle, EventLoopRunner
 import unittest
 
 
@@ -45,8 +45,8 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
 
     def setUp(self):
         self.eventBuilder = MockEventBuilder()
-        self.eventLooperRunner = EventLooperRunner()
-        self.bundle = EventReaderBundle(self.eventBuilder, self.eventLooperRunner)
+        self.eventLoopRunner = EventLoopRunner()
+        self.bundle = EventReaderBundle(self.eventBuilder, self.eventLoopRunner)
 
     def test_addReaderPackage(self):
         package1 = MockReaderPackage()

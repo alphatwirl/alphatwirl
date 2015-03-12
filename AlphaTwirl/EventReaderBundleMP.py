@@ -1,5 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
-from EventReaderBundle import EventLooper
+from EventReaderBundle import EventLoop
 import multiprocessing
 
 ##____________________________________________________________________________||
@@ -21,7 +21,7 @@ class Worker(multiprocessing.Process):
             self.result_queue.put(readers)
 
 ##____________________________________________________________________________||
-class MPEventLooperRunner(object):
+class MPEventLoopRunner(object):
     def __init__(self, nprocesses = 16):
         self._nprocesses = nprocesses
         self._ntasks = 0
@@ -43,7 +43,7 @@ class MPEventLooperRunner(object):
             reader.id = id(reader)
             self._allReaders[id(reader)] = reader
 
-        task = EventLooper(eventBuilder, component, readers)
+        task = EventLoop(eventBuilder, component, readers)
         self._tasks.put(task)
         self._ntasks += 1
 
