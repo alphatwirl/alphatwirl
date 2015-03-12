@@ -73,27 +73,3 @@ class EventLooperMP(object):
                 self._allReaders[reader.id].setResults(reader.results())
 
 ##____________________________________________________________________________||
-class EventReaderBundleMP(object):
-
-    def __init__(self, eventBuilder, eventLooper):
-        self._eventBuilder = eventBuilder
-        self._eventLooper = eventLooper
-        self._packages = [ ]
-
-    def addReaderPackage(self, package):
-        self._packages.append(package)
-
-    def begin(self):
-        self._eventLooper.begin()
-
-    def read(self, component):
-        readers = [package.make(component.name) for package in self._packages]
-        self._eventLooper.read(self._eventBuilder, component, readers)
-
-    def end(self):
-        self._eventLooper.end()
-
-        for package in self._packages:
-            package.collect()
-
-##____________________________________________________________________________||
