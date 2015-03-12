@@ -34,7 +34,7 @@ class Task(object):
         return self.readers
 
 ##____________________________________________________________________________||
-class EventLooperMP(object):
+class MPEventLooperRunner(object):
     def __init__(self, nprocesses = 16):
         self._nprocesses = nprocesses
         self._ntasks = 0
