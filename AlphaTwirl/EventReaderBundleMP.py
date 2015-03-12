@@ -37,14 +37,18 @@ class Task(object):
 class EventLooperMP(object):
     def __init__(self, nprocesses = 16):
         self._nprocesses = nprocesses
+        self._ntasks = 0
+        self._nworkers = 0
+
+    def begin(self):
         self._allReaders = { }
         self._tasks = multiprocessing.JoinableQueue()
         self._results = multiprocessing.Queue()
-        self._ntasks = 0
         self._lock = multiprocessing.Lock()
         for i in xrange(self._nprocesses):
             worker = Worker(self._tasks, self._results, self._lock)
             worker.start()
+            self._nworkers += 1
 
     def read(self, eventBuilder, component, readers):
         # add ids so can collect later
@@ -58,7 +62,7 @@ class EventLooperMP(object):
 
     def end(self):
         # end processes
-        for i in xrange(self._nprocesses):
+        for i in xrange(self._nworkers):
             self._tasks.put(None)
         self._tasks.join()
 
@@ -81,6 +85,7 @@ class EventReaderBundleMP(object):
 
     def begin(self):
         self._eventLooper = EventLooperMP(self._nprocesses)
+        self._eventLooper.begin()
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
