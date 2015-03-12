@@ -78,13 +78,12 @@ class EventReaderBundleMP(object):
     def __init__(self, eventBuilder, nprocesses = 16):
         self._eventBuilder = eventBuilder
         self._packages = [ ]
-        self._nprocesses = nprocesses
+        self._eventLooper = EventLooperMP(nprocesses)
 
     def addReaderPackage(self, package):
         self._packages.append(package)
 
     def begin(self):
-        self._eventLooper = EventLooperMP(self._nprocesses)
         self._eventLooper.begin()
 
     def read(self, component):
