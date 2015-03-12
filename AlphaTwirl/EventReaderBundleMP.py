@@ -20,7 +20,7 @@ class Worker(multiprocessing.Process):
             self.result_queue.put(readers)
 
 ##____________________________________________________________________________||
-class Task(object):
+class EventLooper(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
         self.component = component
@@ -56,7 +56,7 @@ class MPEventLooperRunner(object):
             reader.id = id(reader)
             self._allReaders[id(reader)] = reader
 
-        task = Task(eventBuilder, component, readers)
+        task = EventLooper(eventBuilder, component, readers)
         self._tasks.put(task)
         self._ntasks += 1
 
