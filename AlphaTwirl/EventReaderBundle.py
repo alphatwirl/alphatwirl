@@ -19,10 +19,8 @@ class EventLooperRunner(object):
     def begin(self): pass
 
     def read(self, eventBuilder, component, readers):
-        events = eventBuilder.build(component)
-        for event in events:
-            for reader in readers:
-                reader.event(event)
+        task = EventLooper(eventBuilder, component, readers)
+        task()
 
     def end(self): pass
 
