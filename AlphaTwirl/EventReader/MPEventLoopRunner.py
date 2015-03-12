@@ -37,7 +37,7 @@ class MPEventLoopRunner(object):
             worker.start()
             self._nworkers += 1
 
-    def read(self, eventBuilder, component, readers):
+    def run(self, eventBuilder, component, readers):
         # add ids so can collect later
         for reader in readers:
             reader.id = id(reader)
