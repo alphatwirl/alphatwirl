@@ -2,7 +2,7 @@
 
 ##____________________________________________________________________________||
 class NullProgressReporter(object):
-    def report(self, event): pass
+    def report(self, event, component): pass
 
 ##____________________________________________________________________________||
 class NullProgressMonitor(object):
@@ -20,7 +20,7 @@ class EventLoop(object):
     def __call__(self, progressReporter = NullProgressReporter()):
         events = self.eventBuilder.build(self.component)
         for event in events:
-            progressReporter.report(event)
+            progressReporter.report(event, self.component)
             for reader in self.readers:
                 reader.event(event)
         return self.readers
