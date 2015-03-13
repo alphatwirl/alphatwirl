@@ -3,7 +3,6 @@ from Events import *
 from EventReadProgress import *
 import Binning
 import Counter
-from EventReaderPackage import *
 from Collector import *
 from CombineIntoPandasDataFrame import *
 from WritePandasDataFrameToFile import *
