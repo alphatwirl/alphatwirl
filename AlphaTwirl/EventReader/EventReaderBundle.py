@@ -1,15 +1,20 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
+class NullProgressReporter(object):
+    def report(self, event): pass
+
+##____________________________________________________________________________||
 class EventLoop(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
         self.component = component
         self.readers = readers
 
-    def __call__(self):
+    def __call__(self, progressReporter = NullProgressReporter()):
         events = self.eventBuilder.build(self.component)
         for event in events:
+            progressReporter.report(event)
             for reader in self.readers:
                 reader.event(event)
         return self.readers
