@@ -17,7 +17,7 @@ class MockEventLoop(object):
     def __init__(self, readers):
         self.readers = readers
 
-    def __call__(self):
+    def __call__(self, progressReporter):
         for reader in self.readers:
             reader._results = 3456
         return self.readers
