@@ -6,7 +6,7 @@ class MockEventLoop(object):
     def __init__(self):
         self.called = False
 
-    def __call__(self):
+    def __call__(self, progressReporter):
         self.called = True
 
 ##____________________________________________________________________________||

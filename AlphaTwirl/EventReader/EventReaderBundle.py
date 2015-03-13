@@ -5,6 +5,12 @@ class NullProgressReporter(object):
     def report(self, event): pass
 
 ##____________________________________________________________________________||
+class NullProgressMonitor(object):
+    def createReporter(self): return NullProgressReporter()
+    def addWorker(self, worker): pass
+    def monitor(self): pass
+
+##____________________________________________________________________________||
 class EventLoop(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
@@ -21,10 +27,13 @@ class EventLoop(object):
 
 ##____________________________________________________________________________||
 class EventLoopRunner(object):
+    def __init__(self, progressMonitor = NullProgressMonitor()):
+        self.progressReporter = progressMonitor.createReporter()
+
     def begin(self): pass
 
     def run(self, eventLoop):
-        eventLoop()
+        eventLoop(self.progressReporter)
 
     def end(self): pass
 
