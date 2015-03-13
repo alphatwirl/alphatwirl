@@ -21,8 +21,8 @@ class ProgressBar(object):
 
     def _presentFor(self, name, report):
         percent = float(report.done)/report.total
-        bar = ('=' * int(percent * 20)).ljust(20)
+        bar = ('=' * int(percent * 40)).ljust(40)
         percent = int(percent * 100)
-        sys.stdout.write("%30s [%s] %3s%% %7d / %7d\n" % (name, bar, percent, report.done, report.total))
+        sys.stdout.write("%35s [%s] %3s%% %7d / %7d\n" % (name, bar, percent, report.done, report.total))
 
 ##____________________________________________________________________________||
