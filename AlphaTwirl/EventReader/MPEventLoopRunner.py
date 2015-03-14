@@ -10,7 +10,6 @@ class Worker(multiprocessing.Process):
         self.result_queue = result_queue
         self.lock = lock
         self.progressReporter = progressReporter
-        self.progressReporter.worker = self
 
     def run(self):
         while True:
