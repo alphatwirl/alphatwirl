@@ -10,6 +10,7 @@ class ProgressReporter(object):
         self.queue = queue
         self.pernevents = pernevents
         self.lastReportTime = time.time()
+        self.interval = 0.02 # [second]
 
     def report(self, event, component):
         if not self.needToReport(event, component): return
@@ -20,7 +21,7 @@ class ProgressReporter(object):
 
     def needToReport(self, event, component):
         iEvent = event.iEvent + 1 # add 1 because event.iEvent starts from 0
-        if time.time() - self.lastReportTime > 0.02: return True
+        if time.time() - self.lastReportTime > self.interval: return True
         if iEvent % self.pernevents == 0: return True
         if iEvent == event.nEvents: return True
         return False
@@ -51,9 +52,10 @@ class MPProgressMonitor(object):
         self.queue = multiprocessing.Queue()
         self._presentation = presentation
         self.lastTime = time.time()
+        self.interval = 0.1 # [second]
 
     def monitor(self):
-        if time.time() - self.lastTime < 0.1: return
+        if time.time() - self.lastTime < self.interval: return
         self.lastTime = time.time()
         self._present()
 
