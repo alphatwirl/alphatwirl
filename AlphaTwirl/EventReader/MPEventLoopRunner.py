@@ -40,7 +40,6 @@ class MPEventLoopRunner(object):
             worker.start()
             self._nworkers += 1
             self._workers.append(worker)
-            self._progressMonitor.addWorker(worker)
 
     def run(self, eventLoop):
         # add ids so can collect later

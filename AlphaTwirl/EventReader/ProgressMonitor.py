@@ -49,12 +49,8 @@ class ProgressMonitor(object):
 class MPProgressMonitor(object):
     def __init__(self, presentation):
         self.queue = multiprocessing.Queue()
-        self._workers = [ ]
         self._presentation = presentation
         self.lastTime = time.time()
-
-    def addWorker(self, worker):
-        self._workers.append(worker)
 
     def monitor(self):
         if time.time() - self.lastTime < 0.1: return
