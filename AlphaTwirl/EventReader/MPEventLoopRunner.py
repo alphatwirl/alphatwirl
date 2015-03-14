@@ -54,16 +54,17 @@ class MPEventLoopRunner(object):
 
         while self._ntasks >= 1:
             self._progressMonitor.monitor()
-            self.collectReaders()
+            if self.collectTaskResults():
+                self._ntasks -= 1
 
         self._progressMonitor.last()
         self._tasks.join()
 
-    def collectReaders(self):
-        if self._results.empty(): return
+    def collectTaskResults(self):
+        if self._results.empty(): return False
         readers = self._results.get()
         for reader in readers:
             self._allReaders[reader.id].setResults(reader.results())
-        self._ntasks -= 1
+        return True
 
 ##____________________________________________________________________________||
