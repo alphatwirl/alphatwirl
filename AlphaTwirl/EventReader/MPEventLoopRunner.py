@@ -1,17 +1,6 @@
 # Tai Sakuma <sakuma@fnal.gov>
-from EventReaderBundle import EventLoop
+from EventReaderBundle import EventLoop, NullProgressMonitor, NullProgressReporter
 import multiprocessing
-
-##____________________________________________________________________________||
-class NullProgressReporter(object):
-    def report(self, event): pass
-
-##____________________________________________________________________________||
-class NullProgressMonitor(object):
-    def createReporter(self): return NullProgressReporter()
-    def addWorker(self, worker): pass
-    def monitor(self): pass
-    def last(self): pass
 
 ##____________________________________________________________________________||
 class Worker(multiprocessing.Process):
