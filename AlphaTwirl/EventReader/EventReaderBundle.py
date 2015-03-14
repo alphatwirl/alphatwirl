@@ -27,7 +27,8 @@ class EventLoop(object):
 
 ##____________________________________________________________________________||
 class EventLoopRunner(object):
-    def __init__(self, progressMonitor = NullProgressMonitor()):
+    def __init__(self, progressMonitor = None):
+        if progressMonitor is None: progressMonitor = NullProgressMonitor()
         self.progressReporter = progressMonitor.createReporter()
 
     def begin(self): pass
