@@ -4,3 +4,4 @@ from EventReaderPackage import *
 from Collector import *
 from ProgressBar import *
 from ProgressMonitor import *
+from ProgressReporter import *
