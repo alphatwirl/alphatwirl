@@ -50,6 +50,7 @@ class MPEventLoopRunner(object):
             worker = Worker(self._tasks, self._results, self._progressMonitor.createReporter(), self._lock)
             worker.start()
             self._nworkers += 1
+            self._workers.append(worker)
             self._progressMonitor.addWorker(worker)
 
     def run(self, eventLoop):
@@ -62,17 +63,20 @@ class MPEventLoopRunner(object):
         self._ntasks += 1
 
     def end(self):
-        # end processes
         for i in xrange(self._nworkers):
-            self._tasks.put(None)
+            self._tasks.put(None) # end workers
 
-        self._progressMonitor.monitor()
+        while self._ntasks >= 1:
+            self._progressMonitor.monitor()
+            self.collectReaders()
+
         self._tasks.join()
 
-        # collect readers from processes
-        for i in xrange(self._ntasks):
-            readers = self._results.get()
-            for reader in readers:
-                self._allReaders[reader.id].setResults(reader.results())
+    def collectReaders(self):
+        if self._results.empty(): return
+        readers = self._results.get()
+        for reader in readers:
+            self._allReaders[reader.id].setResults(reader.results())
+        self._ntasks -= 1
 
 ##____________________________________________________________________________||

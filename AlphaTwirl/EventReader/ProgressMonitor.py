@@ -56,11 +56,10 @@ class MPProgressMonitor(object):
         self._workers.append(worker)
 
     def monitor(self):
-        while any(i.is_alive() for i in self._workers):
-            time.sleep(0.1)
-            while not self.queue.empty():
-                report = self.queue.get()
-                self._presentation.present(report)
+        time.sleep(0.1)
+        while not self.queue.empty():
+            report = self.queue.get()
+            self._presentation.present(report)
 
     def createReporter(self):
         return ProgressReporter(self.queue)
