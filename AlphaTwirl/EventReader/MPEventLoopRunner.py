@@ -70,6 +70,7 @@ class MPEventLoopRunner(object):
             self._progressMonitor.monitor()
             self.collectReaders()
 
+        self._progressMonitor.last()
         self._tasks.join()
 
     def collectReaders(self):
