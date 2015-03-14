@@ -55,12 +55,12 @@ class MPProgressMonitor(object):
     def monitor(self):
         if time.time() - self.lastTime < 0.1: return
         self.lastTime = time.time()
-        self.present()
+        self._present()
 
     def last(self):
-        self.present()
+        self._present()
 
-    def present(self):
+    def _present(self):
         while not self.queue.empty():
             report = self.queue.get()
             self._presentation.present(report)
