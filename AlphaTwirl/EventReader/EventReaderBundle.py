@@ -9,6 +9,7 @@ class NullProgressMonitor(object):
     def createReporter(self): return NullProgressReporter()
     def addWorker(self, worker): pass
     def monitor(self): pass
+    def last(self): pass
 
 ##____________________________________________________________________________||
 class EventLoop(object):
