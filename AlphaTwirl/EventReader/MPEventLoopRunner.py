@@ -27,7 +27,6 @@ class MPEventLoopRunner(object):
         self._nprocesses = nprocesses
         self._ntasks = 0
         self._nworkers = 0
-        self._workers = [ ]
         self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
 
     def begin(self):
@@ -39,7 +38,6 @@ class MPEventLoopRunner(object):
             worker = Worker(self._tasks, self._results, self._progressMonitor.createReporter(), self._lock)
             worker.start()
             self._nworkers += 1
-            self._workers.append(worker)
 
     def run(self, eventLoop):
         # add ids so can collect later
