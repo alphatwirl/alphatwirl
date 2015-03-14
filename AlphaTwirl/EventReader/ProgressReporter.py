@@ -14,6 +14,9 @@ class ProgressReporter(object):
 
     def report(self, event, component):
         if not self.needToReport(event, component): return
+        self._report(event, component)
+
+    def _report(self, event, component):
         done = event.iEvent + 1
         report = ProgressReport(name = component.name, done = done, total = event.nEvents)
         self.queue.put(report)
