@@ -59,8 +59,7 @@ class TestEvents(unittest.TestCase):
         self.assertIs(tree, events.tree)
 
     def test_nEvents(self):
-        entreis = 100
-        tree = MockTree(entreis)
+        tree = MockTree(Entries = 100)
         events = Events(tree)
         self.assertEqual(100, events.nEvents) # default the same as entries
 
@@ -76,34 +75,22 @@ class TestEvents(unittest.TestCase):
         events = Events(tree, 100)
         self.assertEqual(100, events.nEvents)
 
-    def test_iter(self):
-        entreis = 4
-        tree = MockTree(entreis)
-        events = Events(tree)
-        it = iter(events)
-        event = next(it)
-        self.assertEqual(0, tree.iEvent)
-        event = next(it)
-        self.assertEqual(1, tree.iEvent)
-        event = next(it)
-        self.assertEqual(2, tree.iEvent)
-        event = next(it)
-        self.assertEqual(3, tree.iEvent)
-        self.assertRaises(StopIteration, next, it)
-
     def test_iEvent(self):
-        entreis = 4
-        tree = MockTree(entreis)
+        tree = MockTree(Entries = 4)
         events = Events(tree)
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
+        self.assertEqual(0, tree.iEvent)
         event = next(it)
         self.assertEqual(1, event.iEvent)
+        self.assertEqual(1, tree.iEvent)
         event = next(it)
         self.assertEqual(2, event.iEvent)
+        self.assertEqual(2, tree.iEvent)
         event = next(it)
         self.assertEqual(3, event.iEvent)
+        self.assertEqual(3, tree.iEvent)
         self.assertRaises(StopIteration, next, it)
         self.assertEqual(-1, event.iEvent)
 
@@ -123,8 +110,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, event.iEvent)
 
     def test_getattr(self):
-        entreis = 5
-        tree = MockTree(entreis)
+        tree = MockTree(Entries = 5)
         events = Events(tree)
         it = iter(events)
         event = next(it)
