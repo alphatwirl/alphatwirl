@@ -24,12 +24,12 @@ class Worker(multiprocessing.Process):
 
 ##____________________________________________________________________________||
 class MPEventLoopRunner(object):
-    def __init__(self, nprocesses = 16, progressMonitor = NullProgressMonitor()):
+    def __init__(self, nprocesses = 16, progressMonitor = None):
         self._nprocesses = nprocesses
         self._ntasks = 0
         self._nworkers = 0
         self._workers = [ ]
-        self._progressMonitor = progressMonitor
+        self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
 
     def begin(self):
         self._allReaders = { }
