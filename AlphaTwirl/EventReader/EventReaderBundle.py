@@ -2,11 +2,17 @@
 from AlphaTwirl.ProgressBar import ProgressReport
 
 ##____________________________________________________________________________||
+class ProgressReportWriter(object):
+    def write(self, component, event):
+        return ProgressReport(name = component.name, done = event.iEvent + 1, total = event.nEvents)
+
+##____________________________________________________________________________||
 class EventLoop(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
         self.component = component
         self.readers = readers
+        self.progressReportWriter = ProgressReportWriter()
 
     def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
@@ -18,7 +24,7 @@ class EventLoop(object):
 
     def reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = ProgressReport(name = self.component.name, done = event.iEvent + 1, total = event.nEvents)
+        report = self.progressReportWriter.write(self.component, event)
         progressReporter.report(report)
 
 ##____________________________________________________________________________||
