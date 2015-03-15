@@ -63,9 +63,11 @@ class ProgressBar(object):
         sys.stdout.flush()
 
     def createLine(self, name, report):
+        nameFieldLength = 32
         percent = float(report.done)/report.total
         bar = ('=' * int(percent * 40)).ljust(40)
         percent = round(percent * 100, 2)
-        return "{0:>35s} [{1:s}] {2:6.2f}% {3:7d} / {4:7d}".format(name, bar, percent, report.done, report.total)
+        name = name[0:nameFieldLength]
+        return " {3:6.2f}% [{2:s}] {4:7d} / {5:7d}  {0:<{1}s} ".format(name, nameFieldLength, bar, percent, report.done, report.total)
 
 ##____________________________________________________________________________||
