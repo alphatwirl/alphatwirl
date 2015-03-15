@@ -2,24 +2,24 @@
 from AlphaTwirl.ProgressBar import ProgressReport
 
 ##____________________________________________________________________________||
-class NullProgressReporter(object):
-    def report(self, report): pass
-
-##____________________________________________________________________________||
 class EventLoop(object):
     def __init__(self, eventBuilder, component, readers):
         self.eventBuilder = eventBuilder
         self.component = component
         self.readers = readers
 
-    def __call__(self, progressReporter = NullProgressReporter()):
+    def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
         for event in events:
-            report = ProgressReport(name = self.component.name, done = event.iEvent + 1, total = event.nEvents)
-            progressReporter.report(report)
+            self.reportProgress(progressReporter, event)
             for reader in self.readers:
                 reader.event(event)
         return self.readers
+
+    def reportProgress(self, progressReporter, event):
+        if progressReporter is None: return
+        report = ProgressReport(name = self.component.name, done = event.iEvent + 1, total = event.nEvents)
+        progressReporter.report(report)
 
 ##____________________________________________________________________________||
 class EventReaderBundle(object):
