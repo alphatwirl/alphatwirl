@@ -5,6 +5,8 @@ import unittest
 class MockEvent(object):
     def __init__(self, id):
         self.id = id
+        self.iEvent = 0
+        self.nEvents = 0
 
 ##____________________________________________________________________________||
 class MockEventBuilder(object):
@@ -23,6 +25,7 @@ class MockReader(object):
 class MockComponent(object):
     def __init__(self):
         self._events = None
+        self.name = None
 
 ##____________________________________________________________________________||
 class TestEventLoop(unittest.TestCase):

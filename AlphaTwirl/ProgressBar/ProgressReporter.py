@@ -11,9 +11,7 @@ class ProgressReporter(object):
         self.interval = 0.02 # [second]
         self._readTime()
 
-    def report(self, event, component):
-        done = event.iEvent + 1
-        report = ProgressReport(name = component.name, done = done, total = event.nEvents)
+    def report(self, report):
         if not self.needToReport(report): return
         self._report(report)
 
