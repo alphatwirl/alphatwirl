@@ -30,10 +30,11 @@ class EventLoop(object):
 ##____________________________________________________________________________||
 class EventReaderBundle(object):
 
-    def __init__(self, eventBuilder, eventLoopRunner):
+    def __init__(self, eventBuilder, eventLoopRunner, progressBar = None):
         self._eventBuilder = eventBuilder
         self._eventLoopRunner = eventLoopRunner
         self._packages = [ ]
+        self.progressBar = progressBar
 
     def addReaderPackage(self, package):
         self._packages.append(package)
@@ -48,8 +49,13 @@ class EventReaderBundle(object):
 
     def end(self):
         self._eventLoopRunner.end()
+        self._collectResults()
 
-        for package in self._packages:
+    def _collectResults(self):
+        for i, package in enumerate(self._packages):
+            if self.progressBar is not None:
+                report = ProgressReport(name = "collecting results", done = i + 1, total = len(self._packages))
+                self.progressBar.present(report)
             package.collect()
 
 ##____________________________________________________________________________||
