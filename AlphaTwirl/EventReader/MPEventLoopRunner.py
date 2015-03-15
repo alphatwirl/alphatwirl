@@ -1,5 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
-from EventReaderBundle import EventLoop, NullProgressMonitor, NullProgressReporter
+from EventLoopRunner import NullProgressMonitor
 import multiprocessing
 
 ##____________________________________________________________________________||
