@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <sakuma@fnal.gov>
-from AlphaTwirl.ProgressBar import ProgressBar, MPProgressMonitor, ProgressReport
+from AlphaTwirl.ProgressBar import ProgressBar, ProgressBar2, MPProgressMonitor, ProgressReport
 from AlphaTwirl.EventReader import MPEventLoopRunner
 import time, random
 
@@ -11,6 +11,7 @@ class EventLoop(object):
         self.readers = [ ]
     def __call__(self, progressReporter = None):
         n = random.randint(5, 50)
+        time.sleep(random.randint(0, 3))
         for i in xrange(n):
             time.sleep(0.1)
             report = ProgressReport(name = self.name, done = i + 1, total = n)
@@ -22,11 +23,11 @@ progressBar = ProgressBar()
 progressMonitor = MPProgressMonitor(presentation = progressBar)
 runner = MPEventLoopRunner(progressMonitor = progressMonitor)
 runner.begin()
-runner.run(EventLoop("loop1"))
-runner.run(EventLoop("loop2"))
-runner.run(EventLoop("loop3"))
-runner.run(EventLoop("loop4"))
-runner.run(EventLoop("loop5"))
+runner.run(EventLoop("loop"))
+runner.run(EventLoop("another loop"))
+runner.run(EventLoop("more loop"))
+runner.run(EventLoop("loop loop loop"))
+runner.run(EventLoop("l"))
 runner.run(EventLoop("loop6"))
 runner.run(EventLoop("loop7"))
 runner.run(EventLoop("loop8"))
