@@ -2,7 +2,7 @@
 import sys, collections
 
 ##____________________________________________________________________________||
-class ProgressBar(object):
+class ProgressBar2(object):
     def __init__(self):
         self._progress = collections.OrderedDict()
         self._finished = collections.OrderedDict()
@@ -29,7 +29,7 @@ class ProgressBar(object):
         sys.stdout.write("%35s [%s] %3s%% %7d / %7d\n" % (name, bar, percent, report.done, report.total))
 
 ##____________________________________________________________________________||
-class ProgressBar2(object):
+class ProgressBar(object):
     def __init__(self):
         self.reports = collections.OrderedDict()
         self.lines = [ ]
