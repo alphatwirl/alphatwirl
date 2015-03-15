@@ -30,6 +30,7 @@ class MPProgressMonitor(object):
         self.queue = multiprocessing.Queue()
         self._presentation = presentation
         self.interval = 0.1 # [second]
+        self.lastWaitTime = 1.0 # [second]
         self._readTime()
 
     def monitor(self):
@@ -38,7 +39,10 @@ class MPProgressMonitor(object):
         self._present()
 
     def last(self):
-        self._present()
+        start = self._time()
+        while self._presentation.nreports() > 0:
+            if self._time() - start > self.lastWaitTime: break
+            self._present()
 
     def _present(self):
         while not self.queue.empty():
