@@ -1,23 +1,10 @@
-from AlphaTwirl.ProgressBar import ProgressReporter
+from AlphaTwirl.ProgressBar import ProgressReporter, ProgressReport
 import unittest
 
 ##____________________________________________________________________________||
 class MockTime(object):
     def __init__(self, time): self.time = time
     def __call__(self): return self.time
-
-##____________________________________________________________________________||
-class MockReport(object): pass
-
-##____________________________________________________________________________||
-class MockEvent(object):
-    def __init__(self):
-        self.iEvent = 123
-        self.nEvents = 1552
-
-##____________________________________________________________________________||
-class MockComponent(object):
-    def __init__(self): self.name = "dataset1"
 
 ##____________________________________________________________________________||
 class MockQueue(object):
@@ -40,9 +27,7 @@ class TestMPProgressMonitor(unittest.TestCase):
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.2
-        event = MockEvent()
-        component = MockComponent()
-        reporter._report(event, component)
+        reporter._report(ProgressReport(name = "dataset1", done = 124, total = 1552))
 
         report = queue.get()
         self.assertEqual("dataset1", report.name)
@@ -62,21 +47,17 @@ class TestMPProgressMonitor(unittest.TestCase):
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.01
-        event = MockEvent()
-        component = MockComponent()
-        self.assertFalse(reporter.needToReport(event, component))
+        report = ProgressReport(name = "dataset1", done = 124, total = 1552)
+        self.assertFalse(reporter.needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.03
-        event = MockEvent()
-        component = MockComponent()
-        self.assertTrue(reporter.needToReport(event, component))
+        report = ProgressReport(name = "dataset1", done = 124, total = 1552)
+        self.assertTrue(reporter.needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.03
-        event = MockEvent()
-        event.iEvent = 1551 # = event.nEvents - 1
-        component = MockComponent()
-        self.assertTrue(reporter.needToReport(event, component))
+        report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
+        self.assertTrue(reporter.needToReport(report))
 
 ##____________________________________________________________________________||

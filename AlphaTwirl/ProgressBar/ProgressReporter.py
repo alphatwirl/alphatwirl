@@ -12,19 +12,18 @@ class ProgressReporter(object):
         self._readTime()
 
     def report(self, event, component):
-        if not self.needToReport(event, component): return
-        self._report(event, component)
-
-    def _report(self, event, component):
         done = event.iEvent + 1
         report = ProgressReport(name = component.name, done = done, total = event.nEvents)
+        if not self.needToReport(report): return
+        self._report(report)
+
+    def _report(self, report):
         self.queue.put(report)
         self._readTime()
 
-    def needToReport(self, event, component):
-        iEvent = event.iEvent + 1 # add 1 because event.iEvent starts from 0
+    def needToReport(self, report):
         if self._time() - self.lastTime > self.interval: return True
-        if iEvent == event.nEvents: return True
+        if report.done == report.total: return True
         return False
 
     def _time(self): return time.time()
