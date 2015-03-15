@@ -1,5 +1,5 @@
 # Tai Sakuma <sakuma@fnal.gov>
-from EventLoopRunner import NullProgressMonitor
+from NullProgressMonitor import NullProgressMonitor
 import multiprocessing
 
 ##____________________________________________________________________________||
