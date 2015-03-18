@@ -10,10 +10,10 @@ class EventLoop(object):
         self.name = name
         self.readers = [ ]
     def __call__(self, progressReporter = None):
-        n = random.randint(5, 50)
+        n = random.randint(5, 1000000)
         time.sleep(random.randint(0, 3))
         for i in xrange(n):
-            time.sleep(0.1)
+            time.sleep(0.0001)
             report = ProgressReport(name = self.name, done = i + 1, total = n)
             progressReporter.report(report)
         return self.readers
