@@ -23,15 +23,21 @@ class MockEventLoop(object):
             reader._results = 3456
         return self.readers
 
+    def firstReportProgress(self, progressReporter): pass
+
 ##____________________________________________________________________________||
 class MockEventLoopForProgressReporterTest(object):
     def __init__(self, readers):
         self.readers = readers
+        self.firstReporter = None
 
     def __call__(self, progressReporter):
         for reader in self.readers:
             reader._results = [3456, progressReporter]
         return self.readers
+
+    def firstReportProgress(self, progressReporter):
+        self.firstReporter = progressReporter
 
 ##____________________________________________________________________________||
 class MockProgressReporter(object):
@@ -78,6 +84,8 @@ class TestMPEventLoopRunner(unittest.TestCase):
         reader2 = MockReader()
         eventLoop = MockEventLoopForProgressReporterTest([reader1, reader2])
         runner.run(eventLoop)
+
+        self.assertIsInstance(eventLoop.firstReporter, MockProgressReporter)
 
         self.assertIsNone(reader1._results)
         self.assertIsNone(reader2._results)
