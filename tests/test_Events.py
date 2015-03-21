@@ -78,6 +78,8 @@ class TestEvents(unittest.TestCase):
     def test_iEvent(self):
         tree = MockTree(Entries = 4)
         events = Events(tree)
+        self.assertEqual(-1, events.iEvent)
+
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
@@ -97,6 +99,8 @@ class TestEvents(unittest.TestCase):
     def test_maxEvents(self):
         tree = MockTree(Entries = 40)
         events = Events(tree, maxEvents = 4)
+        self.assertEqual(-1, events.iEvent)
+
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
