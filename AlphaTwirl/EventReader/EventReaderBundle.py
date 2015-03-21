@@ -10,12 +10,12 @@ class AllEvents(object):
 ##____________________________________________________________________________||
 class EventReaderBundle(object):
 
-    def __init__(self, eventBuilder, eventLoopRunner, progressBar = None):
+    def __init__(self, eventBuilder, eventLoopRunner, eventSelection = None, progressBar = None):
         self._eventBuilder = eventBuilder
         self._eventLoopRunner = eventLoopRunner
         self._packages = [ ]
         self.progressBar = progressBar
-        self.eventSelection = AllEvents()
+        self.eventSelection = eventSelection if eventSelection is not None else AllEvents()
 
     def addReaderPackage(self, package):
         self._packages.append(package)
