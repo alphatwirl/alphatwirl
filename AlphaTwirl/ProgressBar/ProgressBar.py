@@ -64,7 +64,7 @@ class ProgressBar(object):
 
     def createLine(self, name, report):
         nameFieldLength = 32
-        percent = float(report.done)/report.total
+        percent = float(report.done)/report.total if report.total > 0 else 1
         bar = (':' * int(percent * 40)).ljust(40, " ")
         percent = round(percent * 100, 2)
         name = name[0:nameFieldLength]
