@@ -28,24 +28,35 @@ class MockComponent(object):
         self.name = None
 
 ##____________________________________________________________________________||
+class MockEventSelection(object):
+    def __init__(self, toSelect):
+        self.toSelect = toSelect
+
+    def __call__(self, event):
+        return event.id in self.toSelect
+
+##____________________________________________________________________________||
 class TestEventLoop(unittest.TestCase):
 
     def test_call(self):
         eventBuilder = MockEventBuilder()
+        eventSelection = MockEventSelection((102, 104, 105))
         component = MockComponent()
         event1 = MockEvent(101)
         event2 = MockEvent(102)
         event3 = MockEvent(103)
-        component._events = [event1, event2, event3]
+        event4 = MockEvent(104)
+        event5 = MockEvent(105)
+        component._events = [event1, event2, event3, event4, event5]
 
         reader1 = MockReader()
         reader2 = MockReader()
         readers = [reader1, reader2]
 
-        loop = EventLoop(eventBuilder, component, readers)
+        loop = EventLoop(eventBuilder, eventSelection, component, readers)
 
         self.assertEqual(readers, loop())
-        self.assertEqual([101, 102, 103], reader1._eventIds)
-        self.assertEqual([101, 102, 103], reader2._eventIds)
+        self.assertEqual([102, 104, 105], reader1._eventIds)
+        self.assertEqual([102, 104, 105], reader2._eventIds)
 
 ##____________________________________________________________________________||

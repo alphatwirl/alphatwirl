@@ -4,6 +4,10 @@ from ProgressReportWriter import ProgressReportWriter
 from EventLoop import EventLoop
 
 ##____________________________________________________________________________||
+class AllEvents(object):
+    def __call__(self, event): return True
+
+##____________________________________________________________________________||
 class EventReaderBundle(object):
 
     def __init__(self, eventBuilder, eventLoopRunner, progressBar = None):
@@ -11,6 +15,7 @@ class EventReaderBundle(object):
         self._eventLoopRunner = eventLoopRunner
         self._packages = [ ]
         self.progressBar = progressBar
+        self.eventSelection = AllEvents()
 
     def addReaderPackage(self, package):
         self._packages.append(package)
@@ -20,7 +25,7 @@ class EventReaderBundle(object):
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
-        eventLoop = EventLoop(self._eventBuilder, component, readers)
+        eventLoop = EventLoop(self._eventBuilder, self.eventSelection, component, readers)
         self._eventLoopRunner.run(eventLoop)
 
     def end(self):
