@@ -3,7 +3,7 @@ import unittest
 
 ##____________________________________________________________________________||
 # How to run test
-# at the directory one up (under AlphaTwirl/)
+# at the directory two up (under AlphaTwirl/)
 #
 # to run all tests in this file
 # $ python -m unittest tests.examples.test_test_example
