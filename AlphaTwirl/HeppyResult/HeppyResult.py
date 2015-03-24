@@ -6,11 +6,20 @@ import os
 from Component import Component
 
 ##____________________________________________________________________________||
+defaultExcludeList = ('Chunks', 'failed')
+
+##____________________________________________________________________________||
 class HeppyResult(object):
-    def __init__(self, path):
+    def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
         self.path = path
-        excludeList = ('Chunks', 'failed')
-        self.componentNames = [n for n in os.listdir(path) if os.path.isdir(os.path.join(path, n)) and n not in excludeList]
+        allComponentNames = [n for n in os.listdir(path) if os.path.isdir(os.path.join(path, n)) and n not in excludeList]
+        if componentNames is not None:
+            nonexistentComponent =  [c for c in componentNames if c not in allComponentNames]
+            if len(nonexistentComponent) > 0:
+                raise ValueError("No such components: " + ", ".join(nonexistentComponent))
+            self.componentNames = componentNames
+        else:
+            self.componentNames = allComponentNames
 
         self._compDict = { }
 

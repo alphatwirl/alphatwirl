@@ -66,5 +66,25 @@ class TestHeppyResult(unittest.TestCase):
         expected = [self.heppy.QCD_HT_100To250, self.heppy.QCD_HT_250To500, self.heppy.TTJets]
         self.assertEqual(expected, self.heppy.components())
 
+    def test_init_with_componentNames(self):
+        path = 'dir/201522_SingleMu'
+        componentNames = ['QCD_HT_100To250', 'QCD_HT_250To500']
+        heppy = HeppyResult(path = path, componentNames = componentNames)
+
+        expected = componentNames
+        self.assertEqual(expected, heppy.componentNames)
+
+    def test_init_with_componentNames_wrongName(self):
+        path = 'dir/201522_SingleMu'
+        componentNames = ['QCD_HT_100To250', 'QCD_HT_250To500', 'WrongName']
+        self.assertRaises(ValueError, HeppyResult, path = path, componentNames = componentNames)
+
+    def test_init_with_excludeList(self):
+        path = 'dir/201522_SingleMu'
+        excludeList = ('failed', )
+        heppy = HeppyResult(path = path, excludeList = excludeList)
+
+        expected = ['QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks']
+        self.assertEqual(expected, heppy.componentNames)
 
 ##____________________________________________________________________________||
