@@ -1,4 +1,5 @@
 import HeppyResult
+from HeppyResultReader import *
 from Events import *
 import Binning
 import Counter
