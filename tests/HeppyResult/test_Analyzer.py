@@ -1,5 +1,5 @@
 import os
-from AlphaTwirl.HeppyResult import HeppyResult
+from AlphaTwirl.HeppyResult import Analyzer
 import unittest
 
 ##____________________________________________________________________________||
@@ -32,7 +32,7 @@ def mock_isdir(path):
     return False
 
 ##____________________________________________________________________________||
-class TestHeppyResult(unittest.TestCase):
+class TestAnalyzer(unittest.TestCase):
 
     def setUp(self):
         self.listdir_org = os.listdir
@@ -40,31 +40,16 @@ class TestHeppyResult(unittest.TestCase):
         os.listdir = mock_listdir
         os.path.isdir = mock_isdir
 
-        path = 'dir/201522_SingleMu'
-        self.heppy = HeppyResult(path)
+        path = 'dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer'
+        self.analyzer = Analyzer(path)
 
     def tearDown(self):
         os.listdir = self.listdir_org
         os.path.isdir = self.isdir_org
 
     def test_init(self):
-        self.assertEqual('dir/201522_SingleMu', self.heppy.path)
-
-    def test_componentNames(self):
-        expected = ['QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets']
-        self.assertEqual(expected, self.heppy.componentNames)
-
-    def test_components_theSameObject(self):
-        comp1 = self.heppy.QCD_HT_100To250
-        comp2 = self.heppy.QCD_HT_100To250
-        self.assertIs(comp1, comp2)
-
-    def test_AttributeError(self):
-        self.assertRaises(AttributeError, self.heppy.__getattr__, 'WrongName')
-
-    def test_components(self):
-        expected = [self.heppy.QCD_HT_100To250, self.heppy.QCD_HT_250To500, self.heppy.TTJets]
-        self.assertEqual(expected, self.heppy.components())
+        self.assertEqual('dir/201522_SingleMu/QCD_HT_100To250/PileUpAnalyzer', self.analyzer.path)
+        self.assertEqual('PileUpAnalyzer', self.analyzer.name)
 
 
 ##____________________________________________________________________________||

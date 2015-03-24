@@ -1,6 +1,7 @@
 import os
-from AlphaTwirl.HeppyResult import HeppyResult
+from AlphaTwirl.HeppyResult import Component
 import unittest
+import pickle
 
 ##____________________________________________________________________________||
 def mock_listdir(path):
@@ -32,39 +33,58 @@ def mock_isdir(path):
     return False
 
 ##____________________________________________________________________________||
-class TestHeppyResult(unittest.TestCase):
+def mock_readComponentConfig(path):
+    return { "isMC" : "True", 'xSection': '670500' }
+
+##____________________________________________________________________________||
+class TestComponent(unittest.TestCase):
 
     def setUp(self):
         self.listdir_org = os.listdir
-        self.isdir_org = os.path.isdir
         os.listdir = mock_listdir
+
+        self.isdir_org = os.path.isdir
         os.path.isdir = mock_isdir
 
-        path = 'dir/201522_SingleMu'
-        self.heppy = HeppyResult(path)
+        path = 'dir/201522_SingleMu/QCD_HT_100To250'
+        self.component = Component(path)
+        self.component._readConfig = mock_readComponentConfig
 
     def tearDown(self):
         os.listdir = self.listdir_org
         os.path.isdir = self.isdir_org
 
     def test_init(self):
-        self.assertEqual('dir/201522_SingleMu', self.heppy.path)
+        self.assertEqual('dir/201522_SingleMu/QCD_HT_100To250', self.component.path)
+        self.assertEqual('QCD_HT_100To250', self.component.name)
 
-    def test_componentNames(self):
-        expected = ['QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets']
-        self.assertEqual(expected, self.heppy.componentNames)
+    def test_analyzerNames(self):
+        expected = ['PileUpAnalyzer', 'skimAnalyzerCount','treeProducerSusyAlphaT']
+        self.assertEqual(expected, self.component.analyzerNames)
 
-    def test_components_theSameObject(self):
-        comp1 = self.heppy.QCD_HT_100To250
-        comp2 = self.heppy.QCD_HT_100To250
-        self.assertIs(comp1, comp2)
+    def test_analyzers_theSameObject(self):
+        ana1 = self.component.skimAnalyzerCount
+        ana2 = self.component.skimAnalyzerCount
+        self.assertIs(ana1, ana2)
 
     def test_AttributeError(self):
-        self.assertRaises(AttributeError, self.heppy.__getattr__, 'WrongName')
+        self.assertRaises(AttributeError, self.component.__getattr__, 'WrongName')
 
-    def test_components(self):
-        expected = [self.heppy.QCD_HT_100To250, self.heppy.QCD_HT_250To500, self.heppy.TTJets]
-        self.assertEqual(expected, self.heppy.components())
+    def test_analyzers(self):
+        expected = [self.component.PileUpAnalyzer, self.component.skimAnalyzerCount, self.component.treeProducerSusyAlphaT]
+        self.assertEqual(expected, self.component.analyzers())
 
+    def test_config(self):
+        expected = { "isMC" : "True", 'xSection': '670500' }
+        self.assertEqual(expected, self.component.config())
+
+    def test_config_theSameObject(self):
+        cfg1 = self.component.config()
+        cfg2 = self.component.config()
+        self.assertIs(cfg1, cfg2)
+
+    def test_pickle(self):
+        dumps = pickle.dumps(self.component)
+        obj = pickle.loads(dumps)
 
 ##____________________________________________________________________________||
