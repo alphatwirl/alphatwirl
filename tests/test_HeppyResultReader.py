@@ -15,6 +15,11 @@ class MockReader:
 class MockComponent: pass
 
 ##____________________________________________________________________________||
+class MockHeppyResult:
+    def __init__(self, components): self._components = components
+    def components(self): return self._components
+
+##____________________________________________________________________________||
 class TestHeppyResultReader(unittest.TestCase):
 
     def test_read(self):
@@ -33,19 +38,16 @@ class TestHeppyResultReader(unittest.TestCase):
         self.assertEqual([ ], subreader2.readComponents)
         self.assertFalse(subreader2.endCalled)
 
-        reader.begin()
+        component1 = MockComponent()
+        component2 = MockComponent()
+        heppyResult = MockHeppyResult([component1, component2])
+
+        reader.read(heppyResult)
+
         self.assertTrue(subreader1.beginCalled)
         self.assertTrue(subreader2.beginCalled)
-
-        component1 = MockComponent()
-        reader.read(component1)
-
-        component2 = MockComponent()
-        reader.read(component2)
         self.assertEqual([component1, component2], subreader1.readComponents)
         self.assertEqual([component1, component2], subreader2.readComponents)
-
-        reader.end()
         self.assertTrue(subreader1.endCalled)
         self.assertTrue(subreader2.endCalled)
 
