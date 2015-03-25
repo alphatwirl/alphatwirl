@@ -6,7 +6,7 @@ def returnTrue(x): return True
 
 ##____________________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None, retvalue = 'center', valid = returnTrue):
+    def __init__(self, width = 1, aBoundary = None, retvalue = 'lowedge', valid = returnTrue):
         self.width = decimal.Decimal(str(width))
         self.halfWidth = self.width/2
 
