@@ -34,6 +34,9 @@ class TestBinning(unittest.TestCase):
         binning = Binning(lows = lows, ups = ups, retvalue = 'lowedge')
         self.assertEqual([10, 20, 20, float("-inf"), 50], binning((15, 21, 20, 5, 55)))
 
+        binning = Binning(lows = lows, ups = ups) # 'lowedge' is default
+        self.assertEqual([10, 20, 20, float("-inf"), 50], binning((15, 21, 20, 5, 55)))
+
     def test_init_retvalue(self):
         boundaries = (10, 20, 30, 40, 50)
         Binning(boundaries = boundaries)
