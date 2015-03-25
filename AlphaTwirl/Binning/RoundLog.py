@@ -7,7 +7,7 @@ def returnTrue(x): return True
 
 ##____________________________________________________________________________||
 class RoundLog(object):
-    def __init__(self, width = 0.1, aBoundary = 0, retvalue = 'center', valid = returnTrue):
+    def __init__(self, width = 0.1, aBoundary = 0, retvalue = 'lowedge', valid = returnTrue):
         self._round = Round(width = width, aBoundary = aBoundary, retvalue = retvalue)
 
         self.valid = valid
