@@ -6,7 +6,7 @@ def returnTrue(x): return True
 ##____________________________________________________________________________||
 class Binning(object):
     def __init__(self, boundaries = None, lows = None, ups = None,
-                 retvalue = 'number', bins = None, underflow_bin = None, overflow_bin = None,
+                 retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
                  valid = returnTrue):
 
         if boundaries is None:

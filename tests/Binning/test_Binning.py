@@ -7,7 +7,7 @@ class TestBinning(unittest.TestCase):
         bins = (1, 2, 3, 4)
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
-        binning = Binning(bins = bins, lows = lows, ups = ups)
+        binning = Binning(bins = bins, lows = lows, ups = ups, retvalue = 'number')
         self.assertEqual(1, binning(15))
         self.assertEqual(2, binning(21))
         self.assertEqual(2, binning(20)) # on the low edge
@@ -18,14 +18,14 @@ class TestBinning(unittest.TestCase):
         bins = (1, 2, 3, 4)
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
-        binning = Binning(bins = bins, lows = lows, ups = ups)
+        binning = Binning(bins = bins, lows = lows, ups = ups, retvalue = 'number')
         self.assertEqual([1, 2, 2, 0, 5], binning((15, 21, 20, 5, 55)))
         self.assertEqual([1, 2, 2, 0, 5], binning([15, 21, 20, 5, 55]))
         self.assertEqual([1, [3, 2], 2, 0, 5], binning([15, (32, 22), 20, 5, 55]))
 
     def test_onBoundary(self):
         boundaries = (0.000001, 0.00001, 0.0001)
-        binning = Binning(boundaries = boundaries)
+        binning = Binning(boundaries = boundaries, retvalue = 'number')
         self.assertEqual([1, 2, 3], binning((0.000001, 0.00001, 0.0001)))
 
     def test_lowedge(self):
@@ -51,7 +51,7 @@ class TestBinning(unittest.TestCase):
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
         boundaries = (10, 20, 30, 40, 50)
-        binning = Binning(bins = bins, lows = lows, ups = ups)
+        binning = Binning(bins = bins, lows = lows, ups = ups, retvalue = 'number')
         self.assertEqual(bins, binning.bins)
         self.assertEqual(boundaries, binning.boundaries)
 
@@ -60,7 +60,7 @@ class TestBinning(unittest.TestCase):
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
         boundaries = (10, 20, 30, 40, 50)
-        binning = Binning(lows = lows, ups = ups)
+        binning = Binning(lows = lows, ups = ups, retvalue = 'number')
         self.assertEqual(bins, binning.bins)
         self.assertEqual(boundaries, binning.boundaries)
 
@@ -69,7 +69,7 @@ class TestBinning(unittest.TestCase):
         lows = (10.0, 20.0, 30.0, 40.0)
         ups = (20.0, 30.0, 40.0, 50.0)
         boundaries = (10, 20, 30, 40, 50)
-        binning = Binning(boundaries = boundaries)
+        binning = Binning(boundaries = boundaries, retvalue = 'number')
         self.assertEqual(bins, binning.bins)
         self.assertEqual(lows, binning.lows)
         self.assertEqual(ups, binning.ups)
@@ -92,7 +92,7 @@ class TestBinning(unittest.TestCase):
 
     def test_next_number(self):
         boundaries = (10, 20, 30, 40, 50)
-        binning = Binning(boundaries = boundaries)
+        binning = Binning(boundaries = boundaries, retvalue = 'number')
         self.assertEqual([1, 2, 3, 4, 5, 5], binning.next((0, 1, 2, 3, 4, 5)))
 
         self.assertEqual(5, binning.next(5)) # overflow_bin returns the same
@@ -112,7 +112,7 @@ class TestBinning(unittest.TestCase):
         self.assertEqual([0.002, 0.003, 0.004, 0.005, 0.005], binning.next((0.001, 0.002, 0.003, 0.004, 0.005)))
 
     def test_valid(self):
-        binning = Binning(boundaries = (30, 40, 50), valid = lambda x: x >= 10)
+        binning = Binning(boundaries = (30, 40, 50), retvalue = 'number', valid = lambda x: x >= 10)
         self.assertEqual([1, 2, None], binning((33, 45, 9)))
 
 ##____________________________________________________________________________||
