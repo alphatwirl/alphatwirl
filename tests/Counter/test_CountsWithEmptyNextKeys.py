@@ -1,0 +1,58 @@
+import AlphaTwirl.Counter as Counter
+import unittest
+
+##____________________________________________________________________________||
+class MockCounts(object):
+    def __init__(self):
+        self._counts = [ ]
+        self._keys = [ ]
+
+    def count(self, key, weight): self._counts.append((key, weight))
+    def addKeys(self, keys): self._keys.append(keys)
+    def setResults(self, results): self._counts = results
+    def results(self): return self._counts
+
+##____________________________________________________________________________||
+class MockKeyGapKeeper(object):
+    def __init__(self):
+        self.keys = [ ]
+        self.nexts = [ ]
+
+    def next(self, key):
+        self.keys.append(key)
+        return self.nexts.pop()
+
+##____________________________________________________________________________||
+class MockKey(object):
+    def __init__(self, i): self._i = i
+    def __repr__(self): return "key" + str(self._i)
+
+##____________________________________________________________________________||
+class TestCountsWithEmptyNextKeys(unittest.TestCase):
+
+    def test_count_one_bin(self):
+        counts = MockCounts()
+        keyGapKeeper = MockKeyGapKeeper()
+        countsWENK = Counter.CountsWithEmptyNextKeys(counts, keyGapKeeper)
+
+        key1 = MockKey(1)
+        key2 = MockKey(2)
+        key3 = MockKey(3)
+
+        keyGapKeeper.nexts = [[key2, key3]]
+        countsWENK.count(key1, 1)
+        self.assertEqual([key1], keyGapKeeper.keys)
+        self.assertEqual([(key1, 1.0)], counts._counts)
+        self.assertEqual([[key2, key3]], counts._keys)
+
+    def test_results(self):
+        counts = MockCounts()
+        keyGapKeeper = MockKeyGapKeeper()
+        countsWENK = Counter.CountsWithEmptyNextKeys(counts, keyGapKeeper)
+        self.assertEqual([ ], countsWENK.results())
+
+        key1 = MockKey(1)
+        countsWENK.setResults([(key1, 3.0)])
+        self.assertEqual([(key1, 3.0)], countsWENK.results())
+
+##____________________________________________________________________________||
