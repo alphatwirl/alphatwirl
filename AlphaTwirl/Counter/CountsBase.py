@@ -11,6 +11,9 @@ class CountsBase(object):
     def count(self): pass
 
     @abc.abstractmethod
+    def valNames(self): pass
+
+    @abc.abstractmethod
     def setResults(self): pass
 
     @abc.abstractmethod

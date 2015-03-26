@@ -22,6 +22,9 @@ class Counter(object):
     def keynames(self):
         return self._keynames
 
+    def valNames(self):
+        return self._countMethod.valNames()
+
     def setResults(self, results):
         self._countMethod.setResults(results)
 

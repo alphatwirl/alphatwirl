@@ -19,7 +19,7 @@ class CombineIntoPandasDataFrame(object):
     def combine(self, datasetReaderPairs):
         df = pandas.DataFrame()
         for datasetName, reader in datasetReaderPairs:
-            tbl_c = countsToDataFrame(reader.results(), reader.keynames())
+            tbl_c = countsToDataFrame(reader.results(), reader.keynames(), reader.valNames())
             tbl_c.insert(0, self.datasetColumnName, datasetName)
             df = df.append(tbl_c, ignore_index = True)
         return df

@@ -15,6 +15,9 @@ class MockReader(object):
     def keynames(self):
         return ('v1', )
 
+    def valNames(self):
+        return ('n', 'nvar')
+
     def results(self):
         return self._results
 

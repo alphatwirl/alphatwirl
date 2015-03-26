@@ -15,6 +15,9 @@ class CountsWithEmptyNextKeys(CountsBase):
         self._countMethod.addKeys(nextKeys)
         self._countMethod.count(key, weight)
 
+    def valNames(self):
+        return self._countMethod.valNames()
+
     def setResults(self, results):
         self._countMethod.setResults(results)
 
