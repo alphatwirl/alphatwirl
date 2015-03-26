@@ -13,6 +13,8 @@ class Counter(object):
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
+        self._countMethod.setKeyComposer(self._keyComposer)
+
     def event(self, event):
         key = self._keyComposer(event)
         if key is None: return
