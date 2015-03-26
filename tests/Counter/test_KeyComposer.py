@@ -95,4 +95,9 @@ class TestGenericKeyComposer(unittest.TestCase):
         event.var3 = (111, 222, 333)
         self.assertEqual((8, 232, 333), keyComposer(event))
 
+    def test_next(self):
+        binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho())
+        keyComposer = Counter.GenericKeyComposer(('var1', 'var2', 'var3'), binnings)
+        self.assertEqual(((12, 8, 20), (11, 9, 20), (11, 8, 21)), keyComposer.next((11, 8, 20)))
+
 ##____________________________________________________________________________||
