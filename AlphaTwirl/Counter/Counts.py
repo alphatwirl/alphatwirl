@@ -1,7 +1,10 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class Counts(object):
+from CountsBase import CountsBase
+
+##____________________________________________________________________________||
+class Counts(CountsBase):
     def __init__(self):
         self._counts = { }
 

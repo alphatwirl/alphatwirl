@@ -1,7 +1,10 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class CountsWithEmptyKeysInGap(object):
+from CountsBase import CountsBase
+
+##____________________________________________________________________________||
+class CountsWithEmptyKeysInGap(CountsBase):
 
     def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
@@ -19,7 +22,7 @@ class CountsWithEmptyKeysInGap(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
-class CountsWithEmptyKeysInGapAndNext(object):
+class CountsWithEmptyKeysInGapAndNext(CountsBase):
 
     def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod

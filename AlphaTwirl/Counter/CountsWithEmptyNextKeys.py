@@ -1,7 +1,10 @@
 # Tai Sakuma <sakuma@fnal.gov>
 
 ##____________________________________________________________________________||
-class CountsWithEmptyNextKeys(object):
+from CountsBase import CountsBase
+
+##____________________________________________________________________________||
+class CountsWithEmptyNextKeys(CountsBase):
 
     def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
