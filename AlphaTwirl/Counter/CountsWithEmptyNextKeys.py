@@ -11,7 +11,7 @@ class CountsWithEmptyNextKeys(CountsBase):
         self._keyGapKeeper = keyGapKeeper
 
     def count(self, key, weight):
-        nextKeys = self._keyGapKeeper.next(key)
+        nextKeys = self.keyComposer.next(key)
         self._countMethod.addKeys(nextKeys)
         self._countMethod.count(key, weight)
 
