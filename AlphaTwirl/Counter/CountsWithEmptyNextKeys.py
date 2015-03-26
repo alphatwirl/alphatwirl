@@ -6,9 +6,8 @@ from CountsBase import CountsBase
 ##____________________________________________________________________________||
 class CountsWithEmptyNextKeys(CountsBase):
 
-    def __init__(self, countMethod, keyGapKeeper):
+    def __init__(self, countMethod):
         self._countMethod = countMethod
-        self._keyGapKeeper = keyGapKeeper
 
     def count(self, key, weight):
         nextKeys = self.keyComposer.next(key)

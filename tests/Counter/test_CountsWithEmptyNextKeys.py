@@ -13,16 +13,6 @@ class MockCounts(object):
     def results(self): return self._counts
 
 ##____________________________________________________________________________||
-class MockKeyGapKeeper(object):
-    def __init__(self):
-        self.keys = [ ]
-        self.nexts = [ ]
-
-    def next(self, key):
-        self.keys.append(key)
-        return self.nexts.pop()
-
-##____________________________________________________________________________||
 class MockKeyComposer(object):
     def __init__(self):
         self.keys = [ ]
@@ -42,8 +32,7 @@ class TestCountsWithEmptyNextKeys(unittest.TestCase):
 
     def test_count_one_bin(self):
         counts = MockCounts()
-        keyGapKeeper = MockKeyGapKeeper()
-        countsWENK = Counter.CountsWithEmptyNextKeys(counts, keyGapKeeper)
+        countsWENK = Counter.CountsWithEmptyNextKeys(counts)
 
         keyComposer = MockKeyComposer()
         countsWENK.setKeyComposer(keyComposer)
@@ -60,8 +49,7 @@ class TestCountsWithEmptyNextKeys(unittest.TestCase):
 
     def test_results(self):
         counts = MockCounts()
-        keyGapKeeper = MockKeyGapKeeper()
-        countsWENK = Counter.CountsWithEmptyNextKeys(counts, keyGapKeeper)
+        countsWENK = Counter.CountsWithEmptyNextKeys(counts)
         self.assertEqual([ ], countsWENK.results())
 
         key1 = MockKey(1)
