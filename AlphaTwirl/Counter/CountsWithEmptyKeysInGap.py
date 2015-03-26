@@ -2,13 +2,18 @@
 
 ##____________________________________________________________________________||
 from CountsBase import CountsBase
+from KeyGapKeeper import KeyGapKeeper
 
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGap(CountsBase):
 
     def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
-        self._keyGapKeeper = keyGapKeeper
+        # self._keyGapKeeper = keyGapKeeper
+
+    def setKeyComposer(self, keyComposer):
+        super(CountsWithEmptyKeysInGap, self).setKeyComposer(keyComposer)
+        self._keyGapKeeper = KeyGapKeeper(self.keyComposer.binnings())
 
     def count(self, key, weight):
         newkeys = self._keyGapKeeper.update(key)
@@ -29,7 +34,11 @@ class CountsWithEmptyKeysInGapAndNext(CountsBase):
 
     def __init__(self, countMethod, keyGapKeeper):
         self._countMethod = countMethod
-        self._keyGapKeeper = keyGapKeeper
+        ## self._keyGapKeeper = keyGapKeeper
+
+    def setKeyComposer(self, keyComposer):
+        super(CountsWithEmptyKeysInGapAndNext, self).setKeyComposer(keyComposer)
+        self._keyGapKeeper = KeyGapKeeper(self.keyComposer.binnings())
 
     def count(self, key, weight):
         newkeys = self._keyGapKeeper.update(key)
