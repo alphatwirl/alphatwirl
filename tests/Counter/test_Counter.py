@@ -7,12 +7,15 @@ class MockEvent(object):
     pass
 
 ##____________________________________________________________________________||
-class MockCounts(object):
+class MockCounts(Counter.CountsBase):
     def __init__(self):
         self._counts = [ ]
 
     def count(self, key, weight):
         self._counts.append((key, weight))
+
+    def valNames(self):
+        return ('n', 'nvar')
 
     def setResults(self, results):
         self._counts = results
