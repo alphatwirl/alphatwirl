@@ -2,12 +2,13 @@ import AlphaTwirl.Counter as Counter
 import unittest
 
 ##____________________________________________________________________________||
-class MockCounts(object):
+class MockCounts(Counter.CountsBase):
     def __init__(self):
         self._counts = [ ]
         self._keys = [ ]
 
     def count(self, key, weight): self._counts.append((key, weight))
+    def valNames(self): return ('n', 'nvar')
     def addKeys(self, keys): self._keys.append(keys)
     def setResults(self, results): self._counts = results
     def results(self): return self._counts
