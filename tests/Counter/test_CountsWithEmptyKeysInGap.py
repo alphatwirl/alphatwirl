@@ -38,11 +38,10 @@ class TestCountsWithEmptyKeysInGap(unittest.TestCase):
 
     def test_count(self):
         counts = MockCounts()
-        keys = [(14, ), (11, )]
+        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts)
+
         keyGapKeeper = MockKeyGapKeeper()
         keyGapKeeper.updates = [[(11, ), (12, ), (13, ), (14, )], [()]]
-        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts, keyGapKeeper)
-
         countsWEKIG._keyGapKeeper = keyGapKeeper
 
         countsWEKIG.count((11, ), 1)
@@ -57,8 +56,7 @@ class TestCountsWithEmptyKeysInGap(unittest.TestCase):
 
     def test_results(self):
         counts = MockCounts()
-        keyGapKeeper = MockKeyGapKeeper()
-        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts, keyGapKeeper)
+        countsWEKIG = Counter.CountsWithEmptyKeysInGap(counts)
         self.assertEqual([ ], countsWEKIG.results())
 
         countsWEKIG.setResults([((15,), 3.0)])
@@ -69,9 +67,9 @@ class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
 
     def test_count(self):
         counts = MockCounts()
-        keyGapKeeper = MockKeyGapKeeper()
-        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts, keyGapKeeper)
+        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts)
 
+        keyGapKeeper = MockKeyGapKeeper()
         countsWEKIG._keyGapKeeper = keyGapKeeper
 
         keyGapKeeper.updates = [[()], [()]]
@@ -90,41 +88,34 @@ class TestCountsWithEmptyKeysInGapAndNext(unittest.TestCase):
 
     def test_results(self):
         counts = MockCounts()
-        keyGapKeeper = MockKeyGapKeeper()
-        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts, keyGapKeeper)
+        countsWEKIG = Counter.CountsWithEmptyKeysInGapAndNext(counts)
         self.assertEqual([ ], countsWEKIG.results())
 
         countsWEKIG.setResults([((15,), 3.0)])
         self.assertEqual([((15,), 3.0)], countsWEKIG.results())
 
 ##____________________________________________________________________________||
-@unittest.skip("showing class skipping")
 class TestCountsWithEmptyKeysInGapBuilder(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CountsWithEmptyKeysInGapBuilder(MockCounts, MockKeyGapKeeper)
+        builder = Counter.CountsWithEmptyKeysInGapBuilder(MockCounts)
         counts1 = builder()
         counts2 = builder()
         self.assertIsInstance(counts1, Counter.CountsWithEmptyKeysInGap)
         self.assertIsInstance(counts1._countMethod, MockCounts)
-        self.assertIsInstance(counts1._keyGapKeeper, MockKeyGapKeeper)
         self.assertIsNot(counts1, counts2)
         self.assertIsNot(counts1._countMethod, counts2._countMethod)
-        self.assertIsNot(counts1._keyGapKeeper, counts2._keyGapKeeper)
 
 ##____________________________________________________________________________||
-@unittest.skip("showing class skipping")
 class TestCountsWithEmptyKeysInGapAndNextBuilder(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CountsWithEmptyKeysInGapAndNextBuilder(MockCounts, MockKeyGapKeeper)
+        builder = Counter.CountsWithEmptyKeysInGapAndNextBuilder(MockCounts)
         counts1 = builder()
         counts2 = builder()
         self.assertIsInstance(counts1, Counter.CountsWithEmptyKeysInGapAndNext)
         self.assertIsInstance(counts1._countMethod, MockCounts)
-        self.assertIsInstance(counts1._keyGapKeeper, MockKeyGapKeeper)
         self.assertIsNot(counts1, counts2)
         self.assertIsNot(counts1._countMethod, counts2._countMethod)
-        self.assertIsNot(counts1._keyGapKeeper, counts2._keyGapKeeper)
 
 ##____________________________________________________________________________||

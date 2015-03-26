@@ -7,9 +7,8 @@ from KeyGapKeeper import KeyGapKeeper
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGap(CountsBase):
 
-    def __init__(self, countMethod, keyGapKeeper):
+    def __init__(self, countMethod):
         self._countMethod = countMethod
-        # self._keyGapKeeper = keyGapKeeper
 
     def setKeyComposer(self, keyComposer):
         super(CountsWithEmptyKeysInGap, self).setKeyComposer(keyComposer)
@@ -32,9 +31,8 @@ class CountsWithEmptyKeysInGap(CountsBase):
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapAndNext(CountsBase):
 
-    def __init__(self, countMethod, keyGapKeeper):
+    def __init__(self, countMethod):
         self._countMethod = countMethod
-        ## self._keyGapKeeper = keyGapKeeper
 
     def setKeyComposer(self, keyComposer):
         super(CountsWithEmptyKeysInGapAndNext, self).setKeyComposer(keyComposer)
@@ -60,21 +58,19 @@ class CountsWithEmptyKeysInGapAndNext(CountsBase):
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapBuilder(object):
 
-    def __init__(self, countMethodClass, keyGapKeeperClass):
+    def __init__(self, countMethodClass):
         self._countMethodClass = countMethodClass
-        self._keyGapKeeperClass = keyGapKeeperClass
 
     def __call__(self):
-        return CountsWithEmptyKeysInGap(self._countMethodClass(), self._keyGapKeeperClass())
+        return CountsWithEmptyKeysInGap(self._countMethodClass())
 
 ##____________________________________________________________________________||
 class CountsWithEmptyKeysInGapAndNextBuilder(object):
 
-    def __init__(self, countMethodClass, keyGapKeeperClass):
+    def __init__(self, countMethodClass):
         self._countMethodClass = countMethodClass
-        self._keyGapKeeperClass = keyGapKeeperClass
 
     def __call__(self):
-        return CountsWithEmptyKeysInGapAndNext(self._countMethodClass(), self._keyGapKeeperClass())
+        return CountsWithEmptyKeysInGapAndNext(self._countMethodClass())
 
 ##____________________________________________________________________________||
