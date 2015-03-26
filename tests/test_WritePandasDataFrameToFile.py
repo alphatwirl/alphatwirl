@@ -35,7 +35,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3"
+        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3\n"
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_empty_dataframe(self):

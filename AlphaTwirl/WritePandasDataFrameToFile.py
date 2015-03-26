@@ -11,6 +11,7 @@ class WritePandasDataFrameToFile(object):
             f.write(" ".join([i for i in results.columns]) + "\n")
         else:
             results.to_string(f, index = False)
+            f.write("\n")
         self._close(f)
 
     def _open(self, path): return open(path, 'w')
