@@ -24,3 +24,12 @@ class CountsWithEmptyNextKeys(CountsBase):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
+class CountsWithEmptyNextKeysBuilder(object):
+
+    def __init__(self, countMethodClass):
+        self._countMethodClass = countMethodClass
+
+    def __call__(self):
+        return CountsWithEmptyNextKeys(self._countMethodClass())
+
+##____________________________________________________________________________||
