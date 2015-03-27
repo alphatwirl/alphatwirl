@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Tai Sakuma <sakuma@fnal.gov>
+# Tai Sakuma <tai.sakuma@cern.ch>
 from AlphaTwirl.ProgressBar import ProgressBar, ProgressBar2, MPProgressMonitor, ProgressReport
 from AlphaTwirl.EventReader import MPEventLoopRunner
 import time, random

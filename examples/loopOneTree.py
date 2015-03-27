@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Tai Sakuma <sakuma@fnal.gov>
+# Tai Sakuma <tai.sakuma@cern.ch>
 import ROOT
 import sys
 from optparse import OptionParser

@@ -1,4 +1,4 @@
-# Tai Sakuma <sakuma@fnal.gov>
+# Tai Sakuma <tai.sakuma@cern.ch>
 from AlphaTwirl.ProgressBar import ProgressReport
 from ProgressReportWriter import ProgressReportWriter
 from EventLoop import EventLoop

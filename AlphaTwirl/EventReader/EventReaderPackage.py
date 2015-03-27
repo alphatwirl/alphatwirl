@@ -1,4 +1,4 @@
-# Tai Sakuma <sakuma@fnal.gov>
+# Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
 class EventReaderPackage(object):
