@@ -1,7 +1,6 @@
 # Tai Sakuma <sakuma@fnal.gov>
 import multiprocessing
 import time
-
 from ProgressReport import ProgressReport
 
 ##____________________________________________________________________________||

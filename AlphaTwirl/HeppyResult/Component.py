@@ -2,7 +2,6 @@
 
 ##____________________________________________________________________________||
 import os
-
 from ReadComponentConfig import ReadComponentConfig
 from Analyzer import Analyzer
 

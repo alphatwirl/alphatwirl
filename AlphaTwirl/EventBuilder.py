@@ -1,7 +1,7 @@
 # Tai Sakuma <sakuma@fnal.gov>
 import os
 import ROOT
-import AlphaTwirl
+from Events import Events
 
 ##____________________________________________________________________________||
 class EventBuilder(object):
@@ -15,6 +15,6 @@ class EventBuilder(object):
         inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self._treeName)
-        return AlphaTwirl.Events(tree, self._maxEvents)
+        return Events(tree, self._maxEvents)
 
 ##____________________________________________________________________________||

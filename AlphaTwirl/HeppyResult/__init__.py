@@ -1,4 +1,4 @@
-from HeppyResult import *
-from Component import *
-from ReadComponentConfig import *
-from Analyzer import *
+from HeppyResult import HeppyResult, defaultExcludeList
+from Component import Component
+from ReadComponentConfig import ReadComponentConfig
+from Analyzer import Analyzer
