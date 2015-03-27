@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderBundle, EventLoop
+from AlphaTwirl.EventReader import EventReaderBundle
 import unittest
 
 ##____________________________________________________________________________||
@@ -53,12 +53,21 @@ class MockEventLoopRunner(object):
         self.ended = True
 
 ##____________________________________________________________________________||
+class MockEventLoop(object):
+    def __init__(self, eventBuilder, eventSelection, component, readers):
+        self.eventBuilder = eventBuilder
+        self.component = component
+        self.readers = readers
+        self.eventSelection = eventSelection
+
+##____________________________________________________________________________||
 class TestEventReaderEventReaderBundle(unittest.TestCase):
 
     def test_eventBuilder_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner)
+        bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
         bundle.read(component1)
@@ -69,6 +78,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         eventLoopRunner = MockEventLoopRunner()
         eventSelection = MockEventSelection()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventSelection)
+        bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
         bundle.read(component1)
@@ -78,6 +88,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner)
+        bundle.EventLoop = MockEventLoop
 
         self.assertFalse(eventLoopRunner.began)
         bundle.begin()
@@ -87,7 +98,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         component1 = MockComponent()
         bundle.read(component1)
         self.assertIs(component1, eventLoopRunner.eventLoop.component)
-        self.assertIsInstance(eventLoopRunner.eventLoop, EventLoop)
+        self.assertIsInstance(eventLoopRunner.eventLoop, MockEventLoop)
 
         self.assertFalse(eventLoopRunner.ended)
         bundle.end()
@@ -98,6 +109,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner)
+        bundle.EventLoop = MockEventLoop
 
         package1 = MockReaderPackage()
         bundle.addReaderPackage(package1)

@@ -17,6 +17,8 @@ class EventReaderBundle(object):
         self.progressBar = progressBar
         self.eventSelection = eventSelection if eventSelection is not None else AllEvents()
 
+        self.EventLoop = EventLoop
+
     def addReaderPackage(self, package):
         self._packages.append(package)
 
@@ -25,7 +27,7 @@ class EventReaderBundle(object):
 
     def read(self, component):
         readers = [package.make(component.name) for package in self._packages]
-        eventLoop = EventLoop(self._eventBuilder, self.eventSelection, component, readers)
+        eventLoop = self.EventLoop(self._eventBuilder, self.eventSelection, component, readers)
         self._eventLoopRunner.run(eventLoop)
 
     def end(self):
