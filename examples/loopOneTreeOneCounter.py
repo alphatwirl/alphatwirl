@@ -21,16 +21,15 @@ file = ROOT.TFile.Open(options.inputPath)
 tree = file.Get(options.treeName)
 events = AlphaTwirl.Events(tree, options.nevents)
 
-counter_nvtx = AlphaTwirl.Counter_nvtx()
+varNames = ('nJet40', 'nBJetTight40')
+binnings = (AlphaTwirl.Binning.Echo(), AlphaTwirl.Binning.Echo())
+keyComposer = AlphaTwirl.Counter.GenericKeyComposer(varNames, binnings)
+countMethod = AlphaTwirl.Counter.Counts()
+counter = AlphaTwirl.Counter.Counter(varNames, keyComposer, countMethod)
 
 for event in events:
-    run = event.run
-    lumi = event.lumi
-    eventId = event.evt
-    print '%6d %10d %9d' % (run, lumi, eventId),
-    print
-    counter_nvtx.event(event)
+    counter.event(event)
 
-print counter_nvtx.results()
+print counter.results()
 
 ##____________________________________________________________________________||

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
-from AlphaTwirl.ProgressBar import ProgressBar, ProgressBar2, MPProgressMonitor, ProgressReport
+from AlphaTwirl.ProgressBar import ProgressBar, MPProgressMonitor, ProgressReport
 from AlphaTwirl.EventReader import MPEventLoopRunner
 import time, random
 
@@ -17,6 +17,7 @@ class EventLoop(object):
             report = ProgressReport(name = self.name, done = i + 1, total = n)
             progressReporter.report(report)
         return self.readers
+    def firstReportProgress(self, progressReporter): pass
 
 ##____________________________________________________________________________||
 progressBar = ProgressBar()
