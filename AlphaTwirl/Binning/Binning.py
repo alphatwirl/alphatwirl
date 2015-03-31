@@ -17,8 +17,7 @@ class Binning(object):
             self.boundaries = tuple(lows) + (ups[-1], )
             self.lows = tuple(lows)
             self.ups = tuple(ups)
-
-        if boundaries is not None:
+        else:
             if lows is not None or ups is not None:
                 raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
             if len(boundaries) < 2:
