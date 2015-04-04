@@ -4,8 +4,6 @@ import sys
 import os, errno
 
 from HeppyResultReader import HeppyResultReader
-from TblNevt import TblNevt
-from TblXsec import TblXsec
 from HeppyResult.HeppyResult import HeppyResult
 from EventBuilder import EventBuilder
 from EventReader.EventReaderBundle import EventReaderBundle
@@ -88,8 +86,6 @@ class AlphaTwirl(object):
 
     def _buildHeppyResultReader(self):
         heppyResultReader = HeppyResultReader()
-        heppyResultReader.addReader(TblXsec(os.path.join(self.args.outDir, 'tbl_xsec.txt')))
-        heppyResultReader.addReader(TblNevt(os.path.join(self.args.outDir, 'tbl_nevt.txt')))
         while len(self.componentReaders) > 0: heppyResultReader.addReader(self.componentReaders.pop(0))
         return heppyResultReader
 
