@@ -70,6 +70,7 @@ class AlphaTwirl(object):
         self.componentReaders.append(reader)
 
     def addTreeReader(self, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+        if self.args is None: self.ArgumentParser().parse_args()
         eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
         tableConfigs = [self.completeTableConfig(c) for c in tableConfigs]
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
