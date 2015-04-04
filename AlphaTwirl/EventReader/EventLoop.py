@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ProgressReportWriter import ProgressReportWriter
+from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 
 ##____________________________________________________________________________||
 class EventLoop(object):
@@ -7,7 +7,7 @@ class EventLoop(object):
         self.eventBuilder = eventBuilder
         self.component = component
         self.readers = readers
-        self.progressReportWriter = ProgressReportWriter()
+        self.progressReportWriter = EventLoopProgressReportWriter()
         self.eventSelection = eventSelection
 
     def __call__(self, progressReporter = None):
