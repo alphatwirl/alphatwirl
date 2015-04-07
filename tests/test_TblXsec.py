@@ -1,5 +1,4 @@
 from AlphaTwirl import TblXsec
-import pandas
 import unittest
 import cStringIO
 
