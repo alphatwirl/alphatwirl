@@ -6,7 +6,7 @@ import pandas
 class TblXsec(object):
     def __init__(self, outPath):
         self._outPath = outPath
-        self._tbl = pandas.DataFrame()
+        self._tbl = pandas.DataFrame(columns = ('component', 'xsec'))
 
     def begin(self): pass
 
@@ -16,8 +16,11 @@ class TblXsec(object):
 
     def end(self):
         f = self._open(self._outPath)
-        self._tbl.to_string(f, index = False)
-        f.write("\n")
+        if len(self._tbl.index) == 0:
+            f.write(" ".join([i for i in self._tbl.columns]) + "\n")
+        else:
+            self._tbl.to_string(f, index = False)
+            f.write("\n")
         self._close(f)
 
     def _open(self, path): return open(path, 'w')

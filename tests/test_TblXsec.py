@@ -53,4 +53,17 @@ class TestTblXsec(unittest.TestCase):
             ' TBarToLeptons_tch        26.23428']) + '\n'
         self.assertEqual(expected, out.getvalue())
 
+    def test_read_empty(self):
+        tblxsec = TblXsec("t.txt")
+
+        out = cStringIO.StringIO()
+        tblxsec._open = MockOpen(out)
+        tblxsec._close = mockClose
+
+        tblxsec.begin()
+        tblxsec.end()
+
+        expected = 'component xsec\n'
+        self.assertEqual(expected, out.getvalue())
+
 ##____________________________________________________________________________||
