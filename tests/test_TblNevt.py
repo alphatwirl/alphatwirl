@@ -55,7 +55,7 @@ class TestTblNevt(unittest.TestCase):
             '   QCD_HT_100To250   4123612.000',
             '            TTJets  25446993.000',
             ' TBarToLeptons_sch    320855.887',
-            ' TBarToLeptons_tch  50734279.123'])
+            ' TBarToLeptons_tch  50734279.123']) + '\n'
         self.assertEqual(expected, out.getvalue())
 
 
