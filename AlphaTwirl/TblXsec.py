@@ -15,8 +15,11 @@ class TblXsec(object):
         self._tbl = self._tbl.append(pandas.DataFrame({'component': (component.name, ), 'xsec': (xsec, )}))
 
     def end(self):
-        f = open(self._outPath, 'w')
+        f = self._open(self._outPath)
         self._tbl.to_string(f, index = False)
-        f.close()
+        self._close(f)
+
+    def _open(self, path): return open(path, 'w')
+    def _close(self, file): file.close()
 
 ##____________________________________________________________________________||
