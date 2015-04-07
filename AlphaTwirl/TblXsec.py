@@ -17,6 +17,7 @@ class TblXsec(object):
     def end(self):
         f = self._open(self._outPath)
         self._tbl.to_string(f, index = False)
+        f.write("\n")
         self._close(f)
 
     def _open(self, path): return open(path, 'w')

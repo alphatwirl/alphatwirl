@@ -50,7 +50,7 @@ class TestTblXsec(unittest.TestCase):
             '   QCD_HT_100To250  28730000.00000',
             '            TTJets       809.10000',
             ' TBarToLeptons_sch         1.34784',
-            ' TBarToLeptons_tch        26.23428'])
+            ' TBarToLeptons_tch        26.23428']) + '\n'
         self.assertEqual(expected, out.getvalue())
 
 ##____________________________________________________________________________||
