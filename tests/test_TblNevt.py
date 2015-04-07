@@ -59,4 +59,21 @@ class TestTblNevt(unittest.TestCase):
         self.assertEqual(expected, out.getvalue())
 
 
+    def test_read_empty(self):
+        tblnevt = TblNevt("t.txt")
+
+        out = cStringIO.StringIO()
+        tblnevt._open = MockOpen(out)
+        tblnevt._close = mockClose
+
+        getNEventsFor = MockGetNEventsFor()
+        tblnevt._getNEventsFor = getNEventsFor
+
+        tblnevt.begin()
+        tblnevt.end()
+
+        expected = 'component nevt\n'
+        self.assertEqual(expected, out.getvalue())
+
+
 ##____________________________________________________________________________||
