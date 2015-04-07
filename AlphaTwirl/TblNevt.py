@@ -8,17 +8,22 @@ class TblNevt(object):
         self._outPath = outPath
         self._tbl = pandas.DataFrame()
 
+        self._getNEventsFor = getNEventsFor
+
     def begin(self): pass
 
     def read(self, component):
-        nevt = getNEventsFor(component)
+        nevt = self._getNEventsFor(component)
         self._tbl = self._tbl.append(pandas.DataFrame({'component': (component.name, ), 'nevt': (nevt, )}))
 
     def end(self):
         self._tbl.nevt = self._tbl.nevt.apply(lambda x: '%.3f' % x)
-        f = open(self._outPath, 'w')
+        f = self._open(self._outPath)
         self._tbl.to_string(f, index = False)
-        f.close()
+        self._close(f)
+
+    def _open(self, path): return open(path, 'w')
+    def _close(self, file): file.close()
 
 ##____________________________________________________________________________||
 def getNEventsFor(component):
