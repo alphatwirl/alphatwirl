@@ -31,8 +31,7 @@ for componentName in os.listdir(args.heppydir):
     boundaries = [10**(i*0.1) for i in range(-10, 36)]
     counts = { }
 
-    events = eventBuilder.build(component)
-    for event in events:
+    for event in eventBuilder.build(component):
 
         met = event.met_pt
         met_bin = max([b for b in boundaries if b < met])

@@ -25,7 +25,8 @@ keyComposer = GenericKeyComposer(('met_pt', ), (binning, ))
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
 outFile = open(outPath, 'w')
-print >>outFile, "{:>22s} {:>12s} {:>6s} {:>6s}".format("component", "met", "n", "nvar")
+columnnames = ("component", "met", "n", "nvar")
+print >>outFile, "{:>22s} {:>12s} {:>6s} {:>6s}".format(*columnnames)
 
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
@@ -43,8 +44,7 @@ for component in heppyResult.components():
     keys.sort()
     keys.sort()
     for k in  keys:
-        n = results[k]['n']
-        nvar = results[k]['nvar']
-        print >>outFile, "{:>22s} {:12.6f} {:6.0f} {:6.0f}".format(component.name, k[0], n, nvar)
+        row = (component.name, k[0], results[k]['n'], results[k]['nvar'])
+        print >>outFile, "{:>22s} {:12.6f} {:6.0f} {:6.0f}".format(*row)
 
 ##__________________________________________________________________||
