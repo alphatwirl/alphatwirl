@@ -1,4 +1,4 @@
-from AlphaTwirl import TblXsec
+from AlphaTwirl.HeppyResult import TblXsec
 import unittest
 import cStringIO
 
