@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import pandas
+from HeppyResult import ReadCounter
 
 ##____________________________________________________________________________||
 class TblNevt(object):
@@ -31,10 +32,9 @@ class TblNevt(object):
 
 ##____________________________________________________________________________||
 def getNEventsFor(component):
-    file = open(os.path.join(component.skimAnalyzerCount.path, 'SkimReport.txt'))
-    file.readline() # skip the 1st line
-    lines = [l.strip() for l in file]
-    lines = [l for l in lines if l.startswith('Sum Weights')]
-    return float(lines[0][len('Sum Weights'):].strip().split()[0])
+    readCounter = ReadCounter()
+    path = os.path.join(component.skimAnalyzerCount.path, 'SkimReport.txt')
+    counter = readCounter(path)
+    return counter['Sum Weights']['count']
 
 ##____________________________________________________________________________||
