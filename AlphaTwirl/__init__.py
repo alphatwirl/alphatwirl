@@ -11,4 +11,3 @@ import ProgressBar
 from EventBuilder import EventBuilder
 from buildBinningFromTbl import buildBinningFromTbl
 from TblXsec import TblXsec
-from TblNevt import TblNevt
