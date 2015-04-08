@@ -3,6 +3,7 @@
 ##____________________________________________________________________________||
 import re
 import collections
+import ast
 
 ##____________________________________________________________________________||
 class ReadCounter(object):
@@ -29,6 +30,6 @@ class ReadCounter(object):
         count = match.group(2)
         eff1 =  match.group(3)
         eff2 = match.group(4)
-        return level, dict(count = float(count), eff1 = float(eff1), eff2 = float(eff2))
+        return level, dict(count = ast.literal_eval(count), eff1 = float(eff1), eff2 = float(eff2))
 
 ##____________________________________________________________________________||
