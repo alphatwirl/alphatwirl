@@ -7,15 +7,17 @@ from HeppyResult import ReadCounter
 class TblNevt(object):
     def __init__(self, outPath):
         self._outPath = outPath
-        self._tbl = pandas.DataFrame()
+        self.analyzerName = 'skimAnalyzerCount'
+        self.fileName = 'SkimReport.txt'
         self.levels = ('All Events', 'Sum Weights')
         self.columnNames = ('nevt', 'nevt_sumw')
+        self._tbl = pandas.DataFrame()
         self._readCounter = ReadCounter()
 
     def begin(self): pass
 
     def read(self, component):
-        path = os.path.join(component.skimAnalyzerCount.path, 'SkimReport.txt')
+        path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
         counter = self._readCounter(path)
         df_data = {'component': (component.name, )}
         for level, column in zip(self.levels, self.columnNames):
