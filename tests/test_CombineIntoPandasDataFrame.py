@@ -45,6 +45,26 @@ class TestCountsToDataFrame(unittest.TestCase):
         columns = ("v1", )
         self.assertEqual(expected, countsToDataFrame(counts, columns))
 
+    def test_call_threeValues(self):
+
+        counts  = {
+            (1, ): {'n': 4.0, 'nvar': 6.0, 'skewness': 2.3 },
+            (2, ): {'n': 3.0, 'nvar': 9.0, 'skewness': 5.4 },
+            (3, ): {'n': 2.0, 'nvar': 3.0, 'skewness': 3.6 },
+            }
+
+        expected = pandas.DataFrame(
+            {
+                'v1': [1, 2, 3],
+                'n': [4.0, 3.0, 2.0],
+                'nvar': [6.0, 9.0, 3.0],
+                'skewness': [2.3, 5.4, 3.6],
+                }
+            )
+
+        columns = ("v1", )
+        self.assertEqual(expected, countsToDataFrame(counts, columns))
+
     def test_valNames(self):
 
         counts  = {
