@@ -16,19 +16,16 @@ class CombineIntoPandasDataFrame(object):
 
     def combine(self, datasetReaderPairs):
         if len(datasetReaderPairs) == 0: return None
-        df = None
+        combined = { }
         for datasetName, reader in datasetReaderPairs:
             if not reader.results(): continue
-            tbl_c = countsToDataFrame(reader.results(), reader.keynames())
-            tbl_c.insert(0, self.datasetColumnName, datasetName)
-            if df is None:
-                df = tbl_c
-            else:
-                df = df.append(tbl_c, ignore_index = True)
-        if df is None:
+            counts = reader.results()
+            counts = dict([((datasetName, )+ k, v) for k, v in counts.iteritems()])
+            combined.update(counts)
+        if len(combined) == 0:
             reader = datasetReaderPairs[0][1]
             columns = (self.datasetColumnName, ) + tuple(reader.keynames()) + tuple(reader.valNames())
-            df = pandas.DataFrame(columns = columns)
-        return df
+            return pandas.DataFrame(columns = columns)
+        return countsToDataFrame(combined, (self.datasetColumnName, ) + reader.keynames())
 
 ##____________________________________________________________________________||
