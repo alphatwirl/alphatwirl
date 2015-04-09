@@ -19,6 +19,7 @@ class CombineIntoPandasDataFrame(object):
         self.datasetColumnName = 'component'
 
     def combine(self, datasetReaderPairs):
+        if len(datasetReaderPairs) == 0: return None
         df = None
         for datasetName, reader in datasetReaderPairs:
             if not reader.results(): continue

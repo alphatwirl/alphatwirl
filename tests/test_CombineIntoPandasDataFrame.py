@@ -174,4 +174,63 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
         combine = CombineIntoPandasDataFrame()
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
+    def test_combine_with_empty_counts(self):
+
+        counts1  = {
+            (1, ): {'n': 4.0, 'nvar': 6.0},
+            (2, ): {'n': 3.0, 'nvar': 9.0},
+            (3, ): {'n': 2.0, 'nvar': 3.0},
+            }
+
+        reader1 = MockReader(counts1)
+
+        counts2  = { }
+
+        reader2 = MockReader(counts2)
+
+        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
+
+        expected = pandas.DataFrame(
+            {
+                'component': ['data1', 'data1', 'data1'],
+                'v1': [1, 2, 3],
+                'n': [4.0, 3.0, 2.0],
+                'nvar': [6.0, 9.0, 3.0],
+                }
+            )
+
+        combine = CombineIntoPandasDataFrame()
+        self.assertEqual(expected, combine.combine(datasetReaderPairs))
+
+    def test_combine_all_empty_counts(self):
+
+        counts1  = { }
+
+        reader1 = MockReader(counts1)
+
+        counts2  = { }
+
+        reader2 = MockReader(counts2)
+
+        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
+
+        expected = pandas.DataFrame(
+            {
+                'component': [ ],
+                'v1': [ ],
+                'n': [ ],
+                'nvar': [ ],
+                }
+            )
+
+        combine = CombineIntoPandasDataFrame()
+        self.assertEqual(expected, combine.combine(datasetReaderPairs))
+
+    def test_combine_empty_pairs(self):
+
+        datasetReaderPairs = [ ]
+
+        combine = CombineIntoPandasDataFrame()
+        self.assertEqual(None, combine.combine(datasetReaderPairs))
+
 ##____________________________________________________________________________||
