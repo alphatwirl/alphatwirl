@@ -2,11 +2,7 @@
 import pandas
 
 ##____________________________________________________________________________||
-def countsToDataFrame(counts, keyNames, valNames = ('n', 'nvar')):
-    if not counts:
-        columns = tuple(keyNames) + tuple(valNames)
-        return pandas.DataFrame(columns = columns)
-        return
+def countsToDataFrame(counts, keyNames):
     valNames = counts.values()[0].keys()
     d = [k + tuple([v[n] for n in valNames]) for k, v in counts.iteritems()]
     d.sort()
@@ -23,7 +19,7 @@ class CombineIntoPandasDataFrame(object):
         df = None
         for datasetName, reader in datasetReaderPairs:
             if not reader.results(): continue
-            tbl_c = countsToDataFrame(reader.results(), reader.keynames(), reader.valNames())
+            tbl_c = countsToDataFrame(reader.results(), reader.keynames())
             tbl_c.insert(0, self.datasetColumnName, datasetName)
             if df is None:
                 df = tbl_c

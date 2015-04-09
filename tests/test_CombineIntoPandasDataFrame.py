@@ -105,15 +105,7 @@ class TestCountsToDataFrame(unittest.TestCase):
             )
 
         columns = ("v1", )
-        valNames = ('x', 'var_x')
-        self.assertEqual(expected, countsToDataFrame(counts, columns, valNames))
-
-    def test_emptyCounts(self):
-        counts  = { }
-        expected = pandas.DataFrame({'v1': [ ], 'n': [ ], 'nvar': [ ]})
-        columns = ("v1", )
         self.assertEqual(expected, countsToDataFrame(counts, columns))
-
 
 ##____________________________________________________________________________||
 class TestCombineIntoPandasDataFrame(unittest.TestCase):
