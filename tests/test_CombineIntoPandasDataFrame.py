@@ -120,7 +120,7 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)
 
-    def test_combine_oreReader(self):
+    def test_combine_oneReader(self):
 
         counts  = {
             (1, ): {'n': 4.0, 'nvar': 6.0},
