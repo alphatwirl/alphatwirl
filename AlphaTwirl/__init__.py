@@ -4,6 +4,7 @@ from HeppyResultReader import HeppyResultReader
 from Events import Events
 import Binning
 import Counter
+from Combine import Combine
 from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
 from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 import EventReader
