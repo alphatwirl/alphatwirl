@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+
+from Combine import Combine
 import pandas
 
 ##____________________________________________________________________________||
@@ -16,14 +18,10 @@ class CombineIntoPandasDataFrame(object):
 
     def combine(self, datasetReaderPairs):
         if len(datasetReaderPairs) == 0: return None
-        combined = { }
-        for datasetName, reader in datasetReaderPairs:
-            if not reader.results(): continue
-            counts = reader.results()
-            counts = dict([((datasetName, )+ k, v) for k, v in counts.iteritems()])
-            combined.update(counts)
+        combine = Combine()
+        combined = combine.combine(datasetReaderPairs)
+        reader = datasetReaderPairs[0][1]
         if len(combined) == 0:
-            reader = datasetReaderPairs[0][1]
             columns = (self.datasetColumnName, ) + tuple(reader.keynames()) + tuple(reader.valNames())
             return pandas.DataFrame(columns = columns)
         return countsToDataFrame(combined, (self.datasetColumnName, ) + reader.keynames())
