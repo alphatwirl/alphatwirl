@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
+import collections
 from CountsBase import CountsBase
 
 ##____________________________________________________________________________||
@@ -15,7 +16,8 @@ class Counts(CountsBase):
         self._counts[key]['nvar'] += nvar
 
     def addKey(self, key):
-        if key not in self._counts: self._counts[key] = {'n': 0.0, 'nvar': 0.0 }
+        if key not in self._counts:
+            self._counts[key] = collections.OrderedDict((('n', 0.0), ('nvar', 0.0)))
 
     def addKeys(self, keys):
         for key in keys: self.addKey(key)
