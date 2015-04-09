@@ -6,6 +6,7 @@ class WritePandasDataFrameToFile(object):
         self._outPath = outPath
 
     def deliver(self, results):
+        if results is None: return
         f = self._open(self._outPath)
         if len(results.index) == 0:
             f.write(" ".join([i for i in results.columns]) + "\n")

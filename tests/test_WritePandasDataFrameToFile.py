@@ -60,4 +60,14 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
         expected = "v1 n nvar\n"
         self.assertEqual(expected, out.getvalue())
 
+    def test_deliver_None_results(self):
+
+        delivery = WritePandasDataFrameToFile("tbl.txt")
+
+        out = cStringIO.StringIO()
+        delivery._open = MockOpen(out)
+        delivery._close = mockClose
+
+        delivery.deliver(None)
+
 ##____________________________________________________________________________||
