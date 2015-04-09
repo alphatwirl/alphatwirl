@@ -1,5 +1,6 @@
 from AlphaTwirl import countsToDataFrame, CombineIntoPandasDataFrame
 import pandas
+import collections
 import unittest
 
 ##____________________________________________________________________________||
@@ -43,7 +44,29 @@ class TestCountsToDataFrame(unittest.TestCase):
             )
 
         columns = ("v1", )
+        df = countsToDataFrame(counts, columns)
         self.assertEqual(expected, countsToDataFrame(counts, columns))
+
+    def test_call_ordered_values(self):
+
+        counts  = {
+            (1, ): collections.OrderedDict((('n', 4.0), ('nvar', 6.0))),
+            (2, ): collections.OrderedDict((('n', 3.0), ('nvar', 9.0))),
+            (3, ): collections.OrderedDict((('n', 2.0), ('nvar', 3.0))),
+            }
+
+        expected = pandas.DataFrame(
+            {
+                'v1': [1, 2, 3],
+                'n': [4.0, 3.0, 2.0],
+                'nvar': [6.0, 9.0, 3.0],
+                }
+            )
+
+        columns = ("v1", )
+        df = countsToDataFrame(counts, columns)
+        self.assertEqual(expected, df)
+        self.assertEqual(['v1', 'n', 'nvar'], df.columns.values.tolist())
 
     def test_call_threeValues(self):
 
