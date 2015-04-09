@@ -3,12 +3,14 @@ import pandas
 
 ##____________________________________________________________________________||
 def countsToDataFrame(counts, keyNames, valNames = ('n', 'nvar')):
-    columns = tuple(keyNames) + tuple(valNames)
     if not counts:
+        columns = tuple(keyNames) + tuple(valNames)
         return pandas.DataFrame(columns = columns)
         return
-    d = [k + (v[valNames[0]], v[valNames[1]]) for k, v in counts.iteritems()]
+    valNames = counts.values()[0].keys()
+    d = [k + tuple([v[n] for n in valNames]) for k, v in counts.iteritems()]
     d.sort()
+    columns = tuple(keyNames) + tuple(valNames)
     return pandas.DataFrame(d, columns = columns)
 
 ##____________________________________________________________________________||
