@@ -1,7 +1,14 @@
-from AlphaTwirl import countsToDataFrame, CombineIntoPandasDataFrame
-import pandas
 import collections
 import unittest
+
+##____________________________________________________________________________||
+hasPandas = False
+try:
+    import pandas
+    from AlphaTwirl import countsToDataFrame, CombineIntoPandasDataFrame
+    hasPandas = True
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
@@ -23,6 +30,7 @@ class MockReader(object):
         return self._results
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasPandas, "has no pandas")
 class TestCountsToDataFrame(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)
@@ -108,6 +116,7 @@ class TestCountsToDataFrame(unittest.TestCase):
         self.assertEqual(expected, countsToDataFrame(counts, columns))
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasPandas, "has no pandas")
 class TestCombineIntoPandasDataFrame(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)

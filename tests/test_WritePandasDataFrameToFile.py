@@ -1,7 +1,14 @@
-from AlphaTwirl import WritePandasDataFrameToFile
-import pandas
 import unittest
 import cStringIO
+
+##____________________________________________________________________________||
+hasPandas = False
+try:
+    import pandas
+    from AlphaTwirl import WritePandasDataFrameToFile
+    hasPandas = True
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 class MockOpen(object):
@@ -15,6 +22,7 @@ class MockOpen(object):
 def mockClose(file): pass
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasPandas, "has no pandas")
 class TestWritePandasDataFrameToFile(unittest.TestCase):
 
     def test_deliver(self):
