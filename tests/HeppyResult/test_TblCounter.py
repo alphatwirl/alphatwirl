@@ -74,8 +74,8 @@ class TestTblCounter(unittest.TestCase):
 
         expected = '\n'.join([
             '         component     nevt     nevt_sumw',
-            '   QCD_HT_100To250  4123612     4123612.0',
-            '            TTJets 25446993    25446993.0',
+            '   QCD_HT_100To250  4123612       4123612',
+            '            TTJets 25446993      25446993',
             ' TBarToLeptons_sch   250000 320855.887262',
             ' TBarToLeptons_tch  1999800 50734279.1235']) + '\n'
 

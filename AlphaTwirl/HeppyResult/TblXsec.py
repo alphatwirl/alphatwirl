@@ -14,6 +14,7 @@ class TblXsec(object):
 
     def end(self):
         transposed = [[r[i] for r in self._rows] for i in range(len(self._rows[0]))]
+        transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
         transposed = [[str(e) for e in r] for r in transposed]
         columnWidths = [max([len(e) for e in r]) for r in transposed]
         format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
