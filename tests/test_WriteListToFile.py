@@ -33,11 +33,11 @@ class TestWriteListToFile(unittest.TestCase):
         delivery.deliver(results)
 
         expected = """ component   v1 nvar           n
-     data1  100  6.0          40
-     data1    2  9.0         3.3
-     data1 3124  3.0       1e-07
-     data2  333  6.0   300909234
-     data2   11  2.0 323432.2234
+     data1  100    6          40
+     data1    2    9         3.3
+     data1 3124    3       1e-07
+     data2  333    6   300909234
+     data2   11    2 323432.2234
 """
 
         self.assertEqual(expected, out.getvalue())

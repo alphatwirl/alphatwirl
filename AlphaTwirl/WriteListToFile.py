@@ -28,6 +28,7 @@ class WriteListToFile(object):
         #     ['n', 40, 3.3, 1e-07, 300909234, 323432.2234],
         #     ]
 
+        transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
         transposed = [[str(e) for e in r] for r in transposed]
 
         columnWidths = [max([len(e) for e in r]) for r in transposed]
