@@ -7,6 +7,7 @@ import Counter
 from Combine import Combine
 from CombineIntoList import CombineIntoList, countsToList
 from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
+from WriteListToFile import WriteListToFile
 from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 import EventReader
 import ProgressBar
