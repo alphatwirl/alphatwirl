@@ -6,10 +6,14 @@ import Binning
 import Counter
 from Combine import Combine
 from CombineIntoList import CombineIntoList, countsToList
-from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
 from WriteListToFile import WriteListToFile
-from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 import EventReader
 import ProgressBar
 from EventBuilder import EventBuilder
-from buildBinningFromTbl import buildBinningFromTbl
+
+try:
+    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
+    from WritePandasDataFrameToFile import WritePandasDataFrameToFile
+    from buildBinningFromTbl import buildBinningFromTbl
+except ImportError:
+    pass
