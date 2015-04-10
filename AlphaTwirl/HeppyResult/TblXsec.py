@@ -1,25 +1,26 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
-import pandas
 
 ##____________________________________________________________________________||
 class TblXsec(object):
     def __init__(self, outPath):
         self._outPath = outPath
-        self._tbl = pandas.DataFrame(columns = ('component', 'xsec'))
+        self._rows = [['component', 'xsec']]
 
     def begin(self): pass
 
     def read(self, component):
         xsec = component.config()['xSection']
-        self._tbl = self._tbl.append(pandas.DataFrame({'component': (component.name, ), 'xsec': (xsec, )}))
+        self._rows.append([component.name, xsec])
 
     def end(self):
+        transposed = [[r[i] for r in self._rows] for i in range(len(self._rows[0]))]
+        transposed = [[str(e) for e in r] for r in transposed]
+        columnWidths = [max([len(e) for e in r]) for r in transposed]
+        format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
         f = self._open(self._outPath)
-        if len(self._tbl.index) == 0:
-            f.write(" ".join([i for i in self._tbl.columns]) + "\n")
-        else:
-            self._tbl.to_string(f, index = False)
+        for row in zip(*transposed):
+            f.write(format.format(*row))
             f.write("\n")
         self._close(f)
 

@@ -45,11 +45,12 @@ class TestTblXsec(unittest.TestCase):
         tblxsec.end()
 
         expected = '\n'.join([
-            '         component            xsec',
-            '   QCD_HT_100To250  28730000.00000',
-            '            TTJets       809.10000',
-            ' TBarToLeptons_sch         1.34784',
-            ' TBarToLeptons_tch        26.23428']) + '\n'
+            '         component     xsec',
+            '   QCD_HT_100To250 28730000',
+            '            TTJets    809.1',
+            ' TBarToLeptons_sch  1.34784',
+            ' TBarToLeptons_tch 26.23428']) + '\n'
+
         self.assertEqual(expected, out.getvalue())
 
     def test_read_empty(self):
@@ -62,7 +63,7 @@ class TestTblXsec(unittest.TestCase):
         tblxsec.begin()
         tblxsec.end()
 
-        expected = 'component xsec\n'
+        expected = ' component xsec\n'
         self.assertEqual(expected, out.getvalue())
 
 ##____________________________________________________________________________||
