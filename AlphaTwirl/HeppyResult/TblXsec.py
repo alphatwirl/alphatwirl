@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-import os
 
 ##____________________________________________________________________________||
 class TblXsec(object):
