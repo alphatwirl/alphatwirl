@@ -5,6 +5,7 @@ from Events import Events
 import Binning
 import Counter
 from Combine import Combine
+from CombineIntoList import CombineIntoList, countsToList
 from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
 from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 import EventReader
