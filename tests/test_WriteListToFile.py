@@ -1,5 +1,4 @@
 from AlphaTwirl import WriteListToFile
-import pandas
 import unittest
 import cStringIO
 
