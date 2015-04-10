@@ -1,6 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
-import pandas
 from ReadCounter import ReadCounter
 
 ##____________________________________________________________________________||
@@ -11,27 +10,28 @@ class TblCounter(object):
         self.fileName = fileName
         self.levels = levels
         self.columnNames = columnNames
-        self._tbl = pandas.DataFrame()
         self._readCounter = ReadCounter()
+        self._rows = [['component'] + list(columnNames)]
 
     def begin(self): pass
 
     def read(self, component):
         path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
         counter = self._readCounter(path)
-        df_data = {'component': (component.name, )}
+        row = [component.name]
         for level, column in zip(self.levels, self.columnNames):
-            df_data[column] = (counter[level]['count'], )
-        df = pandas.DataFrame(df_data)
-        self._tbl = self._tbl.append(df)
+            row.append(counter[level]['count'])
+        self._rows.append(row)
 
     def end(self):
+        transposed = [[r[i] for r in self._rows] for i in range(len(self._rows[0]))]
+        transposed = [[str(e) for e in r] for r in transposed]
+        columnWidths = [max([len(e) for e in r]) for r in transposed]
+        format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
         f = self._open(self._outPath)
-        if len(self._tbl.index) == 0:
-            f.write('component ' + " ".join(self.columnNames) + '\n')
-        else:
-            self._tbl.to_string(f, index = False, float_format = '{:.3f}'.format)
-            f.write('\n')
+        for row in zip(*transposed):
+            f.write(format.format(*row))
+            f.write("\n")
         self._close(f)
 
     def _open(self, path): return open(path, 'w')

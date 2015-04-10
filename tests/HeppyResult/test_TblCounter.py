@@ -73,11 +73,11 @@ class TestTblCounter(unittest.TestCase):
         tblnevt.end()
 
         expected = '\n'.join([
-            '         component      nevt    nevt_sumw',
-            '   QCD_HT_100To250   4123612  4123612.000',
-            '            TTJets  25446993 25446993.000',
-            ' TBarToLeptons_sch    250000   320855.887',
-            ' TBarToLeptons_tch   1999800 50734279.123']) + '\n'
+            '         component     nevt     nevt_sumw',
+            '   QCD_HT_100To250  4123612     4123612.0',
+            '            TTJets 25446993    25446993.0',
+            ' TBarToLeptons_sch   250000 320855.887262',
+            ' TBarToLeptons_tch  1999800 50734279.1235']) + '\n'
 
         self.assertEqual(expected, out.getvalue())
 
@@ -98,7 +98,7 @@ class TestTblCounter(unittest.TestCase):
         tblnevt.begin()
         tblnevt.end()
 
-        expected = 'component nevt nevt_sumw\n'
+        expected = ' component nevt nevt_sumw\n'
         self.assertEqual(expected, out.getvalue())
 
 
