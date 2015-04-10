@@ -16,8 +16,8 @@ from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
 from Counter.KeyComposer import GenericKeyComposer
 from Counter.Counter import CounterBuilder
-from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
-from WritePandasDataFrameToFile import WritePandasDataFrameToFile
+from CombineIntoList import CombineIntoList
+from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector
 
 ##____________________________________________________________________________||
@@ -124,8 +124,8 @@ class AlphaTwirl(object):
     def createPackageFor(self, tblcfg):
         keyComposer = GenericKeyComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
         counterBuilder = CounterBuilder(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer)
-        resultsCombinationMethod = CombineIntoPandasDataFrame()
-        deliveryMethod = WritePandasDataFrameToFile(tblcfg['outFilePath'])
+        resultsCombinationMethod = CombineIntoList()
+        deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
         collector = Collector(resultsCombinationMethod, deliveryMethod)
         return EventReaderPackage(counterBuilder, collector)
 
