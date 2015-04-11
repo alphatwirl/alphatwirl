@@ -43,12 +43,31 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##____________________________________________________________________________||
+defaultCountsBuilderClass = CountsWithEmptyNextKeysBuilder(Counts)
+
+##____________________________________________________________________________||
+def completeTableConfig(tblcfg, outDir):
+    if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
+    if 'indices' not in tblcfg: tblcfg['indices'] = None
+    if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
+    if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsBuilderClass
+    if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
+    return tblcfg
+
+##____________________________________________________________________________||
+def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
+    # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
+    # l will be ['var1', '1', 'var2', 'var3', '2']
+    l = columnNames if indices is None else [str(e) for sublist in zip(columnNames, indices) for e in sublist if e is not None]
+    ret = prefix + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
+    return ret
+
+##____________________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
         self.args = None
         self.componentReaders = [ ]
-        self.defaultCountsBuilderClass = CountsWithEmptyNextKeysBuilder(Counts)
 
     def ArgumentParser(self, *args, **kwargs):
         parser = ArgumentParser(self, *args, **kwargs)
@@ -70,7 +89,7 @@ class AlphaTwirl(object):
     def addTreeReader(self, analyzerName, fileName, treeName, tableConfigs, eventSelection):
         if self.args is None: self.ArgumentParser().parse_args()
         eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
-        tableConfigs = [self.completeTableConfig(c) for c in tableConfigs]
+        tableConfigs = [completeTableConfig(c, self.args.outDir) for c in tableConfigs]
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
         eventReaderPackages = [self.createPackageFor(c) for c in tableConfigs]
 
@@ -105,21 +124,6 @@ class AlphaTwirl(object):
         for package in eventReaderPackages:
             eventReaderBundle.addReaderPackage(package)
         return eventReaderBundle
-
-    def completeTableConfig(self, tblcfg):
-        if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
-        if 'indices' not in tblcfg: tblcfg['indices'] = None
-        if 'outFileName' not in tblcfg: tblcfg['outFileName'] = self.createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
-        if 'countsClass' not in tblcfg: tblcfg['countsClass'] = self.defaultCountsBuilderClass
-        if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(self.args.outDir, tblcfg['outFileName'])
-        return tblcfg
-
-    def createOutFileName(self, columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
-        # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
-        # l will be ['var1', '1', 'var2', 'var3', '2']
-        l = columnNames if indices is None else [str(e) for sublist in zip(columnNames, indices) for e in sublist if e is not None]
-        ret = prefix + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
-        return ret
 
     def createPackageFor(self, tblcfg):
         keyComposer = GenericKeyComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
