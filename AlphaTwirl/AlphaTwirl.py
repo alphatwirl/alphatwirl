@@ -16,9 +16,13 @@ from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
 from Counter.KeyComposer import GenericKeyComposer
 from Counter.Counter import CounterBuilder
-from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
-from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 from EventReader.Collector import Collector
+
+try:
+    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
+    from WritePandasDataFrameToFile import WritePandasDataFrameToFile
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 def mkdir_p(path):
