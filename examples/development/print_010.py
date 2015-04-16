@@ -3,7 +3,7 @@
 import ROOT
 
 ##__________________________________________________________________||
-inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/201525_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
+inputPath = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
 treeName = 'tree'
 outPath = 'tmp/tbl_met.txt'
 

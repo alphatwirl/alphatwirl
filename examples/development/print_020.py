@@ -4,7 +4,7 @@ import ROOT
 import os
 
 ##__________________________________________________________________||
-heppyPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/201525_SingleMu'
+heppyPath = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14/20150331_SingleMu'
 analyzerName = 'treeProducerSusyAlphaT'
 fileName = 'tree.root'
 treeName = 'tree'
