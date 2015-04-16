@@ -7,12 +7,12 @@ import Counter
 import EventReader
 import ProgressBar
 from EventBuilder import EventBuilder
-from TblXsec import TblXsec
-from TblNevt import TblNevt
 
 try:
     from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
     from buildBinningFromTbl import buildBinningFromTbl
+    from TblXsec import TblXsec
+    from TblNevt import TblNevt
 except ImportError:
     pass
