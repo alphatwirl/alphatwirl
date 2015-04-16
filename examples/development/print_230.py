@@ -2,7 +2,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import argparse
-from AlphaTwirl import EventBuilder, CombineIntoPandasDataFrame, WritePandasDataFrameToFile
+from AlphaTwirl import EventBuilder, CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult
 from AlphaTwirl.Counter import Counts, GenericKeyComposer, CounterBuilder
 from AlphaTwirl.Binning import RoundLog, Echo
@@ -24,8 +24,8 @@ outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
 binning1 = RoundLog(0.1, 0)
 keyComposer1 = GenericKeyComposer(('met_pt', ), (binning1, ))
 counterBuilder1 = CounterBuilder(Counts, ('met', ), keyComposer1)
-resultsCombinationMethod1 = CombineIntoPandasDataFrame()
-deliveryMethod1 = WritePandasDataFrameToFile(outPath1)
+resultsCombinationMethod1 = CombineIntoList()
+deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
 readerPackage1 = EventReaderPackage(counterBuilder1, collector1)
 
@@ -33,8 +33,8 @@ outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
 binning2 = RoundLog(0.1, 0)
 keyComposer2 = GenericKeyComposer(('jet_pt', ), (binning2, ), (0, ))
 counterBuilder2 = CounterBuilder(Counts, ('jet_pt', ), keyComposer2)
-resultsCombinationMethod2 = CombineIntoPandasDataFrame()
-deliveryMethod2 = WritePandasDataFrameToFile(outPath2)
+resultsCombinationMethod2 = CombineIntoList()
+deliveryMethod2 = WriteListToFile(outPath2)
 collector2 = Collector(resultsCombinationMethod2, deliveryMethod2)
 readerPackage2 = EventReaderPackage(counterBuilder2, collector2)
 
@@ -43,8 +43,8 @@ binning31 = Echo()
 binning32 = Echo()
 keyComposer3 = GenericKeyComposer(('nJet40', 'nBJet40'), (binning31, binning32))
 counterBuilder3 = CounterBuilder(Counts, ('njets', 'nbjets'), keyComposer3)
-resultsCombinationMethod3 = CombineIntoPandasDataFrame()
-deliveryMethod3 = WritePandasDataFrameToFile(outPath3)
+resultsCombinationMethod3 = CombineIntoList()
+deliveryMethod3 = WriteListToFile(outPath3)
 collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
 readerPackage3 = EventReaderPackage(counterBuilder3, collector3)
 

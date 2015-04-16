@@ -2,7 +2,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import argparse
-from AlphaTwirl import EventBuilder, CombineIntoPandasDataFrame, WritePandasDataFrameToFile
+from AlphaTwirl import EventBuilder, CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult
 from AlphaTwirl.Counter import Counts, GenericKeyComposer, Counter
 from AlphaTwirl.Binning import RoundLog
@@ -21,8 +21,8 @@ outPath = os.path.join(args.outdir, 'tbl_met.txt')
 
 binning = RoundLog(0.1, 0)
 keyComposer = GenericKeyComposer(('met_pt', ), (binning, ))
-resultsCombinationMethod = CombineIntoPandasDataFrame()
-deliveryMethod = WritePandasDataFrameToFile(outPath)
+resultsCombinationMethod = CombineIntoList()
+deliveryMethod = WriteListToFile(outPath)
 datasetReaderPairs = [ ]
 
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
