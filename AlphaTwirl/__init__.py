@@ -1,4 +1,4 @@
-from AlphaTwirl import AlphaTwirl
+from AlphaTwirl import AlphaTwirl, completeTableConfig
 import HeppyResult
 from HeppyResultReader import HeppyResultReader
 from Events import Events
