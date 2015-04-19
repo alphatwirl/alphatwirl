@@ -17,7 +17,6 @@ d4 <-  read.table('tbl_xsec.txt', header = TRUE)
 d <- merge(d1, d2)
 d <- d %>% group_by(phasespace, process, met) %>% summarise(n = sum(n), nvar = sum(nvar))
 e <- merge(d1, d3)
-e <- e[order(e$phasespace), ]
 e <- e %>% group_by(phasespace, process) %>% summarise(nevt = sum(nevt))
 e <- merge(e, d4)
 d <- merge(d, e)
