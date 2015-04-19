@@ -20,8 +20,8 @@ e <- merge(d1, d3)
 e <- e[order(e$phasespace), ]
 e <- e %>% group_by(phasespace, process) %>% summarise(nevt = sum(nevt))
 e <- merge(e, d4)
-lumi <- 4000
 d <- merge(d, e)
+lumi <- 4000
 d$n <- d$n*d$xsec/d$nevt*lumi
 d$nvar <- d$nvar*(d$xsec/d$nevt*lumi)^2
 d$nevt <- NULL
@@ -29,7 +29,7 @@ d$xsec <- NULL
 d <- d %>% group_by(process, met) %>% summarise(n = sum(n), nvar = sum(nvar))
 
 d <- d[order(d$process, d$met), ]
-write.fwf(as.data.frame(d), 'tbl_out.txt')
+write.fwf(as.data.frame(d), 'tbl_out_R.txt')
 
 
 ##____________________________________________________________________________||
