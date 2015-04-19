@@ -17,8 +17,8 @@ d = pd.merge(d, e)
 lumi = 4000
 d.n = d.n*d.xsec/d.nevt*lumi
 d.nvar = d.nvar*(d.xsec/d.nevt*lumi)**2
-d = d.drop('nevt', 1)
-d = d.drop('xsec', 1)
+del d['nevt']
+del d['xsec']
 d = d.groupby(['process', 'met']).sum().reset_index()
 
 f = open('tbl_out_python.txt', 'w')
