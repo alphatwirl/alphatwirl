@@ -99,7 +99,7 @@ It requires a package.
 
 The installation of pandas could be easy but could be also difficult. It varies with your Python environment. For example, if the [PyPI](https://pypi.python.org) environment of the Python package management is set up, you can install pandas with one line of command.
 
-    pip install pandas Otherwise,
+    pip install pandas
 
 It could be as easy with other package management systems. The installation is detailed here:
 
