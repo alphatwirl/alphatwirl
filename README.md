@@ -1,4 +1,7 @@
-## AlphaTwirl
+
+![AlphaTwirl](images/AlphaTwirl.png?raw=true)
+
+---
 
 A Python library for summarizing event data in CMS EDM and Heppy flat trees
 
