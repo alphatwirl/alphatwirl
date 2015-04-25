@@ -2,6 +2,7 @@
 import argparse
 import sys
 import os, errno
+import itertools
 
 from HeppyResult.HeppyResultReader import HeppyResultReader
 from HeppyResult.HeppyResult import HeppyResult
@@ -92,11 +93,11 @@ class AlphaTwirl(object):
 
     def addTreeReader(self, analyzerName, fileName, treeName, tableConfigs, eventSelection):
         if self.args is None: self.ArgumentParser().parse_args()
-        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
         tableConfigs = [completeTableConfig(c, self.args.outDir) for c in tableConfigs]
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
         eventReaderPackages = [self.createPackageFor(c) for c in tableConfigs]
-
+        branches = set(itertools.chain(*[list(cfg['branchNames']) for cfg in tableConfigs]))
+        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents, branches)
         eventReaderBundle = self.createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages)
         self.addComponentReader(eventReaderBundle)
 

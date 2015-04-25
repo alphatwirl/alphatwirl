@@ -22,7 +22,12 @@ class MockComponent(object):
 
 ##____________________________________________________________________________||
 class MockTObject(object):
-    def __init__(self, name): self.name = name
+    def __init__(self, name):
+        self.name = name
+        self.brancheStatus = set()
+
+    def SetBranchStatus(self, bname, status):
+        self.brancheStatus.add((bname, status))
 
 ##____________________________________________________________________________||
 class MockTFile(object):
@@ -72,5 +77,21 @@ class TestEventBuilder(unittest.TestCase):
         self.assertIsInstance(events, MockEvents)
         self.assertEqual('tree', events.tree.name)
         self.assertEqual(100, events.maxEvents)
+        self.assertEqual(set(), events.tree.brancheStatus)
+
+    def test_build_brancheNames(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT',
+            fileName = 'tree.root',
+            treeName = 'tree',
+            maxEvents = 100,
+            brancheNames = set(['met_pt', 'jet_pt', 'nJet40', 'nBJet40'])
+        )
+
+        component = MockComponent()
+        events = eventBuilder.build(component)
+
+        expected = set([('*', 0), ('nBJet40', 1), ('met_pt', 1), ('nJet40', 1), ('jet_pt', 1)])
+        self.assertEqual(expected, events.tree.brancheStatus)
 
 ##____________________________________________________________________________||
