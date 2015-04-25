@@ -5,7 +5,7 @@ import os, errno
 
 from HeppyResult.HeppyResultReader import HeppyResultReader
 from HeppyResult.HeppyResult import HeppyResult
-from EventBuilder import EventBuilder
+from HeppyResult.EventBuilder import EventBuilder
 from EventReader.EventReaderBundle import EventReaderBundle
 from EventReader.EventReaderPackage import EventReaderPackage
 from EventReader.EventLoopRunner import EventLoopRunner
