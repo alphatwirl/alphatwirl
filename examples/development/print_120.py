@@ -2,8 +2,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import argparse
-from AlphaTwirl import EventBuilder
-from AlphaTwirl.HeppyResult import HeppyResult
+from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposer
 from AlphaTwirl.Binning import RoundLog
 

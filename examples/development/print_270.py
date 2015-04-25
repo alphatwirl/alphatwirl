@@ -2,8 +2,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import argparse
-from AlphaTwirl import EventBuilder, CombineIntoList, WriteListToFile
-from AlphaTwirl.HeppyResult import HeppyResult
+from AlphaTwirl import CombineIntoList, WriteListToFile
+from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposer, CounterBuilder
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector, EventReaderPackage, MPEventLoopRunner, EventReaderBundle

@@ -2,8 +2,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import argparse
-from AlphaTwirl import EventBuilder
-from AlphaTwirl.HeppyResult import Component
+from AlphaTwirl.HeppyResult import Component, EventBuilder
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
