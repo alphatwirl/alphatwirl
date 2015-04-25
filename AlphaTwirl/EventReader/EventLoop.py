@@ -25,9 +25,4 @@ class EventLoop(object):
         report = self.progressReportWriter.write(self.component, event)
         progressReporter.report(report)
 
-    def firstReportProgress(self, progressReporter):
-        if progressReporter is None: return
-        events = self.eventBuilder.build(self.component)
-        self.reportProgress(progressReporter, events)
-
 ##____________________________________________________________________________||

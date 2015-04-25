@@ -40,7 +40,6 @@ class MPEventLoopRunner(object):
             self._nworkers += 1
 
     def run(self, eventLoop):
-        eventLoop.firstReportProgress(self._progressMonitor.createReporter())
 
         # add ids so can collect later
         for reader in eventLoop.readers:
