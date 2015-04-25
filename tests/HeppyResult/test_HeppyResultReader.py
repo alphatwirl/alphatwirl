@@ -1,4 +1,4 @@
-from AlphaTwirl import HeppyResultReader
+from AlphaTwirl.HeppyResult import HeppyResultReader
 import unittest
 
 ##____________________________________________________________________________||

@@ -3,7 +3,7 @@ import argparse
 import sys
 import os, errno
 
-from HeppyResultReader import HeppyResultReader
+from HeppyResult.HeppyResultReader import HeppyResultReader
 from HeppyResult.HeppyResult import HeppyResult
 from EventBuilder import EventBuilder
 from EventReader.EventReaderBundle import EventReaderBundle
