@@ -1,0 +1,19 @@
+$ ./print_imputs.py -n 50000 > in.txt
+$ time ./print_round.py > out.txt
+$ cp -a out.txt out_expected.txt
+$ time ./print_round.py > out.txt
+$ diff out.txt out_expected.txt
+$ python -m cProfile ./print_round.py
+
+
+# with decimal
+$ time ./print_round.py
+
+real	0m6.172s
+user	0m5.509s
+sys	0m0.235s
+
+# without decimal
+real	0m1.406s
+user	0m1.111s
+sys	0m0.218s
