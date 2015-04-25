@@ -5,7 +5,6 @@ import os, errno
 
 from HeppyResult.HeppyResultReader import HeppyResultReader
 from HeppyResult.HeppyResult import HeppyResult
-from HeppyResult.EventBuilder import EventBuilder
 from EventReader.EventReaderBundle import EventReaderBundle
 from EventReader.EventReaderPackage import EventReaderPackage
 from EventReader.EventLoopRunner import EventLoopRunner
@@ -19,6 +18,11 @@ from Counter.Counter import CounterBuilder
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector
+
+try:
+    from EventBuilder import EventBuilder
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 def mkdir_p(path):

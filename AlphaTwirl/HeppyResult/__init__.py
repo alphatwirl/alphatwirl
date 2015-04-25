@@ -6,4 +6,8 @@ from Analyzer import Analyzer
 from ReadCounter import ReadCounter
 from TblCounter import TblCounter
 from TblXsec import TblXsec
-from EventBuilder import EventBuilder
+
+try:
+    from EventBuilder import EventBuilder
+except ImportError:
+    pass

@@ -1,6 +1,14 @@
-from AlphaTwirl.HeppyResult.EventBuilder import EventBuilder
 import unittest
 import sys
+
+##____________________________________________________________________________||
+hasROOT = False
+try:
+    import ROOT
+    from AlphaTwirl.HeppyResult.EventBuilder import EventBuilder
+    hasROOT = True
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 class MockAnalyzer(object):
@@ -35,6 +43,7 @@ class MockEvents(object):
         self.maxEvents = maxEvents
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
 class TestEventBuilder(unittest.TestCase):
 
     def setUp(self):
