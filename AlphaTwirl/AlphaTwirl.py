@@ -20,7 +20,7 @@ from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector
 
 try:
-    from EventBuilder import EventBuilder
+    from HeppyResult.EventBuilder import EventBuilder
 except ImportError:
     pass
 
