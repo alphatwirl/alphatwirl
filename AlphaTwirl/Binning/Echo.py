@@ -14,18 +14,18 @@ class Echo(object):
         self._valid = valid
 
     def __call__(self, val):
-        try:
+
+        if hasattr(val, "__getitem__"):
             return [self.__call__(v) for v in val]
-        except TypeError:
-            pass
+
         if not self._valid(val): return None
         return val
 
     def next(self, bin):
-        try:
+
+        if hasattr(bin, "__getitem__"):
             return [self.next(v) for v in bin]
-        except TypeError:
-            pass
+
         return self._nextFunc(bin)
 
 ##____________________________________________________________________________||

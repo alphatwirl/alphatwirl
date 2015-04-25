@@ -13,20 +13,20 @@ class RoundLog(object):
         self.valid = valid
 
     def __call__(self, val):
-        try:
+
+        if hasattr(val, "__iter__"):
             return [self.__call__(v) for v in val]
-        except TypeError:
-            pass
+
         if not self.valid(val): return None
         if val <= 0: return None
         val = math.log10(val)
         return 10**self._round(val)
 
     def next(self, bin):
-        try:
+
+        if hasattr(bin, "__iter__"):
             return [self.next(v) for v in bin]
-        except TypeError:
-            pass
+
         bin = math.log10(bin)
         return 10**self._round.next(bin)
 
