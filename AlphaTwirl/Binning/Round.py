@@ -21,7 +21,7 @@ class Round(object):
     def __call__(self, val):
         if not self.valid(val): return None
         self._updateBoundaries(val)
-        bin = max([b for b in self.boundaries if b <= val])
+        bin = [b for b in self.boundaries if b <= val][-1]
         if not self.lowedge: bin += self.halfWidth
         return bin
 
