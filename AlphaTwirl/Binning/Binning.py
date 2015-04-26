@@ -48,20 +48,12 @@ class Binning(object):
         self._valid = valid
 
     def __call__(self, val):
-
-        if hasattr(val, "__iter__"):
-            return [self.__call__(v) for v in val]
-
         if not self._valid(val): return None
         if val < self.lows[0]: return self.underflow_bin
         if self.ups[-1] <= val: return self.overflow_bin
         return [b for b, l, u in zip(self.bins, self.lows, self.ups) if l <= val < u][0]
 
     def next(self, bin):
-
-        if hasattr(bin, "__iter__"):
-            return [self.next(v) for v in bin]
-
         if self.lowedge:
             # call self._call__() to ensure that the 'bin' is indeed one of the
             # bins.
