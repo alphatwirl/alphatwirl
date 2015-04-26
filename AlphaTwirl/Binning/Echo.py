@@ -10,22 +10,13 @@ def plusOne(x): return x + 1
 class Echo(object):
     def __init__(self, nextFunc = plusOne, valid = returnTrue):
         self._nextFunc = nextFunc
-
         self._valid = valid
 
     def __call__(self, val):
-
-        if hasattr(val, "__getitem__"):
-            return [self.__call__(v) for v in val]
-
         if not self._valid(val): return None
         return val
 
     def next(self, bin):
-
-        if hasattr(bin, "__getitem__"):
-            return [self.next(v) for v in bin]
-
         return self._nextFunc(bin)
 
 ##____________________________________________________________________________||
