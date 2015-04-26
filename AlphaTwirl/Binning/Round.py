@@ -19,10 +19,6 @@ class Round(object):
         self.valid = valid
 
     def __call__(self, val):
-
-        if hasattr(val, "__iter__"):
-            return [self.__call__(v) for v in val]
-
         if not self.valid(val): return None
         self._updateBoundaries(val)
         bin = max([b for b in self.boundaries if b <= val])
@@ -37,10 +33,6 @@ class Round(object):
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
-
-        if hasattr(bin, "__iter__"):
-            return [self.next(v) for v in bin]
-
         self._updateBoundaries(bin)
         self._updateBoundaries(bin + self.width)
         bin = max([b for b in self.boundaries if b <= bin])
