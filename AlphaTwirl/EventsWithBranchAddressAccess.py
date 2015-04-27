@@ -30,7 +30,7 @@ def setBranchAddresses(brancheNames, tree):
     for l in leafCountInfo:
         a = array.array(l['arraytype'], [ 0 ])
         tree.SetBranchAddress(l['name'], a)
-        ret[l['name']] = dict(array = a, countname = None)
+        ret[l['name']] = dict(array = a, countname = None, countarray = None)
 
     for l in leafinfo:
         if l['name'] in ret: continue
