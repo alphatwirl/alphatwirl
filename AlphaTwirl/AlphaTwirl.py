@@ -15,6 +15,7 @@ from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
 from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
 from Counter.KeyComposer import GenericKeyComposer
+from Counter.GenericKeyComposerAddressAccess import GenericKeyComposerAddressAccessBuilder
 from Counter.Counter import CounterBuilder
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
@@ -97,7 +98,7 @@ class AlphaTwirl(object):
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
         eventReaderPackages = [self.createPackageFor(c) for c in tableConfigs]
         branches = set(itertools.chain(*[list(cfg['branchNames']) for cfg in tableConfigs]))
-        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents, branches)
+        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents, brancheNames = branches, branchAddressAccess = True)
         eventReaderBundle = self.createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages)
         self.addComponentReader(eventReaderBundle)
 
@@ -131,7 +132,7 @@ class AlphaTwirl(object):
         return eventReaderBundle
 
     def createPackageFor(self, tblcfg):
-        keyComposer = GenericKeyComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+        keyComposer = GenericKeyComposerAddressAccessBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
         counterBuilder = CounterBuilder(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer)
         resultsCombinationMethod = CombineIntoList()
         deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
