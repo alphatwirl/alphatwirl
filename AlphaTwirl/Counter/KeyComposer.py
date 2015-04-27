@@ -31,3 +31,12 @@ class GenericKeyComposer(object):
         return self._binnings
 
 ##____________________________________________________________________________||
+class GenericKeyComposerBuilder(object):
+    def __init__(self, varNames, binnings, indices = None):
+        self.varNames = varNames
+        self.binnings = binnings
+        self.indices = indices
+    def __call__(self):
+        return GenericKeyComposer(varNames = self.varNames, binnings = self.binnings, indices = self.indices)
+
+##____________________________________________________________________________||
