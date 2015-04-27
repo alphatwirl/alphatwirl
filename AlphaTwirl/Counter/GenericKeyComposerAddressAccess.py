@@ -10,16 +10,16 @@ class GenericKeyComposerAddressAccess(object):
 
     def __call__(self, event):
         if self._first:
-            self._arrays = self._findArrays(event)
+            self._findArrays(event)
             self._first = False
 
         ret = [ ]
-        for array, binning, index in zip(self._arrays, self._binnings, self._indices):
+        for array, binning, index, countarray in self._zip:
             if index is not None:
-                if array['countarray'][0] <= index: return None
-                var = array['array'][index]
+                if countarray[0] <= index: return None
+                var = array[index]
             else:
-                var = array['array'][0]
+                var = array[0]
             var_bin = binning(var)
             if var_bin is None: return None
             ret.append(var_bin)
@@ -37,7 +37,9 @@ class GenericKeyComposerAddressAccess(object):
         return self._binnings
 
     def _findArrays(self, event):
-        return [event.arrays[n] for n in self._varNames]
+        self._arrays = [event.arrays[n]['array'] for n in self._varNames]
+        self._countarrays = [event.arrays[n]['countarray'] for n in self._varNames]
+        self._zip = zip(self._arrays, self._binnings, self._indices, self._countarrays)
 
 ##____________________________________________________________________________||
 class GenericKeyComposerAddressAccessBuilder(object):
