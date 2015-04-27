@@ -21,7 +21,10 @@ class Round(object):
     def __call__(self, val):
         if not self.valid(val): return None
         self._updateBoundaries(val)
-        bin = [b for b in self.boundaries if b <= val][-1]
+        bin = self.boundaries[0]
+        for b in self.boundaries[1:]:
+            if b <= val: bin = b
+            else: break
         if not self.lowedge: bin += self.halfWidth
         return bin
 
@@ -35,8 +38,11 @@ class Round(object):
     def next(self, bin):
         self._updateBoundaries(bin)
         self._updateBoundaries(bin + self.width)
-        bin = max([b for b in self.boundaries if b <= bin])
-        ret = self.boundaries[self.boundaries.index(bin) + 1]
+        nbin = self.boundaries[0]
+        for b in self.boundaries[1:]:
+            if b <= bin: nbin = b
+            else: break
+        ret = self.boundaries[self.boundaries.index(nbin) + 1]
         if not self.lowedge: ret += self.halfWidth
         return ret
 
