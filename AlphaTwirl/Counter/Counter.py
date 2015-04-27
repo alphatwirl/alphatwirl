@@ -35,13 +35,13 @@ class Counter(object):
 
 ##____________________________________________________________________________||
 class CounterBuilder(Counter):
-    def __init__(self, countMethodClass, keyNames, keyComposer, weightCalculator = WeightCalculatorOne()):
+    def __init__(self, countMethodClass, keyNames, keyComposerClass, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
-        self._keyComposer = keyComposer
+        self._keyComposerClass = keyComposerClass
         self._countMethodClass = countMethodClass
         self._weightCalculator = weightCalculator
 
     def __call__(self):
-        return Counter(self._keynames, self._keyComposer, self._countMethodClass(), self._weightCalculator)
+        return Counter(self._keynames, self._keyComposerClass(), self._countMethodClass(), self._weightCalculator)
 
 ##____________________________________________________________________________||
