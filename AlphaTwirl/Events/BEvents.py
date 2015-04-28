@@ -1,5 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from Branch import BranchManager
+from Branch import Branch
+from BranchAddressManager import BranchAddressManager
+
+##____________________________________________________________________________||
+branchAddressManager = BranchAddressManager()
 
 ##____________________________________________________________________________||
 class BEvents(object):
@@ -10,7 +14,6 @@ class BEvents(object):
         self.iEvent = -1
 
         tree.SetBranchStatus('*', 0)
-        self.branchManager = BranchManager()
         self.branches = { }
 
     def __iter__(self):
@@ -21,7 +24,8 @@ class BEvents(object):
 
     def __getattr__(self, name):
         if name in self.branches: return self.branches[name]
-        self.branches[name] = self.branchManager.findBranch(self.tree, name)
+        itsArray, itsCountArray = branchAddressManager.getArrays(self.tree, name)
+        self.branches[name] = Branch(name, itsArray, itsCountArray)
         if self.iEvent >= 0: self.tree.GetEntry(self.iEvent)
         return self.branches[name]
 

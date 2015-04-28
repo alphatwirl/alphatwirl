@@ -28,18 +28,3 @@ class Branch(object):
         return self.countarray[0]
 
 ##____________________________________________________________________________||
-branchAddressManager = BranchAddressManager()
-
-##____________________________________________________________________________||
-class BranchManager(object):
-    def __init__(self):
-        self.branches = { }
-
-    def findBranch(self, tree, name):
-        if name in self.branches: return self.branches[name]
-
-        itsArray, itsCountArray = branchAddressManager.getArrays(tree, name)
-        self.branches[name] = Branch(name, itsArray, itsCountArray)
-        return self.branches[name]
-
-##____________________________________________________________________________||
