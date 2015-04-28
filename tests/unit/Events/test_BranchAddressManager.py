@@ -50,7 +50,9 @@ class TestBranchAddressManager(unittest.TestCase):
         met_pt = MockLeaf('met_pt', 'Double_t', MockNullLeaf())
         njet = MockLeaf('njet', 'Int_t', MockNullLeaf(), 13)
         jet_pt = MockLeaf('jet_pt', 'Double_t', njet)
-        self.tree1 = MockTree(leaves = [run, lumi, evt, met_pt, njet, jet_pt])
+        nele = MockLeaf('nele', 'Int_t', MockNullLeaf(), 0)
+        ele_pt = MockLeaf('ele_pt', 'Double_t', nele)
+        self.tree1 = MockTree(leaves = [run, lumi, evt, met_pt, njet, jet_pt, nele, ele_pt])
 
     def tearDown(self):
 
@@ -63,7 +65,9 @@ class TestBranchAddressManager(unittest.TestCase):
 
         array_jet_pt, array_jet_pt_count = manager.getArrays(self.tree1, 'jet_pt')
         self.assertEqual('d', array_jet_pt.typecode)
+        self.assertEqual(13, array_jet_pt.buffer_info()[1])
         self.assertEqual('i', array_jet_pt_count.typecode)
+        self.assertEqual(1, array_jet_pt_count.buffer_info()[1])
 
     def test_getArrays_same_objects(self):
 
@@ -90,6 +94,7 @@ class TestBranchAddressManager(unittest.TestCase):
 
         array_met_pt, array_met_pt_count = manager.getArrays(self.tree1, 'met_pt')
         self.assertEqual('d', array_met_pt.typecode)
+        self.assertEqual(1, array_met_pt.buffer_info()[1])
         self.assertIsNone(array_met_pt_count)
 
     def test_getArrays_no_branch(self):
@@ -99,5 +104,15 @@ class TestBranchAddressManager(unittest.TestCase):
         array_zet_pt, array_zet_pt_count = manager.getArrays(self.tree1, 'zet_pt')
         self.assertIsNone(array_zet_pt)
         self.assertIsNone(array_zet_pt_count)
+
+    def test_getArrays_zero_max(self):
+
+        manager = BranchAddressManager()
+
+        array_ele_pt, array_ele_pt_count = manager.getArrays(self.tree1, 'ele_pt')
+        self.assertEqual('d', array_ele_pt.typecode)
+        self.assertEqual(1, array_ele_pt.buffer_info()[1])
+        self.assertEqual('i', array_ele_pt_count.typecode)
+        self.assertEqual(1, array_ele_pt_count.buffer_info()[1])
 
 ##____________________________________________________________________________||
