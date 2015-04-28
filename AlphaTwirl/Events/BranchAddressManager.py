@@ -49,6 +49,7 @@ class BranchAddressManager(object):
         leafNames = [l.GetName() for l in tree.GetListOfLeaves()]
         if branchName not in leafNames:
             self.__class__.arrayDict[(tree, branchName)] = None
+            return
 
         leafInfo = inspectLeaf(tree, branchName)
 
