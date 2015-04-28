@@ -1,6 +1,6 @@
 from AlphaTwirl import AlphaTwirl, completeTableConfig
+import Events
 import HeppyResult
-from Events import Events
 import Binning
 import Counter
 from Combine import Combine
