@@ -1,0 +1,103 @@
+from AlphaTwirl.Events import BranchAddressManager
+import unittest
+
+##____________________________________________________________________________||
+class MockLeaf(object):
+    def __init__(self, name, typename, leafcount = None, maximum = None):
+        self.name = name
+        self.typename = typename
+        self.leafcount = leafcount
+        self.maximum = maximum
+    def GetName(self): return self.name
+    def GetTypeName(self): return self.typename
+    def GetLeafCount(self): return self.leafcount
+    def GetMaximum(self): return self.maximum
+
+##____________________________________________________________________________||
+class MockNullLeaf(object):
+    def GetName(self): raise ReferenceError('null object')
+
+##____________________________________________________________________________||
+class MockTree(object):
+
+    def __init__(self, leaves):
+        self.leaves = leaves
+        self.leafDict = dict([(l.GetName(), l) for l in leaves])
+        self.branchstatus = [ ]
+        self.branchaddress = [ ]
+
+    def GetListOfLeaves(self):
+        return self.leaves
+
+    def GetLeaf(self, name):
+        return self.leafDict[name]
+
+    def SetBranchStatus(self, name, status):
+        self.branchstatus.append((name, status))
+
+    def SetBranchAddress(self, name, address):
+        self.branchaddress.append((name, address))
+
+##____________________________________________________________________________||
+class TestBranchAddressManager(unittest.TestCase):
+
+
+    def setUp(self):
+
+        run = MockLeaf('run', 'Int_t', MockNullLeaf())
+        lumi = MockLeaf('lumi', 'Int_t', MockNullLeaf())
+        evt  = MockLeaf('evt', 'Int_t', MockNullLeaf())
+        met_pt = MockLeaf('met_pt', 'Double_t', MockNullLeaf())
+        njet = MockLeaf('njet', 'Int_t', MockNullLeaf(), 13)
+        jet_pt = MockLeaf('jet_pt', 'Double_t', njet)
+        self.tree1 = MockTree(leaves = [run, lumi, evt, met_pt, njet, jet_pt])
+
+    def tearDown(self):
+
+        BranchAddressManager.arrayDict.clear()
+        BranchAddressManager.counterArrayDict.clear()
+
+    def test_getArrays(self):
+
+        manager = BranchAddressManager()
+
+        array_jet_pt, array_jet_pt_count = manager.getArrays(self.tree1, 'jet_pt')
+        self.assertEqual('d', array_jet_pt.typecode)
+        self.assertEqual('i', array_jet_pt_count.typecode)
+
+    def test_getArrays_same_objects(self):
+
+        manager = BranchAddressManager()
+
+        array_jet_pt_1, array_jet_pt_count_1 = manager.getArrays(self.tree1, 'jet_pt')
+        array_jet_pt_2, array_jet_pt_count_2 = manager.getArrays(self.tree1, 'jet_pt')
+        self.assertIs(array_jet_pt_1, array_jet_pt_2)
+        self.assertIs(array_jet_pt_count_1, array_jet_pt_count_2)
+
+    def test_getArrays_same_objects_different_managers(self):
+
+        manager1 = BranchAddressManager()
+        manager2 = BranchAddressManager()
+
+        array_jet_pt_1, array_jet_pt_count_1 = manager1.getArrays(self.tree1, 'jet_pt')
+        array_jet_pt_2, array_jet_pt_count_2 = manager2.getArrays(self.tree1, 'jet_pt')
+        self.assertIs(array_jet_pt_1, array_jet_pt_2)
+        self.assertIs(array_jet_pt_count_1, array_jet_pt_count_2)
+
+    def test_getArrays_no_count(self):
+
+        manager = BranchAddressManager()
+
+        array_met_pt, array_met_pt_count = manager.getArrays(self.tree1, 'met_pt')
+        self.assertEqual('d', array_met_pt.typecode)
+        self.assertIsNone(array_met_pt_count)
+
+    def test_getArrays_no_branch(self):
+
+        manager = BranchAddressManager()
+
+        array_zet_pt, array_zet_pt_count = manager.getArrays(self.tree1, 'zet_pt')
+        self.assertIsNone(array_zet_pt)
+        self.assertIsNone(array_zet_pt_count)
+
+##____________________________________________________________________________||
