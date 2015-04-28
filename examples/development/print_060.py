@@ -3,7 +3,7 @@
 import ROOT
 import os
 import argparse
-from AlphaTwirl import Events
+from AlphaTwirl.Events import Events
 from AlphaTwirl.HeppyResult import Component
 
 ##__________________________________________________________________||
