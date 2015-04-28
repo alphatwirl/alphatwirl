@@ -2,7 +2,7 @@
 import os
 import ROOT
 from ..Events import Events
-from ..EventsWithBranchAddressAccess import EventsWithBranchAddressAccess
+from ..Events import EventsWithBranchAddressAccess
 
 ##____________________________________________________________________________||
 class EventBuilder(object):
