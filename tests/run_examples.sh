@@ -37,6 +37,10 @@ do
     outdir=${outtopdir}/${num}
     echo_and_excecute "mkdir -p ${outdir}"
     echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir}"
+    exitcode=$?
+    if (($exitcode > 0)); then
+	exit $exitcode
+    fi
 done
 
 ##____________________________________________________________________________||
