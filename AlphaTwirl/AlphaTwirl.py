@@ -15,14 +15,14 @@ from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
 from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
 from Counter.KeyComposer import GenericKeyComposer
-from Counter.GenericKeyComposerAddressAccess import GenericKeyComposerAddressAccessBuilder
+from Counter.GenericKeyComposerB import GenericKeyComposerBBuilder
 from Counter.Counter import CounterBuilder
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector
 
 try:
-    from HeppyResult.EventBuilder import EventBuilder
+    from HeppyResult.BEventBuilder import BEventBuilder as EventBuilder
 except ImportError:
     pass
 
@@ -97,8 +97,7 @@ class AlphaTwirl(object):
         tableConfigs = [completeTableConfig(c, self.args.outDir) for c in tableConfigs]
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
         eventReaderPackages = [self.createPackageFor(c) for c in tableConfigs]
-        branches = set(itertools.chain(*[list(cfg['branchNames']) for cfg in tableConfigs]))
-        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents, brancheNames = branches, branchAddressAccess = True)
+        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
         eventReaderBundle = self.createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages)
         self.addComponentReader(eventReaderBundle)
 
@@ -132,7 +131,7 @@ class AlphaTwirl(object):
         return eventReaderBundle
 
     def createPackageFor(self, tblcfg):
-        keyComposer = GenericKeyComposerAddressAccessBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+        keyComposer = GenericKeyComposerBBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
         counterBuilder = CounterBuilder(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer)
         resultsCombinationMethod = CombineIntoList()
         deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
