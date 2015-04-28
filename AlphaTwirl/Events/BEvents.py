@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from Branch import findBracnh
+from Branch import BranchManager
 
 ##____________________________________________________________________________||
 class BEvents(object):
@@ -8,19 +8,21 @@ class BEvents(object):
         self.tree = tree
         self.nEvents = min(self.tree.GetEntries(), maxEvents) if (maxEvents > -1) else self.tree.GetEntries()
         self.iEvent = -1
-        tree.SetBranchStatus('*', 0)
 
+        tree.SetBranchStatus('*', 0)
+        self.branchManager = BranchManager()
         self.branches = { }
 
     def __iter__(self):
         for self.iEvent in xrange(self.nEvents):
-            if self.tree.GetEntry(self.iEvent) <= 0: break
+            self.tree.GetEntry(self.iEvent)
             yield self
         self.iEvent = -1
 
     def __getattr__(self, name):
         if name in self.branches: return self.branches[name]
-        self.branches[name] = findBracnh(self.tree, name)
+        self.branches[name] = self.branchManager.findBranch(self.tree, name)
+        if self.iEvent >= 0: self.tree.GetEntry(self.iEvent)
         return self.branches[name]
 
 ##____________________________________________________________________________||

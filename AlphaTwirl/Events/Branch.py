@@ -20,25 +20,32 @@ class Branch(object):
         return self.countarray[0]
 
 ##____________________________________________________________________________||
-def findBracnh(tree, name):
-    leafNames = [l.GetName() for l in tree.GetListOfLeaves()]
-    if name not in leafNames: return None
-    leafInfo = inspectLeaf(tree, name)
+class BranchManager(object):
+    def __init__(self):
+        self.branches = { }
 
-    tree.SetBranchStatus(leafInfo['name'], 1)
-    if leafInfo['countname'] is not None: tree.SetBranchStatus(leafInfo['countname'], 1)
+    def findBranch(self, tree, name):
+        if name in self.branches: return self.branches[name]
 
-    maxn = 1 if leafInfo['countmax'] is None or leafInfo['countmax'] == 0 else leafInfo['countmax']
-    itsArray = array.array(leafInfo['arraytype'], maxn*[ 0 ])
-    tree.SetBranchAddress(leafInfo['name'], itsArray)
+        leafNames = [l.GetName() for l in tree.GetListOfLeaves()]
+        if name not in leafNames: return None
+        leafInfo = inspectLeaf(tree, name)
 
-    if leafInfo['countname'] is not None:
-        itsCountArray = array.array(leafInfo['countarraytype'], [ 0 ])
-        tree.SetBranchAddress(leafInfo['countname'], itsCountArray)
-    else:
-        itsCountArray = None
+        tree.SetBranchStatus(leafInfo['name'], 1)
+        if leafInfo['countname'] is not None: tree.SetBranchStatus(leafInfo['countname'], 1)
 
-    return Branch(name, itsArray, itsCountArray)
+        maxn = 1 if leafInfo['countmax'] is None or leafInfo['countmax'] == 0 else leafInfo['countmax']
+        itsArray = array.array(leafInfo['arraytype'], maxn*[ 0 ])
+        tree.SetBranchAddress(leafInfo['name'], itsArray)
+
+        if leafInfo['countname'] is not None:
+            itsCountBranch = self.findBranch(tree, leafInfo['countname'])
+            itsCountArray = itsCountBranch.array
+        else:
+            itsCountArray = None
+
+        self.branches[name] = Branch(name, itsArray, itsCountArray)
+        return self.branches[name]
 
 ##____________________________________________________________________________||
 def inspectLeaf(tree, bname):
