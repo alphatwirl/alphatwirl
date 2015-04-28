@@ -56,7 +56,7 @@ do
     echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir}"
     outdir=${outtopdir}/${num}_mp
     echo_and_excecute "mkdir -p ${outdir}"
-    echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir} -p ${processes}"
+    echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir} -p ${processes} --force"
 done
 
 ##____________________________________________________________________________||
