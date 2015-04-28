@@ -70,6 +70,10 @@ class BranchAddressManager(object):
 ##____________________________________________________________________________||
 def inspectLeaf(tree, bname):
 
+
+    # This dict maps a ROOT type to a type code of the python array
+    # https://root.cern.ch/root/html/Rtypes.h
+    # https://docs.python.org/2/library/array.html
     typedic = dict(
         Double_t = 'd',
         Int_t = 'i',
