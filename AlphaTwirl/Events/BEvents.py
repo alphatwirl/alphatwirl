@@ -25,6 +25,7 @@ class BEvents(object):
     def __getattr__(self, name):
         if name in self.branches: return self.branches[name]
         itsArray, itsCountArray = branchAddressManager.getArrays(self.tree, name)
+        if itsArray is None: raise AttributeError("'" + str(self) + "' has no attribute '" + name + "'")
         self.branches[name] = Branch(name, itsArray, itsCountArray)
         if self.iEvent >= 0: self.tree.GetEntry(self.iEvent)
         return self.branches[name]
