@@ -6,7 +6,7 @@ import os, sys
 import timeit
 import array
 import ROOT
-from AlphaTwirl import Events, BEvents
+from AlphaTwirl.Events import Events, BEvents
 
 ##__________________________________________________________________||
 inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
