@@ -1,15 +1,15 @@
             phasespace            xsec
-      QCD_HT_1000ToInf       769.70000
        QCD_HT_100To250  28730000.00000
        QCD_HT_250To500    670500.00000
       QCD_HT_500To1000     26740.00000
+      QCD_HT_1000ToInf       769.70000
                 T_tWch        35.60000
              TBar_tWch        35.60000
      TBarToLeptons_sch         1.34784
      TBarToLeptons_tch        26.23428
-                TTJets       809.10000
         TToLeptons_sch         2.33280
         TToLeptons_tch        44.08020
+                TTJets       809.10000
  WJetsToLNu_HT100to200      2234.91000
  WJetsToLNu_HT200to400       580.06800
  WJetsToLNu_HT400to600        68.40030
