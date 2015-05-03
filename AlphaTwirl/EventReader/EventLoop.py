@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
+import uuid
 
 ##____________________________________________________________________________||
 class EventLoop(object):
@@ -9,6 +10,9 @@ class EventLoop(object):
         self.readers = readers
         self.progressReportWriter = EventLoopProgressReportWriter()
         self.eventSelection = eventSelection
+
+        # assign a random unique id to be used by progress bar
+        self.taskid = uuid.uuid4()
 
     def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
@@ -22,7 +26,7 @@ class EventLoop(object):
 
     def reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = self.progressReportWriter.write(self.component, event)
+        report = self.progressReportWriter.write(self.taskid, self.component, event)
         progressReporter.report(report)
 
 ##____________________________________________________________________________||
