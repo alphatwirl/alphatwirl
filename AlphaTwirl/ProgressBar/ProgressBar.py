@@ -11,7 +11,7 @@ class ProgressBar(object):
         return len(self.reports)
 
     def present(self, report):
-        self.reports[report.name] = report
+        self.reports[report.taskid] = report
 
         # delete previous lines
         if len(self.lines) >= 1:
@@ -22,10 +22,10 @@ class ProgressBar(object):
         last = [ ]
 
         # create lines
-        for name, report in self.reports.items():
-            line = self.createLine(name, report)
+        for taskid, report in self.reports.items():
+            line = self.createLine(report)
             if report.done >= report.total:
-                del self.reports[report.name]
+                del self.reports[report.taskid]
                 last.append(line)
             else:
                 self.lines.append(line)
@@ -35,12 +35,12 @@ class ProgressBar(object):
         sys.stdout.write("\n".join(self.lines))
         sys.stdout.flush()
 
-    def createLine(self, name, report):
+    def createLine(self, report):
         nameFieldLength = 32
         percent = float(report.done)/report.total if report.total > 0 else 1
         bar = (':' * int(percent * 40)).ljust(40, " ")
         percent = round(percent * 100, 2)
-        name = name[0:nameFieldLength]
+        name = report.name[0:nameFieldLength]
         return " {3:6.2f}% {2:s} | {4:7d} / {5:7d} |:  {0:<{1}s} ".format(name, nameFieldLength, bar, percent, report.done, report.total)
 
 ##____________________________________________________________________________||
