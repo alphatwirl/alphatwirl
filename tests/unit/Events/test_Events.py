@@ -122,4 +122,24 @@ class TestEvents(unittest.TestCase):
         tree.branch1 = 2222
         self.assertEqual(2222, event.branch1)
 
+    def test_getitem(self):
+        tree = MockTree(Entries = 4)
+        events = Events(tree)
+        self.assertEqual(-1, events.iEvent)
+
+        event = events[0]
+        self.assertEqual(0, event.iEvent)
+        self.assertEqual(0, tree.iEvent)
+        event = events[1]
+        self.assertEqual(1, event.iEvent)
+        self.assertEqual(1, tree.iEvent)
+        event = events[2]
+        self.assertEqual(2, event.iEvent)
+        self.assertEqual(2, tree.iEvent)
+        event = events[3]
+        self.assertEqual(3, event.iEvent)
+        self.assertEqual(3, tree.iEvent)
+        self.assertRaises(IndexError, events.__getitem__, 4)
+        self.assertEqual(-1, events.iEvent)
+
 ##____________________________________________________________________________||

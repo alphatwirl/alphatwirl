@@ -22,6 +22,14 @@ class Events(object):
         self.nEvents = min(self.tree.GetEntries(), maxEvents) if (maxEvents > -1) else self.tree.GetEntries()
         self.iEvent = -1
 
+    def __getitem__(self, i):
+        if i >= self.nEvents:
+            self.iEvent = -1
+            raise IndexError("the index is out of range: " + str(i))
+        self.iEvent = i
+        self.tree.GetEntry(self.iEvent)
+        return self
+
     def __iter__(self):
         for self.iEvent in xrange(self.nEvents):
             self.tree.GetEntry(self.iEvent)
