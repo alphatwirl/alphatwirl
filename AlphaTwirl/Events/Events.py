@@ -4,15 +4,34 @@
 class Events(object):
     """An iterative object for events.
 
+    You can use this class to iterate over entries in a ROOT TTree.
 
-    Examples
-    --------
+    You can instantiate this class with a TTree object and an
+    optionally a maximum number of entries to loop over.
 
-    inputFile = ROOT.TFile.Open(inputPath)
-    tree = inputFile.Get(treeName)
-    events = Events(tree)
-    for event in events:
-        event.jet_pt # a branch can be accessed as an attribute
+        inputFile = ROOT.TFile.Open(inputPath)
+        tree = inputFile.Get(treeName)
+        events = Events(tree)
+
+    Then, the "for" loop for the tree entries can be
+
+        for event in events:
+
+    Note: "event" and "events" are the same object. In each iteration,
+    "event" (and "events") is loaded with the next entry in the tree.
+
+    A content of the tree, e.g., a branch, can be accessed as an
+    attribute of "event".
+
+          event.jet_pt
+
+    In order to access to a particular entry, you can use an index.
+    For example, to get 11th entry (the index for the first entry is
+    0),
+
+        event = events[10]
+
+    Note: Again "event" and "events" are the same object.
 
     """
 
