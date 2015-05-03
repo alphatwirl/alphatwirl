@@ -2,6 +2,20 @@
 
 ##____________________________________________________________________________||
 class Events(object):
+    """An iterative object for events.
+
+
+    Examples
+    --------
+
+    inputFile = ROOT.TFile.Open(inputPath)
+    tree = inputFile.Get(treeName)
+    events = Events(tree)
+    for event in events:
+        event.jet_pt # a branch can be accessed as an attribute
+
+    """
+
     def __init__(self, tree, maxEvents = -1):
         self.file = tree.GetDirectory() # so a file won't close
         self.tree = tree
