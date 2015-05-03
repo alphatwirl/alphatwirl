@@ -10,7 +10,7 @@ class Events(object):
 
     def __iter__(self):
         for self.iEvent in xrange(self.nEvents):
-            if self.tree.GetEntry(self.iEvent) <= 0: break
+            self.tree.GetEntry(self.iEvent)
             yield self
         self.iEvent = -1
 
