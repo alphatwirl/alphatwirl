@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from AlphaTwirl.ProgressBar import ProgressReport
+from ..ProgressBar import ProgressReport
 
 ##____________________________________________________________________________||
 class EventLoopProgressReportWriter(object):
