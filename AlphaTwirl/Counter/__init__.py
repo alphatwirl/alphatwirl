@@ -3,4 +3,3 @@ from KeyComposer import GenericKeyComposer, GenericKeyComposerBuilder
 from Counts import Counts
 from CountsBase import CountsBase
 from CountsWithEmptyNextKeys import CountsWithEmptyNextKeys, CountsWithEmptyNextKeysBuilder
-from KeyGapKeeper import KeyGapKeeper, KeyGapKeeperBuilder
