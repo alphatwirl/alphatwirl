@@ -2,6 +2,5 @@ from Counter import Counter, CounterBuilder
 from KeyComposer import GenericKeyComposer, GenericKeyComposerBuilder
 from Counts import Counts
 from CountsBase import CountsBase
-from CountsWithEmptyKeysInGap import CountsWithEmptyKeysInGap, CountsWithEmptyKeysInGapAndNext, CountsWithEmptyKeysInGapBuilder, CountsWithEmptyKeysInGapAndNextBuilder
 from CountsWithEmptyNextKeys import CountsWithEmptyNextKeys, CountsWithEmptyNextKeysBuilder
 from KeyGapKeeper import KeyGapKeeper, KeyGapKeeperBuilder
