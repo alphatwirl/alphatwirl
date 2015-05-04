@@ -14,7 +14,7 @@ from ProgressBar.ProgressBar import ProgressBar
 from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
 from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
-from Counter.KeyComposer import GenericKeyComposer
+from Counter.GenericKeyComposer import GenericKeyComposer
 from Counter.GenericKeyComposerB import GenericKeyComposerBBuilder
 from Counter.Counter import CounterBuilder
 from CombineIntoList import CombineIntoList
