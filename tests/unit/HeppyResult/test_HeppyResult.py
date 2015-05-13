@@ -50,6 +50,10 @@ class TestHeppyResult(unittest.TestCase):
     def test_init(self):
         self.assertEqual('dir/201522_SingleMu', self.heppy.path)
 
+    def test_trailing_slash(self):
+        heppy = HeppyResult('dir/201522_SingleMu/')
+        self.assertEqual('dir/201522_SingleMu', heppy.path)
+
     def test_componentNames(self):
         expected = ['QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets']
         self.assertEqual(expected, self.heppy.componentNames)
