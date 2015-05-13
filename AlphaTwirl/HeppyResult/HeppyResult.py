@@ -6,12 +6,13 @@ from Component import Component
 
 ##____________________________________________________________________________||
 defaultExcludeList = ('Chunks', 'failed')
+componentHasTheseFiles = ('config.pck', 'config.txt')
 
 ##____________________________________________________________________________||
 class HeppyResult(object):
     def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
         self.path = path
-        allComponentNames = [n for n in os.listdir(path) if os.path.isdir(os.path.join(path, n)) and n not in excludeList]
+        allComponentNames = [n for n in os.listdir(path) if self._isComponent(n, excludeList)]
         if componentNames is not None:
             nonexistentComponent =  [c for c in componentNames if c not in allComponentNames]
             if len(nonexistentComponent) > 0:
@@ -32,5 +33,12 @@ class HeppyResult(object):
 
     def components(self):
         return [getattr(self, n) for n in self.componentNames]
+
+    def _isComponent(self, name, excludeList):
+        if name in excludeList: return False
+        path = os.path.join(self.path, name)
+        if not os.path.isdir(path): return False
+        if not len(set(componentHasTheseFiles) & set(os.listdir(path))) == 2: return False
+        return True
 
 ##____________________________________________________________________________||

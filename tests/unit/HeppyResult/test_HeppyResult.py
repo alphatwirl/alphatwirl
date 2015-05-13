@@ -5,7 +5,7 @@ import unittest
 ##____________________________________________________________________________||
 def mock_listdir(path):
     heppyDir = 'dir/201522_SingleMu'
-    filesInHeppyDir = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'versionInfo.txt']
+    filesInHeppyDir = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'versionInfo.txt', 'AnotherDir']
     if path == heppyDir:
         return filesInHeppyDir
 
@@ -20,7 +20,7 @@ def mock_listdir(path):
 ##____________________________________________________________________________||
 def mock_isdir(path):
     heppyDir = 'dir/201522_SingleMu'
-    dirsInHeppy = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks']
+    dirsInHeppy = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'AnotherDir']
     dirsInHeppy = [os.path.join(heppyDir, d) for d in dirsInHeppy]
     if path in dirsInHeppy: return True
 
@@ -79,12 +79,17 @@ class TestHeppyResult(unittest.TestCase):
         componentNames = ['QCD_HT_100To250', 'QCD_HT_250To500', 'WrongName']
         self.assertRaises(ValueError, HeppyResult, path = path, componentNames = componentNames)
 
+    def test_init_with_componentNames_AnotherDir (self):
+        path = 'dir/201522_SingleMu'
+        componentNames = ['QCD_HT_100To250', 'QCD_HT_250To500', 'AnotherDir']
+        self.assertRaises(ValueError, HeppyResult, path = path, componentNames = componentNames)
+
     def test_init_with_excludeList(self):
         path = 'dir/201522_SingleMu'
-        excludeList = ('failed', )
+        excludeList = ('failed', 'QCD_HT_100To250')
         heppy = HeppyResult(path = path, excludeList = excludeList)
 
-        expected = ['QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks']
+        expected = ['QCD_HT_250To500', 'TTJets']
         self.assertEqual(expected, heppy.componentNames)
 
 ##____________________________________________________________________________||
