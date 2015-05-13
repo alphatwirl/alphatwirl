@@ -32,6 +32,13 @@ def mock_isdir(path):
     return False
 
 ##____________________________________________________________________________||
+def mock_readVersionInfo(path):
+    return {
+        'tag': 'RA1cmg_v2.3',
+        'full': 'Tag for production: \nRA1cmg_v2.3\n\nExtra information: \n'
+    }
+
+##____________________________________________________________________________||
 class TestHeppyResult(unittest.TestCase):
 
     def setUp(self):
@@ -42,6 +49,7 @@ class TestHeppyResult(unittest.TestCase):
 
         path = 'dir/201522_SingleMu'
         self.heppy = HeppyResult(path)
+        self.heppy._readVersionInfo = mock_readVersionInfo
 
     def tearDown(self):
         os.listdir = self.listdir_org
@@ -95,5 +103,17 @@ class TestHeppyResult(unittest.TestCase):
 
         expected = ['QCD_HT_250To500', 'TTJets']
         self.assertEqual(expected, heppy.componentNames)
+
+    def test_versionInfo(self):
+        expected = {
+            'tag': 'RA1cmg_v2.3',
+            'full': 'Tag for production: \nRA1cmg_v2.3\n\nExtra information: \n'
+        }
+        self.assertEqual(expected, self.heppy.versionInfo())
+
+    def test_versionInfo_theSameObject(self):
+        info1 = self.heppy.versionInfo()
+        info2 = self.heppy.versionInfo()
+        self.assertIs(info1, info2)
 
 ##____________________________________________________________________________||

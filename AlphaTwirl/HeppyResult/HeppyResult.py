@@ -3,6 +3,7 @@
 ##____________________________________________________________________________||
 import os
 from Component import Component
+from ReadVersionInfo import ReadVersionInfo
 
 ##____________________________________________________________________________||
 defaultExcludeList = ('Chunks', 'failed')
@@ -22,6 +23,8 @@ class HeppyResult(object):
             self.componentNames = allComponentNames
 
         self._compDict = { }
+        self._versionInfo = None
+        self._readVersionInfo = ReadVersionInfo()
 
     def __getattr__(self, name):
         if name not in self._compDict:
@@ -40,5 +43,11 @@ class HeppyResult(object):
         if not os.path.isdir(path): return False
         if not len(set(componentHasTheseFiles) & set(os.listdir(path))) == 2: return False
         return True
+
+    def versionInfo(self):
+        if self._versionInfo is None:
+            path = os.path.join(self.path, 'versionInfo.txt')
+            self._versionInfo = self._readVersionInfo(path)
+        return self._versionInfo
 
 ##____________________________________________________________________________||
