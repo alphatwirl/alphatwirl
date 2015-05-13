@@ -1,13 +1,21 @@
 from AlphaTwirl.Events import BEvents as Events
 from AlphaTwirl.Events import Branch
 import unittest
-import ROOT
+
+##____________________________________________________________________________||
+hasROOT = False
+try:
+    import ROOT
+    hasROOT = True
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
 treeName = 'tree'
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
 @unittest.skip("skip TestBEventsWithFile")
 class TestBEventsWithFile(unittest.TestCase):
 
