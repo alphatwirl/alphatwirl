@@ -2,7 +2,6 @@ from AlphaTwirl.Events import BEvents
 from AlphaTwirl.Events import Branch
 import sys
 import unittest
-import ROOT
 
 ##____________________________________________________________________________||
 class MockFile(object):
