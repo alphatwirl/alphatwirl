@@ -4,10 +4,12 @@
 import re
 import collections
 import ast
+import os
 
 ##____________________________________________________________________________||
 class ReadCounter(object):
     def __call__(self, path):
+        if not os.path.isfile(path): return None
         file = open(path)
         return self._readImp(file)
 

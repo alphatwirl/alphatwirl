@@ -2,6 +2,7 @@ from AlphaTwirl.HeppyResult import ReadCounter
 import unittest
 import collections
 import cStringIO
+import os
 
 ##____________________________________________________________________________||
 sample_counts_txt = """Counter SkimReport :
@@ -12,6 +13,9 @@ sample_counts_txt = """Counter SkimReport :
 """
 
 ##____________________________________________________________________________||
+def mock_isfile(path): return False
+
+##____________________________________________________________________________||
 class TestReadCounter(unittest.TestCase):
 
     def test_read_file(self):
@@ -19,6 +23,15 @@ class TestReadCounter(unittest.TestCase):
         file = cStringIO.StringIO(sample_counts_txt)
         expected = collections.OrderedDict([('All Events', {'count': 500000.0, 'eff2': 1.0, 'eff1': 1.0}), ('Sum Weights', {'count': 1042218.60703, 'eff2': 2.0844, 'eff1': 2.08})])
         self.assertEqual(expected, readConfig._readImp(file))
+
+    def test_no_file(self):
+        isfile_org = os.path.isfile
+        os.path.isfile = mock_isfile
+
+        readConfig = ReadCounter()
+        self.assertIsNone(readConfig('SkimReport.txt'))
+
+        os.path.isfile = isfile_org
 
     def test_readLine(self):
         readConfig = ReadCounter()
