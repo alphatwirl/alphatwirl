@@ -7,6 +7,7 @@ import os.path
 class ReadVersionInfo(object):
     def __call__(self, path):
         if not os.path.isfile(path): return None
+        file = open(path)
         return self._readImp(file)
 
     def _readImp(self, file):
