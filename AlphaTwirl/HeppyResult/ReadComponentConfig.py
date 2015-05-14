@@ -1,11 +1,13 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
+import os
 import ast
 
 ##____________________________________________________________________________||
 class ReadComponentConfig(object):
     def __call__(self, path):
+        if not os.path.isfile(path): return None
         file = open(path)
         return self._readImp(file)
 
