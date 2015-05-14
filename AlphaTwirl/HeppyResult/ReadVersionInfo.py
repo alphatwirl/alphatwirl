@@ -1,9 +1,12 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
+import os.path
+
+##____________________________________________________________________________||
 class ReadVersionInfo(object):
     def __call__(self, path):
-        file = open(path)
+        if not os.path.isfile(path): return None
         return self._readImp(file)
 
     def _readImp(self, file):

@@ -1,4 +1,5 @@
 from AlphaTwirl.HeppyResult import ReadVersionInfo
+import os
 import unittest
 import cStringIO
 
@@ -18,11 +19,23 @@ Date:   Tue Mar 31 16:48:11 2015 +0200
 """
 
 ##____________________________________________________________________________||
+def mock_isfile(path): return False
+
+##____________________________________________________________________________||
 class TestReadVersionInfo(unittest.TestCase):
     def test_read(self):
         readInfo = ReadVersionInfo()
         file = cStringIO.StringIO(sample_versionInfo_txt)
         expected = {'full': sample_versionInfo_txt, 'tag': 'RA1cmg_v2.3'}
         self.assertEqual(expected, readInfo._readImp(file))
+
+    def test_no_file(self):
+        isfile_org = os.path.isfile
+        os.path.isfile = mock_isfile
+
+        readInfo = ReadVersionInfo()
+        self.assertIsNone(readInfo('versionInfo.txt'))
+
+        os.path.isfile = isfile_org
 
 ##____________________________________________________________________________||
