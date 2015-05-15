@@ -51,12 +51,22 @@ for num in $scriptnums
 do
     scriptname=print_${num}.py
     scriptpath=${scriptdir}/${scriptname}
+
     outdir=${outtopdir}/${num}_sp
     echo_and_excecute "mkdir -p ${outdir}"
     echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir}"
+    exitcode=$?
+    if (($exitcode > 0)); then
+	exit $exitcode
+    fi
+
     outdir=${outtopdir}/${num}_mp
     echo_and_excecute "mkdir -p ${outdir}"
     echo_and_excecute "${scriptpath} -i ${heppydir} -n ${nevents} -o ${outdir} -p ${processes} --force"
+    exitcode=$?
+    if (($exitcode > 0)); then
+	exit $exitcode
+    fi
 done
 
 ##____________________________________________________________________________||
