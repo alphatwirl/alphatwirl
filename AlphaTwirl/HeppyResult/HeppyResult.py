@@ -41,7 +41,7 @@ class HeppyResult(object):
         if name in excludeList: return False
         path = os.path.join(self.path, name)
         if not os.path.isdir(path): return False
-        if not len(set(componentHasTheseFiles) & set(os.listdir(path))) == 2: return False
+        if not set(componentHasTheseFiles).issubset(set(os.listdir(path))): return False
         return True
 
     def versionInfo(self):
