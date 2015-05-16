@@ -196,3 +196,43 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     return tbl
 
 ##____________________________________________________________________________||
+def stack_counts_categories(tbl, variables, category, order):
+    """return a data frame with stacked contents
+
+    This function stacks contents of the data frame by the category in
+    the given order. It does what ROOT THStack does with histograms.
+
+    Args:
+
+    tbl (pandas.DataFrame): the input data frame
+
+    variables (string list): the names of the variables to stack
+
+    category (string): the name of the category by which to stack,
+      e.g., "process"
+
+    order (list): the list of values in the category in the order in
+      which to stack. The first element will be in the bottom.
+
+    """
+
+    isFirst = True
+    stack = 1
+    toStack = [ ]
+    for o in order:
+        if len(tbl[tbl[category] == o]) == 0: continue
+        toStack.append(o)
+        d = tbl[tbl[category].isin(toStack)].copy()
+        d[category] = o
+        d = sumOverCategories(d, categories = None, variables = variables)
+        d['stack'] = stack
+        stack += 1
+        if isFirst:
+            ret = d
+            isFirst = False
+        else:
+            ret = ret.append(d, ignore_index = True)
+    if isFirst: return None
+    return ret
+
+##____________________________________________________________________________||
