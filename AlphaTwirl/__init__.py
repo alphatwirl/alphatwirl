@@ -8,6 +8,7 @@ from CombineIntoList import CombineIntoList, countsToList
 from WriteListToFile import WriteListToFile
 import EventReader
 import ProgressBar
+import Aggregate
 
 try:
     from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
