@@ -2,11 +2,15 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-import array
+import argparse
 import ROOT
 
 ##__________________________________________________________________||
-inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
+parser = argparse.ArgumentParser()
+parser.add_argument('args', nargs=argparse.REMAINDER)
+args = parser.parse_args()
+
+inputPath = args.args[0]
 treeName = 'tree'
 
 ##__________________________________________________________________||
