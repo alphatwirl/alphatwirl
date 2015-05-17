@@ -97,6 +97,15 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, p
     return eventReaderBundle
 
 ##____________________________________________________________________________||
+def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+    tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
+    if not args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
+    eventReaderPackages = [createPackageFor(c) for c in tableConfigs]
+    eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, args.processes, args.quiet)
+    return eventReaderBundle
+
+##____________________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
@@ -120,14 +129,10 @@ class AlphaTwirl(object):
     def addComponentReader(self, reader):
         self.componentReaders.append(reader)
 
-    def addTreeReader(self, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+    def addTreeReader(self, **kargs):
         if self.args is None: self.ArgumentParser().parse_args()
-        tableConfigs = [completeTableConfig(c, self.args.outDir) for c in tableConfigs]
-        if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
-        eventReaderPackages = [createPackageFor(c) for c in tableConfigs]
-        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
-        eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, self.args.processes, self.args.quiet)
-        self.addComponentReader(eventReaderBundle)
+        treeReader = createTreeReader(self.args, **kargs)
+        self.addComponentReader(treeReader)
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
