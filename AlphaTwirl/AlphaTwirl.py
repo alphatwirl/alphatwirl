@@ -88,6 +88,15 @@ def buildEventLoopRunner(progressBar, processes, quiet):
     return eventLoopRunner
 
 ##____________________________________________________________________________||
+def createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, processes, quiet):
+    progressBar = None if quiet else ProgressBar()
+    eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = processes, quiet = quiet)
+    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventSelection = eventSelection, progressBar = progressBar)
+    for package in eventReaderPackages:
+        eventReaderBundle.addReaderPackage(package)
+    return eventReaderBundle
+
+##____________________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
@@ -117,7 +126,7 @@ class AlphaTwirl(object):
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
         eventReaderPackages = [createPackageFor(c) for c in tableConfigs]
         eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
-        eventReaderBundle = self.createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages)
+        eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, self.args.processes, self.args.quiet)
         self.addComponentReader(eventReaderBundle)
 
     def run(self):
@@ -131,13 +140,5 @@ class AlphaTwirl(object):
         heppyResultReader = HeppyResultReader()
         while len(self.componentReaders) > 0: heppyResultReader.addReader(self.componentReaders.pop(0))
         return heppyResultReader
-
-    def createEventReaderBundle(self, eventBuilder, eventSelection, eventReaderPackages):
-        progressBar = None if self.args.quiet else ProgressBar()
-        eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = self.args.processes, quiet = self.args.quiet)
-        eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventSelection = eventSelection, progressBar = progressBar)
-        for package in eventReaderPackages:
-            eventReaderBundle.addReaderPackage(package)
-        return eventReaderBundle
 
 ##____________________________________________________________________________||
