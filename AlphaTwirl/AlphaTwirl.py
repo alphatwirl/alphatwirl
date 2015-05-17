@@ -78,6 +78,16 @@ def createPackageFor(tblcfg):
     return EventReaderPackage(counterBuilder, collector)
 
 ##____________________________________________________________________________||
+def buildEventLoopRunner(progressBar, processes, quiet):
+    if processes is None:
+        progressMonitor = None if quiet else ProgressMonitor(presentation = progressBar)
+        eventLoopRunner = EventLoopRunner(progressMonitor)
+    else:
+        progressMonitor = None if quiet else MPProgressMonitor(presentation = progressBar)
+        eventLoopRunner = MPEventLoopRunner(processes, progressMonitor)
+    return eventLoopRunner
+
+##____________________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
@@ -122,18 +132,9 @@ class AlphaTwirl(object):
         while len(self.componentReaders) > 0: heppyResultReader.addReader(self.componentReaders.pop(0))
         return heppyResultReader
 
-    def buildEventLoopRunner(self, progressBar):
-        if self.args.processes is None:
-            progressMonitor = None if self.args.quiet else ProgressMonitor(presentation = progressBar)
-            eventLoopRunner = EventLoopRunner(progressMonitor)
-        else:
-            progressMonitor = None if self.args.quiet else MPProgressMonitor(presentation = progressBar)
-            eventLoopRunner = MPEventLoopRunner(self.args.processes, progressMonitor)
-        return eventLoopRunner
-
     def createEventReaderBundle(self, eventBuilder, eventSelection, eventReaderPackages):
         progressBar = None if self.args.quiet else ProgressBar()
-        eventLoopRunner = self.buildEventLoopRunner(progressBar = progressBar)
+        eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = self.args.processes, quiet = self.args.quiet)
         eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventSelection = eventSelection, progressBar = progressBar)
         for package in eventReaderPackages:
             eventReaderBundle.addReaderPackage(package)
