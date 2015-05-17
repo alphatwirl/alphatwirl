@@ -1,5 +1,6 @@
 import AlphaTwirl.Counter as Counter
 import unittest
+import logging
 
 ##____________________________________________________________________________||
 class MockEvent(object):
@@ -60,6 +61,14 @@ class TestGenericKeyComposerB(unittest.TestCase):
         event = MockEvent()
         event.var1 = [15, ]
         event.var2 = [22, ]
+        self.assertIsNone(keyComposer(event))
+
+    @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
+    def test_None_branch(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningEcho()))
+
+        event = MockEvent()
+        event.var1 = [15, ]
         self.assertIsNone(keyComposer(event))
 
     def test_binnings(self):
