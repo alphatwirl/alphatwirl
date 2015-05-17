@@ -81,7 +81,7 @@ class AlphaTwirl(object):
         return parser
 
     def _add_arguments(self, parser):
-        parser.add_argument('-i', '--heppydir', default = '/Users/sakuma/work/cms/c150130_RA1_data/PHYS14/20150331_SingleMu', action = 'store', help = "Heppy results dir")
+        parser.add_argument('-i', '--heppydir', default = '/Users/sakuma/work/cms/c150130_RA1_data/PHYS14/20150507_SingleMu', action = 'store', help = "Heppy results dir")
         parser.add_argument("-p", "--processes", action = "store", default = None, type = int, help = "number of processes to run in parallel")
         parser.add_argument("-q", "--quiet", action = "store_true", default = False, help = "quiet mode")
         parser.add_argument('-o', '--outDir', default = 'tbl/out', action = 'store')
