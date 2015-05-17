@@ -69,6 +69,15 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
     return ret
 
 ##____________________________________________________________________________||
+def createPackageFor(tblcfg):
+    keyComposer = GenericKeyComposerBBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+    counterBuilder = CounterBuilder(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer)
+    resultsCombinationMethod = CombineIntoList()
+    deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
+    collector = Collector(resultsCombinationMethod, deliveryMethod)
+    return EventReaderPackage(counterBuilder, collector)
+
+##____________________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
@@ -96,7 +105,7 @@ class AlphaTwirl(object):
         if self.args is None: self.ArgumentParser().parse_args()
         tableConfigs = [completeTableConfig(c, self.args.outDir) for c in tableConfigs]
         if not self.args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
-        eventReaderPackages = [self.createPackageFor(c) for c in tableConfigs]
+        eventReaderPackages = [createPackageFor(c) for c in tableConfigs]
         eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.args.nevents)
         eventReaderBundle = self.createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages)
         self.addComponentReader(eventReaderBundle)
@@ -129,13 +138,5 @@ class AlphaTwirl(object):
         for package in eventReaderPackages:
             eventReaderBundle.addReaderPackage(package)
         return eventReaderBundle
-
-    def createPackageFor(self, tblcfg):
-        keyComposer = GenericKeyComposerBBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-        counterBuilder = CounterBuilder(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer)
-        resultsCombinationMethod = CombineIntoList()
-        deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
-        collector = Collector(resultsCombinationMethod, deliveryMethod)
-        return EventReaderPackage(counterBuilder, collector)
 
 ##____________________________________________________________________________||
