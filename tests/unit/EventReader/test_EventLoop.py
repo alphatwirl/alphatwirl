@@ -17,9 +17,17 @@ class MockEventBuilder(object):
 class MockReader(object):
     def __init__(self):
         self._eventIds = [ ]
+        self._begin = False
+        self._end = False
+
+    def begin(self, event):
+        self._begin = event
 
     def event(self, event):
         self._eventIds.append(event.id)
+
+    def end(self):
+        self._end = True
 
 ##____________________________________________________________________________||
 class MockComponent(object):
@@ -47,7 +55,8 @@ class TestEventLoop(unittest.TestCase):
         event3 = MockEvent(103)
         event4 = MockEvent(104)
         event5 = MockEvent(105)
-        component._events = [event1, event2, event3, event4, event5]
+        events = [event1, event2, event3, event4, event5]
+        component._events = events
 
         reader1 = MockReader()
         reader2 = MockReader()
@@ -55,8 +64,20 @@ class TestEventLoop(unittest.TestCase):
 
         loop = EventLoop(eventBuilder, eventSelection, component, readers)
 
+        self.assertFalse(reader1._begin)
+        self.assertFalse(reader2._begin)
+        self.assertEqual([ ], reader1._eventIds)
+        self.assertEqual([ ], reader2._eventIds)
+        self.assertFalse(reader1._end)
+        self.assertFalse(reader2._end)
+
         self.assertEqual(readers, loop())
+
+        self.assertEqual(events, reader1._begin)
+        self.assertEqual(events, reader2._begin)
         self.assertEqual([102, 104, 105], reader1._eventIds)
         self.assertEqual([102, 104, 105], reader2._eventIds)
+        self.assertTrue(reader1._end)
+        self.assertTrue(reader2._end)
 
 ##____________________________________________________________________________||

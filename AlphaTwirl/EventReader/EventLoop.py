@@ -17,11 +17,12 @@ class EventLoop(object):
     def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
         self.reportProgress(progressReporter, events)
+        for reader in self.readers: reader.begin(events)
         for event in events:
             self.reportProgress(progressReporter, event)
             if not self.eventSelection(event): continue
-            for reader in self.readers:
-                reader.event(event)
+            for reader in self.readers: reader.event(event)
+        for reader in self.readers: reader.end()
         return self.readers
 
     def reportProgress(self, progressReporter, event):
