@@ -32,6 +32,10 @@ class MockWeightCalculator(object):
 class MockKeyComposer(object):
     def __init__(self, keys = [ ]):
         self.keys = keys
+        self._begin = None
+
+    def begin(self, event):
+        self._begin = event
 
     def __call__(self, event):
         return self.keys.pop()
@@ -56,6 +60,11 @@ class TestCounter(unittest.TestCase):
         keys = [(12, ), None, (14, ), (11, )]
         keycomposer = MockKeyComposer(keys)
         counter = Counter.Counter(('var', ), keycomposer, counts, MockWeightCalculator())
+
+        event = MockEvent()
+        counter.begin(event)
+        self.assertEqual(event, keycomposer._begin)
+
         event = MockEvent()
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], counts._counts)
@@ -72,6 +81,8 @@ class TestCounter(unittest.TestCase):
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts.results())
+
+        counter.end()
 
     def test_keynames(self):
         counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())

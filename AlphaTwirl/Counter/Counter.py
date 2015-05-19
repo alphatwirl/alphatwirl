@@ -15,11 +15,17 @@ class Counter(object):
 
         self._countMethod.setKeyComposer(self._keyComposer)
 
+    def begin(self, event):
+        self._keyComposer.begin(event)
+
     def event(self, event):
         key = self._keyComposer(event)
         if key is None: return
         weight = self._weightCalculator(event)
         self._countMethod.count(key, weight)
+
+    def end(self):
+        pass
 
     def keynames(self):
         return self._keynames
