@@ -6,15 +6,12 @@ class GenericKeyComposerB(object):
         self._varNames = varNames
         self._binnings = binnings
         self._indices = indices if indices is not None else [None]*len(self._varNames)
-        self._first = True
+
+    def begin(self, event):
+        self._zip = self._zipArrays(event)
 
     def __call__(self, event):
-        if self._first:
-            self._findArrays(event)
-            self._first = False
-
         if self._zip is None: return None
-
         ret = [ ]
         for branche, binning, index in self._zip:
             if index is not None:
@@ -38,7 +35,7 @@ class GenericKeyComposerB(object):
     def binnings(self):
         return self._binnings
 
-    def _findArrays(self, event):
+    def _zipArrays(self, event):
         self._branches = [ ]
         for varname in self._varNames:
             try:
@@ -46,10 +43,9 @@ class GenericKeyComposerB(object):
             except AttributeError, e:
                 import logging
                 logging.warning(e)
-                self._zip = None
-                return
+                return None
             self._branches.append(branch)
-        self._zip = zip(self._branches, self._binnings, self._indices)
+        return zip(self._branches, self._binnings, self._indices)
 
 ##____________________________________________________________________________||
 class GenericKeyComposerBBuilder(object):

@@ -29,38 +29,56 @@ class TestGenericKeyComposerB(unittest.TestCase):
         keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ))
 
         event = MockEvent()
-        event.var1 = [12, ]
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, ]
         self.assertEqual((12, ), keyComposer(event))
 
     def test_call_2vars(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningEcho()))
 
         event = MockEvent()
-        event.var1 = [15, ]
-        event.var2 = [22, ]
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [15, ]
+        event.var2[:] = [22, ]
         self.assertEqual((15, 22), keyComposer(event))
 
     def test_None_key_1var(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningNone(), ))
 
         event = MockEvent()
-        event.var1 = [12, ]
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, ]
         self.assertIsNone(keyComposer(event))
 
     def test_None_key_2vars_var1(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningNone(), MockBinningEcho()))
 
         event = MockEvent()
-        event.var1 = [15, ]
-        event.var2 = [22, ]
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [15, ]
+        event.var2[:] = [22, ]
         self.assertIsNone(keyComposer(event))
 
     def test_None_key_2vars_var2(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningNone()))
 
         event = MockEvent()
-        event.var1 = [15, ]
-        event.var2 = [22, ]
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [15, ]
+        event.var2[:] = [22, ]
         self.assertIsNone(keyComposer(event))
 
     @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
@@ -68,7 +86,10 @@ class TestGenericKeyComposerB(unittest.TestCase):
         keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningEcho()))
 
         event = MockEvent()
-        event.var1 = [15, ]
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [15, ]
         self.assertIsNone(keyComposer(event))
 
     def test_binnings(self):
@@ -84,13 +105,19 @@ class TestGenericKeyComposerB(unittest.TestCase):
     def test_indices_1(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ), indices = (0, ))
         event = MockEvent()
-        event.var1 = (12, )
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, ]
         self.assertEqual((12, ), keyComposer(event))
 
     def test_indices_2(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ), indices = (1, ))
         event = MockEvent()
-        event.var1 = [12, 8, 6]
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
         self.assertEqual((8, ), keyComposer(event))
 
         event.var1[:] = [3, ]
@@ -99,9 +126,14 @@ class TestGenericKeyComposerB(unittest.TestCase):
     def test_indices_3(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', 'var2', 'var3'), (MockBinningEcho(), MockBinningEcho(), MockBinningEcho()), indices = (1, None, 2))
         event = MockEvent()
-        event.var1 = (12, 8, 6)
-        event.var2 = [232, ]
-        event.var3 = (111, 222, 333)
+        event.var1 = [ ]
+        event.var2 = [ ]
+        event.var3 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
+        event.var2[:] = [232, ]
+        event.var3[:] = [111, 222, 333]
         self.assertEqual((8, 232, 333), keyComposer(event))
 
     def test_next(self):
