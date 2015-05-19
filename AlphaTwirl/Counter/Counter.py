@@ -19,10 +19,10 @@ class Counter(object):
         self._keyComposer.begin(event)
 
     def event(self, event):
-        key = self._keyComposer(event)
-        if key is None: return
+        keys = self._keyComposer(event)
         weight = self._weightCalculator(event)
-        self._countMethod.count(key, weight)
+        for key in keys:
+            self._countMethod.count(key, weight)
 
     def end(self):
         pass
