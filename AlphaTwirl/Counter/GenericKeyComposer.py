@@ -7,6 +7,8 @@ class GenericKeyComposer(object):
         self._binnings = binnings
         self._indices = indices if indices is not None else [None]*len(self._varNames)
 
+    def begin(self, event): pass
+
     def __call__(self, event):
         ret = [ ]
         for varName, binning, index in zip(self._varNames, self._binnings, self._indices):
