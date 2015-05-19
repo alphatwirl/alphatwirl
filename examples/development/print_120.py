@@ -35,8 +35,9 @@ for component in heppyResult.components():
     events = eventBuilder.build(component)
     for event in events:
 
-        key = keyComposer(event)
-        counts.count(key)
+        keys = keyComposer(event)
+        for key in keys:
+            counts.count(key)
 
     results = counts.results()
     keys = results.keys()
