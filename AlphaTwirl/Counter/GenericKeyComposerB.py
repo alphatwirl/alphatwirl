@@ -25,6 +25,12 @@ class GenericKeyComposerB(object):
         return (tuple(ret), )
 
     def next(self, key):
+        """returns a list of the next keys
+
+        e.g.,
+        If key = (11, 8, 20)
+        it returns ((12, 8, 20), (11, 9, 20), (11, 8, 21))
+        """
         ret = [ ]
         for i in range(len(self._binnings)):
             keyc = list(key)
