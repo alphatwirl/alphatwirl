@@ -14,7 +14,7 @@ from AlphaTwirl.Binning import RoundLog, Echo
 import AlphaTwirl
 
 ##__________________________________________________________________||
-heppydir='/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu'
+heppydir='/Users/sakuma/work/cms/c150130_RA1_data/PHYS14/20150507_SingleMu'
 nevents=100000
 outdir = tempfile.mkdtemp()
 sys.argv.extend(["-i", heppydir, "-n", str(nevents), "-o", outdir])
