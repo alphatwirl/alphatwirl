@@ -24,20 +24,6 @@ class GenericKeyComposerB(object):
             ret.append(var_bin)
         return (tuple(ret), )
 
-    def next(self, key):
-        """returns a list of the next keys
-
-        e.g.,
-        If key = (11, 8, 20)
-        it returns ((12, 8, 20), (11, 9, 20), (11, 8, 21))
-        """
-        ret = [ ]
-        for i in range(len(self._binnings)):
-            keyc = list(key)
-            keyc[i] = self._binnings[i].next(keyc[i])
-            ret.append(tuple(keyc))
-        return tuple(ret)
-
     def binnings(self):
         return self._binnings
 
