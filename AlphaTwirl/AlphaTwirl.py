@@ -16,7 +16,7 @@ from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
 from Counter.Counts import Counts
 from Counter.GenericKeyComposer import GenericKeyComposer
 from Counter.GenericKeyComposerB import GenericKeyComposerBBuilder
-from Counter.Counter import CounterFactory
+from Counter.CounterFactory import CounterFactory
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector

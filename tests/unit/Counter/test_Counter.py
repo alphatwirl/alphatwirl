@@ -102,19 +102,3 @@ class TestCounter(unittest.TestCase):
         self.assertEqual([((11,), 1.0)], counter.results())
 
 ##____________________________________________________________________________||
-class TestCounterFactory(unittest.TestCase):
-
-    def test_call(self):
-        builder = Counter.CounterFactory(MockCounts, ('var_bin', ), MockKeyComposer, MockBinning())
-        counter1 = builder()
-        self.assertEqual(('var_bin', ), counter1._keynames)
-        self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
-        self.assertIsInstance(counter1._countMethod, MockCounts)
-
-    def test_counterMethods_differentInstances(self):
-        builder = Counter.CounterFactory(MockCounts, ('var_bin', ), MockKeyComposer, MockBinning())
-        counter1 = builder()
-        counter2 = builder()
-        self.assertIsNot(counter1._countMethod, counter2._countMethod)
-
-##____________________________________________________________________________||
