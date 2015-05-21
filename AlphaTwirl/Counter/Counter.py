@@ -40,7 +40,7 @@ class Counter(object):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
-class CounterBuilder(Counter):
+class CounterFactory(Counter):
     def __init__(self, countMethodClass, keyNames, keyComposerClass, binnings, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
         self._keyComposerClass = keyComposerClass

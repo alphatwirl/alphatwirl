@@ -1,4 +1,4 @@
-from Counter import Counter, CounterBuilder
+from Counter import Counter, CounterFactory
 from GenericKeyComposer import GenericKeyComposer, GenericKeyComposerBuilder
 from GenericKeyComposerB import GenericKeyComposerB, GenericKeyComposerBBuilder
 from NextKeyComposer import NextKeyComposer, NextKeyComposerBuilder
