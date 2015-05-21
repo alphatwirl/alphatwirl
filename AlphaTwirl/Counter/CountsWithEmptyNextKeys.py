@@ -10,7 +10,7 @@ class CountsWithEmptyNextKeys(CountsBase):
         self._countMethod = countMethod
 
     def count(self, key, weight):
-        nextKeys = self.keyComposer.next(key)
+        nextKeys = self.nextKeyComposer(key)
         self._countMethod.addKeys(nextKeys)
         self._countMethod.count(key, weight)
 

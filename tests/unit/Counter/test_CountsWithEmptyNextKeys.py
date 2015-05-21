@@ -14,12 +14,12 @@ class MockCounts(Counter.CountsBase):
     def results(self): return self._counts
 
 ##____________________________________________________________________________||
-class MockKeyComposer(object):
+class MockNextKeyComposer(object):
     def __init__(self):
         self.keys = [ ]
         self.nexts = [ ]
 
-    def next(self, key):
+    def __call__(self, key):
         self.keys.append(key)
         return self.nexts.pop()
 
@@ -35,8 +35,8 @@ class TestCountsWithEmptyNextKeys(unittest.TestCase):
         counts = MockCounts()
         countsWENK = Counter.CountsWithEmptyNextKeys(counts)
 
-        keyComposer = MockKeyComposer()
-        countsWENK.setKeyComposer(keyComposer)
+        keyComposer = MockNextKeyComposer()
+        countsWENK.nextKeyComposer = keyComposer
 
         key1 = MockKey(1)
         key2 = MockKey(2)

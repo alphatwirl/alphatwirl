@@ -29,6 +29,9 @@ class MockWeightCalculator(object):
         return 1.0
 
 ##____________________________________________________________________________||
+class MockBinning(object): pass
+
+##____________________________________________________________________________||
 class MockKeyComposer(object):
     def __init__(self, listOfKeys = [ ]):
         self.listOfKeys = listOfKeys
@@ -102,14 +105,14 @@ class TestCounter(unittest.TestCase):
 class TestCounterBuilder(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer)
+        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer, MockBinning())
         counter1 = builder()
         self.assertEqual(('var_bin', ), counter1._keynames)
         self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
         self.assertIsInstance(counter1._countMethod, MockCounts)
 
     def test_counterMethods_differentInstances(self):
-        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer)
+        builder = Counter.CounterBuilder(MockCounts, ('var_bin', ), MockKeyComposer, MockBinning())
         counter1 = builder()
         counter2 = builder()
         self.assertIsNot(counter1._countMethod, counter2._countMethod)
