@@ -9,7 +9,7 @@ class MockCounts(Counter.CountsBase):
 
     def count(self, key, weight): self._counts.append((key, weight))
     def valNames(self): return ('n', 'nvar')
-    def addKeys(self, keys): self._keys.append(keys)
+    def addKey(self, key): self._keys.append(key)
     def setResults(self, results): self._counts = results
     def results(self): return self._counts
 
@@ -46,7 +46,7 @@ class TestCountsWithEmptyNextKeys(unittest.TestCase):
         countsWENK.count(key1, 1)
         self.assertEqual([key1], keyComposer.keys)
         self.assertEqual([(key1, 1.0)], counts._counts)
-        self.assertEqual([[key2, key3]], counts._keys)
+        self.assertEqual([key2, key3], counts._keys)
 
     def test_results(self):
         counts = MockCounts()

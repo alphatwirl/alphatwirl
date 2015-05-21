@@ -49,13 +49,11 @@ class TestCounts(unittest.TestCase):
         expected  = {1: {'n': 0.0, 'nvar': 0.0}}
         self.assertEqual(expected, counts.results())
 
-    def test_addKeys(self):
-        counts = Counts()
-        counts.addKeys([1, 3, 5])
+        counts.addKey(3)
+        counts.addKey(5)
         expected  = {1: {'n': 0.0, 'nvar': 0.0},
                      3: {'n': 0.0, 'nvar': 0.0},
-                     5: {'n': 0.0, 'nvar': 0.0}
-                     }
+                     5: {'n': 0.0, 'nvar': 0.0}}
         self.assertEqual(expected, counts.results())
 
 ##____________________________________________________________________________||
