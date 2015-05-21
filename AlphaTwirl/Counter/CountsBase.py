@@ -7,9 +7,6 @@ import abc
 class CountsBase(object):
     __metaclass__ = abc.ABCMeta
 
-    def setKeyComposer(self, keyComposer):
-        self.keyComposer = keyComposer
-
     @abc.abstractmethod
     def count(self): pass
 

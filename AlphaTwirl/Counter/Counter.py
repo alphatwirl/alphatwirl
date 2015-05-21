@@ -15,8 +15,6 @@ class Counter(object):
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
 
-        self._countMethod.setKeyComposer(self._keyComposer)
-
     def begin(self, event):
         self._keyComposer.begin(event)
 
