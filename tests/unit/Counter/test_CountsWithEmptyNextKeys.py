@@ -58,10 +58,10 @@ class TestCountsWithEmptyNextKeys(unittest.TestCase):
         self.assertEqual([(key1, 3.0)], countsWENK.results())
 
 ##____________________________________________________________________________||
-class TestCountsWithEmptyNextKeysBuilder(unittest.TestCase):
+class TestCountsWithEmptyNextKeysFactory(unittest.TestCase):
 
     def test_call(self):
-        builder = Counter.CountsWithEmptyNextKeysBuilder(MockCounts)
+        builder = Counter.CountsWithEmptyNextKeysFactory(MockCounts)
         counts1 = builder()
         counts2 = builder()
         self.assertIsInstance(counts1, Counter.CountsWithEmptyNextKeys)

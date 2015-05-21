@@ -5,4 +5,4 @@ from GenericKeyComposerB import GenericKeyComposerB, GenericKeyComposerBBuilder
 from NextKeyComposer import NextKeyComposer, NextKeyComposerBuilder
 from Counts import Counts
 from CountsBase import CountsBase
-from CountsWithEmptyNextKeys import CountsWithEmptyNextKeys, CountsWithEmptyNextKeysBuilder
+from CountsWithEmptyNextKeys import CountsWithEmptyNextKeys, CountsWithEmptyNextKeysFactory

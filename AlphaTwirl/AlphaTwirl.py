@@ -12,7 +12,7 @@ from EventReader.EventLoopRunner import EventLoopRunner
 from EventReader.MPEventLoopRunner import MPEventLoopRunner
 from ProgressBar.ProgressBar import ProgressBar
 from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
-from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysBuilder
+from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysFactory
 from Counter.Counts import Counts
 from Counter.GenericKeyComposer import GenericKeyComposer
 from Counter.GenericKeyComposerB import GenericKeyComposerBBuilder
@@ -49,7 +49,7 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##____________________________________________________________________________||
-defaultCountsBuilderClass = CountsWithEmptyNextKeysBuilder(Counts)
+defaultCountsBuilderClass = CountsWithEmptyNextKeysFactory(Counts)
 
 ##____________________________________________________________________________||
 def completeTableConfig(tblcfg, outDir):

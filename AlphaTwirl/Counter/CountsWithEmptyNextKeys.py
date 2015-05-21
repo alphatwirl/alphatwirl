@@ -24,7 +24,7 @@ class CountsWithEmptyNextKeys(CountsBase):
         return self._countMethod.results()
 
 ##____________________________________________________________________________||
-class CountsWithEmptyNextKeysBuilder(object):
+class CountsWithEmptyNextKeysFactory(object):
 
     def __init__(self, countMethodClass):
         self._countMethodClass = countMethodClass
