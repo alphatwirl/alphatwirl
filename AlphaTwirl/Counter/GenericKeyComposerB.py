@@ -2,6 +2,13 @@
 
 ##____________________________________________________________________________||
 class GenericKeyComposerB(object):
+    """This class is a faster of GenericKeyComposer.
+
+    This class can be used with BEvents.
+
+    (this docstring is under development.)
+
+    """
     def __init__(self, varNames, binnings, indices = None):
         self.varNames = varNames
         self.binnings = binnings
