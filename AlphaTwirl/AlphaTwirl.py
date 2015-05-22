@@ -71,7 +71,12 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
 ##____________________________________________________________________________||
 def createPackageFor(tblcfg):
     keyComposer = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-    counterFactory = CounterFactory(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer, tblcfg['binnings'])
+    counterFactory = CounterFactory(
+        countMethodClass = tblcfg['countsClass'],
+        keyNames = tblcfg['outColumnNames'],
+        keyComposerClass = keyComposer,
+        binnings = tblcfg['binnings']
+    )
     resultsCombinationMethod = CombineIntoList()
     deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
     collector = Collector(resultsCombinationMethod, deliveryMethod)
