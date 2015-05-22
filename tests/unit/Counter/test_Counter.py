@@ -1,6 +1,5 @@
 import AlphaTwirl.Counter as Counter
 import unittest
-import pickle
 
 ##____________________________________________________________________________||
 class MockEvent(object):
@@ -10,9 +9,13 @@ class MockEvent(object):
 class MockCounts(Counter.CountsBase):
     def __init__(self):
         self._counts = [ ]
+        self._addedkeys = [ ]
 
     def count(self, key, weight):
         self._counts.append((key, weight))
+
+    def addKey(self, key):
+        self._addedkeys.append(key)
 
     def valNames(self):
         return ('n', 'nvar')
@@ -44,6 +47,14 @@ class MockKeyComposer(object):
         return self.listOfKeys.pop()
 
 ##____________________________________________________________________________||
+class MockNextKeyComposer(object):
+    def __init__(self, nextdic):
+        self.nextdic = nextdic
+
+    def __call__(self, key):
+        return self.nextdic[key]
+
+##____________________________________________________________________________||
 class TestMockKeyComposer(unittest.TestCase):
 
     def test_call(self):
@@ -62,7 +73,9 @@ class TestCounter(unittest.TestCase):
         counts = MockCounts()
         listOfKeys = [[(11, ), (12, )], [(12, )], [ ], [(14, )], [(11, )]]
         keycomposer = MockKeyComposer(listOfKeys)
-        counter = Counter.Counter(('var', ), keycomposer, counts, MockWeightCalculator())
+        nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
+        nextKeyComposer = MockNextKeyComposer(nextdic)
+        counter = Counter.Counter(('var', ), keycomposer, counts, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -72,22 +85,27 @@ class TestCounter(unittest.TestCase):
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
+        self.assertEqual([(12, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+        self.assertEqual([(12, ), (15, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+        self.assertEqual([(12, ), (15, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts.results())
+        self.assertEqual([(12, ), (15, ), (13, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts.results())
+        self.assertEqual([(12, ), (15, ), (13, ), (12, ), (13, )], counts._addedkeys)
 
         counter.end()
 
