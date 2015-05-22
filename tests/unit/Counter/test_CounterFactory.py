@@ -56,7 +56,6 @@ class TestCounterFactory(unittest.TestCase):
     def test_call(self):
         builder = Counter.CounterFactory(MockCounts, ('var_bin', ), MockKeyComposer, MockBinning())
         counter1 = builder()
-        self.assertEqual(('var_bin', ), counter1._keynames)
         self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
         self.assertIsInstance(counter1._countMethod, MockCounts)
 

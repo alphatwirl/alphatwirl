@@ -7,9 +7,8 @@ class WeightCalculatorOne(object):
 
 ##____________________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyNames, keyComposer, countMethod,
-                 nextKeyComposer = None, weightCalculator = WeightCalculatorOne()):
-        self._keynames = keyNames
+    def __init__(self, keyComposer, countMethod, nextKeyComposer = None,
+                 weightCalculator = WeightCalculatorOne()):
         self._keyComposer = keyComposer
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
@@ -29,9 +28,6 @@ class Counter(object):
 
     def end(self):
         pass
-
-    def keynames(self):
-        return self._keynames
 
     def valNames(self):
         return self._countMethod.valNames()

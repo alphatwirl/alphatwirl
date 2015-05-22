@@ -75,7 +75,7 @@ class TestCounter(unittest.TestCase):
         keycomposer = MockKeyComposer(listOfKeys)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Counter.Counter(('var', ), keycomposer, counts, nextKeyComposer, MockWeightCalculator())
+        counter = Counter.Counter(keycomposer, counts, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -109,12 +109,8 @@ class TestCounter(unittest.TestCase):
 
         counter.end()
 
-    def test_keynames(self):
-        counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
-        self.assertEqual(('var', ), counter.keynames())
-
     def test_setResults(self):
-        counter = Counter.Counter(('var', ), MockKeyComposer(), MockCounts(), MockWeightCalculator())
+        counter = Counter.Counter(MockKeyComposer(), MockCounts(), MockWeightCalculator())
         self.assertEqual([ ], counter.results())
         counter.setResults([((11, ), 1.0)])
         self.assertEqual([((11,), 1.0)], counter.results())

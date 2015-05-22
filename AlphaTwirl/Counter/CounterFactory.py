@@ -21,7 +21,6 @@ class CounterFactory(Counter):
     def __call__(self):
 
         return Counter(
-            self._keynames,
             self._keyComposerFactory(),
             self._countMethodClass(),
             NextKeyComposer(self._binnings),
