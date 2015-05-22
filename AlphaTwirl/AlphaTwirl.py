@@ -71,11 +71,11 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
 ##____________________________________________________________________________||
 def createPackageFor(tblcfg):
     keyComposer = GenericKeyComposerBBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-    counterBuilder = CounterFactory(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer, tblcfg['binnings'])
+    counterFactory = CounterFactory(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer, tblcfg['binnings'])
     resultsCombinationMethod = CombineIntoList()
     deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
     collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return EventReaderPackage(counterBuilder, collector)
+    return EventReaderPackage(counterFactory, collector)
 
 ##____________________________________________________________________________||
 def buildEventLoopRunner(progressBar, processes, quiet):
