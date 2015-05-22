@@ -21,9 +21,6 @@ class GenericKeyComposer(object):
             ret.append(var_bin)
         return (tuple(ret), )
 
-    def binnings(self):
-        return self._binnings
-
 ##____________________________________________________________________________||
 class GenericKeyComposerFactory(object):
     def __init__(self, varNames, binnings, indices = None):
