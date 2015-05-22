@@ -4,7 +4,7 @@ import os
 import argparse
 from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
-from AlphaTwirl.Counter import Counts, GenericKeyComposerBuilder, CounterBuilder
+from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector
 from AlphaTwirl.ProgressBar import ProgressBar, ProgressReport, ProgressMonitor
@@ -22,26 +22,26 @@ treeName = 'tree'
 
 outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
 binning1 = RoundLog(0.1, 0)
-keyComposer1 = GenericKeyComposerBuilder(('met_pt', ), (binning1, ))
-counterBuilder1 = CounterBuilder(Counts, ('met', ), keyComposer1)
-resultsCombinationMethod1 = CombineIntoList()
+keyComposer1 = GenericKeyComposerFactory(('met_pt', ), (binning1, ))
+counterFactory1 = CounterFactory(Counts, keyComposer1, (binning1, ))
+resultsCombinationMethod1 = CombineIntoList(('met', ))
 deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
 
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
 binning2 = RoundLog(0.1, 0)
-keyComposer2 = GenericKeyComposerBuilder(('jet_pt', ), (binning2, ), (0, ))
-counterBuilder2 = CounterBuilder(Counts, ('jet_pt', ), keyComposer2)
-resultsCombinationMethod2 = CombineIntoList()
+keyComposer2 = GenericKeyComposerFactory(('jet_pt', ), (binning2, ), (0, ))
+counterFactory2 = CounterFactory(Counts, keyComposer2, (binning2, ))
+resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
 deliveryMethod2 = WriteListToFile(outPath2)
 collector2 = Collector(resultsCombinationMethod2, deliveryMethod2)
 
 outPath3 = os.path.join(args.outdir, 'tbl_njets_nbjets.txt')
 binning31 = Echo()
 binning32 = Echo()
-keyComposer3 = GenericKeyComposerBuilder(('nJet40', 'nBJet40'), (binning31, binning32))
-counterBuilder3 = CounterBuilder(Counts, ('njets', 'nbjets'), keyComposer3)
-resultsCombinationMethod3 = CombineIntoList()
+keyComposer3 = GenericKeyComposerFactory(('nJet40', 'nBJet40'), (binning31, binning32))
+counterFactory3 = CounterFactory(Counts, keyComposer3, (binning31, binning32))
+resultsCombinationMethod3 = CombineIntoList(('njets', 'nbjets'))
 deliveryMethod3 = WriteListToFile(outPath3)
 collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
 
@@ -59,13 +59,13 @@ progressReporter = progressMonitor.createReporter()
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
-    counter1 = counterBuilder1()
+    counter1 = counterFactory1()
     collector1.addReader(component.name, counter1)
 
-    counter2 = counterBuilder2()
+    counter2 = counterFactory2()
     collector2.addReader(component.name, counter2)
 
-    counter3 = counterBuilder3()
+    counter3 = counterFactory3()
     collector3.addReader(component.name, counter3)
 
     events = eventBuilder.build(component)

@@ -33,7 +33,7 @@ heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
     counts = Counts()
-    counter = Counter(('met', ), keyComposer, counts)
+    counter = Counter(keyComposer, counts)
 
     datasetReaderPairs.append((component.name, counter))
 

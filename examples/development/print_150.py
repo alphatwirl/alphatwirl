@@ -21,7 +21,7 @@ outPath = os.path.join(args.outdir, 'tbl_met.txt')
 
 binning = RoundLog(0.1, 0)
 keyComposer = GenericKeyComposer(('met_pt', ), (binning, ))
-resultsCombinationMethod = CombineIntoList()
+resultsCombinationMethod = CombineIntoList(('met', ))
 deliveryMethod = WriteListToFile(outPath)
 datasetReaderPairs = [ ]
 
@@ -31,7 +31,7 @@ heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
     counts = Counts()
-    counter = Counter(('met', ), keyComposer, counts)
+    counter = Counter(keyComposer, counts)
 
     datasetReaderPairs.append((component.name, counter))
 

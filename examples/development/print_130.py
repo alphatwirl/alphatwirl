@@ -31,7 +31,7 @@ heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
     counts = Counts()
-    counter = Counter(('met', ), keyComposer, counts)
+    counter = Counter(keyComposer, counts)
 
     events = eventBuilder.build(component)
     for event in events:
