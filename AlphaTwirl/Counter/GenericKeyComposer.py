@@ -25,7 +25,7 @@ class GenericKeyComposer(object):
         return self._binnings
 
 ##____________________________________________________________________________||
-class GenericKeyComposerBuilder(object):
+class GenericKeyComposerFactory(object):
     def __init__(self, varNames, binnings, indices = None):
         self.varNames = varNames
         self.binnings = binnings

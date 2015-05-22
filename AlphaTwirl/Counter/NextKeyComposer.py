@@ -29,7 +29,7 @@ class NextKeyComposer(object):
         return tuple(ret)
 
 ##____________________________________________________________________________||
-class NextKeyComposerBuilder(object):
+class NextKeyComposerFactory(object):
     def __init__(self, binnings):
         self.binnings = binnings
 
