@@ -21,13 +21,13 @@ class Counter(object):
         keys = self.keyComposer(event)
         weight = self.weightCalculator(event)
         for key in keys:
-            if self.nextKeyComposer is not None:
-                nextKeys = self.nextKeyComposer(key)
-                for nextKey in nextKeys: self.countMethod.addKey(nextKey)
             self.countMethod.count(key, weight)
 
     def end(self):
-        pass
+        if self.nextKeyComposer is None: return
+        for key in sorted(self.countMethod.keys()):
+            nextKeys = self.nextKeyComposer(key)
+            for nextKey in nextKeys: self.countMethod.addKey(nextKey)
 
     def valNames(self):
         return self.countMethod.valNames()

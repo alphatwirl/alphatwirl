@@ -9,13 +9,18 @@ class MockEvent(object):
 class MockCounts(object):
     def __init__(self):
         self._counts = [ ]
-        self._addedkeys = [ ]
+        self._keys = set()
+        self._addedkeys = set()
 
     def count(self, key, weight):
         self._counts.append((key, weight))
+        self._keys.add(key)
+
+    def keys(self):
+        return list(self._keys)
 
     def addKey(self, key):
-        self._addedkeys.append(key)
+        self._addedkeys.add(key)
 
     def valNames(self):
         return ('n', 'nvar')
@@ -85,29 +90,25 @@ class TestCounter(unittest.TestCase):
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
-        self.assertEqual([(12, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
-        self.assertEqual([(12, ), (15, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
-        self.assertEqual([(12, ), (15, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts.results())
-        self.assertEqual([(12, ), (15, ), (13, )], counts._addedkeys)
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts._counts)
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts.results())
-        self.assertEqual([(12, ), (15, ), (13, ), (12, ), (13, )], counts._addedkeys)
 
         counter.end()
+        self.assertEqual(set([(15, ), (13, ), (12, )]), counts._addedkeys)
 
     def test_setResults(self):
         counter = Counter.Counter(MockKeyComposer(), MockCounts(), MockWeightCalculator())

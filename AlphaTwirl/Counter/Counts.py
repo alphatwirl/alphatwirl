@@ -18,6 +18,9 @@ class Counts(object):
         if key not in self._counts:
             self._counts[key] = collections.OrderedDict((('n', 0.0), ('nvar', 0.0)))
 
+    def keys(self):
+        return self._counts.keys()
+
     def valNames(self):
         return ('n', 'nvar')
 
