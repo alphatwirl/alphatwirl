@@ -73,7 +73,6 @@ def createPackageFor(tblcfg):
     keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     counterFactory = CounterFactory(
         countMethodClass = tblcfg['countsClass'],
-        keyNames = tblcfg['outColumnNames'],
         keyComposerFactory = keyComposerFactory,
         binnings = tblcfg['binnings']
     )
