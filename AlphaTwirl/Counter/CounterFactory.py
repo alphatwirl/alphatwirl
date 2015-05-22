@@ -19,15 +19,11 @@ class CounterFactory(Counter):
         self._weightCalculator = weightCalculator
 
     def __call__(self):
-        countMethod = self._countMethodClass()
-        if isinstance(countMethod, CountsWithEmptyNextKeys):
-            nextKeyComposer = NextKeyComposer(self._binnings)
-            countMethod.nextKeyComposer = nextKeyComposer
 
         return Counter(
             self._keynames,
             self._keyComposerFactory(),
-            countMethod,
+            self._countMethodClass(),
             NextKeyComposer(self._binnings),
             self._weightCalculator
         )
