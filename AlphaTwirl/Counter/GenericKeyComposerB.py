@@ -3,9 +3,9 @@
 ##____________________________________________________________________________||
 class GenericKeyComposerB(object):
     def __init__(self, varNames, binnings, indices = None):
-        self._varNames = varNames
-        self._binnings = binnings
-        self._indices = indices if indices is not None else [None]*len(self._varNames)
+        self.varNames = varNames
+        self.binnings = binnings
+        self.indices = indices if indices is not None else [None]*len(self.varNames)
 
     def begin(self, event):
         self._zip = self._zipArrays(event)
@@ -25,16 +25,16 @@ class GenericKeyComposerB(object):
         return (tuple(ret), )
 
     def _zipArrays(self, event):
-        self._branches = [ ]
-        for varname in self._varNames:
+        self.branches = [ ]
+        for varname in self.varNames:
             try:
                 branch = getattr(event, varname)
             except AttributeError, e:
                 import logging
                 logging.warning(e)
                 return None
-            self._branches.append(branch)
-        return zip(self._branches, self._binnings, self._indices)
+            self.branches.append(branch)
+        return zip(self.branches, self.binnings, self.indices)
 
 ##____________________________________________________________________________||
 class GenericKeyComposerBFactory(object):
