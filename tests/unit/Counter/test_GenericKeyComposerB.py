@@ -92,16 +92,6 @@ class TestGenericKeyComposerB(unittest.TestCase):
         event.var1[:] = [15, ]
         self.assertEqual(( ), keyComposer(event))
 
-    def test_binnings(self):
-        binning1 = MockBinningEcho()
-        keyComposer = Counter.GenericKeyComposerB(('var1', ), (binning1, ))
-        self.assertEqual((binning1, ), keyComposer.binnings())
-
-        binning1 = MockBinningEcho()
-        binning2 = MockBinningEcho()
-        keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (binning1, binning2))
-        self.assertEqual((binning1, binning2), keyComposer.binnings())
-
     def test_indices_1(self):
         keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ), indices = (0, ))
         event = MockEvent()

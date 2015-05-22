@@ -24,9 +24,6 @@ class GenericKeyComposerB(object):
             ret.append(var_bin)
         return (tuple(ret), )
 
-    def binnings(self):
-        return self._binnings
-
     def _zipArrays(self, event):
         self._branches = [ ]
         for varname in self._varNames:
