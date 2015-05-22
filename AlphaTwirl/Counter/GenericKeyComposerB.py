@@ -2,7 +2,7 @@
 
 ##____________________________________________________________________________||
 class GenericKeyComposerB(object):
-    """This class is a faster of GenericKeyComposer.
+    """This class is a faster version of GenericKeyComposer.
 
     This class can be used with BEvents.
 
