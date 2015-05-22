@@ -49,7 +49,7 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##____________________________________________________________________________||
-defaultCountsBuilderClass = CountsWithEmptyNextKeysFactory(Counts)
+defaultCountsBuilderClass = Counts
 
 ##____________________________________________________________________________||
 def completeTableConfig(tblcfg, outDir):

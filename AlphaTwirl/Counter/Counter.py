@@ -7,11 +7,13 @@ class WeightCalculatorOne(object):
 
 ##____________________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyNames, keyComposer, countMethod, weightCalculator = WeightCalculatorOne()):
+    def __init__(self, keyNames, keyComposer, countMethod,
+                 nextKeyComposer = None, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
         self._keyComposer = keyComposer
         self._countMethod = countMethod
         self._weightCalculator = weightCalculator
+        self._nextKeyComposer = nextKeyComposer
 
     def begin(self, event):
         self._keyComposer.begin(event)
@@ -20,6 +22,9 @@ class Counter(object):
         keys = self._keyComposer(event)
         weight = self._weightCalculator(event)
         for key in keys:
+            if self._nextKeyComposer is not None:
+                nextKeys = self._nextKeyComposer(key)
+                for nextKey in nextKeys: self._countMethod.addKey(nextKey)
             self._countMethod.count(key, weight)
 
     def end(self):

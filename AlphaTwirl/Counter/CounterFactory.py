@@ -28,6 +28,7 @@ class CounterFactory(Counter):
             self._keynames,
             self._keyComposerFactory(),
             countMethod,
+            NextKeyComposer(self._binnings),
             self._weightCalculator
         )
 
