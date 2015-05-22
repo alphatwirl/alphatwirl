@@ -141,7 +141,7 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
                 }
             )
 
-        combine = CombineIntoPandasDataFrame()
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_twoReaders(self):
@@ -172,7 +172,7 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
                 }
             )
 
-        combine = CombineIntoPandasDataFrame()
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_with_empty_counts(self):
@@ -200,7 +200,7 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
                 }
             )
 
-        combine = CombineIntoPandasDataFrame()
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_all_empty_counts(self):
@@ -224,14 +224,14 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
                 }
             )
 
-        combine = CombineIntoPandasDataFrame()
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_empty_pairs(self):
 
         datasetReaderPairs = [ ]
 
-        combine = CombineIntoPandasDataFrame()
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(None, combine.combine(datasetReaderPairs))
 
 ##____________________________________________________________________________||
