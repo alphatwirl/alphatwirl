@@ -7,9 +7,6 @@ class MockReader(object):
     def __init__(self, results):
         self._results = results
 
-    def keynames(self):
-        return ('v1', )
-
     def valNames(self):
         return ('n', 'nvar')
 
@@ -94,7 +91,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('data1', 3, 3.0, 2.0),
         ]
 
-        combine = CombineIntoList()
+        combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_twoReaders(self):
@@ -125,7 +122,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('data2', 4, 2.0, 2.0),
         ]
 
-        combine = CombineIntoList()
+        combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_with_empty_counts(self):
@@ -151,7 +148,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('data1', 3, 3.0, 2.0),
         ]
 
-        combine = CombineIntoList()
+        combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_all_empty_counts(self):
@@ -170,14 +167,14 @@ class TestCombineIntoList(unittest.TestCase):
             ('component', 'v1', 'n', 'nvar'),
         ]
 
-        combine = CombineIntoList()
+        combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_empty_pairs(self):
 
         datasetReaderPairs = [ ]
 
-        combine = CombineIntoList()
+        combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(None, combine.combine(datasetReaderPairs))
 
 ##____________________________________________________________________________||

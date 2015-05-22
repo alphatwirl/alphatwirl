@@ -77,7 +77,7 @@ def createPackageFor(tblcfg):
         keyComposerFactory = keyComposerFactory,
         binnings = tblcfg['binnings']
     )
-    resultsCombinationMethod = CombineIntoList()
+    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
     deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
     collector = Collector(resultsCombinationMethod, deliveryMethod)
     return EventReaderPackage(counterFactory, collector)

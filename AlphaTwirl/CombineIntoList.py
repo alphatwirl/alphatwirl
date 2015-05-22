@@ -13,8 +13,9 @@ def countsToList(counts, keyNames):
 
 ##____________________________________________________________________________||
 class CombineIntoList(object):
-    def __init__(self):
+    def __init__(self, keyNames):
         self.datasetColumnName = 'component'
+        self.keyNames = keyNames
 
     def combine(self, datasetReaderPairs):
         if len(datasetReaderPairs) == 0: return None
@@ -22,8 +23,8 @@ class CombineIntoList(object):
         combined = combine.combine(datasetReaderPairs)
         reader = datasetReaderPairs[0][1]
         if len(combined) == 0:
-            columns = (self.datasetColumnName, ) + tuple(reader.keynames()) + tuple(reader.valNames())
+            columns = (self.datasetColumnName, ) + tuple(self.keyNames) + tuple(reader.valNames())
             return [columns]
-        return countsToList(combined, (self.datasetColumnName, ) + reader.keynames())
+        return countsToList(combined, (self.datasetColumnName, ) + self.keyNames)
 
 ##____________________________________________________________________________||
