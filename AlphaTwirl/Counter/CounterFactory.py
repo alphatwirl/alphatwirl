@@ -11,9 +11,9 @@ class WeightCalculatorOne(object):
 
 ##____________________________________________________________________________||
 class CounterFactory(Counter):
-    def __init__(self, countMethodClass, keyNames, keyComposerClass, binnings, weightCalculator = WeightCalculatorOne()):
+    def __init__(self, countMethodClass, keyNames, keyComposerFactory, binnings, weightCalculator = WeightCalculatorOne()):
         self._keynames = keyNames
-        self._keyComposerClass = keyComposerClass
+        self._keyComposerFactory = keyComposerFactory
         self._countMethodClass = countMethodClass
         self._binnings = binnings
         self._weightCalculator = weightCalculator
@@ -24,6 +24,11 @@ class CounterFactory(Counter):
             nextKeyComposer = NextKeyComposer(self._binnings)
             countMethod.nextKeyComposer = nextKeyComposer
 
-        return Counter(self._keynames, self._keyComposerClass(), countMethod, self._weightCalculator)
+        return Counter(
+            self._keynames,
+            self._keyComposerFactory(),
+            countMethod,
+            self._weightCalculator
+        )
 
 ##____________________________________________________________________________||
