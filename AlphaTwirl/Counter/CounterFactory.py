@@ -1,8 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from CountsWithEmptyNextKeys import CountsWithEmptyNextKeys
 from NextKeyComposer import NextKeyComposer
 from Counter import Counter
-
 
 ##____________________________________________________________________________||
 class WeightCalculatorOne(object):
