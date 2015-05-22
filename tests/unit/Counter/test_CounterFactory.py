@@ -16,19 +16,19 @@ class TestCounterFactory(unittest.TestCase):
     def test_call(self):
         builder = Counter.CounterFactory(MockCounts, MockKeyComposer, MockBinning())
         counter1 = builder()
-        self.assertIsInstance(counter1._keyComposer, MockKeyComposer)
-        self.assertIsInstance(counter1._countMethod, MockCounts)
+        self.assertIsInstance(counter1.keyComposer, MockKeyComposer)
+        self.assertIsInstance(counter1.countMethod, MockCounts)
 
     def test_counterMethods_differentInstances(self):
         builder = Counter.CounterFactory(MockCounts, MockKeyComposer, MockBinning())
         counter1 = builder()
         counter2 = builder()
-        self.assertIsNot(counter1._countMethod, counter2._countMethod)
+        self.assertIsNot(counter1.countMethod, counter2.countMethod)
 
     def test_keyComposer_differentInstances(self):
         builder = Counter.CounterFactory(MockCounts, MockKeyComposer, MockBinning())
         counter1 = builder()
         counter2 = builder()
-        self.assertIsNot(counter1._keyComposer, counter2._keyComposer)
+        self.assertIsNot(counter1.keyComposer, counter2.keyComposer)
 
 ##____________________________________________________________________________||
