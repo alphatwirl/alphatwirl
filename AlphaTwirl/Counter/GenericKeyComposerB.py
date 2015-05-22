@@ -9,10 +9,10 @@ class GenericKeyComposerB(object):
     (this docstring is under development.)
 
     """
-    def __init__(self, varNames, binnings, indices = None):
-        self.varNames = varNames
+    def __init__(self, branchNames, binnings, indices = None):
+        self.branchNames = branchNames
         self.binnings = binnings
-        self.indices = indices if indices is not None else [None]*len(self.varNames)
+        self.indices = indices if indices is not None else [None]*len(self.branchNames)
 
     def begin(self, event):
         self._zip = self._zipArrays(event)
@@ -33,7 +33,7 @@ class GenericKeyComposerB(object):
 
     def _zipArrays(self, event):
         self.branches = [ ]
-        for varname in self.varNames:
+        for varname in self.branchNames:
             try:
                 branch = getattr(event, varname)
             except AttributeError, e:
@@ -45,11 +45,11 @@ class GenericKeyComposerB(object):
 
 ##____________________________________________________________________________||
 class GenericKeyComposerBFactory(object):
-    def __init__(self, varNames, binnings, indices = None):
-        self.varNames = varNames
+    def __init__(self, branchNames, binnings, indices = None):
+        self.branchNames = branchNames
         self.binnings = binnings
         self.indices = indices
     def __call__(self):
-        return GenericKeyComposerB(varNames = self.varNames, binnings = self.binnings, indices = self.indices)
+        return GenericKeyComposerB(branchNames = self.branchNames, binnings = self.binnings, indices = self.indices)
 
 ##____________________________________________________________________________||
