@@ -15,7 +15,7 @@ from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
 from Counter.CountsWithEmptyNextKeys import CountsWithEmptyNextKeysFactory
 from Counter.Counts import Counts
 from Counter.GenericKeyComposer import GenericKeyComposer
-from Counter.GenericKeyComposerB import GenericKeyComposerBBuilder
+from Counter.GenericKeyComposerB import GenericKeyComposerBFactory
 from Counter.CounterFactory import CounterFactory
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
@@ -70,7 +70,7 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
 
 ##____________________________________________________________________________||
 def createPackageFor(tblcfg):
-    keyComposer = GenericKeyComposerBBuilder(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+    keyComposer = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     counterFactory = CounterFactory(tblcfg['countsClass'], tblcfg['outColumnNames'], keyComposer, tblcfg['binnings'])
     resultsCombinationMethod = CombineIntoList()
     deliveryMethod = WriteListToFile(tblcfg['outFilePath'])

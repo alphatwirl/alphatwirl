@@ -1,7 +1,7 @@
 from Counter import Counter
 from CounterFactory import CounterFactory
 from GenericKeyComposer import GenericKeyComposer, GenericKeyComposerBuilder
-from GenericKeyComposerB import GenericKeyComposerB, GenericKeyComposerBBuilder
+from GenericKeyComposerB import GenericKeyComposerB, GenericKeyComposerBFactory
 from NextKeyComposer import NextKeyComposer, NextKeyComposerBuilder
 from Counts import Counts
 from CountsBase import CountsBase

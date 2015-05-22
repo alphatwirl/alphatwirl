@@ -40,7 +40,7 @@ class GenericKeyComposerB(object):
         return zip(self._branches, self._binnings, self._indices)
 
 ##____________________________________________________________________________||
-class GenericKeyComposerBBuilder(object):
+class GenericKeyComposerBFactory(object):
     def __init__(self, varNames, binnings, indices = None):
         self.varNames = varNames
         self.binnings = binnings
