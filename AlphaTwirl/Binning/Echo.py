@@ -17,6 +17,7 @@ class Echo(object):
         return val
 
     def next(self, bin):
+        if self._nextFunc is None: return None
         return self._nextFunc(bin)
 
 ##____________________________________________________________________________||
