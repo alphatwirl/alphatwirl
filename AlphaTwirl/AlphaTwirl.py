@@ -49,14 +49,14 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##____________________________________________________________________________||
-defaultCountsBuilderClass = Counts
+defaultCountsClass = Counts
 
 ##____________________________________________________________________________||
 def completeTableConfig(tblcfg, outDir):
     if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
     if 'indices' not in tblcfg: tblcfg['indices'] = None
     if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
-    if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsBuilderClass
+    if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsClass
     if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
     return tblcfg
 
