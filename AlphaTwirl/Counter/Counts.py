@@ -2,10 +2,9 @@
 
 ##____________________________________________________________________________||
 import collections
-from CountsBase import CountsBase
 
 ##____________________________________________________________________________||
-class Counts(CountsBase):
+class Counts(object):
     def __init__(self):
         self._counts = { }
 

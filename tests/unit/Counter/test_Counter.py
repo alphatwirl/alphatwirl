@@ -6,7 +6,7 @@ class MockEvent(object):
     pass
 
 ##____________________________________________________________________________||
-class MockCounts(Counter.CountsBase):
+class MockCounts(object):
     def __init__(self):
         self._counts = [ ]
         self._addedkeys = [ ]
