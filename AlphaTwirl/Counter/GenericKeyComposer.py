@@ -2,16 +2,16 @@
 
 ##____________________________________________________________________________||
 class GenericKeyComposer(object):
-    def __init__(self, varNames, binnings, indices = None):
-        self.varNames = varNames
+    def __init__(self, branchNames, binnings, indices = None):
+        self.branchNames = branchNames
         self.binnings = binnings
-        self.indices = indices if indices is not None else [None]*len(self.varNames)
+        self.indices = indices if indices is not None else [None]*len(self.branchNames)
 
     def begin(self, event): pass
 
     def __call__(self, event):
         ret = [ ]
-        for varName, binning, index in zip(self.varNames, self.binnings, self.indices):
+        for varName, binning, index in zip(self.branchNames, self.binnings, self.indices):
             var = getattr(event, varName)
             if index is not None:
                 if len(var) <= index: return ()
@@ -23,11 +23,11 @@ class GenericKeyComposer(object):
 
 ##____________________________________________________________________________||
 class GenericKeyComposerFactory(object):
-    def __init__(self, varNames, binnings, indices = None):
-        self.varNames = varNames
+    def __init__(self, branchNames, binnings, indices = None):
+        self.branchNames = branchNames
         self.binnings = binnings
         self.indices = indices
     def __call__(self):
-        return GenericKeyComposer(varNames = self.varNames, binnings = self.binnings, indices = self.indices)
+        return GenericKeyComposer(branchNames = self.branchNames, binnings = self.binnings, indices = self.indices)
 
 ##____________________________________________________________________________||
