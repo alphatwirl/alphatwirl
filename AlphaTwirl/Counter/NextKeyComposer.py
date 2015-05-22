@@ -11,11 +11,20 @@ class NextKeyComposer(object):
         e.g.,
         If key = (11, 8, 20)
         it returns ((12, 8, 20), (11, 9, 20), (11, 8, 21))
+
+        When the next bin is None, it won't be included.
+
+        When the next bin is the same, it won't be included.
+
         """
         ret = [ ]
         for i in range(len(self._binnings)):
             keyc = list(key)
-            keyc[i] = self._binnings[i].next(keyc[i])
+            thisbin = keyc[i]
+            nextbin = self._binnings[i].next(thisbin)
+            if nextbin is None: continue
+            if nextbin == thisbin: continue
+            keyc[i] = nextbin
             ret.append(tuple(keyc))
         return tuple(ret)
 

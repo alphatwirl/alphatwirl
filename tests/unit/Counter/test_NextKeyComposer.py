@@ -2,7 +2,7 @@ import AlphaTwirl.Counter as Counter
 import unittest
 
 ##____________________________________________________________________________||
-class MockBinningEcho(object):
+class MockBinningPlusOneNext(object):
     def __call__(self, val):
         return val
 
@@ -10,11 +10,47 @@ class MockBinningEcho(object):
         return val + 1
 
 ##____________________________________________________________________________||
+class MockBinningNoneNext(object):
+    def __call__(self, val):
+        return val
+
+    def next(self, val):
+        return None
+
+##____________________________________________________________________________||
+class MockBinningSameNext(object):
+    def __call__(self, val):
+        return val
+
+    def next(self, val):
+        return val
+
+##____________________________________________________________________________||
 class TestNextKeyComposer(unittest.TestCase):
 
-    def test_next(self):
-        binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho())
+    def test_call(self):
+        binnings = (MockBinningPlusOneNext(), MockBinningPlusOneNext(), MockBinningPlusOneNext())
         keyComposer = Counter.NextKeyComposer(binnings)
         self.assertEqual(((12, 8, 20), (11, 9, 20), (11, 8, 21)), keyComposer((11, 8, 20)))
+
+    def test_call_one_none(self):
+        binnings = (MockBinningPlusOneNext(), MockBinningNoneNext(), MockBinningPlusOneNext())
+        keyComposer = Counter.NextKeyComposer(binnings)
+        self.assertEqual(((12, 8, 20), (11, 8, 21)), keyComposer((11, 8, 20)))
+
+    def test_call_all_none(self):
+        binnings = (MockBinningNoneNext(), MockBinningNoneNext(), MockBinningNoneNext())
+        keyComposer = Counter.NextKeyComposer(binnings)
+        self.assertEqual(( ), keyComposer((11, 8, 20)))
+
+    def test_call_no_binning(self):
+        binnings = ( )
+        keyComposer = Counter.NextKeyComposer(binnings)
+        self.assertEqual(( ), keyComposer(( )))
+
+    def test_call_one_same(self):
+        binnings = (MockBinningPlusOneNext(), MockBinningSameNext(), MockBinningPlusOneNext())
+        keyComposer = Counter.NextKeyComposer(binnings)
+        self.assertEqual(((12, 8, 20), (11, 8, 21)), keyComposer((11, 8, 20)))
 
 ##____________________________________________________________________________||
