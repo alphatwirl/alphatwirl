@@ -29,23 +29,22 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
 
 
     tbl_yield is the data frame for binned MC counts for each
-    component (data set).
+    component (data set), e.g.,::
 
-    e.g.,
-                 component            met     n  nvar
-          QCD_HT_1000ToInf  15.8489319246     1     1
-          QCD_HT_1000ToInf  19.9526231497     0     0
-          QCD_HT_1000ToInf  25.1188643151     1     1
-          QCD_HT_1000ToInf  31.6227766017     3     3
-          QCD_HT_1000ToInf  39.8107170553     2     2
-          QCD_HT_1000ToInf  50.1187233627     5     5
-          QCD_HT_1000ToInf   63.095734448     2     2
-          QCD_HT_1000ToInf  79.4328234724     2     2
-          QCD_HT_1000ToInf            100     3     3
-          QCD_HT_1000ToInf  125.892541179     2     2
-          QCD_HT_1000ToInf  158.489319246     0     0
-     QCD_HT_1000ToInf_ext1  39.8107170553     1     1
-     QCD_HT_1000ToInf_ext1  50.1187233627     1     1
+                  component            met     n  nvar
+           QCD_HT_1000ToInf  15.8489319246     1     1
+           QCD_HT_1000ToInf  19.9526231497     0     0
+           QCD_HT_1000ToInf  25.1188643151     1     1
+           QCD_HT_1000ToInf  31.6227766017     3     3
+           QCD_HT_1000ToInf  39.8107170553     2     2
+           QCD_HT_1000ToInf  50.1187233627     5     5
+           QCD_HT_1000ToInf   63.095734448     2     2
+           QCD_HT_1000ToInf  79.4328234724     2     2
+           QCD_HT_1000ToInf            100     3     3
+           QCD_HT_1000ToInf  125.892541179     2     2
+           QCD_HT_1000ToInf  158.489319246     0     0
+      QCD_HT_1000ToInf_ext1  39.8107170553     1     1
+      QCD_HT_1000ToInf_ext1  50.1187233627     1     1
 
 
     The column 'component' is the data set. (The data set is called
@@ -69,75 +68,72 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     have the same value as the 'n'.
 
     tbl_process is the data frame that relates the components, the
-    phase spaces, and the processes.
+    phase spaces, and the processes, e.g.,::
 
-    e.g.,
-                 component             phasespace  process
-           QCD_HT_100To250        QCD_HT_100To250  QCD
-           QCD_HT_250To500        QCD_HT_250To500  QCD
-          QCD_HT_500To1000       QCD_HT_500To1000  QCD
-          QCD_HT_1000ToInf       QCD_HT_1000ToInf  QCD
-      QCD_HT_250To500_ext1        QCD_HT_250To500  QCD
-     QCD_HT_500To1000_ext1       QCD_HT_500To1000  QCD
-     QCD_HT_1000ToInf_ext1       QCD_HT_1000ToInf  QCD
-            TToLeptons_sch         TToLeptons_sch  T
-         TBarToLeptons_sch      TBarToLeptons_sch  T
-            TToLeptons_tch         TToLeptons_tch  T
-         TBarToLeptons_tch      TBarToLeptons_tch  T
-                    T_tWch                 T_tWch  T
-                 TBar_tWch              TBar_tWch  T
-                    TTJets                 TTJets  TTJets
-     WJetsToLNu_HT100to200  WJetsToLNu_HT100to200  WJetsToLNu
-     WJetsToLNu_HT200to400  WJetsToLNu_HT200to400  WJetsToLNu
-     WJetsToLNu_HT400to600  WJetsToLNu_HT400to600  WJetsToLNu
-     WJetsToLNu_HT600toInf  WJetsToLNu_HT600toInf  WJetsToLNu
+                  component             phasespace  process
+            QCD_HT_100To250        QCD_HT_100To250  QCD
+            QCD_HT_250To500        QCD_HT_250To500  QCD
+           QCD_HT_500To1000       QCD_HT_500To1000  QCD
+           QCD_HT_1000ToInf       QCD_HT_1000ToInf  QCD
+       QCD_HT_250To500_ext1        QCD_HT_250To500  QCD
+      QCD_HT_500To1000_ext1       QCD_HT_500To1000  QCD
+      QCD_HT_1000ToInf_ext1       QCD_HT_1000ToInf  QCD
+             TToLeptons_sch         TToLeptons_sch  T
+          TBarToLeptons_sch      TBarToLeptons_sch  T
+             TToLeptons_tch         TToLeptons_tch  T
+          TBarToLeptons_tch      TBarToLeptons_tch  T
+                     T_tWch                 T_tWch  T
+                  TBar_tWch              TBar_tWch  T
+                     TTJets                 TTJets  TTJets
+      WJetsToLNu_HT100to200  WJetsToLNu_HT100to200  WJetsToLNu
+      WJetsToLNu_HT200to400  WJetsToLNu_HT200to400  WJetsToLNu
+      WJetsToLNu_HT400to600  WJetsToLNu_HT400to600  WJetsToLNu
+      WJetsToLNu_HT600toInf  WJetsToLNu_HT600toInf  WJetsToLNu
 
     tbl_nevt is the data frame that shows the number of the generated
-    events for each component.
+    events for each component, e.g.,::
 
-    e.g.,
-                 component     nevt     nevt_sumw
-          QCD_HT_1000ToInf  1130720       1130720
-     QCD_HT_1000ToInf_ext1   333733        333733
-           QCD_HT_100To250  4123612       4123612
-           QCD_HT_250To500  2004219       2004219
-      QCD_HT_250To500_ext1   663953        663953
-          QCD_HT_500To1000  3214312       3214312
-     QCD_HT_500To1000_ext1   849033        849033
-                    T_tWch   986100        986100
-                 TBar_tWch   971800        971800
-         TBarToLeptons_sch   250000 320855.887262
-         TBarToLeptons_tch  1999800 50734279.1235
-                    TTJets 25446993      25446993
-            TToLeptons_sch   500000 1042218.60703
-            TToLeptons_tch  3991000 173500373.328
-     WJetsToLNu_HT100to200  5262265       5262265
-     WJetsToLNu_HT200to400  4936077       4936077
-     WJetsToLNu_HT400to600  4640594       4640594
-     WJetsToLNu_HT600toInf  4581841       4581841
+                  component     nevt     nevt_sumw
+           QCD_HT_1000ToInf  1130720       1130720
+      QCD_HT_1000ToInf_ext1   333733        333733
+            QCD_HT_100To250  4123612       4123612
+            QCD_HT_250To500  2004219       2004219
+       QCD_HT_250To500_ext1   663953        663953
+           QCD_HT_500To1000  3214312       3214312
+      QCD_HT_500To1000_ext1   849033        849033
+                     T_tWch   986100        986100
+                  TBar_tWch   971800        971800
+          TBarToLeptons_sch   250000 320855.887262
+          TBarToLeptons_tch  1999800 50734279.1235
+                     TTJets 25446993      25446993
+             TToLeptons_sch   500000 1042218.60703
+             TToLeptons_tch  3991000 173500373.328
+      WJetsToLNu_HT100to200  5262265       5262265
+      WJetsToLNu_HT200to400  4936077       4936077
+      WJetsToLNu_HT400to600  4640594       4640594
+      WJetsToLNu_HT600toInf  4581841       4581841
 
-    tbl_xsec shows the cross sections of each component
+    tbl_xsec shows the cross sections of each component, e.g.,::
 
-    e.g.,
-                 component     xsec
-          QCD_HT_1000ToInf    769.7
-     QCD_HT_1000ToInf_ext1    769.7
-           QCD_HT_100To250 28730000
-           QCD_HT_250To500   670500
-      QCD_HT_250To500_ext1   670500
-          QCD_HT_500To1000    26740
-     QCD_HT_500To1000_ext1    26740
-                    T_tWch     35.6
-                 TBar_tWch     35.6
-         TBarToLeptons_sch  1.34784
-         TBarToLeptons_tch 26.23428
-                    TTJets    809.1
-            TToLeptons_sch   2.3328
-            TToLeptons_tch  44.0802
-     WJetsToLNu_HT100to200  2234.91
-     WJetsToLNu_HT200to400  580.068
-     WJetsToLNu_HT400to600  68.4003
-     WJetsToLNu_HT600toInf  23.1363
+                  component     xsec
+           QCD_HT_1000ToInf    769.7
+      QCD_HT_1000ToInf_ext1    769.7
+            QCD_HT_100To250 28730000
+            QCD_HT_250To500   670500
+       QCD_HT_250To500_ext1   670500
+           QCD_HT_500To1000    26740
+      QCD_HT_500To1000_ext1    26740
+                     T_tWch     35.6
+                  TBar_tWch     35.6
+          TBarToLeptons_sch  1.34784
+          TBarToLeptons_tch 26.23428
+                     TTJets    809.1
+             TToLeptons_sch   2.3328
+             TToLeptons_tch  44.0802
+      WJetsToLNu_HT100to200  2234.91
+      WJetsToLNu_HT200to400  580.068
+      WJetsToLNu_HT400to600  68.4003
+      WJetsToLNu_HT600toInf  23.1363
 
     All components in the same phase space need to have the same cross
     section. In the example above, QCD_HT_1000ToInf and
@@ -147,26 +143,26 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     return value
 
     The function returns the data frame for the cross sections in the
-    same bins by processes.
+    same bins by processes.::
 
-    process          met      xsec       xsecvar
-        QCD    15.848932  0.013687  8.688971e-05
-        QCD    19.952623  0.052646  3.464539e-04
-        QCD    25.118864  0.264983  6.323639e-02
-        QCD    31.622777  0.266034  6.323694e-02
-        QCD    39.810717  0.034481  2.173624e-04
-        QCD    50.118723  0.300515  6.345431e-02
-        QCD    63.095734  0.053697  3.470063e-04
-        QCD    79.432823  0.265508  6.323667e-02
-        QCD   100.000000  0.015264  8.771844e-05
-        QCD   125.892541  0.014213  8.716595e-05
-        QCD   158.489319  0.006581  4.330673e-05
-        QCD   199.526231  0.000000  0.000000e+00
-          T     1.584893  0.000073  2.645322e-09
-          T     1.995262  0.000109  3.987302e-09
-          T     2.511886  0.000445  1.499073e-08
-          T     3.162278  0.000571  1.545752e-08
-          T     3.981072  0.001429  3.620408e-08
+     process          met      xsec       xsecvar
+         QCD    15.848932  0.013687  8.688971e-05
+         QCD    19.952623  0.052646  3.464539e-04
+         QCD    25.118864  0.264983  6.323639e-02
+         QCD    31.622777  0.266034  6.323694e-02
+         QCD    39.810717  0.034481  2.173624e-04
+         QCD    50.118723  0.300515  6.345431e-02
+         QCD    63.095734  0.053697  3.470063e-04
+         QCD    79.432823  0.265508  6.323667e-02
+         QCD   100.000000  0.015264  8.771844e-05
+         QCD   125.892541  0.014213  8.716595e-05
+         QCD   158.489319  0.006581  4.330673e-05
+         QCD   199.526231  0.000000  0.000000e+00
+           T     1.584893  0.000073  2.645322e-09
+           T     1.995262  0.000109  3.987302e-09
+           T     2.511886  0.000445  1.499073e-08
+           T     3.162278  0.000571  1.545752e-08
+           T     3.981072  0.001429  3.620408e-08
 
     The unit of 'xsec' will be the same as in tbx_xsec. In this
     example, it is pb.
