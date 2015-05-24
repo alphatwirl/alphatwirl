@@ -4,7 +4,8 @@ import sys
 import os, errno
 import itertools
 
-from HeppyResult.HeppyResultReader import HeppyResultReader
+from HeppyResult.ComponentReaderBundle import ComponentReaderBundle
+from HeppyResult.ComponentLoop import ComponentLoop
 from HeppyResult.HeppyResult import HeppyResult
 from EventReader.EventReaderBundle import EventReaderBundle
 from EventReader.EventReaderPackage import EventReaderPackage
@@ -140,13 +141,14 @@ class AlphaTwirl(object):
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
         mkdir_p(self.args.outDir)
-        heppyResultReader = self._buildHeppyResultReader()
+        componentReaderBundle = self._buildComponentReaderBundle()
+        componentLoop = ComponentLoop(componentReaderBundle)
         heppyResult = HeppyResult(self.args.heppydir)
-        heppyResultReader.read(heppyResult)
+        componentLoop(heppyResult.components())
 
-    def _buildHeppyResultReader(self):
-        heppyResultReader = HeppyResultReader()
-        while len(self.componentReaders) > 0: heppyResultReader.addReader(self.componentReaders.pop(0))
-        return heppyResultReader
+    def _buildComponentReaderBundle(self):
+        componentReaderBundle = ComponentReaderBundle()
+        while len(self.componentReaders) > 0: componentReaderBundle.addReader(self.componentReaders.pop(0))
+        return componentReaderBundle
 
 ##____________________________________________________________________________||
