@@ -1,7 +1,23 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Collector(object):
+
+    """This class collects results, i.e., this class combines results
+    of readers and deliver them.
+
+    Methods for combination and delivery are specified at the
+    instantiation.
+
+    Readers are typically instances of the same class initialized in
+    the same way. Each reader reads a data set. A pair of the name of
+    a data set and the reader that reads the data set is given to this
+    class via the method ``addReader``.
+
+    The method ``collect`` is called after the event loop.
+
+    """
+
     def __init__(self, resultsCombinationMethod, deliveryMethod):
         self.resultsCombinationMethod = resultsCombinationMethod
         self.deliveryMethod = deliveryMethod
@@ -15,4 +31,4 @@ class Collector(object):
         results = self.resultsCombinationMethod.combine(self._datasetReaderPairs)
         self.deliveryMethod.deliver(results)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
