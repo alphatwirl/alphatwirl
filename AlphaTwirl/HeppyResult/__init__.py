@@ -1,4 +1,6 @@
 from HeppyResultReader import HeppyResultReader
+from ComponentLoop import ComponentLoop
+from ComponentReaderBundle import ComponentReaderBundle
 from HeppyResult import HeppyResult, defaultExcludeList
 from Component import Component
 from ReadComponentConfig import ReadComponentConfig
