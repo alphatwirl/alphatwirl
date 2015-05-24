@@ -3,7 +3,7 @@
 import os
 import argparse
 from AlphaTwirl import CombineIntoList, WriteListToFile
-from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, HeppyResultReader
+from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, ComponentReaderBundle, ComponentLoop
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector, EventReaderPackage, MPEventLoopRunner, EventReaderBundle
@@ -59,11 +59,12 @@ readerBundle.addReaderPackage(readerPackage1)
 readerBundle.addReaderPackage(readerPackage2)
 readerBundle.addReaderPackage(readerPackage3)
 
-heppyResultReader = HeppyResultReader()
-heppyResultReader.addReader(readerBundle)
+componentReaderBundle = ComponentReaderBundle()
+componentReaderBundle.addReader(readerBundle)
+componentLoop = ComponentLoop(componentReaderBundle)
 
 heppyResult = HeppyResult(args.heppydir)
 
-heppyResultReader.read(heppyResult)
+componentLoop(heppyResult.components())
 
 ##__________________________________________________________________||
