@@ -18,7 +18,6 @@ class ComponentReaderBundle(object):
             reader.read(component)
 
     def end(self):
-        for reader in self.readers:
-            reader.end()
+        return [reader.end() for reader in self.readers]
 
 ##____________________________________________________________________________||
