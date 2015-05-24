@@ -14,7 +14,8 @@ class Collector(object):
     a data set and the reader that reads the data set is given to this
     class via the method ``addReader``.
 
-    The method ``collect`` is called after the event loop.
+    The method ``collect`` is called after the event loop. It returns
+    the combined results.
 
     """
 
@@ -30,5 +31,6 @@ class Collector(object):
     def collect(self):
         results = self.resultsCombinationMethod.combine(self._datasetReaderPairs)
         self.deliveryMethod.deliver(results)
+        return results
 
 ##__________________________________________________________________||

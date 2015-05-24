@@ -44,8 +44,9 @@ class TestCollector(unittest.TestCase):
 
         self.assertIsNone(method.readers)
         self.assertIsNone(deliveryMethod.results)
-        collector.collect()
+        self.assertEqual(4234, collector.collect())
         self.assertEqual([('data1', reader1), ('data2', reader2)], resultsCombinationMethod.readers)
         self.assertEqual(4234, deliveryMethod.results)
+
 
 ##____________________________________________________________________________||
