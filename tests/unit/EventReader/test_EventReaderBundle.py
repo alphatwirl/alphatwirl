@@ -61,7 +61,7 @@ class MockEventLoop(object):
         self.eventSelection = eventSelection
 
 ##____________________________________________________________________________||
-class TestEventReaderEventReaderBundle(unittest.TestCase):
+class TestEventReaderBundle(unittest.TestCase):
 
     def test_eventBuilder_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
