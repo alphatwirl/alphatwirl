@@ -20,7 +20,6 @@ from Counter.CounterFactory import CounterFactory
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
 from EventReader.Collector import Collector
-from mkdir_p import mkdir_p
 
 try:
     from HeppyResult.BEventBuilder import BEventBuilder as EventBuilder
@@ -131,7 +130,6 @@ class AlphaTwirl(object):
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
-        mkdir_p(self.args.outDir)
         componentReaderBundle = self._buildComponentReaderBundle()
         componentLoop = ComponentLoop(componentReaderBundle)
         heppyResult = HeppyResult(self.args.heppydir)

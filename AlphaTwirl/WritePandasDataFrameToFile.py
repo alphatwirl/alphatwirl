@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+from .mkdir_p import mkdir_p
+import os
 
 ##____________________________________________________________________________||
 class WritePandasDataFrameToFile(object):
@@ -15,7 +17,10 @@ class WritePandasDataFrameToFile(object):
             f.write("\n")
         self._close(f)
 
-    def _open(self, path): return open(path, 'w')
+    def _open(self, path):
+        mkdir_p(os.path.dirname(path))
+        return open(path, 'w')
+
     def _close(self, file): file.close()
 
 ##____________________________________________________________________________||

@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+from .mkdir_p import mkdir_p
+import os
 
 ##____________________________________________________________________________||
 class WriteListToFile(object):
@@ -52,7 +54,10 @@ class WriteListToFile(object):
         #     data2   11  2.0 323432.2234
 
 
-    def _open(self, path): return open(path, 'w')
+    def _open(self, path):
+        mkdir_p(os.path.dirname(path))
+        return open(path, 'w')
+
     def _close(self, file): file.close()
 
 ##____________________________________________________________________________||
