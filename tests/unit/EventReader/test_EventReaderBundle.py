@@ -70,6 +70,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
+        component1.name = "compName1"
         bundle.read(component1)
         self.assertIs(eventBuilder, eventLoopRunner.eventLoop.eventBuilder)
 
@@ -81,6 +82,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
         bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
+        component1.name = "compName1"
         bundle.read(component1)
         self.assertIs(eventSelection, eventLoopRunner.eventLoop.eventSelection)
 
@@ -96,6 +98,7 @@ class TestEventReaderEventReaderBundle(unittest.TestCase):
 
         self.assertIsNone(eventLoopRunner.eventLoop)
         component1 = MockComponent()
+        component1.name = "compName1"
         bundle.read(component1)
         self.assertIs(component1, eventLoopRunner.eventLoop.component)
         self.assertIsInstance(eventLoopRunner.eventLoop, MockEventLoop)
