@@ -14,7 +14,6 @@ from EventReader.MPEventLoopRunner import MPEventLoopRunner
 from ProgressBar.ProgressBar import ProgressBar
 from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
 from Counter.Counts import Counts
-from Counter.GenericKeyComposer import GenericKeyComposer
 from Counter.GenericKeyComposerB import GenericKeyComposerBFactory
 from Counter.CounterFactory import CounterFactory
 from CombineIntoList import CombineIntoList
