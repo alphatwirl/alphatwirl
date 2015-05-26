@@ -21,7 +21,7 @@ class Collector(object):
 
     def __init__(self, resultsCombinationMethod, deliveryMethod):
         self.resultsCombinationMethod = resultsCombinationMethod
-        self.deliveryMethod = deliveryMethod
+        self.deliveryMethod = deliveryMethod if deliveryMethod is not None else NullDeliveryMethod()
 
         self._datasetReaderPairs = [ ]
 
@@ -32,5 +32,9 @@ class Collector(object):
         results = self.resultsCombinationMethod.combine(self._datasetReaderPairs)
         self.deliveryMethod.deliver(results)
         return results
+
+##__________________________________________________________________||
+class NullDeliveryMethod(object):
+    def deliver(self, results): pass
 
 ##__________________________________________________________________||
