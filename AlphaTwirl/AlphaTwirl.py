@@ -59,7 +59,7 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
     return ret
 
 ##__________________________________________________________________||
-def createPackageFor(tblcfg):
+def createEventReaderCollectorAssociator(tblcfg):
     keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     counterFactory = CounterFactory(
         countMethodClass = tblcfg['countsClass'],
@@ -94,7 +94,7 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
 def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
-    eventReaderCollectorAssociators = [createPackageFor(c) for c in tableConfigs]
+    eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
     eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, args.processes, args.quiet)
     return eventReaderBundle
