@@ -1,5 +1,5 @@
 from EventReaderBundle import EventReaderBundle
-from EventReaderPackageBundle import EventReaderPackageBundle
+from EventReaderCollectorAssociatorComposite import EventReaderCollectorAssociatorComposite
 from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
 from EventReaderCollectorAssociator import EventReaderCollectorAssociator

@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderPackageBundle
+from AlphaTwirl.EventReader import EventReaderCollectorAssociatorComposite
 import unittest
 
 ##__________________________________________________________________||
@@ -24,11 +24,11 @@ class MockReaderPackage(object):
         self.collected = True
 
 ##__________________________________________________________________||
-class TestEventReaderPackageBundle(unittest.TestCase):
+class TestEventReaderCollectorAssociatorComposite(unittest.TestCase):
 
     def test_packages_read_and_collected(self):
 
-        bundle = EventReaderPackageBundle()
+        bundle = EventReaderCollectorAssociatorComposite()
 
         package1 = MockReaderPackage()
         bundle.add(package1)

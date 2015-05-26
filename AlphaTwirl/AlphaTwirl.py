@@ -9,7 +9,7 @@ from HeppyResult.ComponentLoop import ComponentLoop
 from HeppyResult.HeppyResult import HeppyResult
 from EventReader.EventReaderBundle import EventReaderBundle
 from EventReader.EventReaderCollectorAssociator import EventReaderCollectorAssociator
-from EventReader.EventReaderPackageBundle import EventReaderPackageBundle
+from EventReader.EventReaderCollectorAssociatorComposite import EventReaderCollectorAssociatorComposite
 from EventReader.EventLoopRunner import EventLoopRunner
 from EventReader.MPEventLoopRunner import MPEventLoopRunner
 from ProgressBar.ProgressBar import ProgressBar
@@ -84,7 +84,7 @@ def buildEventLoopRunner(progressBar, processes, quiet):
 ##__________________________________________________________________||
 def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, processes, quiet):
     progressBar = None if quiet else ProgressBar()
-    eventReaderCollectorAssociatorBundle = EventReaderPackageBundle(progressBar)
+    eventReaderCollectorAssociatorBundle = EventReaderCollectorAssociatorComposite(progressBar)
     for package in eventReaderCollectorAssociators: eventReaderCollectorAssociatorBundle.add(package)
     eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = processes, quiet = quiet)
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorBundle, eventSelection = eventSelection)

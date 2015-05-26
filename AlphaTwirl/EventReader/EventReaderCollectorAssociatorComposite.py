@@ -31,7 +31,7 @@ class EventReaderComposite(object):
         return [reader.results() for reader in self.readers]
 
 ##__________________________________________________________________||
-class EventReaderPackageBundle(object):
+class EventReaderCollectorAssociatorComposite(object):
 
     def __init__(self, progressBar = None):
         self._packages = [ ]
