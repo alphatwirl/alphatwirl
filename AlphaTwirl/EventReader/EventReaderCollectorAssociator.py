@@ -28,11 +28,11 @@ class EventReaderCollectorAssociator(object):
         return reader
 
     def collect(self):
-        self._resultCollector.collect()
+        return self._resultCollector.collect()
 
 ##____________________________________________________________________________||
 class NullCollector(object):
-    def collect(self): pass
+    def collect(self): return None
     def addReader(self, datasetName, reader): pass
 
 ##____________________________________________________________________________||
