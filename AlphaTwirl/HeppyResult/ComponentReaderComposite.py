@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-class ComponentReaderBundle(object):
+class ComponentReaderComposite(object):
 
     def __init__(self):
         self.readers = [ ]

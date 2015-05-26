@@ -1,4 +1,4 @@
-from AlphaTwirl.HeppyResult import ComponentReaderBundle
+from AlphaTwirl.HeppyResult import ComponentReaderComposite
 import unittest
 
 ##__________________________________________________________________||
@@ -18,10 +18,10 @@ class MockReader:
 class MockComponent: pass
 
 ##__________________________________________________________________||
-class TestComponentReaderBundle(unittest.TestCase):
+class TestComponentReaderComposite(unittest.TestCase):
 
     def test_read(self):
-        bundle = ComponentReaderBundle()
+        bundle = ComponentReaderComposite()
 
         reader1 = MockReader(1111)
         bundle.addReader(reader1)

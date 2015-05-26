@@ -3,7 +3,7 @@
 import os
 import argparse
 from AlphaTwirl import CombineIntoList, WriteListToFile
-from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, ComponentReaderBundle, ComponentLoop
+from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, ComponentReaderComposite, ComponentLoop
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReaderBundle
@@ -59,7 +59,7 @@ readerBundle.addReaderPackage(readerCollectorAssociator1)
 readerBundle.addReaderPackage(readerCollectorAssociator2)
 readerBundle.addReaderPackage(readerCollectorAssociator3)
 
-componentReaderBundle = ComponentReaderBundle()
+componentReaderBundle = ComponentReaderComposite()
 componentReaderBundle.addReader(readerBundle)
 componentLoop = ComponentLoop(componentReaderBundle)
 
