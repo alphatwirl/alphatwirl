@@ -42,12 +42,14 @@ class ArgumentParser(argparse.ArgumentParser):
 defaultCountsClass = Counts
 
 ##__________________________________________________________________||
-def completeTableConfig(tblcfg, outDir):
+def completeTableConfig(tblcfg, outDir = None):
     if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
     if 'indices' not in tblcfg: tblcfg['indices'] = None
-    if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
     if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsClass
-    if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
+    if 'outFile' not in tblcfg: tblcfg['outFile'] = True
+    if tblcfg['outFile']:
+        if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
+        if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
     return tblcfg
 
 ##__________________________________________________________________||
@@ -67,7 +69,7 @@ def createEventReaderCollectorAssociator(tblcfg):
         binnings = tblcfg['binnings']
     )
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
-    deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
+    deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
     return EventReaderCollectorAssociator(counterFactory, collector)
 
@@ -93,7 +95,7 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
 ##__________________________________________________________________||
 def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
-    if not args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
+    if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
     eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, args.processes, args.quiet)
