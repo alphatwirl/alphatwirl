@@ -26,6 +26,6 @@ class EventReaderBundle(object):
 
     def end(self):
         self.eventLoopRunner.end()
-        self.readerCollectorAssociator.collect()
+        return self.readerCollectorAssociator.collect()
 
 ##__________________________________________________________________||
