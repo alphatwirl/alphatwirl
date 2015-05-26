@@ -20,8 +20,8 @@ class EventReaderBundle(object):
         self.eventLoopRunner.begin()
 
     def read(self, component):
-        readers = self.readerPackage.make(component.name)
-        eventLoop = self.EventLoop(self.eventBuilder, self.eventSelection, component, readers)
+        reader = self.readerPackage.make(component.name)
+        eventLoop = self.EventLoop(self.eventBuilder, self.eventSelection, component, reader)
         self.eventLoopRunner.run(eventLoop)
 
     def end(self):
