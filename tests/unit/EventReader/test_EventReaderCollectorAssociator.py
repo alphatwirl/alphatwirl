@@ -16,29 +16,30 @@ class MockCollector(object):
 
     def collect(self):
         self.collected = True
+        return 1234
 
 ##____________________________________________________________________________||
 class TestEventReaderCollectorAssociator(unittest.TestCase):
 
     def test_make(self):
         collector = MockCollector()
-        package = EventReaderCollectorAssociator(MockReader, collector)
+        associator = EventReaderCollectorAssociator(MockReader, collector)
 
-        reader = package.make("data1")
+        reader = associator.make("data1")
         self.assertIsInstance(reader, MockReader)
 
         self.assertEqual([("data1", reader)], collector.readers)
 
     def test_collect(self):
         collector = MockCollector()
-        package = EventReaderCollectorAssociator(MockReader, collector)
+        associator = EventReaderCollectorAssociator(MockReader, collector)
 
         self.assertFalse(collector.collected)
-        package.collect()
+        self.assertEqual(1234, associator.collect())
         self.assertTrue(collector.collected)
 
     def test_no_collector(self):
-        package = EventReaderCollectorAssociator(MockReader)
-        package.collect()
+        associator = EventReaderCollectorAssociator(MockReader)
+        self.assertIsNone(associator.collect())
 
 ##____________________________________________________________________________||
