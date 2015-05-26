@@ -19,7 +19,7 @@ class Collector(object):
 
     """
 
-    def __init__(self, resultsCombinationMethod, deliveryMethod):
+    def __init__(self, resultsCombinationMethod, deliveryMethod = None):
         self.resultsCombinationMethod = resultsCombinationMethod
         self.deliveryMethod = deliveryMethod if deliveryMethod is not None else NullDeliveryMethod()
 
