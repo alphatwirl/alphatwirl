@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderPackage
+from AlphaTwirl.EventReader import EventReaderCollectorAssociator
 import unittest
 
 ##____________________________________________________________________________||
@@ -18,11 +18,11 @@ class MockCollector(object):
         self.collected = True
 
 ##____________________________________________________________________________||
-class TestEventReaderPackage(unittest.TestCase):
+class TestEventReaderCollectorAssociator(unittest.TestCase):
 
     def test_make(self):
         collector = MockCollector()
-        package = EventReaderPackage(MockReader, collector)
+        package = EventReaderCollectorAssociator(MockReader, collector)
 
         reader = package.make("data1")
         self.assertIsInstance(reader, MockReader)
@@ -31,14 +31,14 @@ class TestEventReaderPackage(unittest.TestCase):
 
     def test_collect(self):
         collector = MockCollector()
-        package = EventReaderPackage(MockReader, collector)
+        package = EventReaderCollectorAssociator(MockReader, collector)
 
         self.assertFalse(collector.collected)
         package.collect()
         self.assertTrue(collector.collected)
 
     def test_no_collector(self):
-        package = EventReaderPackage(MockReader)
+        package = EventReaderCollectorAssociator(MockReader)
         package.collect()
 
 ##____________________________________________________________________________||

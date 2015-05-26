@@ -8,7 +8,7 @@ from HeppyResult.ComponentReaderBundle import ComponentReaderBundle
 from HeppyResult.ComponentLoop import ComponentLoop
 from HeppyResult.HeppyResult import HeppyResult
 from EventReader.EventReaderBundle import EventReaderBundle
-from EventReader.EventReaderPackage import EventReaderPackage
+from EventReader.EventReaderCollectorAssociator import EventReaderCollectorAssociator
 from EventReader.EventReaderPackageBundle import EventReaderPackageBundle
 from EventReader.EventLoopRunner import EventLoopRunner
 from EventReader.MPEventLoopRunner import MPEventLoopRunner
@@ -69,7 +69,7 @@ def createPackageFor(tblcfg):
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
     deliveryMethod = WriteListToFile(tblcfg['outFilePath'])
     collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return EventReaderPackage(counterFactory, collector)
+    return EventReaderCollectorAssociator(counterFactory, collector)
 
 ##____________________________________________________________________________||
 def buildEventLoopRunner(progressBar, processes, quiet):
@@ -82,21 +82,21 @@ def buildEventLoopRunner(progressBar, processes, quiet):
     return eventLoopRunner
 
 ##____________________________________________________________________________||
-def createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, processes, quiet):
+def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, processes, quiet):
     progressBar = None if quiet else ProgressBar()
-    eventReaderPackageBundle = EventReaderPackageBundle(progressBar)
-    for package in eventReaderPackages: eventReaderPackageBundle.add(package)
+    eventReaderCollectorAssociatorBundle = EventReaderPackageBundle(progressBar)
+    for package in eventReaderCollectorAssociators: eventReaderCollectorAssociatorBundle.add(package)
     eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = processes, quiet = quiet)
-    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderPackageBundle, eventSelection = eventSelection)
+    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorBundle, eventSelection = eventSelection)
     return eventReaderBundle
 
 ##____________________________________________________________________________||
 def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
-    eventReaderPackages = [createPackageFor(c) for c in tableConfigs]
+    eventReaderCollectorAssociators = [createPackageFor(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderPackages, args.processes, args.quiet)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, args.processes, args.quiet)
     return eventReaderBundle
 
 ##____________________________________________________________________________||

@@ -66,8 +66,8 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventBuilder_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerPackage = MockReaderPackage()
-        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerPackage)
+        readerCollectorAssociator = MockReaderPackage()
+        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
@@ -78,9 +78,9 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventSelection_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerPackage = MockReaderPackage()
+        readerCollectorAssociator = MockReaderPackage()
         eventSelection = MockEventSelection()
-        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerPackage, eventSelection)
+        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator, eventSelection)
         bundle.EventLoop = MockEventLoop
 
         component1 = MockComponent()
@@ -91,8 +91,8 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventLoopRunner_called(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerPackage = MockReaderPackage()
-        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerPackage)
+        readerCollectorAssociator = MockReaderPackage()
+        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
         self.assertFalse(eventLoopRunner.began)
@@ -113,8 +113,8 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_packages_read_and_collected(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerPackage = MockReaderPackage()
-        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerPackage)
+        readerCollectorAssociator = MockReaderPackage()
+        bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
         bundle.begin()
@@ -123,16 +123,16 @@ class TestEventReaderBundle(unittest.TestCase):
         component1.name = "compName1"
         bundle.read(component1)
         self.assertIs("compName1", eventLoopRunner.eventLoop.component.name)
-        self.assertEqual([readerPackage.reader], eventLoopRunner.eventLoop.readers)
+        self.assertEqual([readerCollectorAssociator.reader], eventLoopRunner.eventLoop.readers)
 
         component2 = MockComponent()
         component2.name = "compName2"
         bundle.read(component2)
         self.assertIs("compName2", eventLoopRunner.eventLoop.component.name)
-        self.assertEqual([readerPackage.reader],eventLoopRunner.eventLoop.readers)
+        self.assertEqual([readerCollectorAssociator.reader],eventLoopRunner.eventLoop.readers)
 
-        self.assertFalse(readerPackage.collected)
+        self.assertFalse(readerCollectorAssociator.collected)
         bundle.end()
-        self.assertTrue(readerPackage.collected)
+        self.assertTrue(readerCollectorAssociator.collected)
 
 ##__________________________________________________________________||

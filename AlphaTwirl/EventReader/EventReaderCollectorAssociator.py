@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##____________________________________________________________________________||
-class EventReaderPackage(object):
+class EventReaderCollectorAssociator(object):
 
     """This class relates event readers and a result collector.
 

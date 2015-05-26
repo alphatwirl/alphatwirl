@@ -44,10 +44,10 @@ AlphaTwirl.EventReader.EventReaderBundle module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.EventReader.EventReaderPackage module
+AlphaTwirl.EventReader.EventReaderCollectorAssociator module
 ------------------------------------------------
 
-.. automodule:: AlphaTwirl.EventReader.EventReaderPackage
+.. automodule:: AlphaTwirl.EventReader.EventReaderCollectorAssociator
     :members:
     :undoc-members:
     :show-inheritance:

@@ -6,7 +6,7 @@ from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderPackage, EventLoop
+from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, EventLoop
 from AlphaTwirl.ProgressBar import ProgressBar, ProgressMonitor
 
 ##__________________________________________________________________||
@@ -27,7 +27,7 @@ counterFactory1 = CounterFactory(Counts, keyComposer1, (binning1, ))
 resultsCombinationMethod1 = CombineIntoList(('met', ))
 deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
-readerPackage1 = EventReaderPackage(counterFactory1, collector1)
+readerCollectorAssociator1 = EventReaderCollectorAssociator(counterFactory1, collector1)
 
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
 binning2 = RoundLog(0.1, 0)
@@ -36,7 +36,7 @@ counterFactory2 = CounterFactory(Counts, keyComposer2, (binning2, ))
 resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
 deliveryMethod2 = WriteListToFile(outPath2)
 collector2 = Collector(resultsCombinationMethod2, deliveryMethod2)
-readerPackage2 = EventReaderPackage(counterFactory2, collector2)
+readerCollectorAssociator2 = EventReaderCollectorAssociator(counterFactory2, collector2)
 
 outPath3 = os.path.join(args.outdir, 'tbl_njets_nbjets.txt')
 binning31 = Echo()
@@ -46,7 +46,7 @@ counterFactory3 = CounterFactory(Counts, keyComposer3, (binning31, binning32))
 resultsCombinationMethod3 = CombineIntoList(('njets', 'nbjets'))
 deliveryMethod3 = WriteListToFile(outPath3)
 collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
-readerPackage3 = EventReaderPackage(counterFactory3, collector3)
+readerCollectorAssociator3 = EventReaderCollectorAssociator(counterFactory3, collector3)
 
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
@@ -62,17 +62,17 @@ progressReporter = progressMonitor.createReporter()
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
-    reader1 = readerPackage1.make(component.name)
-    reader2 = readerPackage2.make(component.name)
-    reader3 = readerPackage3.make(component.name)
+    reader1 = readerCollectorAssociator1.make(component.name)
+    reader2 = readerCollectorAssociator2.make(component.name)
+    reader3 = readerCollectorAssociator3.make(component.name)
 
     readers = (reader1, reader2, reader3)
 
     eventLoop = EventLoop(eventBuilder, eventSelection, component, readers)
     eventLoop(progressReporter)
 
-readerPackage1.collect()
-readerPackage2.collect()
-readerPackage3.collect()
+readerCollectorAssociator1.collect()
+readerCollectorAssociator2.collect()
+readerCollectorAssociator3.collect()
 
 ##__________________________________________________________________||
