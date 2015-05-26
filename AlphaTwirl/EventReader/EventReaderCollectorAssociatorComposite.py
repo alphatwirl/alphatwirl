@@ -34,25 +34,25 @@ class EventReaderComposite(object):
 class EventReaderCollectorAssociatorComposite(object):
 
     def __init__(self, progressBar = None):
-        self._packages = [ ]
+        self.associators = [ ]
         self.progressBar = progressBar
 
-    def add(self, package):
-        self._packages.append(package)
+    def add(self, associator):
+        self.associators.append(associator)
 
     def make(self, datasetName):
         readerComposite = EventReaderComposite()
-        for package in self._packages:
-            reader = package.make(datasetName)
+        for associator in self.associators:
+            reader = associator.make(datasetName)
             readerComposite.add(reader)
         return readerComposite
 
     def collect(self):
-        for i, package in enumerate(self._packages):
+        for i, associator in enumerate(self.associators):
             if self.progressBar is not None:
-                report = ProgressReport(name = "collecting results", done = i + 1, total = len(self._packages))
+                report = ProgressReport(name = "collecting results", done = i + 1, total = len(self.associators))
                 self.progressBar.present(report)
-            package.collect()
+            associator.collect()
 
 
 ##__________________________________________________________________||
