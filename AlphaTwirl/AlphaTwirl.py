@@ -26,7 +26,7 @@ try:
 except ImportError:
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class ArgumentParser(argparse.ArgumentParser):
 
     def __init__(self, owner, *args, **kwargs):
@@ -38,10 +38,10 @@ class ArgumentParser(argparse.ArgumentParser):
         self.owner.args = args
         return args
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 defaultCountsClass = Counts
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def completeTableConfig(tblcfg, outDir):
     if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
     if 'indices' not in tblcfg: tblcfg['indices'] = None
@@ -50,7 +50,7 @@ def completeTableConfig(tblcfg, outDir):
     if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
     return tblcfg
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
     # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
     # l will be ['var1', '1', 'var2', 'var3', '2']
@@ -58,7 +58,7 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
     ret = prefix + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
     return ret
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def createPackageFor(tblcfg):
     keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     counterFactory = CounterFactory(
@@ -71,7 +71,7 @@ def createPackageFor(tblcfg):
     collector = Collector(resultsCombinationMethod, deliveryMethod)
     return EventReaderCollectorAssociator(counterFactory, collector)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def buildEventLoopRunner(progressBar, processes, quiet):
     if processes is None:
         progressMonitor = None if quiet else ProgressMonitor(presentation = progressBar)
@@ -81,7 +81,7 @@ def buildEventLoopRunner(progressBar, processes, quiet):
         eventLoopRunner = MPEventLoopRunner(processes, progressMonitor)
     return eventLoopRunner
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, processes, quiet):
     progressBar = None if quiet else ProgressBar()
     eventReaderCollectorAssociatorBundle = EventReaderPackageBundle(progressBar)
@@ -90,7 +90,7 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorBundle, eventSelection = eventSelection)
     return eventReaderBundle
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if not os.path.exists(c['outFilePath'])]
@@ -99,12 +99,12 @@ def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, event
     eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, args.processes, args.quiet)
     return eventReaderBundle
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class AlphaTwirl(object):
 
     def __init__(self):
         self.args = None
-        self.componentReaders = [ ]
+        self.componentReaders = ComponentReaderComposite()
 
     def ArgumentParser(self, *args, **kwargs):
         parser = ArgumentParser(self, *args, **kwargs)
@@ -121,7 +121,7 @@ class AlphaTwirl(object):
         return parser
 
     def addComponentReader(self, reader):
-        self.componentReaders.append(reader)
+        self.componentReaders.add(reader)
 
     def addTreeReader(self, **kargs):
         if self.args is None: self.ArgumentParser().parse_args()
@@ -130,14 +130,8 @@ class AlphaTwirl(object):
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
-        componentReaderBundle = self._buildComponentReaderComposite()
-        componentLoop = ComponentLoop(componentReaderBundle)
+        componentLoop = ComponentLoop(self.componentReaders)
         heppyResult = HeppyResult(self.args.heppydir)
         componentLoop(heppyResult.components())
 
-    def _buildComponentReaderComposite(self):
-        componentReaderBundle = ComponentReaderComposite()
-        while len(self.componentReaders) > 0: componentReaderBundle.add(self.componentReaders.pop(0))
-        return componentReaderBundle
-
-##____________________________________________________________________________||
+##__________________________________________________________________||
