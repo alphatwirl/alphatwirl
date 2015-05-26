@@ -4,10 +4,10 @@ import uuid
 
 ##____________________________________________________________________________||
 class EventLoop(object):
-    def __init__(self, eventBuilder, eventSelection, component, readers):
+    def __init__(self, eventBuilder, eventSelection, component, reader):
         self.eventBuilder = eventBuilder
         self.component = component
-        self.readers = readers
+        self.reader = reader
         self.progressReportWriter = EventLoopProgressReportWriter()
         self.eventSelection = eventSelection
 
@@ -17,13 +17,13 @@ class EventLoop(object):
     def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
         self.reportProgress(progressReporter, events)
-        for reader in self.readers: reader.begin(events)
+        self.reader.begin(events)
         for event in events:
             self.reportProgress(progressReporter, event)
             if not self.eventSelection(event): continue
-            for reader in self.readers: reader.event(event)
-        for reader in self.readers: reader.end()
-        return self.readers
+            self.reader.event(event)
+        self.reader.end()
+        return self.reader
 
     def reportProgress(self, progressReporter, event):
         if progressReporter is None: return

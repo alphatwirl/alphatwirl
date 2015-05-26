@@ -15,23 +15,21 @@ class MockReader(object):
 
 ##____________________________________________________________________________||
 class MockEventLoop(object):
-    def __init__(self, readers):
-        self.readers = readers
+    def __init__(self, reader):
+        self.reader = reader
 
     def __call__(self, progressReporter):
-        for reader in self.readers:
-            reader._results = 3456
-        return self.readers
+        self.reader._results = 3456
+        return self.reader
 
 ##____________________________________________________________________________||
 class MockEventLoopForProgressReporterTest(object):
-    def __init__(self, readers):
-        self.readers = readers
+    def __init__(self, reader):
+        self.reader = reader
 
     def __call__(self, progressReporter):
-        for reader in self.readers:
-            reader._results = [3456, progressReporter]
-        return self.readers
+        self.reader._results = [3456, progressReporter]
+        return self.reader
 
 ##____________________________________________________________________________||
 class MockProgressReporter(object):
@@ -56,39 +54,32 @@ class TestMPEventLoopRunner(unittest.TestCase):
         runner = MPEventLoopRunner()
         runner.begin()
 
-        reader1 = MockReader()
-        reader2 = MockReader()
-        eventLoop = MockEventLoop([reader1, reader2])
+        reader = MockReader()
+        eventLoop = MockEventLoop(reader)
         runner.run(eventLoop)
 
-        self.assertIsNone(reader1._results)
-        self.assertIsNone(reader2._results)
+        self.assertIsNone(reader._results)
 
         runner.end()
 
-        self.assertEqual(3456, reader1._results)
-        self.assertEqual(3456, reader2._results)
+        self.assertEqual(3456, reader._results)
 
     def test_ProgressMonitor(self):
         progressMonitor = MockProgressMonitor()
         runner = MPEventLoopRunner(nprocesses = 3, progressMonitor = progressMonitor)
         runner.begin()
 
-        reader1 = MockReader()
-        reader2 = MockReader()
-        eventLoop = MockEventLoopForProgressReporterTest([reader1, reader2])
+        reader = MockReader()
+        eventLoop = MockEventLoopForProgressReporterTest(reader)
         runner.run(eventLoop)
 
-        self.assertIsNone(reader1._results)
-        self.assertIsNone(reader2._results)
+        self.assertIsNone(reader._results)
 
         runner.end()
 
-        self.assertEqual(3456, reader1._results[0])
-        self.assertEqual(3456, reader2._results[0])
+        self.assertEqual(3456, reader._results[0])
 
         # assert that the EventLoop received a ProgressReporter
-        self.assertIsInstance(reader1._results[1], MockProgressReporter)
-        self.assertIsInstance(reader2._results[1], MockProgressReporter)
+        self.assertIsInstance(reader._results[1], MockProgressReporter)
 
 ##____________________________________________________________________________||

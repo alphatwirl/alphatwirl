@@ -45,7 +45,7 @@ class EventReaderPackageBundle(object):
         for package in self._packages:
             reader = package.make(datasetName)
             readerComposite.add(reader)
-        return [readerComposite]
+        return readerComposite
 
     def collect(self):
         for i, package in enumerate(self._packages):

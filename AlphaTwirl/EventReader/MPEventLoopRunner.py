@@ -17,9 +17,9 @@ class Worker(multiprocessing.Process):
             if task is None:
                 self.task_queue.task_done()
                 break
-            readers = task(self.progressReporter)
+            reader = task(self.progressReporter)
             self.task_queue.task_done()
-            self.result_queue.put(readers)
+            self.result_queue.put(reader)
 
 ##____________________________________________________________________________||
 class MPEventLoopRunner(object):
@@ -41,10 +41,10 @@ class MPEventLoopRunner(object):
 
     def run(self, eventLoop):
 
-        # add ids so can collect later
-        for reader in eventLoop.readers:
-            reader.id = id(reader)
-            self._allReaders[id(reader)] = reader
+        # add id so can collect later
+        reader = eventLoop.reader
+        reader.id = id(reader)
+        self._allReaders[id(reader)] = reader
 
         self._tasks.put(eventLoop)
         self._ntasks += 1
@@ -63,9 +63,8 @@ class MPEventLoopRunner(object):
 
     def collectTaskResults(self):
         if self._results.empty(): return False
-        readers = self._results.get()
-        for reader in readers:
-            self._allReaders[reader.id].setResults(reader.results())
+        reader = self._results.get()
+        self._allReaders[reader.id].setResults(reader.results())
         return True
 
 ##____________________________________________________________________________||

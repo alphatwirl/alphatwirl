@@ -38,11 +38,11 @@ class TestEventReaderPackageBundle(unittest.TestCase):
 
         actual = bundle.make("compName1") # need to evaluate actual before expected.
         expected = [package1.reader, package2.reader]
-        self.assertEqual(expected, actual[0].readers)
+        self.assertEqual(expected, actual.readers)
 
         actual = bundle.make("compName2")
         expected = [package1.reader, package2.reader]
-        self.assertEqual(expected, actual[0].readers)
+        self.assertEqual(expected, actual.readers)
 
         self.assertFalse(package1.collected)
         self.assertFalse(package2.collected)

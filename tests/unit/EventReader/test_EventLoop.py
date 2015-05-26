@@ -58,26 +58,18 @@ class TestEventLoop(unittest.TestCase):
         events = [event1, event2, event3, event4, event5]
         component._events = events
 
-        reader1 = MockReader()
-        reader2 = MockReader()
-        readers = [reader1, reader2]
+        reader = MockReader()
 
-        loop = EventLoop(eventBuilder, eventSelection, component, readers)
+        loop = EventLoop(eventBuilder, eventSelection, component, reader)
 
-        self.assertFalse(reader1._begin)
-        self.assertFalse(reader2._begin)
-        self.assertEqual([ ], reader1._eventIds)
-        self.assertEqual([ ], reader2._eventIds)
-        self.assertFalse(reader1._end)
-        self.assertFalse(reader2._end)
+        self.assertFalse(reader._begin)
+        self.assertEqual([ ], reader._eventIds)
+        self.assertFalse(reader._end)
 
-        self.assertEqual(readers, loop())
+        self.assertEqual(reader, loop())
 
-        self.assertEqual(events, reader1._begin)
-        self.assertEqual(events, reader2._begin)
-        self.assertEqual([102, 104, 105], reader1._eventIds)
-        self.assertEqual([102, 104, 105], reader2._eventIds)
-        self.assertTrue(reader1._end)
-        self.assertTrue(reader2._end)
+        self.assertEqual(events, reader._begin)
+        self.assertEqual([102, 104, 105], reader._eventIds)
+        self.assertTrue(reader._end)
 
 ##____________________________________________________________________________||
