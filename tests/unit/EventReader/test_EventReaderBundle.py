@@ -19,17 +19,18 @@ class MockReader(object):
         self._eventIds.append(event.id)
 
 ##__________________________________________________________________||
-class MockReaderPackage(object):
+class MockEventReaderCollectorAssociator(object):
     def __init__(self):
         self.reader = None
         self.collected = False
 
     def make(self, name):
         self.reader = MockReader(name)
-        return [self.reader]
+        return self.reader
 
     def collect(self):
         self.collected = True
+        return 1234
 
 ##__________________________________________________________________||
 class MockComponent(object):
@@ -54,10 +55,10 @@ class MockEventLoopRunner(object):
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
-    def __init__(self, eventBuilder, eventSelection, component, readers):
+    def __init__(self, eventBuilder, eventSelection, component, reader):
         self.eventBuilder = eventBuilder
         self.component = component
-        self.readers = readers
+        self.reader = reader
         self.eventSelection = eventSelection
 
 ##__________________________________________________________________||
@@ -66,7 +67,7 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventBuilder_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerCollectorAssociator = MockReaderPackage()
+        readerCollectorAssociator = MockEventReaderCollectorAssociator()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
@@ -78,7 +79,7 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventSelection_passed_to_EventLoop(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerCollectorAssociator = MockReaderPackage()
+        readerCollectorAssociator = MockEventReaderCollectorAssociator()
         eventSelection = MockEventSelection()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator, eventSelection)
         bundle.EventLoop = MockEventLoop
@@ -91,7 +92,7 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_eventLoopRunner_called(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerCollectorAssociator = MockReaderPackage()
+        readerCollectorAssociator = MockEventReaderCollectorAssociator()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
@@ -113,7 +114,7 @@ class TestEventReaderBundle(unittest.TestCase):
     def test_packages_read_and_collected(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
-        readerCollectorAssociator = MockReaderPackage()
+        readerCollectorAssociator = MockEventReaderCollectorAssociator()
         bundle = EventReaderBundle(eventBuilder, eventLoopRunner, readerCollectorAssociator)
         bundle.EventLoop = MockEventLoop
 
@@ -123,16 +124,16 @@ class TestEventReaderBundle(unittest.TestCase):
         component1.name = "compName1"
         bundle.read(component1)
         self.assertIs("compName1", eventLoopRunner.eventLoop.component.name)
-        self.assertEqual([readerCollectorAssociator.reader], eventLoopRunner.eventLoop.readers)
+        self.assertEqual(readerCollectorAssociator.reader, eventLoopRunner.eventLoop.reader)
 
         component2 = MockComponent()
         component2.name = "compName2"
         bundle.read(component2)
         self.assertIs("compName2", eventLoopRunner.eventLoop.component.name)
-        self.assertEqual([readerCollectorAssociator.reader],eventLoopRunner.eventLoop.readers)
+        self.assertEqual(readerCollectorAssociator.reader,eventLoopRunner.eventLoop.reader)
 
         self.assertFalse(readerCollectorAssociator.collected)
-        bundle.end()
+        self.assertEqual(1234, bundle.end())
         self.assertTrue(readerCollectorAssociator.collected)
 
 ##__________________________________________________________________||
