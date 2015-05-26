@@ -11,5 +11,6 @@ from TblXsec import TblXsec
 
 try:
     from EventBuilder import EventBuilder
+    from BEventBuilder import BEventBuilder
 except ImportError:
     pass
