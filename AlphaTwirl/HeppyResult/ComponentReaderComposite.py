@@ -6,7 +6,7 @@ class ComponentReaderComposite(object):
     def __init__(self):
         self.readers = [ ]
 
-    def addReader(self, reader):
+    def add(self, reader):
         self.readers.append(reader)
 
     def begin(self):

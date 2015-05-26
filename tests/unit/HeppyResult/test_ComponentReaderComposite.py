@@ -24,9 +24,9 @@ class TestComponentReaderComposite(unittest.TestCase):
         bundle = ComponentReaderComposite()
 
         reader1 = MockReader(1111)
-        bundle.addReader(reader1)
+        bundle.add(reader1)
         reader2 = MockReader(2222)
-        bundle.addReader(reader2)
+        bundle.add(reader2)
 
         self.assertFalse(reader1.beginCalled)
         self.assertEqual([ ], reader1.readComponents)

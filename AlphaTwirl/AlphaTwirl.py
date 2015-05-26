@@ -137,7 +137,7 @@ class AlphaTwirl(object):
 
     def _buildComponentReaderComposite(self):
         componentReaderBundle = ComponentReaderComposite()
-        while len(self.componentReaders) > 0: componentReaderBundle.addReader(self.componentReaders.pop(0))
+        while len(self.componentReaders) > 0: componentReaderBundle.add(self.componentReaders.pop(0))
         return componentReaderBundle
 
 ##____________________________________________________________________________||
