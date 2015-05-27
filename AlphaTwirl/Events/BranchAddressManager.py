@@ -52,6 +52,9 @@ class BranchAddressManager(object):
             return
 
         leafInfo = inspectLeaf(tree, branchName)
+        if leafInfo['arraytype'] is None:
+            self.__class__.arrayDict[(tree, branchName)] = None
+            return
 
         tree.SetBranchStatus(leafInfo['name'], 1)
         if leafInfo['countname'] is not None: tree.SetBranchStatus(leafInfo['countname'], 1)
@@ -87,7 +90,7 @@ def inspectLeaf(tree, bname):
     return dict(
         name = leaf.GetName(),
         ROOTtype = leaf.GetTypeName(),
-        arraytype = typedic[leaf.GetTypeName()],
+        arraytype = typedic[leaf.GetTypeName()] if leaf.GetTypeName() in typedic else None,
         isarray = isArray,
         countname = leafcount.GetName() if isArray else None,
         countROOTtype = leafcount.GetTypeName() if isArray else None,
