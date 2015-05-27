@@ -42,7 +42,7 @@ for leaf in tree.GetListOfLeaves():
     row = [ ]
     row.append(leaf.GetName())
     row.append(leaf.GetTypeName())
-    row.append(typedic[leaf.GetTypeName()])
+    row.append(typedic[leaf.GetTypeName()] if leaf.GetTypeName() in typedic else "unknown")
     row.append('yes ' if isArray else 'no')
     row.append(leafcount.GetName() if isArray else None)
     row.append(leafcount.GetTypeName() if isArray else None)
