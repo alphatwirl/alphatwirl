@@ -1,4 +1,3 @@
-from AlphaTwirl.Aggregate import stack_counts_categories
 import unittest
 import cStringIO
 
@@ -6,9 +5,12 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
+    from AlphaTwirl.Aggregate import stack_counts_categories
     hasPandas = True
 except ImportError:
-    pass
+    class PD:
+        def read_table(self, *args, **kargs): pass
+    pd = PD()
 
 ##____________________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):

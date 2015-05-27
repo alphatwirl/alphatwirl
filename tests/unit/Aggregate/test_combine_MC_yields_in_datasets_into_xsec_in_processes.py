@@ -1,4 +1,3 @@
-from AlphaTwirl.Aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
 import unittest
 import cStringIO
 
@@ -6,9 +5,12 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
+    from AlphaTwirl.Aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
     hasPandas = True
 except ImportError:
-    pass
+    class PD:
+        def read_table(self, *args, **kargs): pass
+    pd = PD()
 
 ##____________________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
