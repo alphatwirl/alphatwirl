@@ -3,8 +3,8 @@ from CommunicationChannel import CommunicationChannel
 
 ##__________________________________________________________________||
 class MPEventLoopRunner(object):
-    def __init__(self, nprocesses = 16, progressMonitor = None):
-        self.communicationChannel = CommunicationChannel(nprocesses, progressMonitor)
+    def __init__(self, communicationChannel):
+        self.communicationChannel = communicationChannel
         self._ntasks = 0
 
     def begin(self):

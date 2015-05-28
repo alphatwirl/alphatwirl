@@ -79,7 +79,7 @@ def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
     if communicationChannel is None: # single process
         eventLoopRunner = EventLoopRunner(progressMonitor)
     else:
-        eventLoopRunner = MPEventLoopRunner(processes, progressMonitor)
+        eventLoopRunner = MPEventLoopRunner(communicationChannel)
     return eventLoopRunner
 
 ##__________________________________________________________________||
