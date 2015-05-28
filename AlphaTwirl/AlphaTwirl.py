@@ -4,25 +4,25 @@ import sys
 import os
 import itertools
 
-from HeppyResult.ComponentReaderComposite import ComponentReaderComposite
-from HeppyResult.ComponentLoop import ComponentLoop
-from HeppyResult.HeppyResult import HeppyResult
-from EventReader.EventReaderBundle import EventReaderBundle
-from EventReader.EventReaderCollectorAssociator import EventReaderCollectorAssociator
-from EventReader.EventReaderCollectorAssociatorComposite import EventReaderCollectorAssociatorComposite
-from EventReader.EventLoopRunner import EventLoopRunner
-from EventReader.MPEventLoopRunner import MPEventLoopRunner
-from ProgressBar.ProgressBar import ProgressBar
-from ProgressBar.ProgressMonitor import ProgressMonitor, MPProgressMonitor
-from Counter.Counts import Counts
-from Counter.GenericKeyComposerB import GenericKeyComposerBFactory
-from Counter.CounterFactory import CounterFactory
+from HeppyResult import ComponentReaderComposite
+from HeppyResult import ComponentLoop
+from HeppyResult import HeppyResult
+from EventReader import EventReaderBundle
+from EventReader import EventReaderCollectorAssociator
+from EventReader import EventReaderCollectorAssociatorComposite
+from EventReader import EventLoopRunner
+from EventReader import MPEventLoopRunner
+from ProgressBar import ProgressBar
+from ProgressBar import ProgressMonitor, MPProgressMonitor
+from Counter import Counts
+from Counter import GenericKeyComposerBFactory
+from Counter import CounterFactory
 from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
-from EventReader.Collector import Collector
+from EventReader import Collector
 
 try:
-    from HeppyResult.BEventBuilder import BEventBuilder as EventBuilder
+    from HeppyResult import BEventBuilder as EventBuilder
 except ImportError:
     pass
 
