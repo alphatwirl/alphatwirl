@@ -17,9 +17,9 @@ class Worker(multiprocessing.Process):
             if task is None:
                 self.task_queue.task_done()
                 break
-            reader = task(self.progressReporter)
+            results = task(self.progressReporter)
             self.task_queue.task_done()
-            self.result_queue.put(reader)
+            self.result_queue.put(results)
 
 ##____________________________________________________________________________||
 class MPEventLoopRunner(object):
