@@ -27,7 +27,7 @@ class MPEventLoopRunner(object):
         self._nprocesses = nprocesses
         self._ntasks = 0
         self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.start_workers()
+        self.start_workers(nprocesses, self._progressMonitor)
         self.task_queue = self._tasks
         self.result_queue = self._results
 
@@ -61,13 +61,13 @@ class MPEventLoopRunner(object):
         self._allReaders[reader.id].setResults(reader.results())
         return True
 
-    def start_workers(self):
+    def start_workers(self, nprocesses, progressMonitor):
         self._nworkers = 0
         self._tasks = multiprocessing.JoinableQueue()
         self._results = multiprocessing.Queue()
         self._lock = multiprocessing.Lock()
-        for i in xrange(self._nprocesses):
-            worker = Worker(self._tasks, self._results, self._progressMonitor.createReporter(), self._lock)
+        for i in xrange(nprocesses):
+            worker = Worker(self._tasks, self._results, progressMonitor.createReporter(), self._lock)
             worker.start()
             self._nworkers += 1
 
