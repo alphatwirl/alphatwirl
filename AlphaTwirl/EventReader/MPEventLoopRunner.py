@@ -22,14 +22,37 @@ class Worker(multiprocessing.Process):
             self.result_queue.put(results)
 
 ##__________________________________________________________________||
+class CommunicationChannel(object):
+    def __init__(self, nprocesses = 16, progressMonitor = None):
+        self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
+        self.start_workers(nprocesses, self.progressMonitor)
+
+    def start_workers(self, nprocesses, progressMonitor):
+        self._nworkers = 0
+        self.task_queue = multiprocessing.JoinableQueue()
+        self.result_queue = multiprocessing.Queue()
+        self.lock = multiprocessing.Lock()
+        for i in xrange(nprocesses):
+            worker = Worker(self.task_queue, self.result_queue, progressMonitor.createReporter(), self.lock)
+            worker.start()
+            self._nworkers += 1
+
+    def end(self):
+        self.end_workers()
+
+    def end_workers(self):
+        for i in xrange(self._nworkers):
+            self.task_queue.put(None) # end workers
+        self.task_queue.join()
+
+##__________________________________________________________________||
 class MPEventLoopRunner(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
-        self._nprocesses = nprocesses
+        self.communicationChannel = CommunicationChannel(nprocesses, progressMonitor)
+        self._progressMonitor = self.communicationChannel.progressMonitor
+        self.task_queue = self.communicationChannel.task_queue
+        self.result_queue = self.communicationChannel.result_queue
         self._ntasks = 0
-        self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.start_workers(nprocesses, self._progressMonitor)
-        self.task_queue = self._tasks
-        self.result_queue = self._results
 
     def begin(self):
         self._allReaders = { }
@@ -53,27 +76,12 @@ class MPEventLoopRunner(object):
 
         self._progressMonitor.last()
 
-        self.end_workers()
+        self.communicationChannel.end()
 
     def collectTaskResults(self):
         if self.result_queue.empty(): return False
         reader = self.result_queue.get()
         self._allReaders[reader.id].setResults(reader.results())
         return True
-
-    def start_workers(self, nprocesses, progressMonitor):
-        self._nworkers = 0
-        self._tasks = multiprocessing.JoinableQueue()
-        self._results = multiprocessing.Queue()
-        self._lock = multiprocessing.Lock()
-        for i in xrange(nprocesses):
-            worker = Worker(self._tasks, self._results, progressMonitor.createReporter(), self._lock)
-            worker.start()
-            self._nworkers += 1
-
-    def end_workers(self):
-        for i in xrange(self._nworkers):
-            self._tasks.put(None) # end workers
-        self._tasks.join()
 
 ##__________________________________________________________________||
