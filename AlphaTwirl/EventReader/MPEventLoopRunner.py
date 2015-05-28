@@ -49,13 +49,13 @@ class CommunicationChannel(object):
 class MPEventLoopRunner(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.communicationChannel = CommunicationChannel(nprocesses, progressMonitor)
-        self._progressMonitor = self.communicationChannel.progressMonitor
-        self.task_queue = self.communicationChannel.task_queue
-        self.result_queue = self.communicationChannel.result_queue
         self._ntasks = 0
 
     def begin(self):
         self._allReaders = { }
+        self._progressMonitor = self.communicationChannel.progressMonitor
+        self.task_queue = self.communicationChannel.task_queue
+        self.result_queue = self.communicationChannel.result_queue
 
     def run(self, eventLoop):
 
