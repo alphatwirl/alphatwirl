@@ -50,8 +50,6 @@ class MPEventLoopRunner(object):
         self._ntasks += 1
 
     def end(self):
-        for i in xrange(self._nworkers):
-            self._tasks.put(None) # end workers
 
         while self._ntasks >= 1:
             self._progressMonitor.monitor()
@@ -59,6 +57,9 @@ class MPEventLoopRunner(object):
                 self._ntasks -= 1
 
         self._progressMonitor.last()
+
+        for i in xrange(self._nworkers):
+            self._tasks.put(None) # end workers
         self._tasks.join()
 
     def collectTaskResults(self):
