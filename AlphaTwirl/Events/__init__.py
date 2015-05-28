@@ -1,5 +1,10 @@
 from Events import Events
-from BEvents import BEvents
-from Branch import Branch
-from BranchBuilder import BranchBuilder
 from BranchAddressManager import BranchAddressManager
+from Branch import Branch
+
+try:
+    from BEvents import BEvents
+    from BranchBuilder import BranchBuilder
+    from BranchAddressManagerForVector import BranchAddressManagerForVector
+except ImportError:
+    pass

@@ -1,5 +1,3 @@
-from AlphaTwirl.Events import BEvents as Events
-from AlphaTwirl.Events import Branch
 import unittest
 import os
 
@@ -7,13 +5,15 @@ import os
 hasROOT = False
 try:
     import ROOT
+    from AlphaTwirl.Events import BEvents as Events
+    from AlphaTwirl.Events import Branch
     hasROOT = True
 except ImportError:
     pass
 
 ##____________________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
-@unittest.skip("skip TestBEventsWithFile")
+# @unittest.skip("skip TestBEventsWithFile")
 class TestBEventsWithFile(unittest.TestCase):
 
     def test_branch(self):

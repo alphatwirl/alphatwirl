@@ -1,6 +1,14 @@
-from AlphaTwirl.Events import BranchBuilder
 import sys
 import unittest
+
+##____________________________________________________________________________||
+hasROOT = False
+try:
+    import ROOT
+    from AlphaTwirl.Events import BranchBuilder
+    hasROOT = True
+except ImportError:
+    pass
 
 ##____________________________________________________________________________||
 class MockFile(object):
@@ -102,6 +110,7 @@ class TestMockTree(unittest.TestCase):
         self.assertEqual(-1, tree.iEvent)
 
 ##____________________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
 class TestBranchBuilder(unittest.TestCase):
 
     def setUp(self):

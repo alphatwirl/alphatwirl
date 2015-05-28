@@ -39,6 +39,9 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.BEventBuilder))
         self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.EventBuilder))
 
+        self.assertTrue(inspect.isclass(AlphaTwirl.Events.BEvents))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Events.BranchAddressManagerForVector))
+
     def test_functions(self):
         self.assertTrue(inspect.isfunction(AlphaTwirl.mkdir_p))
 
@@ -67,7 +70,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.MPEventLoopRunner))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.NullProgressMonitor))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Events.BEvents))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.Branch))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.BranchAddressManager))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.Events))
