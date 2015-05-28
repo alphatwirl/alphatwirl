@@ -1,18 +1,15 @@
 from AlphaTwirl.Events import BEvents
-from AlphaTwirl.Events import Branch
 import sys
 import unittest
 
-##____________________________________________________________________________||
-class MockFile(object):
-    pass
+##__________________________________________________________________||
+class MockFile(object): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTree(object):
     def __init__(self, Entries = 100):
         self.Entries = Entries
         self.iEvent = -1
-        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
         self.branchstatus = [ ]
         self.getEntryCalled = False
     def GetDirectory(self):
@@ -32,25 +29,17 @@ class MockTree(object):
     def SetBranchStatus(self, bname, status):
         self.branchstatus.append((bname, status))
 
-    def _isleafName(self, name): return name in self.leafNames
+##__________________________________________________________________||
+class MockBranch(object): pass
 
+##__________________________________________________________________||
+class MockBranchBuilder(object):
+    def __init__(self):
+        self.next = None
+    def __call__(self, tree, name):
+        return self.next
 
-##____________________________________________________________________________||
-class MockArray(object): pass
-
-##____________________________________________________________________________||
-class MockBranchAddressManager(object):
-    def getArrays(self, tree, branchName):
-        if tree._isleafName(branchName):
-            return MockArray(), MockArray()
-        return None, None
-
-##____________________________________________________________________________||
-class MockBranch(object):
-    def __init__(self, name, array, countarray):
-        pass
-
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMockTree(unittest.TestCase):
 
     def test_mocktree(self):
@@ -70,70 +59,70 @@ class TestMockTree(unittest.TestCase):
         self.assertEqual(0, tree.GetEntry(3))
         self.assertEqual(-1, tree.iEvent)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestBEvents(unittest.TestCase):
 
-    def setUp(self):
-        self.moduleBEvents = sys.modules['AlphaTwirl.Events.BEvents']
-        self.org_branchAddressManager = self.moduleBEvents.branchAddressManager
-        self.moduleBEvents.branchAddressManager = MockBranchAddressManager()
-
-        self.org_Branch = self.moduleBEvents.Branch
-        self.moduleBEvents.Branch = MockBranch
-
-    def tearDown(self):
-        self.moduleBEvents.branchAddressManager = self.org_branchAddressManager
-        self.moduleBEvents.Branch = self.org_Branch
-
-    def test_init(self):
+    def test_init_branch_status(self):
         tree = MockTree()
         self.assertEqual([ ], tree.branchstatus)
         events = BEvents(tree)
+        events.buildBranch = MockBranchBuilder()
         self.assertEqual([('*', 0)], tree.branchstatus)
 
     def test_getattr(self):
         tree = MockTree()
         events = BEvents(tree)
+        branchBuilder = MockBranchBuilder()
+        events.buildBranch = branchBuilder
 
+        branchBuilder.next = MockBranch()
         jet_pt = events.jet_pt
-        met_pt = events.met_pt
         self.assertIsInstance(jet_pt, MockBranch)
-        self.assertIsInstance(met_pt, MockBranch)
 
     def test_getattr_same_objects(self):
         tree = MockTree()
         events = BEvents(tree)
+        branchBuilder = MockBranchBuilder()
+        events.buildBranch = branchBuilder
 
+        branch1 = MockBranch()
+        branchBuilder.next = branch1
         jet_pt1 = events.jet_pt
-        met_pt1 = events.met_pt
+        self.assertIs(branch1, jet_pt1)
 
+        branch2 = MockBranch()
+        branchBuilder.next = branch2
         jet_pt2 = events.jet_pt
-        met_pt2 = events.met_pt
 
-        self.assertIs(jet_pt1, jet_pt2)
-        self.assertIs(met_pt1, met_pt2)
+        self.assertIs(branch1, jet_pt2)
+        self.assertIsNot(branch2, jet_pt2)
 
         it = iter(events)
         event = next(it)
 
+        branch3 = MockBranch()
+        branchBuilder.next = branch3
         jet_pt3 = event.jet_pt
-        met_pt3 = event.met_pt
 
-        self.assertIs(jet_pt1, jet_pt3)
-        self.assertIs(met_pt1, met_pt3)
+        self.assertIs(branch1, jet_pt3)
+        self.assertIsNot(branch3, jet_pt3)
 
     def test_getattr_exception(self):
         tree = MockTree()
         events = BEvents(tree)
+        events.buildBranch = MockBranchBuilder()
 
         self.assertRaises(AttributeError, events.__getattr__, 'no_such_branch')
 
     def test_getattr_getentry(self):
         tree = MockTree()
         events = BEvents(tree)
+        branchBuilder = MockBranchBuilder()
+        events.buildBranch = branchBuilder
 
         self.assertEqual(-1, events.iEvent)
         self.assertFalse(tree.getEntryCalled)
+        branchBuilder.next = MockBranch()
         jet_pt = events.jet_pt
         self.assertFalse(tree.getEntryCalled)
 
@@ -145,7 +134,8 @@ class TestBEvents(unittest.TestCase):
         jet_pt = event.jet_pt
         self.assertFalse(tree.getEntryCalled)
 
+        tree.getEntryCalled = False
         met_pt = event.met_pt
         self.assertTrue(tree.getEntryCalled)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
