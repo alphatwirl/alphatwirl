@@ -8,3 +8,4 @@ from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from EventReaderComposite import EventReaderComposite
 from NullProgressMonitor import NullProgressMonitor
+from CommunicationChannel import CommunicationChannel
