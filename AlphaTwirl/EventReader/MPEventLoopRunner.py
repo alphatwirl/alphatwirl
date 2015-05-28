@@ -2,7 +2,7 @@
 from NullProgressMonitor import NullProgressMonitor
 import multiprocessing
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Worker(multiprocessing.Process):
     def __init__(self, task_queue, result_queue, progressReporter, lock):
         multiprocessing.Process.__init__(self)
@@ -21,7 +21,7 @@ class Worker(multiprocessing.Process):
             self.task_queue.task_done()
             self.result_queue.put(results)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MPEventLoopRunner(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self._nprocesses = nprocesses
@@ -76,4 +76,4 @@ class MPEventLoopRunner(object):
             self._tasks.put(None) # end workers
         self._tasks.join()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
