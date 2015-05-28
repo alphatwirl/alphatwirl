@@ -1,6 +1,7 @@
 from AlphaTwirl.Events import BEvents as Events
 from AlphaTwirl.Events import Branch
 import unittest
+import os
 
 ##____________________________________________________________________________||
 hasROOT = False
@@ -11,8 +12,10 @@ except ImportError:
     pass
 
 ##____________________________________________________________________________||
-inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
+inputFile = 'sample_01.root'
 treeName = 'tree'
+
+inputPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), inputFile)
 
 ##____________________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
