@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import MPEventLoopRunner
+from AlphaTwirl.EventReader import MPEventLoopRunner, CommunicationChannel
 import unittest
 import os
 
@@ -46,17 +46,23 @@ class MockProgressMonitor(object):
 class TestMPEventLoopRunner(unittest.TestCase):
 
     def test_begin_end(self):
-        runner = MPEventLoopRunner()
+        communicationChannel = CommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        communicationChannel.begin()
         runner.begin()
         runner.end()
+        communicationChannel.end()
 
     def test_run(self):
-        runner = MPEventLoopRunner()
+        communicationChannel = CommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        communicationChannel.begin()
         runner.begin()
 
         reader = MockReader()
         eventLoop = MockEventLoop(reader)
         runner.run(eventLoop)
+
 
         self.assertIsNone(reader._results)
 
@@ -64,9 +70,13 @@ class TestMPEventLoopRunner(unittest.TestCase):
 
         self.assertEqual(3456, reader._results)
 
+        communicationChannel.end()
+
     def test_ProgressMonitor(self):
         progressMonitor = MockProgressMonitor()
-        runner = MPEventLoopRunner(nprocesses = 3, progressMonitor = progressMonitor)
+        communicationChannel = CommunicationChannel(nprocesses = 3, progressMonitor = progressMonitor)
+        runner = MPEventLoopRunner(communicationChannel)
+        communicationChannel.begin()
         runner.begin()
 
         reader = MockReader()
@@ -81,5 +91,7 @@ class TestMPEventLoopRunner(unittest.TestCase):
 
         # assert that the EventLoop received a ProgressReporter
         self.assertIsInstance(reader._results[1], MockProgressReporter)
+
+        communicationChannel.end()
 
 ##____________________________________________________________________________||
