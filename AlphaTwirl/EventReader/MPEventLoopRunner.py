@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from CommunicationChannel import CommunicationChannel
 
 ##__________________________________________________________________||
 class MPEventLoopRunner(object):
