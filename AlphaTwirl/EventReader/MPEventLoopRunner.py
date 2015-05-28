@@ -58,14 +58,17 @@ class MPEventLoopRunner(object):
 
         self._progressMonitor.last()
 
-        for i in xrange(self._nworkers):
-            self._tasks.put(None) # end workers
-        self._tasks.join()
+        self.end_workers()
 
     def collectTaskResults(self):
         if self._results.empty(): return False
         reader = self._results.get()
         self._allReaders[reader.id].setResults(reader.results())
         return True
+
+    def end_workers(self):
+        for i in xrange(self._nworkers):
+            self._tasks.put(None) # end workers
+        self._tasks.join()
 
 ##____________________________________________________________________________||
