@@ -6,7 +6,7 @@ from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReaderBundle
+from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReaderBundle, EventReaderCollectorAssociatorComposite
 from AlphaTwirl.ProgressBar import MPProgressMonitor, ProgressBar
 
 ##__________________________________________________________________||
@@ -54,10 +54,11 @@ progressBar = ProgressBar()
 progressMonitor = MPProgressMonitor(progressBar)
 eventLoopRunner = MPEventLoopRunner(8, progressMonitor)
 
-readerBundle = EventReaderBundle(eventBuilder, eventLoopRunner, progressBar = progressBar)
-readerBundle.addReaderPackage(readerCollectorAssociator1)
-readerBundle.addReaderPackage(readerCollectorAssociator2)
-readerBundle.addReaderPackage(readerCollectorAssociator3)
+eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressBar)
+eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator1)
+eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator2)
+eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator3)
+readerBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite)
 
 readerBundle.begin()
 
