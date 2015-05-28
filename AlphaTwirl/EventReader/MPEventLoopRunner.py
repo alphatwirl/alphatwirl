@@ -28,10 +28,10 @@ class MPEventLoopRunner(object):
         self._ntasks = 0
         self._nworkers = 0
         self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
+        self.start_workers()
 
     def begin(self):
         self._allReaders = { }
-        self.start_workers()
 
     def run(self, eventLoop):
 
