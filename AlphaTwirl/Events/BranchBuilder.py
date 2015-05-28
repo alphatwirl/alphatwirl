@@ -28,13 +28,38 @@ class BranchBuilder(object):
         return branch
 
     def imp(self, tree, name):
-        itsArray, itsCountArray = branchAddressManager.getArrays(tree, name)
-        if itsArray is not None:
-            branch = Branch(name, itsArray, itsCountArray)
-            return branch
-        itsVector = branchAddressManagerForVector.getVector(tree, name)
-        if itsVector is not None:
-            return itsVector # this can be used as a branch
+        if not self._branch_exist(tree, name): return None
+
+        branch = self._try_ctypes_or_array_of_ctypes(tree, name)
+        if branch is not None: return branch
+
+        branch = self._try_std_vector(tree, name)
+        if branch is not None: return branch
+
+        self._unknown_type_warning(tree, name)
+
         return None
+
+    def _branch_exist(self, tree, name):
+        leafNames = [l.GetName() for l in tree.GetListOfLeaves()]
+        if name in leafNames: return True
+        return False
+
+    def _try_ctypes_or_array_of_ctypes(self, tree, name):
+        itsArray, itsCountArray = branchAddressManager.getArrays(tree, name)
+        if itsArray is None: return None
+        branch = Branch(name, itsArray, itsCountArray)
+        return branch
+
+    def _try_std_vector(self, tree, name):
+        itsVector = branchAddressManagerForVector.getVector(tree, name)
+        return itsVector # this can be used as a branch
+
+    def _unknown_type_warning(self, tree, name):
+        import logging
+        leaf = tree.GetLeaf(name)
+        typename = leaf.GetTypeName()
+        logging.warning("'" + self.__class__.__name__
+            + "': unknown leaf type '" + typename + "'")
 
 ##__________________________________________________________________||

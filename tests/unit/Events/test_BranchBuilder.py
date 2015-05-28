@@ -7,13 +7,28 @@ class MockFile(object):
     pass
 
 ##____________________________________________________________________________||
+class MockLeaf(object):
+    def __init__(self, name, typename):
+        self.name = name
+        self.typename = typename
+
+    def GetName(self):
+        return self.name
+
+    def GetTypeName(self):
+        return self.typename
+
+##____________________________________________________________________________||
 class MockTree(object):
     def __init__(self, Entries = 100):
         self.Entries = Entries
         self.iEvent = -1
-        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
         self.branchstatus = [ ]
         self.getEntryCalled = False
+        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt', 'trigger_path', 'EventAuxiliary')
+        self.leafTypeNames = ('Int_t', 'Int_t', 'Int_t', 'Double_t', 'Double_t', 'vector<string>', 'edm::EventAuxiliary')
+        self.leafs = dict([(n, MockLeaf(n, t)) for n, t in zip(self.leafNames, self.leafTypeNames)])
+
     def GetDirectory(self):
         return MockFile()
     def GetEntries(self):
@@ -31,18 +46,35 @@ class MockTree(object):
     def SetBranchStatus(self, bname, status):
         self.branchstatus.append((bname, status))
 
-    def _isleafName(self, name): return name in self.leafNames
+    def GetListOfLeaves(self):
+        return self.leafs.values()
 
+    def GetLeaf(self, name):
+        return self.leafs[name]
 
 ##____________________________________________________________________________||
 class MockArray(object): pass
 
 ##____________________________________________________________________________||
 class MockBranchAddressManager(object):
+    def __init__(self):
+        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
     def getArrays(self, tree, branchName):
-        if tree._isleafName(branchName):
+        if branchName in self.leafNames:
             return MockArray(), MockArray()
         return None, None
+
+##____________________________________________________________________________||
+class MockVector(object): pass
+
+##____________________________________________________________________________||
+class MockBranchAddressManagerForVector(object):
+    def __init__(self):
+        self.leafNames = ('trigger_path', )
+    def getVector(self, tree, branchName):
+        if branchName in self.leafNames:
+            return MockVector()
+        return None
 
 ##____________________________________________________________________________||
 class MockBranch(object):
@@ -77,11 +109,15 @@ class TestBranchBuilder(unittest.TestCase):
         self.org_branchAddressManager = self.moduleBranchBuilder.branchAddressManager
         self.moduleBranchBuilder.branchAddressManager = MockBranchAddressManager()
 
+        self.org_branchAddressManagerForVector = self.moduleBranchBuilder.branchAddressManagerForVector
+        self.moduleBranchBuilder.branchAddressManagerForVector = MockBranchAddressManagerForVector()
+
         self.org_Branch = self.moduleBranchBuilder.Branch
         self.moduleBranchBuilder.Branch = MockBranch
 
     def tearDown(self):
         self.moduleBranchBuilder.branchAddressManager = self.org_branchAddressManager
+        self.moduleBranchBuilder.branchAddressManagerForVector = self.org_branchAddressManagerForVector
         self.moduleBranchBuilder.Branch = self.org_Branch
 
     def test_init(self):
@@ -125,11 +161,19 @@ class TestBranchBuilder(unittest.TestCase):
         self.assertIs(jet_pt1, jet_pt2)
         self.assertIs(met_pt1, met_pt2)
 
-    def test_getattr_exception(self):
+    def test_getattr_None(self):
         builder = BranchBuilder()
 
         tree = MockTree()
 
-        self.assertRaises(AttributeError, builder.__call__, tree, 'no_such_branch')
+        self.assertIsNone(builder(tree, 'no_such_branch'))
+
+    @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
+    def test_getattr_warning(self):
+        builder = BranchBuilder()
+
+        tree = MockTree()
+
+        self.assertIsNone(builder(tree, 'EventAuxiliary'))
 
 ##____________________________________________________________________________||
