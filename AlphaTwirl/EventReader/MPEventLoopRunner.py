@@ -9,7 +9,6 @@ class MPEventLoopRunner(object):
 
     def begin(self):
         self._allReaders = { }
-        self.communicationChannel.begin()
         self._progressMonitor = self.communicationChannel.progressMonitor
         self.task_queue = self.communicationChannel.task_queue
         self.result_queue = self.communicationChannel.result_queue
@@ -32,8 +31,6 @@ class MPEventLoopRunner(object):
                 self._ntasks -= 1
 
         self._progressMonitor.last()
-
-        self.communicationChannel.end()
 
     def collectTaskResults(self):
         if self.result_queue.empty(): return False

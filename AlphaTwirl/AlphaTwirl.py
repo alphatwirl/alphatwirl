@@ -105,6 +105,7 @@ class AlphaTwirl(object):
     def __init__(self):
         self.args = None
         self.componentReaders = ComponentReaderComposite()
+        self.are_CommunicationChannel_and_ProgressMonitor_created = False
 
     def ArgumentParser(self, *args, **kwargs):
         parser = ArgumentParser(self, *args, **kwargs)
@@ -121,6 +122,7 @@ class AlphaTwirl(object):
         return parser
 
     def _create_CommunicationChannel_and_ProgressMonitor(self):
+        if self.are_CommunicationChannel_and_ProgressMonitor_created: return
         self.progressBar = None if self.args.quiet else ProgressBar()
         if self.args.processes is None:
             self.progressMonitor = None if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
@@ -128,6 +130,7 @@ class AlphaTwirl(object):
         else:
             self.progressMonitor = None if self.args.quiet else MPProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
+        self.are_CommunicationChannel_and_ProgressMonitor_created = True
 
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
@@ -141,8 +144,10 @@ class AlphaTwirl(object):
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
         self._create_CommunicationChannel_and_ProgressMonitor()
+        if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
         heppyResult = HeppyResult(self.args.heppydir)
         componentLoop(heppyResult.components())
+        if self.communicationChannel is not None: self.communicationChannel.end()
 
 ##__________________________________________________________________||
