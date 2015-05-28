@@ -26,7 +26,6 @@ class MPEventLoopRunner(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self._nprocesses = nprocesses
         self._ntasks = 0
-        self._nworkers = 0
         self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.start_workers()
 
@@ -61,6 +60,7 @@ class MPEventLoopRunner(object):
         return True
 
     def start_workers(self):
+        self._nworkers = 0
         self._tasks = multiprocessing.JoinableQueue()
         self._results = multiprocessing.Queue()
         self._lock = multiprocessing.Lock()
