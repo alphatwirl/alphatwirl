@@ -12,6 +12,7 @@ from EventReader import EventReaderCollectorAssociator
 from EventReader import EventReaderCollectorAssociatorComposite
 from EventReader import EventLoopRunner
 from EventReader import MPEventLoopRunner
+from EventReader import CommunicationChannel
 from ProgressBar import ProgressBar
 from ProgressBar import ProgressMonitor, MPProgressMonitor
 from Counter import Counts
@@ -74,31 +75,28 @@ def createEventReaderCollectorAssociator(tblcfg):
     return EventReaderCollectorAssociator(counterFactory, collector)
 
 ##__________________________________________________________________||
-def buildEventLoopRunner(progressBar, processes, quiet):
-    if processes is None:
-        progressMonitor = None if quiet else ProgressMonitor(presentation = progressBar)
+def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
+    if communicationChannel is None: # single process
         eventLoopRunner = EventLoopRunner(progressMonitor)
     else:
-        progressMonitor = None if quiet else MPProgressMonitor(presentation = progressBar)
         eventLoopRunner = MPEventLoopRunner(processes, progressMonitor)
     return eventLoopRunner
 
 ##__________________________________________________________________||
-def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, processes, quiet):
-    progressBar = None if quiet else ProgressBar()
+def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressBar, progressMonitor, communicationChannel, processes, quiet):
     eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressBar)
     for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
-    eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = processes, quiet = quiet)
+    eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite, eventSelection = eventSelection)
     return eventReaderBundle
 
 ##__________________________________________________________________||
-def createTreeReader(args, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+def createTreeReader(args, progressBar, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, args.processes, args.quiet)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressBar, progressMonitor, communicationChannel, args.processes, args.quiet)
     return eventReaderBundle
 
 ##__________________________________________________________________||
@@ -122,16 +120,27 @@ class AlphaTwirl(object):
         parser.add_argument("--force", action = "store_true", default = False, dest="force", help = "recreate all output files")
         return parser
 
+    def _create_CommunicationChannel_and_ProgressMonitor(self):
+        self.progressBar = None if self.args.quiet else ProgressBar()
+        if self.args.processes is None:
+            self.progressMonitor = None if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
+            self.communicationChannel = None
+        else:
+            self.progressMonitor = None if self.args.quiet else MPProgressMonitor(presentation = self.progressBar)
+            self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
+
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
     def addTreeReader(self, **kargs):
         if self.args is None: self.ArgumentParser().parse_args()
-        treeReader = createTreeReader(self.args, **kargs)
+        self._create_CommunicationChannel_and_ProgressMonitor()
+        treeReader = createTreeReader(self.args, self.progressBar, self.progressMonitor, self.communicationChannel, **kargs)
         self.addComponentReader(treeReader)
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
+        self._create_CommunicationChannel_and_ProgressMonitor()
         componentLoop = ComponentLoop(self.componentReaders)
         heppyResult = HeppyResult(self.args.heppydir)
         componentLoop(heppyResult.components())
