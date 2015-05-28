@@ -28,6 +28,8 @@ class MPEventLoopRunner(object):
         self._ntasks = 0
         self._progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.start_workers()
+        self.task_queue = self._tasks
+        self.result_queue = self._results
 
     def begin(self):
         self._allReaders = { }
@@ -39,7 +41,7 @@ class MPEventLoopRunner(object):
         reader.id = id(reader)
         self._allReaders[id(reader)] = reader
 
-        self._tasks.put(eventLoop)
+        self.task_queue.put(eventLoop)
         self._ntasks += 1
 
     def end(self):
@@ -54,8 +56,8 @@ class MPEventLoopRunner(object):
         self.end_workers()
 
     def collectTaskResults(self):
-        if self._results.empty(): return False
-        reader = self._results.get()
+        if self.result_queue.empty(): return False
+        reader = self.result_queue.get()
         self._allReaders[reader.id].setResults(reader.results())
         return True
 
