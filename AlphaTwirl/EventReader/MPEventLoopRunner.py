@@ -25,7 +25,13 @@ class Worker(multiprocessing.Process):
 class CommunicationChannel(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.start_workers(nprocesses, self.progressMonitor)
+        self.nprocesses = nprocesses
+
+    def begin(self):
+        self.start_workers(self.nprocesses, self.progressMonitor)
+
+    def end(self):
+        self.end_workers()
 
     def start_workers(self, nprocesses, progressMonitor):
         self._nworkers = 0
@@ -36,9 +42,6 @@ class CommunicationChannel(object):
             worker = Worker(self.task_queue, self.result_queue, progressMonitor.createReporter(), self.lock)
             worker.start()
             self._nworkers += 1
-
-    def end(self):
-        self.end_workers()
 
     def end_workers(self):
         for i in xrange(self._nworkers):
@@ -53,6 +56,7 @@ class MPEventLoopRunner(object):
 
     def begin(self):
         self._allReaders = { }
+        self.communicationChannel.begin()
         self._progressMonitor = self.communicationChannel.progressMonitor
         self.task_queue = self.communicationChannel.task_queue
         self.result_queue = self.communicationChannel.result_queue
