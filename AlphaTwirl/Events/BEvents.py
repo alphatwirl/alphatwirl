@@ -4,11 +4,11 @@ from Events import Events
 from BranchAddressManager import BranchAddressManager
 from BranchAddressManagerForVector import BranchAddressManagerForVector
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 branchAddressManager = BranchAddressManager()
 branchAddressManagerForVector = BranchAddressManagerForVector()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class BEvents(Events):
     def __init__(self, tree, maxEvents = -1):
         super(BEvents, self).__init__(tree, maxEvents)
@@ -34,4 +34,4 @@ class BEvents(Events):
         return None
 
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
