@@ -86,10 +86,10 @@ def buildEventLoopRunner(progressBar, processes, quiet):
 ##__________________________________________________________________||
 def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, processes, quiet):
     progressBar = None if quiet else ProgressBar()
-    eventReaderCollectorAssociatorBundle = EventReaderCollectorAssociatorComposite(progressBar)
-    for package in eventReaderCollectorAssociators: eventReaderCollectorAssociatorBundle.add(package)
+    eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressBar)
+    for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
     eventLoopRunner = buildEventLoopRunner(progressBar = progressBar, processes = processes, quiet = quiet)
-    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorBundle, eventSelection = eventSelection)
+    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite, eventSelection = eventSelection)
     return eventReaderBundle
 
 ##__________________________________________________________________||
