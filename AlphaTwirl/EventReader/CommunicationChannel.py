@@ -26,9 +26,25 @@ class CommunicationChannel(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.nprocesses = nprocesses
+        self._ntasks = 0
 
     def begin(self):
         self.start_workers(self.nprocesses, self.progressMonitor)
+
+    def put(self, task):
+        self.task_queue.put(task)
+        self._ntasks += 1
+
+    def receive(self):
+        results = [ ]
+        while self._ntasks >= 1:
+            self.progressMonitor.monitor()
+            if self.result_queue.empty(): continue
+            result = self.result_queue.get()
+            results.append(result)
+            self._ntasks -= 1
+        self.progressMonitor.last()
+        return results
 
     def end(self):
         self.end_workers()
