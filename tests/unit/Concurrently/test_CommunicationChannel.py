@@ -1,19 +1,7 @@
-from AlphaTwirl.EventReader import MPEventLoopRunner
 from AlphaTwirl.Concurrently import CommunicationChannel
 import unittest
 import time
 import os
-
-##__________________________________________________________________||
-class MockReader(object):
-    def __init__(self):
-        self._results = None
-
-    def setResults(self, results):
-        self._results = results
-
-    def results(self):
-        return self._results
 
 ##__________________________________________________________________||
 class MockResult(object):
@@ -32,24 +20,12 @@ class MockTask(object):
         return self.result
 
 ##__________________________________________________________________||
-class MockTaskForProgressReporterTest(object):
-    def __init__(self, result, time):
-        self.result = result
-        self.time = time
-
-    def __call__(self, progressReporter):
-        time.sleep(self.time)
-        self.result.progressReporter = progressReporter
-        return self.result
-
-##__________________________________________________________________||
 class MockProgressReporter(object):
     def report(self, event, component): pass
 
 ##__________________________________________________________________||
 class MockProgressMonitor(object):
     def createReporter(self): return MockProgressReporter()
-    def addWorker(self, worker): pass
     def monitor(self): pass
     def last(self): pass
 
