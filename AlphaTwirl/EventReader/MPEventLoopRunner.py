@@ -26,6 +26,15 @@ class MPEventLoopRunner(object):
         # different objects.
 
         returned_readers = self.communicationChannel.receive()
+
+        if len(self._original_readers) != len(returned_readers):
+            import logging
+            logging.warning("'" + self.__class__.__name__
+                            + "': the same number of the readers were not received: "
+                            + str(len(self._original_readers)) + " readers put, "
+                            + str(len(returned_readers)) + " readers received"
+                        )
+
         for original, returned in zip(self._original_readers, returned_readers):
             if original is returned: continue
             original.setResults(returned.results())
