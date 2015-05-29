@@ -4,6 +4,14 @@ AlphaTwirl.ProgressBar package
 Submodules
 ----------
 
+AlphaTwirl.ProgressBar.NullProgressMonitor module
+-------------------------------------------------
+
+.. automodule:: AlphaTwirl.ProgressBar.NullProgressMonitor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.ProgressBar.ProgressBar module
 -----------------------------------------
 

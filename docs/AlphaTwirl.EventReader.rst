@@ -45,9 +45,25 @@ AlphaTwirl.EventReader.EventReaderBundle module
     :show-inheritance:
 
 AlphaTwirl.EventReader.EventReaderCollectorAssociator module
-------------------------------------------------
+------------------------------------------------------------
 
 .. automodule:: AlphaTwirl.EventReader.EventReaderCollectorAssociator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.EventReader.EventReaderCollectorAssociatorComposite module
+---------------------------------------------------------------------
+
+.. automodule:: AlphaTwirl.EventReader.EventReaderCollectorAssociatorComposite
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.EventReader.EventReaderComposite module
+--------------------------------------------------
+
+.. automodule:: AlphaTwirl.EventReader.EventReaderComposite
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,14 +72,6 @@ AlphaTwirl.EventReader.MPEventLoopRunner module
 -----------------------------------------------
 
 .. automodule:: AlphaTwirl.EventReader.MPEventLoopRunner
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-AlphaTwirl.EventReader.NullProgressMonitor module
--------------------------------------------------
-
-.. automodule:: AlphaTwirl.EventReader.NullProgressMonitor
     :members:
     :undoc-members:
     :show-inheritance:

@@ -28,6 +28,22 @@ AlphaTwirl.HeppyResult.Component module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.HeppyResult.ComponentLoop module
+-------------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.ComponentLoop
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.HeppyResult.ComponentReaderComposite module
+------------------------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.ComponentReaderComposite
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.HeppyResult.EventBuilder module
 ------------------------------------------
 
@@ -40,14 +56,6 @@ AlphaTwirl.HeppyResult.HeppyResult module
 -----------------------------------------
 
 .. automodule:: AlphaTwirl.HeppyResult.HeppyResult
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-AlphaTwirl.HeppyResult.HeppyResultReader module
------------------------------------------------
-
-.. automodule:: AlphaTwirl.HeppyResult.HeppyResultReader
     :members:
     :undoc-members:
     :show-inheritance:
