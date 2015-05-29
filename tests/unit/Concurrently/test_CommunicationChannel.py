@@ -41,9 +41,9 @@ class TestCommunicationChannel(unittest.TestCase):
         nprocesses = 8
         communicationChannel = CommunicationChannel(nprocesses = nprocesses)
         communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel._nworkers)
+        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
         communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel._nworkers)
+        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
         communicationChannel.end()
 
     def test_put(self):
@@ -60,7 +60,7 @@ class TestCommunicationChannel(unittest.TestCase):
 
         communicationChannel.end()
 
-    def test_receive(self):
+    def test_put_receive(self):
         communicationChannel = CommunicationChannel()
         communicationChannel.begin()
 
@@ -76,6 +76,57 @@ class TestCommunicationChannel(unittest.TestCase):
         self.assertEqual(set(['task1', 'task2']), set(actual))
 
         communicationChannel.end()
+
+    def test_put_receive_repeat(self):
+        communicationChannel = CommunicationChannel()
+        communicationChannel.begin()
+
+        result1 = MockResult('task1')
+        task1 = MockTask(result1, 0.003)
+        communicationChannel.put(task1)
+
+        result2 = MockResult('task2')
+        task2 = MockTask(result2, 0.001)
+        communicationChannel.put(task2)
+
+        actual = [r.data for r in communicationChannel.receive()]
+        self.assertEqual(set(['task1', 'task2']), set(actual))
+
+        result3 = MockResult('task3')
+        task3 = MockTask(result3, 0.002)
+        communicationChannel.put(task3)
+
+        result4 = MockResult('task4')
+        task4 = MockTask(result4, 0.002)
+        communicationChannel.put(task4)
+
+        actual = [r.data for r in communicationChannel.receive()]
+        self.assertEqual(set(['task3', 'task4']), set(actual))
+
+        communicationChannel.end()
+
+    def test_begin_put_recive_end_repeat(self):
+        communicationChannel = CommunicationChannel()
+        communicationChannel.begin()
+
+        result = MockResult('task1')
+        task = MockTask(result, 0.003)
+        communicationChannel.put(task)
+
+        communicationChannel.receive()
+
+        communicationChannel.end()
+
+        communicationChannel.begin()
+
+        result = MockResult('task2')
+        task = MockTask(result, 0.003)
+        communicationChannel.put(task)
+
+        communicationChannel.receive()
+
+        communicationChannel.end()
+
 
     def test_receive_without_put(self):
         communicationChannel = CommunicationChannel()
@@ -112,10 +163,6 @@ class TestCommunicationChannel(unittest.TestCase):
     def test_receive_order(self):
         # test the order of results
         pass
-
-    # test repeating put and receive
-
-    # test begin again anfter end
 
 
 ##__________________________________________________________________||

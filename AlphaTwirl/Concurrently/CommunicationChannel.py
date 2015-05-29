@@ -25,44 +25,39 @@ class Worker(multiprocessing.Process):
 class CommunicationChannel(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.nprocesses = nprocesses
-        self._nworkers = 0
+        self.nMaxProcesses = nprocesses
+        self.nCurrentProcesses = 0
         self.task_queue = multiprocessing.JoinableQueue()
         self.result_queue = multiprocessing.Queue()
         self.lock = multiprocessing.Lock()
-        self._ntasks = 0
+        self.nRunningTasks = 0
 
     def begin(self):
-        self.start_workers(self.nprocesses, self.progressMonitor)
+        if self.nCurrentProcesses >= self.nMaxProcesses: return
+        for i in xrange(self.nCurrentProcesses, self.nMaxProcesses):
+            worker = Worker(self.task_queue, self.result_queue, self.progressMonitor.createReporter(), self.lock)
+            worker.start()
+            self.nCurrentProcesses += 1
 
     def put(self, task):
         self.task_queue.put(task)
-        self._ntasks += 1
+        self.nRunningTasks += 1
 
     def receive(self):
         results = [ ]
-        while self._ntasks >= 1:
+        while self.nRunningTasks >= 1:
             self.progressMonitor.monitor()
             if self.result_queue.empty(): continue
             result = self.result_queue.get()
             results.append(result)
-            self._ntasks -= 1
+            self.nRunningTasks -= 1
         self.progressMonitor.last()
         return results
 
     def end(self):
-        self.end_workers()
-
-    def start_workers(self, nprocesses, progressMonitor):
-        if self._nworkers >= nprocesses: return
-        for i in xrange(self._nworkers, nprocesses):
-            worker = Worker(self.task_queue, self.result_queue, progressMonitor.createReporter(), self.lock)
-            worker.start()
-            self._nworkers += 1
-
-    def end_workers(self):
-        for i in xrange(self._nworkers):
+        for i in xrange(self.nCurrentProcesses):
             self.task_queue.put(None) # end workers
         self.task_queue.join()
+        self.nCurrentProcesses = 0
 
 ##__________________________________________________________________||
