@@ -54,7 +54,8 @@ class CommunicationChannel(object):
         self.end_workers()
 
     def start_workers(self, nprocesses, progressMonitor):
-        for i in xrange(nprocesses):
+        if self._nworkers >= nprocesses: return
+        for i in xrange(self._nworkers, nprocesses):
             worker = Worker(self.task_queue, self.result_queue, progressMonitor.createReporter(), self.lock)
             worker.start()
             self._nworkers += 1

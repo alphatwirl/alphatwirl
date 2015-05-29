@@ -37,6 +37,15 @@ class TestCommunicationChannel(unittest.TestCase):
         communicationChannel.begin()
         communicationChannel.end()
 
+    def test_begin_twice(self):
+        nprocesses = 8
+        communicationChannel = CommunicationChannel(nprocesses = nprocesses)
+        communicationChannel.begin()
+        self.assertEqual(nprocesses, communicationChannel._nworkers)
+        communicationChannel.begin()
+        self.assertEqual(nprocesses, communicationChannel._nworkers)
+        communicationChannel.end()
+
     def test_put(self):
         communicationChannel = CommunicationChannel()
         communicationChannel.begin()
@@ -108,6 +117,5 @@ class TestCommunicationChannel(unittest.TestCase):
 
     # test begin again anfter end
 
-    # test when begin is called twice
 
 ##__________________________________________________________________||
