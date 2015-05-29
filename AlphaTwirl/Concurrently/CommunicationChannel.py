@@ -93,7 +93,7 @@ class CommunicationChannel(object):
         channel.put(task6)
         channel.put(task7)
 
-    And you can receive the receive of them::
+    And you can receive the results of them::
 
         results = channel.receive()
 
