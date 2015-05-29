@@ -26,6 +26,10 @@ class CommunicationChannel(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.nprocesses = nprocesses
+        self._nworkers = 0
+        self.task_queue = multiprocessing.JoinableQueue()
+        self.result_queue = multiprocessing.Queue()
+        self.lock = multiprocessing.Lock()
         self._ntasks = 0
 
     def begin(self):
@@ -50,10 +54,6 @@ class CommunicationChannel(object):
         self.end_workers()
 
     def start_workers(self, nprocesses, progressMonitor):
-        self._nworkers = 0
-        self.task_queue = multiprocessing.JoinableQueue()
-        self.result_queue = multiprocessing.Queue()
-        self.lock = multiprocessing.Lock()
         for i in xrange(nprocesses):
             worker = Worker(self.task_queue, self.result_queue, progressMonitor.createReporter(), self.lock)
             worker.start()
