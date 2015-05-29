@@ -25,6 +25,87 @@ class Worker(multiprocessing.Process):
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
+    """A communication channel with workers in other processes.
+
+    You can send tasks to workers through this channel. The workers,
+    running in other processes, execute the tasks in the background.
+    You can receive the results of the tasks also through this
+    channel. While waiting to receive the results, this class operates
+    a progress monitor, which, for example, updates the progress bars
+    on the screen.
+
+
+    An instance of this class can be created with two optional
+    arguments: ``nprocesses``, the number of workers to be created,
+    and ``progressMonitor``::
+
+        progressBar = ProgressBar()
+        progressMonitor = MPProgressMonitor(progressBar)
+        channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
+
+    Workers will be created when ``begin()`` is called::
+
+        channel.begin()
+
+    In ``begin()``, this class gives each worker a
+    ``progressReporter``, which is created by the ``progressMonitor``.
+
+    Now, you are ready to send a task. A task is a function or any
+    object which is callable and picklable and which takes the only
+    argument ``progressReporter``. A value that a task returns is the
+    result of the task and must be picklable. For example, an instance
+    of ``EventLoop`` can be a task. You can send a task with the
+    method ``put``::
+
+        channel.put(task1)
+
+    This class sends the task to a worker. The worker which receives
+    the task will call the task with the ``progressReporter``.
+
+
+    You can send multiple tasks::
+
+        channel.put(task2)
+        channel.put(task3)
+        channel.put(task4)
+        channel.put(task5)
+
+    They will be executed by workers.
+
+    You can receive the results of the tasks with the method
+    ``receive()``::
+
+        results = channel.receive()
+
+    This method will wait until all tasks are finished. If a task
+    gives a ``progressReport`` to the ``progressReporter``, the report
+    will be sent to the ``progressMonitor`` in the main process,
+    which, for example, will be used to update progress bars on the
+    screen.
+
+    When all tasks end, results will be returned. The return value
+    ``results`` is a list of results of the tasks. They are sorted in
+    the order in which the tasks are originally put.
+
+
+    After receiving the results, you can put more tasks::
+
+        channel.put(task6)
+        channel.put(task7)
+
+    And you can receive the receive of them::
+
+        results = channel.receive()
+
+    If there are no more tasks to be done, you should call the method
+    ``end``::
+
+        channel.end()
+
+    This will end all background processes.
+
+    """
+
     def __init__(self, nprocesses = 16, progressMonitor = None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.nMaxProcesses = nprocesses
