@@ -8,6 +8,7 @@ Subpackages
 
     AlphaTwirl.Aggregate
     AlphaTwirl.Binning
+    AlphaTwirl.Concurrently
     AlphaTwirl.Counter
     AlphaTwirl.EventReader
     AlphaTwirl.Events
@@ -69,6 +70,22 @@ AlphaTwirl.buildBinningFromTbl module
 -------------------------------------
 
 .. automodule:: AlphaTwirl.buildBinningFromTbl
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.dataframe module
+---------------------------
+
+.. automodule:: AlphaTwirl.dataframe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.mkdir_p module
+-------------------------
+
+.. automodule:: AlphaTwirl.mkdir_p
     :members:
     :undoc-members:
     :show-inheritance:
