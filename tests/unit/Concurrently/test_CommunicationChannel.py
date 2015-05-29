@@ -104,4 +104,10 @@ class TestCommunicationChannel(unittest.TestCase):
         # test the order of results
         pass
 
+    # test repeating put and receive
+
+    # test begin again anfter end
+
+    # test when begin is called twice
+
 ##__________________________________________________________________||
