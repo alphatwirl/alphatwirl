@@ -4,23 +4,18 @@
 class MPEventLoopRunner(object):
     def __init__(self, communicationChannel):
         self.communicationChannel = communicationChannel
+        self._original_readers = [ ]
 
-    def begin(self):
-        self._allReaders = { }
+    def begin(self): pass
 
     def run(self, eventLoop):
-
-        # add id so can collect later
-        reader = eventLoop.reader
-        reader.id = id(reader)
-        self._allReaders[id(reader)] = reader
-
+        self._original_readers.append(eventLoop.reader)
         self.communicationChannel.put(eventLoop)
 
     def end(self):
-
-        readers = self.communicationChannel.receive()
-        for reader in readers:
-            self._allReaders[reader.id].setResults(reader.results())
+        returned_readers = self.communicationChannel.receive()
+        for original, returned in zip(self._original_readers, returned_readers):
+            if original is returned: continue
+            original.setResults(returned.results())
 
 ##__________________________________________________________________||
