@@ -1,98 +1,126 @@
 from AlphaTwirl.EventReader import MPEventLoopRunner
-from AlphaTwirl.Concurrently import CommunicationChannel
 import unittest
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
+class MockCommunicationChannel(object):
+    def __init__(self):
+        self.eventLoops = [ ]
+        self.readersToReceive = [ ]
+
+    def put(self, task):
+        eventLoop = task
+        self.eventLoops.append(eventLoop)
+
+    def receive(self):
+        return self.readersToReceive
+
+##__________________________________________________________________||
+class MockResult(object): pass
+
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self):
-        self._results = None
+        self._result = None
+        self._isSetResultsCalled = False
 
-    def setResults(self, results):
-        self._results = results
+    def setResults(self, result):
+        self._result = result
+        self._isSetResultsCalled = True
 
     def results(self):
-        return self._results
+        return self._result
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEventLoop(object):
     def __init__(self, reader):
         self.reader = reader
 
-    def __call__(self, progressReporter):
-        self.reader._results = 3456
-        return self.reader
-
-##____________________________________________________________________________||
-class MockEventLoopForProgressReporterTest(object):
-    def __init__(self, reader):
-        self.reader = reader
-
-    def __call__(self, progressReporter):
-        self.reader._results = [3456, progressReporter]
-        return self.reader
-
-##____________________________________________________________________________||
-class MockProgressReporter(object):
-    def report(self, event, component): pass
-
-##____________________________________________________________________________||
-class MockProgressMonitor(object):
-    def createReporter(self): return MockProgressReporter()
-    def addWorker(self, worker): pass
-    def monitor(self): pass
-    def last(self): pass
-
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMPEventLoopRunner(unittest.TestCase):
 
     def test_begin_end(self):
-        communicationChannel = CommunicationChannel()
+        communicationChannel = MockCommunicationChannel()
         runner = MPEventLoopRunner(communicationChannel)
-        communicationChannel.begin()
         runner.begin()
         runner.end()
-        communicationChannel.end()
 
     def test_run(self):
-        communicationChannel = CommunicationChannel()
+        communicationChannel = MockCommunicationChannel()
         runner = MPEventLoopRunner(communicationChannel)
-        communicationChannel.begin()
         runner.begin()
 
-        reader = MockReader()
-        eventLoop = MockEventLoop(reader)
-        runner.run(eventLoop)
+        reader1 = MockReader()
+        eventLoop1 = MockEventLoop(reader1)
+        runner.run(eventLoop1)
 
+        reader2 = MockReader()
+        eventLoop2 = MockEventLoop(reader2)
+        runner.run(eventLoop2)
 
-        self.assertIsNone(reader._results)
+        self.assertEqual([eventLoop1, eventLoop2], communicationChannel.eventLoops)
+
+    def test_run_end_same_readers(self):
+        communicationChannel = MockCommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        runner.begin()
+
+        reader1 = MockReader()
+        eventLoop1 = MockEventLoop(reader1)
+        runner.run(eventLoop1)
+
+        reader2 = MockReader()
+        eventLoop2 = MockEventLoop(reader2)
+        runner.run(eventLoop2)
+
+        communicationChannel.readersToReceive = [reader1, reader2]
+
+        runner.end()
+        self.assertFalse(reader1._isSetResultsCalled)
+        self.assertFalse(reader2._isSetResultsCalled)
+
+    def test_run_end_different_readers(self):
+        communicationChannel = MockCommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        runner.begin()
+
+        reader1 = MockReader()
+        eventLoop1 = MockEventLoop(reader1)
+        runner.run(eventLoop1)
+
+        reader2 = MockReader()
+        eventLoop2 = MockEventLoop(reader2)
+        runner.run(eventLoop2)
+
+        reader3 = MockReader()
+        reader4 = MockReader()
+        reader3._result = MockResult()
+        reader4._result = MockResult()
+        communicationChannel.readersToReceive = [reader3, reader4]
+
+        runner.end()
+        self.assertTrue(reader1._isSetResultsCalled)
+        self.assertTrue(reader2._isSetResultsCalled)
+
+        self.assertEqual(reader3._result, reader1._result)
+        self.assertEqual(reader4._result, reader2._result)
+
+    @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
+    def test_run_end_wrong_number_or_readers(self):
+        communicationChannel = MockCommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        runner.begin()
+
+        reader1 = MockReader()
+        eventLoop1 = MockEventLoop(reader1)
+        runner.run(eventLoop1)
+
+        reader2 = MockReader()
+        eventLoop2 = MockEventLoop(reader2)
+        runner.run(eventLoop2)
+
+        communicationChannel.readersToReceive = [ ]
 
         runner.end()
 
-        self.assertEqual(3456, reader._results)
-
-        communicationChannel.end()
-
-    def test_ProgressMonitor(self):
-        progressMonitor = MockProgressMonitor()
-        communicationChannel = CommunicationChannel(nprocesses = 3, progressMonitor = progressMonitor)
-        runner = MPEventLoopRunner(communicationChannel)
-        communicationChannel.begin()
-        runner.begin()
-
-        reader = MockReader()
-        eventLoop = MockEventLoopForProgressReporterTest(reader)
-        runner.run(eventLoop)
-
-        self.assertIsNone(reader._results)
-
-        runner.end()
-
-        self.assertEqual(3456, reader._results[0])
-
-        # assert that the EventLoop received a ProgressReporter
-        self.assertIsInstance(reader._results[1], MockProgressReporter)
-
-        communicationChannel.end()
-
-##____________________________________________________________________________||
+##__________________________________________________________________||
