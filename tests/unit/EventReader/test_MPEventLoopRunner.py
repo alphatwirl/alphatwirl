@@ -1,4 +1,5 @@
-from AlphaTwirl.EventReader import MPEventLoopRunner, CommunicationChannel
+from AlphaTwirl.EventReader import MPEventLoopRunner
+from AlphaTwirl.Concurrently import CommunicationChannel
 import unittest
 import os
 

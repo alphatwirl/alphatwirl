@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from NullProgressMonitor import NullProgressMonitor
+from ..ProgressBar import NullProgressMonitor
 
 ##____________________________________________________________________________||
 class EventLoopRunner(object):

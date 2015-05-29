@@ -12,7 +12,7 @@ from EventReader import EventReaderCollectorAssociator
 from EventReader import EventReaderCollectorAssociatorComposite
 from EventReader import EventLoopRunner
 from EventReader import MPEventLoopRunner
-from EventReader import CommunicationChannel
+from Concurrently import CommunicationChannel
 from ProgressBar import ProgressBar
 from ProgressBar import ProgressMonitor, MPProgressMonitor
 from Counter import Counts

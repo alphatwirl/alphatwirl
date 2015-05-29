@@ -52,6 +52,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Echo))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Round))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.RoundLog))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Concurrently.CommunicationChannel))
         self.assertTrue(inspect.isclass(AlphaTwirl.Combine))
         self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoList))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.Counter))
@@ -69,8 +70,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderCollectorAssociatorComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.MPEventLoopRunner))
-        self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.CommunicationChannel))
-        self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.NullProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.Branch))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.BranchAddressManager))
         self.assertTrue(inspect.isclass(AlphaTwirl.Events.Events))
@@ -88,6 +87,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReport))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReporter))
+        self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.NullProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.WriteListToFile))
 
 ##________________________________._________________________________||
