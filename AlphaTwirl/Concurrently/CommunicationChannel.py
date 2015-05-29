@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..ProgressBar import NullProgressMonitor
 import multiprocessing
+from operator import itemgetter
 
 ##__________________________________________________________________||
 class Worker(multiprocessing.Process):
@@ -13,13 +14,14 @@ class Worker(multiprocessing.Process):
 
     def run(self):
         while True:
-            task = self.task_queue.get()
-            if task is None:
+            message = self.task_queue.get()
+            if message is None:
                 self.task_queue.task_done()
                 break
-            results = task(self.progressReporter)
+            taskNo, task = message
+            result = task(self.progressReporter)
             self.task_queue.task_done()
-            self.result_queue.put(results)
+            self.result_queue.put((taskNo, result))
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
@@ -31,6 +33,7 @@ class CommunicationChannel(object):
         self.result_queue = multiprocessing.Queue()
         self.lock = multiprocessing.Lock()
         self.nRunningTasks = 0
+        self.taskNo = 0
 
     def begin(self):
         if self.nCurrentProcesses >= self.nMaxProcesses: return
@@ -40,17 +43,23 @@ class CommunicationChannel(object):
             self.nCurrentProcesses += 1
 
     def put(self, task):
-        self.task_queue.put(task)
+        self.task_queue.put((self.taskNo, task))
+        self.taskNo += 1
         self.nRunningTasks += 1
 
     def receive(self):
-        results = [ ]
+        messages = [ ] # a list of (taskNo, result)
         while self.nRunningTasks >= 1:
             self.progressMonitor.monitor()
             if self.result_queue.empty(): continue
-            result = self.result_queue.get()
-            results.append(result)
+            message = self.result_queue.get()
+            messages.append(message)
             self.nRunningTasks -= 1
+
+        # sort in the order of taskNo
+        messages = sorted(messages, key = itemgetter(0))
+
+        results = [result for taskNo, result in messages]
         self.progressMonitor.last()
         return results
 

@@ -77,6 +77,30 @@ class TestCommunicationChannel(unittest.TestCase):
 
         communicationChannel.end()
 
+    def test_receive_order(self):
+        # results of tasks are sorted in the order in which the tasks
+        # are put.
+
+        communicationChannel = CommunicationChannel()
+        communicationChannel.begin()
+
+        result1 = MockResult('task1')
+        task1 = MockTask(result1, 0.010)
+        communicationChannel.put(task1)
+
+        result2 = MockResult('task2')
+        task2 = MockTask(result2, 0.001)
+        communicationChannel.put(task2)
+
+        result3 = MockResult('task3')
+        task3 = MockTask(result3, 0.005)
+        communicationChannel.put(task3)
+
+        actual = [r.data for r in communicationChannel.receive()]
+        self.assertEqual(['task1', 'task2', 'task3'], actual)
+
+        communicationChannel.end()
+
     def test_put_receive_repeat(self):
         communicationChannel = CommunicationChannel()
         communicationChannel.begin()
@@ -159,10 +183,6 @@ class TestCommunicationChannel(unittest.TestCase):
         self.assertIsInstance(returnedResults[1].progressReporter, MockProgressReporter)
 
         communicationChannel.end()
-
-    def test_receive_order(self):
-        # test the order of results
-        pass
 
 
 ##__________________________________________________________________||
