@@ -14,7 +14,7 @@ from EventReader import EventLoopRunner
 from EventReader import MPEventLoopRunner
 from Concurrently import CommunicationChannel
 from ProgressBar import ProgressBar
-from ProgressBar import ProgressMonitor, MPProgressMonitor
+from ProgressBar import ProgressMonitor, BProgressMonitor
 from Counter import Counts
 from Counter import GenericKeyComposerBFactory
 from Counter import CounterFactory
@@ -128,7 +128,7 @@ class AlphaTwirl(object):
             self.progressMonitor = None if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = None
         else:
-            self.progressMonitor = None if self.args.quiet else MPProgressMonitor(presentation = self.progressBar)
+            self.progressMonitor = None if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
         self.are_CommunicationChannel_and_ProgressMonitor_created = True
 
@@ -144,10 +144,12 @@ class AlphaTwirl(object):
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
         self._create_CommunicationChannel_and_ProgressMonitor()
+        if self.progressMonitor is not None: self.progressMonitor.begin()
         if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
         heppyResult = HeppyResult(self.args.heppydir)
         componentLoop(heppyResult.components())
         if self.communicationChannel is not None: self.communicationChannel.end()
+        if self.progressMonitor is not None: self.progressMonitor.end()
 
 ##__________________________________________________________________||
