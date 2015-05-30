@@ -17,7 +17,6 @@ class MPEventLoopRunner(object):
 
     In older versions, multiple processes are forked in this method.
 
-
     Then, you can give an ``EventLoop`` with the method ``run()``::
 
         runner.run(eventLoop1)
@@ -34,11 +33,9 @@ class MPEventLoopRunner(object):
     If workers are in the background, this method immediately returns.
     Worker are running the event loops concurrently in the background.
     If the worker is in the foreground, this method won't return until
-    the worker finishes running the event loop. In this case, a
-    progress bar might be shown on the screen if the communication
-    channel is configured so. Whether workers are in the background or
-    foreground depends on the communication channel with which this
-    class is initialized.
+    the worker finishes running the event loop. Whether workers are in
+    the background or foreground depends on the communication channel
+    with which this class is initialized.
 
     After giving all event loops that you need to run to this class,
     you need to call the method ``end()``::
@@ -46,10 +43,8 @@ class MPEventLoopRunner(object):
         runner.end()
 
     If workers are in the background, this method will wait until
-    workers finish running all event loops. While waiting progress
-    bars will be shown on the screen if the communication channel is
-    configured so. If the worker is in the background, this method
-    immediately returns.
+    workers finish running all event loops. If the worker is in the
+    foreground, this method immediately returns.
 
     """
 
