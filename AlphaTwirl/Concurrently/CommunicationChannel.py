@@ -30,17 +30,14 @@ class CommunicationChannel(object):
     You can send tasks to workers through this channel. The workers,
     running in other processes, execute the tasks in the background.
     You can receive the results of the tasks also through this
-    channel. While waiting to receive the results, this class operates
-    a progress monitor, which, for example, updates the progress bars
-    on the screen.
-
+    channel.
 
     An instance of this class can be created with two optional
     arguments: ``nprocesses``, the number of workers to be created,
     and ``progressMonitor``::
 
         progressBar = ProgressBar()
-        progressMonitor = MPProgressMonitor(progressBar)
+        progressMonitor = BProgressMonitor(progressBar)
         channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
 
     Workers will be created when ``begin()`` is called::
@@ -79,14 +76,11 @@ class CommunicationChannel(object):
 
     This method will wait until all tasks are finished. If a task
     gives a ``progressReport`` to the ``progressReporter``, the report
-    will be sent to the ``progressMonitor`` in the main process,
-    which, for example, will be used to update progress bars on the
-    screen.
+    will be used, for example, to update progress bars on the screen.
 
     When all tasks end, results will be returned. The return value
     ``results`` is a list of results of the tasks. They are sorted in
     the order in which the tasks are originally put.
-
 
     After receiving the results, you can put more tasks::
 
@@ -131,7 +125,6 @@ class CommunicationChannel(object):
     def receive(self):
         messages = [ ] # a list of (taskNo, result)
         while self.nRunningTasks >= 1:
-            self.progressMonitor.monitor()
             if self.result_queue.empty(): continue
             message = self.result_queue.get()
             messages.append(message)
@@ -141,7 +134,6 @@ class CommunicationChannel(object):
         messages = sorted(messages, key = itemgetter(0))
 
         results = [result for taskNo, result in messages]
-        self.progressMonitor.last()
         return results
 
     def end(self):
