@@ -3,8 +3,7 @@
 ##____________________________________________________________________________||
 class NullProgressMonitor(object):
     def createReporter(self): return None
-    def addWorker(self, worker): pass
-    def monitor(self): pass
-    def last(self): pass
+    def begin(self): pass
+    def end(self): pass
 
 ##____________________________________________________________________________||
