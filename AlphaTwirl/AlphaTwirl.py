@@ -84,7 +84,7 @@ def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
 
 ##__________________________________________________________________||
 def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressBar, progressMonitor, communicationChannel, processes, quiet):
-    eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressBar)
+    eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
     for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
     eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite, eventSelection = eventSelection)

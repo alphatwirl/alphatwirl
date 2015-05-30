@@ -5,9 +5,9 @@ from .EventReaderComposite import EventReaderComposite
 ##__________________________________________________________________||
 class EventReaderCollectorAssociatorComposite(object):
 
-    def __init__(self, progressBar = None):
+    def __init__(self, progressReporter = None):
         self.associators = [ ]
-        self.progressBar = progressBar
+        self.progressReporter = progressReporter
 
     def add(self, associator):
         self.associators.append(associator)
@@ -21,9 +21,9 @@ class EventReaderCollectorAssociatorComposite(object):
 
     def collect(self):
         for i, associator in enumerate(self.associators):
-            if self.progressBar is not None:
+            if self.progressReporter is not None:
                 report = ProgressReport(name = "collecting results", done = i + 1, total = len(self.associators))
-                self.progressBar.present(report)
+                self.progressReporter.report(report)
             associator.collect()
 
 
