@@ -1,20 +1,20 @@
 from AlphaTwirl.ProgressBar import ProgressReporter, ProgressReport
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTime(object):
     def __init__(self, time): self.time = time
     def __call__(self): return self.time
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockQueue(object):
     def __init__(self): self.queue = [ ]
     def put(self, report): self.queue.append(report)
     def get(self): return self.queue.pop(0)
     def empty(self): return len(self.queue) == 0
 
-##____________________________________________________________________________||
-class TestMPProgressMonitor(unittest.TestCase):
+##__________________________________________________________________||
+class TestProgressReporter(unittest.TestCase):
 
     def test_report(self):
         queue = MockQueue()
@@ -60,4 +60,4 @@ class TestMPProgressMonitor(unittest.TestCase):
         report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
         self.assertTrue(reporter.needToReport(report))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
