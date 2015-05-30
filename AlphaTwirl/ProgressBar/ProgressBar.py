@@ -12,26 +12,29 @@ class ProgressBar(object):
 
     def present(self, report):
         self.reports[report.taskid] = report
+        self._delete_previous_lines()
+        self._create_lines()
+        self._print_lines()
 
-        # delete previous lines
+    def _delete_previous_lines(self):
         if len(self.lines) >= 1:
             sys.stdout.write('\b'*len(self.lines[-1]))
         if len(self.lines) >= 2:
             sys.stdout.write('\033M'*(len(self.lines) - 1))
         self.lines = [ ]
-        last = [ ]
+        self.last = [ ]
 
-        # create lines
+    def _create_lines(self):
         for taskid, report in self.reports.items():
             line = self.createLine(report)
             if report.done >= report.total:
                 del self.reports[report.taskid]
-                last.append(line)
+                self.last.append(line)
             else:
                 self.lines.append(line)
 
-        # print lines
-        if len(last) > 0: sys.stdout.write("\n".join(last) + "\n")
+    def _print_lines(self):
+        if len(self.last) > 0: sys.stdout.write("\n".join(self.last) + "\n")
         sys.stdout.write("\n".join(self.lines))
         sys.stdout.flush()
 
