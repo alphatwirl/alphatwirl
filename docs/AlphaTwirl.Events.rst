@@ -28,6 +28,22 @@ AlphaTwirl.Events.BranchAddressManager module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.Events.BranchAddressManagerForVector module
+------------------------------------------------------
+
+.. automodule:: AlphaTwirl.Events.BranchAddressManagerForVector
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.Events.BranchBuilder module
+--------------------------------------
+
+.. automodule:: AlphaTwirl.Events.BranchBuilder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.Events.Events module
 -------------------------------
 
