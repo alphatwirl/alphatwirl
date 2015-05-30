@@ -15,7 +15,11 @@ class ProgressMonitor(object):
     def __init__(self, presentation):
         self.queue = Queue(presentation = presentation)
 
+    def begin(self): pass
+
     def monitor(self): pass
+
+    def end(self): pass
 
     def createReporter(self):
         reporter = ProgressReporter(self.queue)
