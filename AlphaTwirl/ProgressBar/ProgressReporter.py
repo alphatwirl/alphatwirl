@@ -46,7 +46,7 @@ class ProgressReporter(object):
 
         """
 
-        if not self.needToReport(report): return
+        if not self._needToReport(report): return
         self._report(report)
 
     def _report(self, report):
