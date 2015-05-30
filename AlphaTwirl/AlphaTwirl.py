@@ -14,7 +14,7 @@ from EventReader import EventLoopRunner
 from EventReader import MPEventLoopRunner
 from Concurrently import CommunicationChannel
 from ProgressBar import ProgressBar
-from ProgressBar import ProgressMonitor, BProgressMonitor
+from ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
 from Counter import Counts
 from Counter import GenericKeyComposerBFactory
 from Counter import CounterFactory
@@ -83,7 +83,7 @@ def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
     return eventLoopRunner
 
 ##__________________________________________________________________||
-def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressBar, progressMonitor, communicationChannel, processes, quiet):
+def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes, quiet):
     eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
     for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
     eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
@@ -91,12 +91,12 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
     return eventReaderBundle
 
 ##__________________________________________________________________||
-def createTreeReader(args, progressBar, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+def createTreeReader(args, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressBar, progressMonitor, communicationChannel, args.processes, args.quiet)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, args.processes, args.quiet)
     return eventReaderBundle
 
 ##__________________________________________________________________||
@@ -125,10 +125,10 @@ class AlphaTwirl(object):
         if self.are_CommunicationChannel_and_ProgressMonitor_created: return
         self.progressBar = None if self.args.quiet else ProgressBar()
         if self.args.processes is None:
-            self.progressMonitor = None if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
+            self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = None
         else:
-            self.progressMonitor = None if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
+            self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
         self.are_CommunicationChannel_and_ProgressMonitor_created = True
 
@@ -138,7 +138,7 @@ class AlphaTwirl(object):
     def addTreeReader(self, **kargs):
         if self.args is None: self.ArgumentParser().parse_args()
         self._create_CommunicationChannel_and_ProgressMonitor()
-        treeReader = createTreeReader(self.args, self.progressBar, self.progressMonitor, self.communicationChannel, **kargs)
+        treeReader = createTreeReader(self.args, self.progressMonitor, self.communicationChannel, **kargs)
         self.addComponentReader(treeReader)
 
     def run(self):
