@@ -1,9 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-import multiprocessing
 import time
 from ProgressReport import ProgressReport
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class ProgressReporter(object):
     def __init__(self, queue):
         self.queue = queue
@@ -26,4 +25,4 @@ class ProgressReporter(object):
     def _time(self): return time.time()
     def _readTime(self): self.lastTime = self._time()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
