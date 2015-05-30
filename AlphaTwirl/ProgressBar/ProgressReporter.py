@@ -4,6 +4,35 @@ from ProgressReport import ProgressReport
 
 ##__________________________________________________________________||
 class ProgressReporter(object):
+    """A progress reporter
+
+    This class sends progress reports to a progress monitor, which,
+    for example, use the reports to update progress bars on the
+    screen.
+
+    An instance of this class is initialized with a message queue::
+
+        reporter = ProgressReporter(queue)
+
+    A reporter, an instance of this class, is typically created and
+    initialized by a progress monitor, which keeps the other end of
+    the message queue. A reporter and a monitor might be running in
+    different processes.
+
+    A report, an instance of ``ProgressReport`` can be sent as::
+
+        reporter.report(report)
+
+    This method can be frequently called multiple times. However,
+    after sending one report, the reporter wait for a certain
+    ``interval`` (0.02 seconds by default) before sending another
+    report. Reports received within this interval will be discarded.
+    The exception for this is the last report. The last report, which
+    indicates the completion of the task, will be always sent to the
+    progress monitor regardless of whether it is given within the
+    interval.
+
+    """
     def __init__(self, queue):
         self.queue = queue
         self.interval = 0.02 # [second]
