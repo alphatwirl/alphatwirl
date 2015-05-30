@@ -25,7 +25,7 @@ class ProgressReporter(object):
 
     This method can be frequently called multiple times. However,
     after sending one report, the reporter wait for a certain
-    ``interval`` (0.02 seconds by default) before sending another
+    ``interval`` (0.1 seconds by default) before sending another
     report. Reports received within this interval will be discarded.
     The exception for this is the last report. The last report, which
     indicates the completion of the task, will be always sent to the
@@ -35,7 +35,7 @@ class ProgressReporter(object):
     """
     def __init__(self, queue):
         self.queue = queue
-        self.interval = 0.02 # [second]
+        self.interval = 0.1 # [second]
         self._readTime()
 
     def report(self, report):
