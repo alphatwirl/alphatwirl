@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
-from AlphaTwirl.ProgressBar import ProgressBar, MPProgressMonitor, ProgressReport
+from AlphaTwirl.ProgressBar import ProgressBar, ProgressReport, BProgressMonitor
 from AlphaTwirl.Concurrently import CommunicationChannel
 import time, random
 import uuid
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Task(object):
     def __init__(self, name):
         self.name = name
@@ -19,10 +19,11 @@ class Task(object):
             progressReporter.report(report)
         return None
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 progressBar = ProgressBar()
-progressMonitor = MPProgressMonitor(presentation = progressBar)
+progressMonitor = BProgressMonitor(presentation = progressBar)
 channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
+progressMonitor.begin()
 channel.begin()
 channel.put(Task("loop"))
 channel.put(Task("another loop"))
@@ -35,5 +36,6 @@ channel.put(Task("loop8"))
 channel.put(Task("loop6"))
 channel.receive()
 channel.end()
+progressMonitor.end()
 
 ##____________________________________________________________________________||
