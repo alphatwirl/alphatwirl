@@ -7,7 +7,7 @@ class ProgressReporter(object):
     """A progress reporter
 
     This class sends progress reports to a progress monitor, which,
-    for example, use the reports to update progress bars on the
+    for example, uses the reports to update progress bars on the
     screen.
 
     An instance of this class is initialized with a message queue::
