@@ -39,6 +39,13 @@ class ProgressReporter(object):
         self._readTime()
 
     def report(self, report):
+        """send report to a progress monitor
+
+        Args:
+            report (ProgressReport): a progress report
+
+        """
+
         if not self.needToReport(report): return
         self._report(report)
 
@@ -46,7 +53,7 @@ class ProgressReporter(object):
         self.queue.put(report)
         self._readTime()
 
-    def needToReport(self, report):
+    def _needToReport(self, report):
         if self._time() - self.lastTime > self.interval: return True
         if report.done == report.total: return True
         return False

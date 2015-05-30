@@ -48,16 +48,16 @@ class TestProgressReporter(unittest.TestCase):
 
         mocktime.time = 1000.01
         report = ProgressReport(name = "dataset1", done = 124, total = 1552)
-        self.assertFalse(reporter.needToReport(report))
+        self.assertFalse(reporter._needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.03
         report = ProgressReport(name = "dataset1", done = 124, total = 1552)
-        self.assertTrue(reporter.needToReport(report))
+        self.assertTrue(reporter._needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
         mocktime.time = 1000.03
         report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
-        self.assertTrue(reporter.needToReport(report))
+        self.assertTrue(reporter._needToReport(report))
 
 ##__________________________________________________________________||
