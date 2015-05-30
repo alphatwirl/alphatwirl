@@ -17,12 +17,6 @@ class BProgressMonitor(object):
         self.queue.put(None)
         self.bg.join()
 
-    def monitor(self):
-        pass
-
-    def last(self):
-        pass
-
     def createReporter(self):
         return ProgressReporter(self.queue)
 

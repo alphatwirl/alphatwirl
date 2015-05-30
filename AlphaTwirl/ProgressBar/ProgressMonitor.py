@@ -17,8 +17,6 @@ class ProgressMonitor(object):
 
     def begin(self): pass
 
-    def monitor(self): pass
-
     def end(self): pass
 
     def createReporter(self):
