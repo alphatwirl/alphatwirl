@@ -62,6 +62,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.GenericKeyComposerB))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.NextKeyComposer))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.Collector))
+        self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.CollectorComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventLoop))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventLoopProgressReportWriter))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventLoopRunner))
