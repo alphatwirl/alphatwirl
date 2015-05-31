@@ -12,6 +12,14 @@ AlphaTwirl.EventReader.Collector module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.EventReader.CollectorComposite module
+------------------------------------------------
+
+.. automodule:: AlphaTwirl.EventReader.CollectorComposite
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.EventReader.EventLoop module
 ---------------------------------------
 
