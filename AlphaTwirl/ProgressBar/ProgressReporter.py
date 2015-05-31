@@ -6,20 +6,21 @@ from ProgressReport import ProgressReport
 class ProgressReporter(object):
     """A progress reporter
 
-    This class sends progress reports to a progress monitor, which,
-    for example, uses the reports to update progress bars on the
-    screen.
+    This class sends a `ProgressReport` to a progress monitor, e.g.,
+    `ProgressMonitor` or `BProgressMonitor`, which, for example, uses
+    the reports to update `ProgressBar` on the screen.
 
     An instance of this class is initialized with a message queue::
 
         reporter = ProgressReporter(queue)
 
     A reporter, an instance of this class, is typically created and
-    initialized by a progress monitor, which keeps the other end of
-    the message queue. A reporter and a monitor might be running in
-    different processes.
+    initialized by a progress monitor (`ProgressMonitor` or
+    `BProgressMonitor`), which keeps the other end of the message
+    queue. A reporter and a monitor might be running in different
+    processes.
 
-    A report, an instance of ``ProgressReport`` can be sent as::
+    A report, an instance of `ProgressReport`, can be sent as::
 
         reporter.report(report)
 
@@ -39,7 +40,7 @@ class ProgressReporter(object):
         self._readTime()
 
     def report(self, report):
-        """send report to a progress monitor
+        """send ``report`` to a progress monitor
 
         Args:
             report (ProgressReport): a progress report
