@@ -3,42 +3,45 @@
 ##__________________________________________________________________||
 class MPEventLoopRunner(object):
 
-    """This class (concurrently) runs instances of ``EventLoop``.
+    """This class (concurrently) runs instances of `EventLoop`.
 
     An instance of this class needs to be initialized with a
-    ``CommunicationChannel``, a communication channel with workers
-    that actually run the ``EventLoop``::
+    communication channel with workers that actually run the
+    `EventLoop`::
 
         runner = MPEventLoopRunner(communicationChannel)
 
-    The method ``begin()`` does nothing in the current version::
+    An example of a communication channel is an instance of
+    `CommunicationChannel`.
+
+    The method `begin()` does nothing in the current version::
 
         runner.begin()
 
     In older versions, multiple processes are forked in this method.
 
-    Then, you can give an ``EventLoop`` with the method ``run()``::
+    Then, you can give an `EventLoop` with the method `run()`::
 
         runner.run(eventLoop1)
 
-    This class will send the event loop to a worker through the
-    communication channel. The worker, then, runs the event loop.
+    This class will send the `EventLoop` to a worker through the
+    communication channel. The worker, then, runs the `EventLoop`.
 
-    You can call the method ``run()`` mutiple times::
+    You can call the method `run()` mutiple times::
 
         runner.run(eventLoop2)
         runner.run(eventLoop3)
         runner.run(eventLoop4)
 
     If workers are in the background, this method immediately returns.
-    Worker are running the event loops concurrently in the background.
+    Worker are concurrently running the event loops in the background.
     If the worker is in the foreground, this method won't return until
     the worker finishes running the event loop. Whether workers are in
     the background or foreground depends on the communication channel
     with which this class is initialized.
 
     After giving all event loops that you need to run to this class,
-    you need to call the method ``end()``::
+    you need to call the method `end()`::
 
         runner.end()
 
@@ -52,20 +55,38 @@ class MPEventLoopRunner(object):
         self.communicationChannel = communicationChannel
         self._original_readers = [ ]
 
-    def begin(self): pass
+    def begin(self):
+        """does nothing.
+
+        Older versions of this class had implementations.
+        """
+        pass
 
     def run(self, eventLoop):
+        """run the event loop in the background.
+
+        Args:
+            eventLoop (EventLoop): an event loop to run
+
+        """
+
         self._original_readers.append(eventLoop.reader)
         self.communicationChannel.put(eventLoop)
 
     def end(self):
-        """If eventLoops were executed in other processes, the readers
-        in the main process do not read the events; therefore, they
-        don't have the results. The readers in other processes read
-        the events. They have the results. The readers in other
-        process are pickled and sent back to the main process.
-        However, these returned readers are no longer the same
-        objects as the original readers in the main process.
+        """wait until all event loops end
+
+        In addition, if necessary, this method also carries out a
+        somewhat complex copying operation because of the duplication
+        of objects that occurs in multiprocessing.
+
+        If eventLoops were executed in other processes, the readers in
+        the main process do not read the events; therefore, they don't
+        have the results. The readers in other processes read the
+        events. They have the results. The readers in other process
+        are pickled and sent back to the main process. However, these
+        returned readers are no longer the same objects as the
+        original readers in the main process.
 
         The method copy the results in the returned readers to the
         original readers if they are different objects.
