@@ -5,6 +5,11 @@ from ProgressReporter import ProgressReporter
 
 ##__________________________________________________________________||
 class MPProgressMonitor(object):
+    """A progress monitor of tasks concurrently executed
+
+    This class has been deprecated and replaced with `BProgressMonitor`.
+
+    """
     def __init__(self, presentation):
         self.queue = multiprocessing.Queue()
         self._presentation = presentation
