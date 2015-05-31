@@ -4,6 +4,7 @@ from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
 from EventReaderCollectorAssociator import EventReaderCollectorAssociator
 from Collector import Collector
+from CollectorComposite import CollectorComposite
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from EventReaderComposite import EventReaderComposite
