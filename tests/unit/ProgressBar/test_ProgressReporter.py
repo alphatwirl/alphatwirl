@@ -40,24 +40,30 @@ class TestProgressReporter(unittest.TestCase):
         queue = MockQueue()
         reporter = ProgressReporter(queue)
 
+        interval = reporter.interval
+        self.assertEqual(0.1, interval)
+
         mocktime = MockTime(1000.0)
         reporter._time = mocktime
 
         reporter._readTime()
         self.assertEqual(1000.0, reporter.lastTime)
 
-        mocktime.time = 1000.01
+        # before the interval passes
+        mocktime.time += 0.1*interval
         report = ProgressReport(name = "dataset1", done = 124, total = 1552)
         self.assertFalse(reporter._needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
-        mocktime.time = 1000.03
-        report = ProgressReport(name = "dataset1", done = 124, total = 1552)
+        # the last report before the interval passes
+        report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
         self.assertTrue(reporter._needToReport(report))
         self.assertEqual(1000.0, reporter.lastTime)
 
-        mocktime.time = 1000.03
-        report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
+        # after the interval passes
+        mocktime.time += 1.2*interval
+        report = ProgressReport(name = "dataset2", done = 1022, total = 4000)
         self.assertTrue(reporter._needToReport(report))
+        self.assertEqual(1000.0, reporter.lastTime)
 
 ##__________________________________________________________________||
