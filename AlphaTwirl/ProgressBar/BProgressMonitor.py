@@ -10,7 +10,7 @@ class BProgressMonitor(object):
         self.presentation = presentation
 
     def begin(self):
-        self.bg = ProgressReportTray(self.queue, self.presentation)
+        self.bg = ProgressReportPickup(self.queue, self.presentation)
         self.bg.start()
 
     def end(self):
@@ -21,7 +21,7 @@ class BProgressMonitor(object):
         return ProgressReporter(self.queue)
 
 ##__________________________________________________________________||
-class ProgressReportTray(multiprocessing.Process):
+class ProgressReportPickup(multiprocessing.Process):
     def __init__(self, queue, presentation):
         multiprocessing.Process.__init__(self)
         self.queue = queue
