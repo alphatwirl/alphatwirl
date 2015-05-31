@@ -41,6 +41,10 @@ extensions = [
 # http://sphinx-doc.org/ext/autodoc.html
 autodoc_member_order = 'bysource'
 
+# configuration for napoleon
+# http://sphinx-doc.org/ext/napoleon.html#configuration
+napoleon_use_ivar = True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
