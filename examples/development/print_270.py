@@ -7,7 +7,8 @@ from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReaderBundle, EventReaderCollectorAssociatorComposite
-from AlphaTwirl.ProgressBar import MPProgressMonitor, ProgressBar
+from AlphaTwirl.ProgressBar import BProgressMonitor, ProgressBar
+from AlphaTwirl.Concurrently import CommunicationChannel
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
@@ -51,10 +52,13 @@ readerCollectorAssociator3 = EventReaderCollectorAssociator(counterFactory3, col
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
 progressBar = ProgressBar()
-progressMonitor = MPProgressMonitor(progressBar)
-eventLoopRunner = MPEventLoopRunner(8, progressMonitor)
+progressMonitor = BProgressMonitor(progressBar)
+progressMonitor.begin()
+communicationChannel = CommunicationChannel(8, progressMonitor)
+communicationChannel.begin()
+eventLoopRunner = MPEventLoopRunner(communicationChannel)
 
-eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressBar)
+eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
 eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator1)
 eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator2)
 eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator3)
@@ -68,5 +72,7 @@ for component in heppyResult.components():
     readerBundle.read(component)
 
 readerBundle.end()
+communicationChannel.end()
+progressMonitor.end()
 
 ##__________________________________________________________________||
