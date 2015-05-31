@@ -20,15 +20,15 @@ class EventReaderCollectorAssociator(object):
 
     def __init__(self, ReaderClass, resultCollector = None):
         self._ReaderClass = ReaderClass
-        self._resultCollector = resultCollector if resultCollector is not None else NullCollector()
+        self.collector = resultCollector if resultCollector is not None else NullCollector()
 
     def make(self, datasetName):
         reader = self._ReaderClass()
-        self._resultCollector.addReader(datasetName, reader)
+        self.collector.addReader(datasetName, reader)
         return reader
 
     def collect(self):
-        return self._resultCollector.collect()
+        return self.collector.collect()
 
 ##____________________________________________________________________________||
 class NullCollector(object):
