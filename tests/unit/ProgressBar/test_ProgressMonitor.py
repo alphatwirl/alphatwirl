@@ -22,10 +22,11 @@ class TestQueue(unittest.TestCase):
 ##__________________________________________________________________||
 class TestProgressMonitor(unittest.TestCase):
 
-    def test_monitor(self):
+    def test_begin_end(self):
         presentation = MockPresentation()
         monitor = ProgressMonitor(presentation)
-        monitor.monitor()
+        monitor.begin()
+        monitor.end()
 
     def test_createReporter(self):
         presentation = MockPresentation()
