@@ -4,4 +4,5 @@ from MPProgressMonitor import MPProgressMonitor
 from ProgressReporter import ProgressReporter
 from ProgressReport import ProgressReport
 from NullProgressMonitor import NullProgressMonitor
-from BProgressMonitor import BProgressMonitor, ProgressReportPickup
+from BProgressMonitor import BProgressMonitor
+from ProgressReportPickup import ProgressReportPickup
