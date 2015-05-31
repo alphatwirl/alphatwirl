@@ -19,18 +19,23 @@ class MockReader(object):
         self._eventIds.append(event.id)
 
 ##__________________________________________________________________||
-class MockEventReaderCollectorAssociator(object):
+class MockCollector(object):
     def __init__(self):
-        self.reader = None
         self.collected = False
-
-    def make(self, name):
-        self.reader = MockReader(name)
-        return self.reader
 
     def collect(self):
         self.collected = True
         return 1234
+
+##__________________________________________________________________||
+class MockEventReaderCollectorAssociator(object):
+    def __init__(self):
+        self.reader = None
+        self.collector = MockCollector()
+
+    def make(self, name):
+        self.reader = MockReader(name)
+        return self.reader
 
 ##__________________________________________________________________||
 class MockComponent(object):
@@ -132,8 +137,8 @@ class TestEventReaderBundle(unittest.TestCase):
         self.assertIs("compName2", eventLoopRunner.eventLoop.component.name)
         self.assertEqual(readerCollectorAssociator.reader,eventLoopRunner.eventLoop.reader)
 
-        self.assertFalse(readerCollectorAssociator.collected)
+        self.assertFalse(readerCollectorAssociator.collector.collected)
         self.assertEqual(1234, bundle.end())
-        self.assertTrue(readerCollectorAssociator.collected)
+        self.assertTrue(readerCollectorAssociator.collector.collected)
 
 ##__________________________________________________________________||
