@@ -65,12 +65,12 @@ class BProgressMonitor(object):
         self.presentation = presentation
 
     def begin(self):
-        self.bg = ProgressReportPickup(self.queue, self.presentation)
-        self.bg.start()
+        self.pickup = ProgressReportPickup(self.queue, self.presentation)
+        self.pickup.start()
 
     def end(self):
         self.queue.put(None)
-        self.bg.join()
+        self.pickup.join()
 
     def createReporter(self):
         return ProgressReporter(self.queue)
