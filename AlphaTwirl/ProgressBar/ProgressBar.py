@@ -54,6 +54,7 @@ class ProgressBar(object):
     def _need_to_update(self, report):
         if self._time() - self.lastTime > self.interval: return True
         if report.done == report.total: return True
+        if report.done == 0: return True
         return False
 
     def _time(self): return time.time()
