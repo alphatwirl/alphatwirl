@@ -22,9 +22,6 @@ class EventReaderCollectorAssociator(object):
     class creates a reader, provide the collector with the pair of the
     data set name and the reader, and returns the reader.
 
-    After the readers read events, the method `collect` is called.
-    This method, in turn, calls the method `collect` of the collector.
-
     """
 
     def __init__(self, ReaderClass, resultCollector = None):
@@ -45,9 +42,6 @@ class EventReaderCollectorAssociator(object):
         reader = self._ReaderClass()
         self.collector.addReader(datasetName, reader)
         return reader
-
-    def collect(self):
-        return self.collector.collect()
 
 ##____________________________________________________________________________||
 class NullCollector(object):
