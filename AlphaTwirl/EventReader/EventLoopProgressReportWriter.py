@@ -3,6 +3,9 @@ from ..ProgressBar import ProgressReport
 
 ##____________________________________________________________________________||
 class EventLoopProgressReportWriter(object):
+    """A progress report writer of an event loop
+
+    """
     def write(self, taskid, component, event):
         return ProgressReport(
             name = component.name,

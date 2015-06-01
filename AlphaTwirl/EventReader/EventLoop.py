@@ -4,6 +4,8 @@ import uuid
 
 ##____________________________________________________________________________||
 class EventLoop(object):
+    """An event loop
+    """
     def __init__(self, eventBuilder, eventSelection, component, reader):
         self.eventBuilder = eventBuilder
         self.component = component
@@ -16,16 +18,16 @@ class EventLoop(object):
 
     def __call__(self, progressReporter = None):
         events = self.eventBuilder.build(self.component)
-        self.reportProgress(progressReporter, events)
+        self._reportProgress(progressReporter, events)
         self.reader.begin(events)
         for event in events:
-            self.reportProgress(progressReporter, event)
+            self._reportProgress(progressReporter, event)
             if not self.eventSelection(event): continue
             self.reader.event(event)
         self.reader.end()
         return self.reader
 
-    def reportProgress(self, progressReporter, event):
+    def _reportProgress(self, progressReporter, event):
         if progressReporter is None: return
         report = self.progressReportWriter.write(self.taskid, self.component, event)
         progressReporter.report(report)

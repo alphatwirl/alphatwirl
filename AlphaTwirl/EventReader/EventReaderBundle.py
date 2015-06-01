@@ -7,7 +7,9 @@ class AllEvents(object):
 
 ##__________________________________________________________________||
 class EventReaderBundle(object):
+    """A bundle of event readers
 
+    """
     def __init__(self, eventBuilder, eventLoopRunner, readerCollectorAssociator, eventSelection = None):
         self.eventBuilder = eventBuilder
         self.eventLoopRunner = eventLoopRunner
