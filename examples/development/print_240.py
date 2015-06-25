@@ -70,8 +70,8 @@ for component in heppyResult.components():
     eventLoop = EventLoop(eventBuilder, eventSelection, component, readers)
     eventLoop(progressReporter)
 
-readerCollectorAssociator1.collect()
-readerCollectorAssociator2.collect()
-readerCollectorAssociator3.collect()
+collector1.collect()
+collector2.collect()
+collector3.collect()
 
 ##__________________________________________________________________||

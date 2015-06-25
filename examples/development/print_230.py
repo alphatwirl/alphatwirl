@@ -78,8 +78,8 @@ for component in heppyResult.components():
         reader2.event(event)
         reader3.event(event)
 
-readerCollectorAssociator1.collect()
-readerCollectorAssociator2.collect()
-readerCollectorAssociator3.collect()
+collector1.collect()
+collector2.collect()
+collector3.collect()
 
 ##__________________________________________________________________||

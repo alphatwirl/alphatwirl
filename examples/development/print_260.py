@@ -76,9 +76,9 @@ for component in heppyResult.components():
     eventLoopRunner.run(eventLoop)
 
 eventLoopRunner.end()
-readerCollectorAssociator1.collect()
-readerCollectorAssociator2.collect()
-readerCollectorAssociator3.collect()
+collector1.collect()
+collector2.collect()
+collector3.collect()
 communicationChannel.end()
 progressMonitor.end()
 
