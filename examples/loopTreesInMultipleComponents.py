@@ -26,7 +26,7 @@ for component in heppyResult.components():
     inputPath = os.path.join(analyzer.path, options.rootFileName)
     file = ROOT.TFile.Open(inputPath)
     tree = file.Get(options.treeName)
-    events = AlphaTwirl.Events(tree, options.nevents)
+    events = AlphaTwirl.Events.Events(tree, options.nevents)
     for event in events:
         run = event.run
         lumi = event.lumi

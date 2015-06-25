@@ -19,7 +19,7 @@ parser.add_option("-t", "--treeName", default = 'tree', action = "store", type =
 ##____________________________________________________________________________||
 file = ROOT.TFile.Open(options.inputPath)
 tree = file.Get(options.treeName)
-events = AlphaTwirl.Events(tree, options.nevents)
+events = AlphaTwirl.Events.Events(tree, options.nevents)
 
 for event in events:
     run = event.run
