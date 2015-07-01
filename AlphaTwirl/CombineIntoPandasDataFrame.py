@@ -24,7 +24,8 @@ class CombineIntoPandasDataFrame(object):
         reader = datasetReaderPairs[0][1]
         if len(combined) == 0:
             columns = (self.datasetColumnName, ) + tuple(self.keyNames) + tuple(reader.valNames())
-            return pandas.DataFrame(columns = columns)
+            d = dict([(e, [ ]) for e in columns])
+            return pandas.DataFrame(d, columns = columns)
         return countsToDataFrame(combined, (self.datasetColumnName, ) + self.keyNames)
 
 ##____________________________________________________________________________||
