@@ -57,4 +57,11 @@ class TestReadCounter(unittest.TestCase):
         self.assertEqual('Sum \t Weights', level)
         self.assertEqual({'count': 1042218.60703, 'eff2': 2.0844, 'eff1': 2.08}, content)
 
+    def test_readLine_scientific_notation(self):
+        readCounter = ReadCounter()
+        line = "	 Sum Weights                              3.73134089883e+12 	 154498.74 	 154498.7447"
+        level, content = readCounter._readLine(line)
+        self.assertEqual('Sum Weights', level)
+        self.assertEqual({'count': 3.73134089883e+12, 'eff2': 154498.7447, 'eff1': 154498.74}, content)
+
 ##____________________________________________________________________________||

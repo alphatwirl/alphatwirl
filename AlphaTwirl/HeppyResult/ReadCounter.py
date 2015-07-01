@@ -26,7 +26,7 @@ class ReadCounter(object):
     def _readLine(self, line):
         # a line is written in the format '\t {level:<40} {count:>9} \t {eff1:4.2f} \t {eff2:6.4f}\n'
         # https://github.com/cms-sw/cmssw/blob/CMSSW_7_4_0/PhysicsTools/HeppyCore/python/statistics/counter.py
-        match = re.search(r'^\t (.*?) *([0-9.]*) \t ([0-9.]*) \t ([0-9.]*)$', line)
+        match = re.search(r'^\t (.*?) *([0-9e+.]*) \t ([0-9e+.]*) \t ([0-9e+.]*)$', line)
         if not match: return None, None
         level = match.group(1)
         count = match.group(2)
