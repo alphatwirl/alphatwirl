@@ -81,6 +81,8 @@ def inspectLeaf(tree, bname):
     typedic = dict(
         Double_t = 'd',
         Int_t = 'i',
+        UInt_t = 'I',
+        ULong64_t = 'L',
     )
 
     leaf = tree.GetLeaf(bname)
