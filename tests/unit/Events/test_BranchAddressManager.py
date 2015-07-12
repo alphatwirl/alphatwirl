@@ -44,8 +44,8 @@ class TestBranchAddressManager(unittest.TestCase):
 
     def setUp(self):
 
-        run = MockLeaf('run', 'Int_t', MockNullLeaf())
-        lumi = MockLeaf('lumi', 'Int_t', MockNullLeaf())
+        run = MockLeaf('run', 'UInt_t', MockNullLeaf())
+        lumi = MockLeaf('lumi', 'UInt_t', MockNullLeaf())
         evt  = MockLeaf('evt', 'Int_t', MockNullLeaf())
         met_pt = MockLeaf('met_pt', 'Double_t', MockNullLeaf())
         njet = MockLeaf('njet', 'Int_t', MockNullLeaf(), 13)
