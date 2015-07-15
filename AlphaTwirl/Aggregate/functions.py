@@ -22,7 +22,7 @@ def sumOverCategories(tbl, categories, variables):
 
 ##____________________________________________________________________________||
 def combine_MC_yields_in_datasets_into_xsec_in_processes(
-        tbl_yield, tbl_process, tbl_nevt, tbl_xsec):
+        tbl_yield, tbl_process, tbl_nevt, tbl_xsec, use_nevt_sumw = False):
     """return a data frame for cross sections for each process.
 
     This function receives four data frames:
@@ -175,15 +175,26 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     tbl = pd.merge(tbl_process, tbl_yield)
     tbl = sumOverCategories(tbl, categories = ('component', ), variables = ('n', 'nvar'))
 
-    tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
-    tbl_nevt = pd.merge(tbl_process, tbl_nevt)
-    tbl_nevt = sumOverCategories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
-    tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
+    if use_nevt_sumw:
+        tbl_nevt = tbl_nevt.drop('nevt', axis = 1)
+        tbl_nevt = pd.merge(tbl_process, tbl_nevt)
+        tbl_nevt = sumOverCategories(tbl_nevt, categories = ('component', ), variables = ('nevt_sumw', ))
+        tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
+    else:
+        tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
+        tbl_nevt = pd.merge(tbl_process, tbl_nevt)
+        tbl_nevt = sumOverCategories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
+        tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
 
     tbl = pd.merge(tbl, tbl_nevt)
-    tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl.nevt)**2
-    tbl['xsec'] = tbl.n*(tbl.xsec/tbl.nevt)
-    del tbl['nevt']
+    if use_nevt_sumw:
+        tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl.nevt_sumw)**2
+        tbl['xsec'] = tbl.n*(tbl.xsec/tbl.nevt_sumw)
+        del tbl['nevt_sumw']
+    else:
+        tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl.nevt)**2
+        tbl['xsec'] = tbl.n*(tbl.xsec/tbl.nevt)
+        del tbl['nevt']
     del tbl['n']
     del tbl['nvar']
 

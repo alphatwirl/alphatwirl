@@ -89,13 +89,13 @@ tbl_xsec = pd.read_table(cStringIO.StringIO(
 ##____________________________________________________________________________||
 tbl_nevt = pd.read_table(cStringIO.StringIO(
 """             component     nevt     nevt_sumw
-      QCD_HT_1000ToInf  1130720       1130720
+      QCD_HT_1000ToInf  1130720       1356864
  QCD_HT_1000ToInf_ext1   333733        333733
       QCD_HT_500To1000  3214312       3214312
  QCD_HT_500To1000_ext1   849033        849033
                 T_tWch   986100        986100
-             TBar_tWch   971800        971800
-                TTJets 25446993      25446993
+             TBar_tWch   971800       1068980
+                TTJets 25446993   26719342.65
 """), delim_whitespace = True)
 
 ##____________________________________________________________________________||
@@ -136,6 +136,43 @@ tbl_process_met = pd.read_table(cStringIO.StringIO(
  TTJets      5  800  144.543977 2.352867e-03  7.481061e-08
 """), delim_whitespace = True)
 
+tbl_process_met_sumw = pd.read_table(cStringIO.StringIO(
+"""process  njets   HT         MET      xsec       xsecvar
+    QCD      4  800  114.815362 4.552830e-04  2.072826e-07
+    QCD      4  800  125.892541 4.552830e-04  2.072826e-07
+    QCD      5  800  104.712855 4.552830e-04  2.072826e-07
+    QCD      5  800  114.815362 4.552830e-04  2.072826e-07
+    QCD      5  800  120.226443 9.105659e-04  4.145651e-07
+    QCD      5  800  125.892541 9.105659e-04  4.145651e-07
+    QCD      5  800  131.825674 4.552830e-04  2.072826e-07
+    QCD      5  800  138.038426 4.552830e-04  2.072826e-07
+    QCD      5  800  144.543977 7.036068e-03  4.351401e-05
+      T      4  800  125.892541 3.330277e-05  1.109075e-09
+      T      4  800  131.825674 7.220363e-05  2.606682e-09
+      T      4  800  138.038426 3.610182e-05  1.303341e-09
+      T      5  800  114.815362 3.330277e-05  1.109075e-09
+      T      5  800  120.226443 6.940459e-05  2.412416e-09
+      T      5  800  125.892541 1.444073e-04  5.213364e-09
+      T      5  800  131.825674 1.360101e-04  4.630565e-09
+      T      5  800  138.038426 1.749110e-04  6.128173e-09
+      T      5  800  144.543977 1.388092e-04  4.824832e-09
+ TTJets      4  800  114.815362 2.119700e-04  6.418757e-09
+ TTJets      4  800  120.226443 1.816886e-04  5.501791e-09
+ TTJets      4  800  125.892541 1.816886e-04  5.501791e-09
+ TTJets      4  800  131.825674 2.119700e-04  6.418757e-09
+ TTJets      4  800  138.038426 3.330958e-04  1.008662e-08
+ TTJets      4  800  144.543977 3.633772e-04  1.100358e-08
+ TTJets      5  600  144.543977 6.056287e-05  1.833930e-09
+ TTJets      5  800  104.712855 1.514072e-04  4.584826e-09
+ TTJets      5  800  109.647820 4.542215e-04  1.375448e-08
+ TTJets      5  800  114.815362 8.478801e-04  2.567503e-08
+ TTJets      5  800  120.226443 1.029569e-03  3.117682e-08
+ TTJets      5  800  125.892541 1.120413e-03  3.392771e-08
+ TTJets      5  800  131.825674 1.816886e-03  5.501791e-08
+ TTJets      5  800  138.038426 2.180263e-03  6.602150e-08
+ TTJets      5  800  144.543977 2.240826e-03  6.785543e-08
+"""), delim_whitespace = True)
+
 ##____________________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
@@ -160,5 +197,11 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
     # to test
     #  - unique xsec for phasespaces
     #  - conflicting variable names
+
+    def test_use_nevt_sumw(self):
+        expect = tbl_process_met_sumw
+        actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec, use_nevt_sumw = True)
+        ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
+        self.assertEqual(expect, actual)
 
 ##____________________________________________________________________________||
