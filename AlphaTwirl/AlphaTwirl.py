@@ -42,12 +42,18 @@ class ArgumentParser(argparse.ArgumentParser):
 ##__________________________________________________________________||
 defaultCountsClass = Counts
 
+##____________________________________________________________________________||
+class WeightCalculatorOne(object):
+    def __call__(self, event):
+        return 1.0
+
 ##__________________________________________________________________||
 def completeTableConfig(tblcfg, outDir = None):
     if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
     if 'indices' not in tblcfg: tblcfg['indices'] = None
     if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsClass
     if 'outFile' not in tblcfg: tblcfg['outFile'] = True
+    if 'weight' not in tblcfg: tblcfg['weight'] = WeightCalculatorOne()
     if tblcfg['outFile']:
         if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
         if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
@@ -67,7 +73,8 @@ def createEventReaderCollectorAssociator(tblcfg):
     counterFactory = CounterFactory(
         countMethodClass = tblcfg['countsClass'],
         keyComposerFactory = keyComposerFactory,
-        binnings = tblcfg['binnings']
+        binnings = tblcfg['binnings'],
+        weightCalculator = tblcfg['weight']
     )
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
