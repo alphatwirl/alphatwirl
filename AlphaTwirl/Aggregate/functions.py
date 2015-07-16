@@ -203,7 +203,7 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     return tbl
 
 ##____________________________________________________________________________||
-def stack_counts_categories(tbl, variables, category, order):
+def stack_counts_categories(tbl, variables, category, order = None):
     """return a data frame with stacked contents
 
     This function stacks contents of the data frame by the category in
@@ -219,9 +219,14 @@ def stack_counts_categories(tbl, variables, category, order):
       e.g., "process"
 
     order (list): the list of values in the category in the order in
-      which to stack. The first element will be in the bottom.
+      which to stack. The first element will be in the bottom. If
+      None, the decreasing order of variables will be used
 
     """
+
+    if order is None:
+        d = tbl.groupby(category)[variables].sum().reset_index()
+        order = d.sort(list(variables))[category]
 
     isFirst = True
     stack = 1
