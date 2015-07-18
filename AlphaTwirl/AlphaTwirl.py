@@ -125,6 +125,7 @@ class AlphaTwirl(object):
         parser.add_argument("-q", "--quiet", action = "store_true", default = False, help = "quiet mode")
         parser.add_argument('-o', '--outDir', default = 'tbl/out', action = 'store')
         parser.add_argument("-n", "--nevents", action = "store", default = -1, type = int, help = "maximum number of events to process for each component")
+        parser.add_argument("-c", "--components", default = None, nargs = '*', help = "the list of components")
         parser.add_argument("--force", action = "store_true", default = False, dest="force", help = "recreate all output files")
         return parser
 
@@ -154,7 +155,7 @@ class AlphaTwirl(object):
         if self.progressMonitor is not None: self.progressMonitor.begin()
         if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
-        heppyResult = HeppyResult(self.args.heppydir)
+        heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
         componentLoop(heppyResult.components())
         if self.communicationChannel is not None: self.communicationChannel.end()
         if self.progressMonitor is not None: self.progressMonitor.end()
