@@ -71,13 +71,13 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
     return eventReaderBundle
 
 ##__________________________________________________________________||
-def createTreeReader(args, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
-    tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = args.outDir)
+def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, processes, quiet, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+    tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
-    if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
+    if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
-    eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, args.processes, args.quiet)
+    eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes, quiet)
     return eventReaderBundle
 
 ##__________________________________________________________________||
@@ -115,18 +115,32 @@ class AlphaTwirl(object):
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
-    def addTreeReader(self, **kargs):
-        self.treeReaderConfigs.append(kargs)
+    def addTreeReader(self, analyzerName, fileName, treeName,
+                      tableConfigs, eventSelection = None):
+        cfg = dict(
+            analyzerName = analyzerName,
+            fileName = fileName,
+            treeName = treeName,
+            tableConfigs = tableConfigs,
+            eventSelection = eventSelection
+            )
 
-    def addTreeReader_(self, **kargs):
-        treeReader = createTreeReader(self.args, self.progressMonitor, self.communicationChannel, **kargs)
-        self.addComponentReader(treeReader)
+        self.treeReaderConfigs.append(cfg)
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
         self._create_CommunicationChannel_and_ProgressMonitor()
         for cfg in self.treeReaderConfigs:
-            self.addTreeReader_(**cfg)
+            treeReader = createTreeReader(
+                self.progressMonitor,
+                self.communicationChannel,
+                self.args.outDir,
+                self.args.force,
+                self.args.nevents,
+                self.args.processes,
+                self.args.quiet,
+                **cfg)
+            self.addComponentReader(treeReader)
         if self.progressMonitor is not None: self.progressMonitor.begin()
         if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
