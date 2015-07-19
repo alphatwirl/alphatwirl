@@ -45,22 +45,21 @@ def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
     return eventLoopRunner
 
 ##__________________________________________________________________||
-def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes):
-    eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
-    for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
-    eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
-    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite, eventSelection = eventSelection)
-    return eventReaderBundle
-
-##__________________________________________________________________||
 def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, processes, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
-    eventReaderCollectorAssociatorBuilder = EventReaderCollectorAssociatorBuilder()
-    eventReaderCollectorAssociators = [eventReaderCollectorAssociatorBuilder.build(c) for c in tableConfigs]
+
+    tableCreatorBuilder = EventReaderCollectorAssociatorBuilder()
+    tableCreators = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
+    for tblcfg in tableConfigs:
+        tableCreators.add(tableCreatorBuilder.build(tblcfg))
+
+    eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
+
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes)
+    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, tableCreators, eventSelection = eventSelection)
+
     return eventReaderBundle
 
 ##__________________________________________________________________||
