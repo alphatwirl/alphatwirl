@@ -86,7 +86,7 @@ class AlphaTwirl(object):
     def __init__(self):
         self.args = None
         self.componentReaders = ComponentReaderComposite()
-        self.are_CommunicationChannel_and_ProgressMonitor_created = False
+        self.treeReaderConfigs = [ ]
 
     def ArgumentParser(self, *args, **kwargs):
         parser = ArgumentParser(self, *args, **kwargs)
@@ -104,7 +104,6 @@ class AlphaTwirl(object):
         return parser
 
     def _create_CommunicationChannel_and_ProgressMonitor(self):
-        if self.are_CommunicationChannel_and_ProgressMonitor_created: return
         self.progressBar = None if self.args.quiet else ProgressBar()
         if self.args.processes is None:
             self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
@@ -112,20 +111,22 @@ class AlphaTwirl(object):
         else:
             self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
-        self.are_CommunicationChannel_and_ProgressMonitor_created = True
 
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
     def addTreeReader(self, **kargs):
-        if self.args is None: self.ArgumentParser().parse_args()
-        self._create_CommunicationChannel_and_ProgressMonitor()
+        self.treeReaderConfigs.append(kargs)
+
+    def addTreeReader_(self, **kargs):
         treeReader = createTreeReader(self.args, self.progressMonitor, self.communicationChannel, **kargs)
         self.addComponentReader(treeReader)
 
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
         self._create_CommunicationChannel_and_ProgressMonitor()
+        for cfg in self.treeReaderConfigs:
+            self.addTreeReader_(**cfg)
         if self.progressMonitor is not None: self.progressMonitor.begin()
         if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
