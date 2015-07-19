@@ -1,1 +1,2 @@
 from TableConfigCompleter import TableConfigCompleter
+from TableFileNameComposer import TableFileNameComposer
