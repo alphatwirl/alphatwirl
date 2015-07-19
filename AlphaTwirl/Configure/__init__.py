@@ -1,2 +1,3 @@
 from TableConfigCompleter import TableConfigCompleter
 from TableFileNameComposer import TableFileNameComposer
+from EventReaderCollectorAssociatorBuilder import EventReaderCollectorAssociatorBuilder

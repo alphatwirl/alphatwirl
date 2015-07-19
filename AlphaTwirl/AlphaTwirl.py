@@ -5,6 +5,7 @@ import os
 import itertools
 
 from Configure import TableConfigCompleter
+from Configure import EventReaderCollectorAssociatorBuilder
 from HeppyResult import ComponentReaderComposite
 from HeppyResult import ComponentLoop
 from HeppyResult import HeppyResult
@@ -17,11 +18,6 @@ from Concurrently import CommunicationChannel
 from ProgressBar import ProgressBar
 from ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
 from Counter import Counts
-from Counter import GenericKeyComposerBFactory
-from Counter import CounterFactory
-from CombineIntoList import CombineIntoList
-from WriteListToFile import WriteListToFile
-from EventReader import Collector
 
 try:
     from HeppyResult import BEventBuilder as EventBuilder
@@ -39,21 +35,6 @@ class ArgumentParser(argparse.ArgumentParser):
         args = super(ArgumentParser, self).parse_args(*args, **kwargs)
         self.owner.args = args
         return args
-
-##__________________________________________________________________||
-class EventReaderCollectorAssociatorBuilder(object):
-    def build(self, tblcfg):
-        keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-        counterFactory = CounterFactory(
-            countMethodClass = tblcfg['countsClass'],
-            keyComposerFactory = keyComposerFactory,
-            binnings = tblcfg['binnings'],
-            weightCalculator = tblcfg['weight']
-        )
-        resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
-        deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
-        collector = Collector(resultsCombinationMethod, deliveryMethod)
-        return EventReaderCollectorAssociator(counterFactory, collector)
 
 ##__________________________________________________________________||
 def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
