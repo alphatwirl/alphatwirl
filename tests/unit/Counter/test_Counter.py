@@ -110,6 +110,23 @@ class TestCounter(unittest.TestCase):
         counter.end()
         self.assertEqual(set([(15, ), (13, ), (12, )]), counts._addedkeys)
 
+    def test_default_weight(self):
+        counts = MockCounts()
+        listOfKeys = [[(11, ), (12, )], [(12, )], [ ], [(14, )], [(11, )]]
+        keycomposer = MockKeyComposer(listOfKeys)
+        nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
+        nextKeyComposer = MockNextKeyComposer(nextdic)
+        counter = Counter.Counter(keycomposer, counts, nextKeyComposer)
+
+        self.assertIsInstance(counter.weightCalculator, Counter.WeightCalculatorOne)
+
+        event = MockEvent()
+        counter.event(event)
+        self.assertEqual([((11, ), 1.0)], counts._counts)
+        self.assertEqual([((11, ), 1.0)], counter.results())
+
+
+
     def test_setResults(self):
         counter = Counter.Counter(MockKeyComposer(), MockCounts(), MockWeightCalculator())
         self.assertEqual([ ], counter.results())

@@ -1,9 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-
-##____________________________________________________________________________||
-class WeightCalculatorOne(object):
-    def __call__(self, event):
-        return 1.0
+from .WeightCalculatorOne import WeightCalculatorOne
 
 ##____________________________________________________________________________||
 class Counter(object):
