@@ -1,11 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 
-##____________________________________________________________________________||
-class WeightCalculatorOne(object):
-    def __call__(self, event):
-        return 1.0
-
 ##__________________________________________________________________||
 def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
     # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
@@ -16,9 +11,9 @@ def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = 
 
 ##__________________________________________________________________||
 class TableConfigCompleter(object):
-    def __init__(self, defaultCountsClass, outDir):
+    def __init__(self, defaultCountsClass, defaultWeight, outDir):
         self.defaultCountsClass = defaultCountsClass
-        self.defaultWeight = WeightCalculatorOne()
+        self.defaultWeight = defaultWeight
         self.outDir = outDir
 
     def complete(self, tblcfg):

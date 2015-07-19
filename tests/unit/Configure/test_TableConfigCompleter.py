@@ -5,19 +5,30 @@ import unittest
 class MockCounts: pass
 
 ##__________________________________________________________________||
+class MockWeight: pass
+
+##__________________________________________________________________||
 class MockBinning: pass
 
 ##__________________________________________________________________||
 class TestTableConfigCompleter(unittest.TestCase):
 
     def test_copy(self):
-        completer = TableConfigCompleter(defaultCountsClass = MockCounts, outDir = '/tmp')
+        completer = TableConfigCompleter(
+            defaultCountsClass = MockCounts,
+            defaultWeight = MockWeight(),
+            outDir = '/tmp'
+        )
         tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))
         tblcfg_out = completer.complete(tblcfg_in)
         self.assertIsNot(tblcfg_in, tblcfg_out)
 
     def test_minimum_input(self):
-        completer = TableConfigCompleter(defaultCountsClass = MockCounts, outDir = '/tmp')
+        completer = TableConfigCompleter(
+            defaultCountsClass = MockCounts,
+            defaultWeight = MockWeight(),
+            outDir = '/tmp'
+        )
 
         tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))
         tblcfg_out = completer.complete(tblcfg_in)

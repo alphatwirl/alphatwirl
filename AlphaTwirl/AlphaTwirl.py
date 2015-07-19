@@ -43,6 +43,11 @@ class ArgumentParser(argparse.ArgumentParser):
 ##__________________________________________________________________||
 defaultCountsClass = Counts
 
+##____________________________________________________________________________||
+class WeightCalculatorOne(object):
+    def __call__(self, event):
+        return 1.0
+
 ##__________________________________________________________________||
 def createEventReaderCollectorAssociator(tblcfg):
     keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
@@ -75,7 +80,7 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
 
 ##__________________________________________________________________||
 def createTreeReader(args, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
-    tableConfigCompleter = TableConfigCompleter(Counts, args.outDir)
+    tableConfigCompleter = TableConfigCompleter(Counts, WeightCalculatorOne(), args.outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
