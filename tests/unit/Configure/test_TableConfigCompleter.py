@@ -17,7 +17,7 @@ class TestTableConfigCompleter(unittest.TestCase):
         completer = TableConfigCompleter(
             defaultCountsClass = MockCounts,
             defaultWeight = MockWeight(),
-            outDir = '/tmp'
+            defaultOutDir = '/tmp'
         )
         tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))
         tblcfg_out = completer.complete(tblcfg_in)
@@ -27,7 +27,7 @@ class TestTableConfigCompleter(unittest.TestCase):
         completer = TableConfigCompleter(
             defaultCountsClass = MockCounts,
             defaultWeight = MockWeight(),
-            outDir = '/tmp'
+            defaultOutDir = '/tmp'
         )
 
         tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))

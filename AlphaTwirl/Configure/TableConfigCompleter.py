@@ -1,14 +1,20 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 from .TableFileNameComposer import TableFileNameComposer
+from ..Counter import Counts, WeightCalculatorOne
 
 ##__________________________________________________________________||
 class TableConfigCompleter(object):
-    def __init__(self, defaultCountsClass, defaultWeight, outDir):
+    def __init__(self,
+                 defaultCountsClass = Counts,
+                 defaultWeight = WeightCalculatorOne(),
+                 defaultOutDir = '.',
+                 createOutFileName = TableFileNameComposer()):
+
         self.defaultCountsClass = defaultCountsClass
         self.defaultWeight = defaultWeight
-        self.createOutFileName = TableFileNameComposer()
-        self.outDir = outDir
+        self.defaultOutDir = defaultOutDir
+        self.createOutFileName = createOutFileName
 
     def complete(self, tblcfg):
         ret = tblcfg.copy()
@@ -19,7 +25,7 @@ class TableConfigCompleter(object):
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
         if ret['outFile']:
             if 'outFileName' not in ret: ret['outFileName'] = self.createOutFileName(ret['outColumnNames'], ret['indices'])
-            if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.outDir, ret['outFileName'])
+            if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
             return ret
 
 ##__________________________________________________________________||
