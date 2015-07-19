@@ -48,16 +48,21 @@ class WeightCalculatorOne(object):
         return 1.0
 
 ##__________________________________________________________________||
-def completeTableConfig(tblcfg, outDir = None):
-    if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
-    if 'indices' not in tblcfg: tblcfg['indices'] = None
-    if 'countsClass' not in tblcfg: tblcfg['countsClass'] = defaultCountsClass
-    if 'outFile' not in tblcfg: tblcfg['outFile'] = True
-    if 'weight' not in tblcfg: tblcfg['weight'] = WeightCalculatorOne()
-    if tblcfg['outFile']:
-        if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
-        if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(outDir, tblcfg['outFileName'])
-    return tblcfg
+class TableConfigCompleter(object):
+    def __init__(self, defaultCountsClass, outDir):
+        self.defaultCountsClass = defaultCountsClass
+        self.outDir = outDir
+
+    def complete(self, tblcfg):
+        if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
+        if 'indices' not in tblcfg: tblcfg['indices'] = None
+        if 'countsClass' not in tblcfg: tblcfg['countsClass'] = self.defaultCountsClass
+        if 'outFile' not in tblcfg: tblcfg['outFile'] = True
+        if 'weight' not in tblcfg: tblcfg['weight'] = WeightCalculatorOne()
+        if tblcfg['outFile']:
+            if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
+            if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(self.outDir, tblcfg['outFileName'])
+            return tblcfg
 
 ##__________________________________________________________________||
 def createOutFileName(columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
@@ -99,7 +104,8 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
 
 ##__________________________________________________________________||
 def createTreeReader(args, progressMonitor, communicationChannel, analyzerName, fileName, treeName, tableConfigs, eventSelection):
-    tableConfigs = [completeTableConfig(c, args.outDir) for c in tableConfigs]
+    tableConfigCompleter = TableConfigCompleter(Counts, args.outDir)
+    tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not args.force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
