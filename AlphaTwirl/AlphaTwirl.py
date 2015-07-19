@@ -45,7 +45,7 @@ def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
     return eventLoopRunner
 
 ##__________________________________________________________________||
-def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes, quiet):
+def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes):
     eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
     for associator in eventReaderCollectorAssociators: eventReaderCollectorAssociatorComposite.add(associator)
     eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
@@ -53,14 +53,14 @@ def createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAs
     return eventReaderBundle
 
 ##__________________________________________________________________||
-def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, processes, quiet, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, processes, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     eventReaderCollectorAssociatorBuilder = EventReaderCollectorAssociatorBuilder()
     eventReaderCollectorAssociators = [eventReaderCollectorAssociatorBuilder.build(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes, quiet)
+    eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes)
     return eventReaderBundle
 
 ##__________________________________________________________________||
@@ -121,7 +121,6 @@ class AlphaTwirl(object):
                 self.args.force,
                 self.args.nevents,
                 self.args.processes,
-                self.args.quiet,
                 **cfg)
             self.addComponentReader(treeReader)
         if self.progressMonitor is not None: self.progressMonitor.begin()
