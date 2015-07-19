@@ -21,14 +21,15 @@ class TableConfigCompleter(object):
         self.outDir = outDir
 
     def complete(self, tblcfg):
-        if 'outColumnNames' not in tblcfg: tblcfg['outColumnNames'] = tblcfg['branchNames']
-        if 'indices' not in tblcfg: tblcfg['indices'] = None
-        if 'countsClass' not in tblcfg: tblcfg['countsClass'] = self.defaultCountsClass
-        if 'outFile' not in tblcfg: tblcfg['outFile'] = True
-        if 'weight' not in tblcfg: tblcfg['weight'] = WeightCalculatorOne()
-        if tblcfg['outFile']:
-            if 'outFileName' not in tblcfg: tblcfg['outFileName'] = createOutFileName(tblcfg['outColumnNames'], tblcfg['indices'])
-            if 'outFilePath' not in tblcfg: tblcfg['outFilePath'] = os.path.join(self.outDir, tblcfg['outFileName'])
-            return tblcfg
+        ret = tblcfg.copy()
+        if 'outColumnNames' not in ret: ret['outColumnNames'] = ret['branchNames']
+        if 'indices' not in ret: ret['indices'] = None
+        if 'countsClass' not in ret: ret['countsClass'] = self.defaultCountsClass
+        if 'outFile' not in ret: ret['outFile'] = True
+        if 'weight' not in ret: ret['weight'] = WeightCalculatorOne()
+        if ret['outFile']:
+            if 'outFileName' not in ret: ret['outFileName'] = createOutFileName(ret['outColumnNames'], ret['indices'])
+            if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.outDir, ret['outFileName'])
+            return ret
 
 ##__________________________________________________________________||
