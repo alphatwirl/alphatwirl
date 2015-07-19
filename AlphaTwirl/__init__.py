@@ -1,4 +1,4 @@
-from AlphaTwirl import AlphaTwirl, createTreeReader, createEventReaderCollectorAssociator, createEventReaderBundle
+from AlphaTwirl import AlphaTwirl, createTreeReader, createEventReaderBundle
 import Events
 import HeppyResult
 import Binning

@@ -41,18 +41,19 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def createEventReaderCollectorAssociator(tblcfg):
-    keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-    counterFactory = CounterFactory(
-        countMethodClass = tblcfg['countsClass'],
-        keyComposerFactory = keyComposerFactory,
-        binnings = tblcfg['binnings'],
-        weightCalculator = tblcfg['weight']
-    )
-    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
-    deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
-    collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return EventReaderCollectorAssociator(counterFactory, collector)
+class EventReaderCollectorAssociatorBuilder(object):
+    def build(self, tblcfg):
+        keyComposerFactory = GenericKeyComposerBFactory(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+        counterFactory = CounterFactory(
+            countMethodClass = tblcfg['countsClass'],
+            keyComposerFactory = keyComposerFactory,
+            binnings = tblcfg['binnings'],
+            weightCalculator = tblcfg['weight']
+        )
+        resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
+        deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
+        collector = Collector(resultsCombinationMethod, deliveryMethod)
+        return EventReaderCollectorAssociator(counterFactory, collector)
 
 ##__________________________________________________________________||
 def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
@@ -75,7 +76,8 @@ def createTreeReader(progressMonitor, communicationChannel, outDir, force, neven
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
-    eventReaderCollectorAssociators = [createEventReaderCollectorAssociator(c) for c in tableConfigs]
+    eventReaderCollectorAssociatorBuilder = EventReaderCollectorAssociatorBuilder()
+    eventReaderCollectorAssociators = [eventReaderCollectorAssociatorBuilder.build(c) for c in tableConfigs]
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
     eventReaderBundle = createEventReaderBundle(eventBuilder, eventSelection, eventReaderCollectorAssociators, progressMonitor, communicationChannel, processes, quiet)
     return eventReaderBundle
