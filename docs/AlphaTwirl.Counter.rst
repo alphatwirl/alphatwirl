@@ -52,6 +52,14 @@ AlphaTwirl.Counter.NextKeyComposer module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.Counter.WeightCalculatorOne module
+---------------------------------------------
+
+.. automodule:: AlphaTwirl.Counter.WeightCalculatorOne
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
