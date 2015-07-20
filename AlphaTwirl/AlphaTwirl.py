@@ -15,6 +15,7 @@ from EventReader import EventReaderCollectorAssociatorComposite
 from EventReader import EventLoopRunner
 from EventReader import MPEventLoopRunner
 from Concurrently import CommunicationChannel
+from Concurrently import CommunicationChannel0
 from ProgressBar import ProgressBar
 from ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
 from Counter import Counts
@@ -37,15 +38,7 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def buildEventLoopRunner(progressMonitor, communicationChannel, processes):
-    if communicationChannel is None: # single process
-        eventLoopRunner = EventLoopRunner(progressMonitor)
-    else:
-        eventLoopRunner = MPEventLoopRunner(communicationChannel)
-    return eventLoopRunner
-
-##__________________________________________________________________||
-def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, processes, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, analyzerName, fileName, treeName, tableConfigs, eventSelection):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
@@ -55,7 +48,7 @@ def createTreeReader(progressMonitor, communicationChannel, outDir, force, neven
     for tblcfg in tableConfigs:
         tableCreators.add(tableCreatorBuilder.build(tblcfg))
 
-    eventLoopRunner = buildEventLoopRunner(progressMonitor = progressMonitor, communicationChannel = communicationChannel, processes = processes)
+    eventLoopRunner = MPEventLoopRunner(communicationChannel)
 
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, tableCreators, eventSelection = eventSelection)
@@ -87,9 +80,9 @@ class AlphaTwirl(object):
 
     def _create_CommunicationChannel_and_ProgressMonitor(self):
         self.progressBar = None if self.args.quiet else ProgressBar()
-        if self.args.processes is None:
+        if self.args.processes is None or self.args.processes == 0:
             self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
-            self.communicationChannel = None
+            self.communicationChannel = CommunicationChannel0(self.progressMonitor)
         else:
             self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
@@ -119,16 +112,15 @@ class AlphaTwirl(object):
                 self.args.outDir,
                 self.args.force,
                 self.args.nevents,
-                self.args.processes,
                 **cfg)
             self.addComponentReader(treeReader)
         if self.progressMonitor is not None: self.progressMonitor.begin()
-        if self.communicationChannel is not None: self.communicationChannel.begin()
+        self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
         componentLoop(heppyResult.components())
-        if self.communicationChannel is not None: self.communicationChannel.end()
+        self.communicationChannel.end()
         if self.progressMonitor is not None: self.progressMonitor.end()
 
 ##__________________________________________________________________||
