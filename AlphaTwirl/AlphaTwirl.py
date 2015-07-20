@@ -125,6 +125,7 @@ class AlphaTwirl(object):
         if self.progressMonitor is not None: self.progressMonitor.begin()
         if self.communicationChannel is not None: self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
+        if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
         componentLoop(heppyResult.components())
         if self.communicationChannel is not None: self.communicationChannel.end()
