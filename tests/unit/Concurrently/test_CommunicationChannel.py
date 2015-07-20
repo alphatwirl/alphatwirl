@@ -32,6 +32,9 @@ class MockProgressMonitor(object):
 ##__________________________________________________________________||
 class TestCommunicationChannel(unittest.TestCase):
 
+    def test_init(self):
+        self.assertRaises(ValueError, CommunicationChannel, nprocesses = 0)
+
     def test_begin_end(self):
         communicationChannel = CommunicationChannel()
         communicationChannel.begin()

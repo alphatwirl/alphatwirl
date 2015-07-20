@@ -101,6 +101,11 @@ class CommunicationChannel(object):
     """
 
     def __init__(self, nprocesses = 16, progressMonitor = None):
+
+        if nprocesses <= 0:
+            raise ValueError("nprocesses must be at least one: " + str(nprocesses) + " is given")
+
+
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.nMaxProcesses = nprocesses
         self.nCurrentProcesses = 0
