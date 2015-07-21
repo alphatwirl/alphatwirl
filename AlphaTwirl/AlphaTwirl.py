@@ -2,7 +2,6 @@
 import argparse
 import sys
 import os
-import itertools
 
 from Configure import TableConfigCompleter
 from Configure import EventReaderCollectorAssociatorBuilder
@@ -38,21 +37,21 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def createTreeReader(progressMonitor, communicationChannel, outDir, force, nevents, analyzerName, fileName, treeName, tableConfigs, eventSelection):
+def buildTableCreators(tableConfigs, outDir, force, progressMonitor):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
-
     tableCreatorBuilder = EventReaderCollectorAssociatorBuilder()
     tableCreators = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
     for tblcfg in tableConfigs:
         tableCreators.add(tableCreatorBuilder.build(tblcfg))
+    return tableCreators
 
+##__________________________________________________________________||
+def createTreeReader(analyzerName, fileName, treeName, eventSelection, tableCreators, nevents, communicationChannel):
     eventLoopRunner = MPEventLoopRunner(communicationChannel)
-
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
     eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, tableCreators, eventSelection = eventSelection)
-
     return eventReaderBundle
 
 ##__________________________________________________________________||
@@ -78,15 +77,6 @@ class AlphaTwirl(object):
         parser.add_argument("--force", action = "store_true", default = False, dest="force", help = "recreate all output files")
         return parser
 
-    def _create_CommunicationChannel_and_ProgressMonitor(self):
-        self.progressBar = None if self.args.quiet else ProgressBar()
-        if self.args.processes is None or self.args.processes == 0:
-            self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
-            self.communicationChannel = CommunicationChannel0(self.progressMonitor)
-        else:
-            self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
-            self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
-
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
@@ -102,25 +92,44 @@ class AlphaTwirl(object):
 
         self.treeReaderConfigs.append(cfg)
 
+    def _build(self):
+
+        self.progressBar = None if self.args.quiet else ProgressBar()
+        if self.args.processes is None or self.args.processes == 0:
+            self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
+            self.communicationChannel = CommunicationChannel0(self.progressMonitor)
+        else:
+            self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
+            self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
+
+        for cfg in self.treeReaderConfigs:
+            tableCreators = buildTableCreators(
+                tableConfigs = cfg['tableConfigs'],
+                outDir = self.args.outDir,
+                force = self.args.force,
+                progressMonitor = self.progressMonitor,
+            )
+            treeReader = createTreeReader(
+                analyzerName = cfg['analyzerName'],
+                fileName = cfg['fileName'],
+                treeName = cfg['treeName'],
+                eventSelection = cfg['eventSelection'],
+                tableCreators = tableCreators,
+                nevents = self.args.nevents,
+                communicationChannel = self.communicationChannel,
+            )
+            self.addComponentReader(treeReader)
+
     def run(self):
         if self.args is None: self.ArgumentParser().parse_args()
-        self._create_CommunicationChannel_and_ProgressMonitor()
-        for cfg in self.treeReaderConfigs:
-            treeReader = createTreeReader(
-                self.progressMonitor,
-                self.communicationChannel,
-                self.args.outDir,
-                self.args.force,
-                self.args.nevents,
-                **cfg)
-            self.addComponentReader(treeReader)
-        if self.progressMonitor is not None: self.progressMonitor.begin()
+        self._build()
+        self.progressMonitor.begin()
         self.communicationChannel.begin()
         componentLoop = ComponentLoop(self.componentReaders)
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
         componentLoop(heppyResult.components())
         self.communicationChannel.end()
-        if self.progressMonitor is not None: self.progressMonitor.end()
+        self.progressMonitor.end()
 
 ##__________________________________________________________________||
