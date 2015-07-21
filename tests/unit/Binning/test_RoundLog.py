@@ -41,4 +41,8 @@ class TestRoundLog(unittest.TestCase):
         self.assertAlmostEqual( 10.0, binning(10))
         self.assertIsNone(binning(7))
 
+    def test_onBoundary(self):
+        binning = RoundLog(0.1, 100)
+        self.assertEqual( 100, binning( 100))
+
 ##____________________________________________________________________________||
