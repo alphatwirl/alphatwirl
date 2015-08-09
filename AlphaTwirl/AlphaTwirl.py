@@ -109,6 +109,7 @@ class AlphaTwirl(object):
                 force = self.args.force,
                 progressMonitor = self.progressMonitor,
             )
+            if len(tableCreators.components) == 0: continue
             treeReader = createTreeReader(
                 analyzerName = cfg['analyzerName'],
                 fileName = cfg['fileName'],
