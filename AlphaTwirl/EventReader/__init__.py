@@ -8,3 +8,4 @@ from CollectorComposite import CollectorComposite
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from EventReaderComposite import EventReaderComposite
+from EventReaderWithSelection import EventReaderWithSelection
