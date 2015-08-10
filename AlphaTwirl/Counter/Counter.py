@@ -31,9 +31,6 @@ class Counter(object):
     def copyFrom(self, src):
         self.countMethod.copyFrom(src.countMethod)
 
-    def setResults(self, results):
-        self.countMethod.setResults(results)
-
     def results(self):
         return self.countMethod.results()
 
