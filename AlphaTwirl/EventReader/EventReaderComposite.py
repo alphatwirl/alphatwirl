@@ -27,11 +27,8 @@ class EventReaderComposite(object):
     def end(self):
         for reader in self.readers: reader.end()
 
-    def setResults(self, results):
-        for reader, result in zip(self.readers, results):
-            reader.setResults(result)
-
-    def results(self):
-        return [reader.results() for reader in self.readers]
+    def copyFrom(self, src):
+        for d, s in zip(self.readers, src.readers):
+            d.copyFrom(s)
 
 ##__________________________________________________________________||
