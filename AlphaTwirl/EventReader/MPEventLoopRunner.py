@@ -81,15 +81,15 @@ class MPEventLoopRunner(object):
         of objects that occurs in multiprocessing.
 
         If eventLoops were executed in other processes, the readers in
-        the main process do not read the events; therefore, they don't
-        have the results. The readers in other processes read the
-        events. They have the results. The readers in other process
-        are pickled and sent back to the main process. However, these
-        returned readers are no longer the same objects as the
-        original readers in the main process.
+        the main process did not read the events; therefore, they
+        don't have the results. The readers in other processes read
+        the events. They have the results. The readers in other
+        process are pickled and sent back to the main process.
+        However, these returned readers are no longer the same objects
+        as the original readers in the main process.
 
-        The method copy the results in the returned readers to the
-        original readers if they are different objects.
+        The method copies the returned readers to the original readers
+        if they are different objects.
 
         """
 
@@ -105,6 +105,6 @@ class MPEventLoopRunner(object):
 
         for original, returned in zip(self._original_readers, returned_readers):
             if original is returned: continue
-            original.setResults(returned.results())
+            original.copyFrom(returned)
 
 ##__________________________________________________________________||
