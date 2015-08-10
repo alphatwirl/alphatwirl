@@ -20,14 +20,14 @@ fileName = 'tree.root'
 treeName = 'tree'
 
 outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
-binning1 = RoundLog(0.1, 0)
+binning1 = RoundLog(0.1, 1)
 keyComposer1 = GenericKeyComposer(('met_pt', ), (binning1, ))
 resultsCombinationMethod1 = CombineIntoList(('met', ))
 deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
 
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
-binning2 = RoundLog(0.1, 0)
+binning2 = RoundLog(0.1, 1)
 keyComposer2 = GenericKeyComposer(('jet_pt', ), (binning2, ), (0, ))
 resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
 deliveryMethod2 = WriteListToFile(outPath2)

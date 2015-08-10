@@ -20,7 +20,7 @@ fileName = 'tree.root'
 treeName = 'tree'
 outPath = os.path.join(args.outdir, 'tbl_met.txt')
 
-binning = RoundLog(0.1, 0)
+binning = RoundLog(0.1, 1)
 keyComposer = GenericKeyComposer(('met_pt', ), (binning, ))
 resultsCombinationMethod = CombineIntoList(('met', ))
 deliveryMethod = WriteListToFile(outPath)

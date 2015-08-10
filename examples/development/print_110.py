@@ -27,7 +27,7 @@ print >>outFile, "{:>22s} {:>12s} {:>6s} {:>6s}".format(*columnnames)
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
-    binning = RoundLog(0.1, 0)
+    binning = RoundLog(0.1, 1)
     counts = Counts()
 
     events = eventBuilder.build(component)

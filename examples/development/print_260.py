@@ -22,7 +22,7 @@ fileName = 'tree.root'
 treeName = 'tree'
 
 outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
-binning1 = RoundLog(0.1, 0)
+binning1 = RoundLog(0.1, 1)
 keyComposer1 = GenericKeyComposerFactory(('met_pt', ), (binning1, ))
 counterFactory1 = CounterFactory(Counts, keyComposer1, (binning1, ))
 resultsCombinationMethod1 = CombineIntoList(('met', ))
@@ -31,7 +31,7 @@ collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
 readerCollectorAssociator1 = EventReaderCollectorAssociator(counterFactory1, collector1)
 
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
-binning2 = RoundLog(0.1, 0)
+binning2 = RoundLog(0.1, 1)
 keyComposer2 = GenericKeyComposerFactory(('jet_pt', ), (binning2, ), (0, ))
 counterFactory2 = CounterFactory(Counts, keyComposer2, (binning2, ))
 resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
