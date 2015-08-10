@@ -25,6 +25,9 @@ class MockCounts(object):
     def valNames(self):
         return ('n', 'nvar')
 
+    def copyFrom(self, src):
+        self._counts[:] = src._counts[:]
+
     def setResults(self, results):
         self._counts = results
 
@@ -125,7 +128,17 @@ class TestCounter(unittest.TestCase):
         self.assertEqual([((11, ), 1.0)], counts._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
+    def test_copyFrom(self):
+        counts = MockCounts()
+        counter = Counter.Counter(MockKeyComposer(), counts, MockWeightCalculator())
 
+        src_counts = MockCounts()
+        src_counter = Counter.Counter(MockKeyComposer(), src_counts, MockWeightCalculator())
+        src_counts._counts[:] = [((11, ), 1.0)]
+
+        self.assertEqual([ ], counts._counts)
+        counter.copyFrom(src_counter)
+        self.assertEqual([((11,), 1.0)], counts._counts)
 
     def test_setResults(self):
         counter = Counter.Counter(MockKeyComposer(), MockCounts(), MockWeightCalculator())
