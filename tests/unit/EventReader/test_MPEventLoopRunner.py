@@ -23,13 +23,11 @@ class MockReader(object):
     def __init__(self):
         self._result = None
         self._isSetResultsCalled = False
+        self._isCopyFromCalled = False
 
-    def setResults(self, result):
-        self._result = result
-        self._isSetResultsCalled = True
-
-    def results(self):
-        return self._result
+    def copyFrom(self, src):
+        self._result = src._result
+        self._isCopyFromCalled = True
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
@@ -76,8 +74,8 @@ class TestMPEventLoopRunner(unittest.TestCase):
         communicationChannel.readersToReceive = [reader1, reader2]
 
         runner.end()
-        self.assertFalse(reader1._isSetResultsCalled)
-        self.assertFalse(reader2._isSetResultsCalled)
+        self.assertFalse(reader1._isCopyFromCalled)
+        self.assertFalse(reader2._isCopyFromCalled)
 
     def test_run_end_different_readers(self):
         communicationChannel = MockCommunicationChannel()
@@ -99,8 +97,8 @@ class TestMPEventLoopRunner(unittest.TestCase):
         communicationChannel.readersToReceive = [reader3, reader4]
 
         runner.end()
-        self.assertTrue(reader1._isSetResultsCalled)
-        self.assertTrue(reader2._isSetResultsCalled)
+        self.assertTrue(reader1._isCopyFromCalled)
+        self.assertTrue(reader2._isCopyFromCalled)
 
         self.assertEqual(reader3._result, reader1._result)
         self.assertEqual(reader4._result, reader2._result)

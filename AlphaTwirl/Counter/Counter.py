@@ -28,8 +28,8 @@ class Counter(object):
     def valNames(self):
         return self.countMethod.valNames()
 
-    def setResults(self, results):
-        self.countMethod.setResults(results)
+    def copyFrom(self, src):
+        self.countMethod.copyFrom(src.countMethod)
 
     def results(self):
         return self.countMethod.results()

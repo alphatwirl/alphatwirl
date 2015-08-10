@@ -7,8 +7,8 @@ class EventReaderComposite(object):
 
     This class is a composite in the composite pattern.
 
-    Examples of event readers are instances of `Counter`, and this
-    class.
+    Examples of event readers are instances of `Counter`,
+    `EventReaderWithSelection`, and this class.
 
     """
 
@@ -27,11 +27,8 @@ class EventReaderComposite(object):
     def end(self):
         for reader in self.readers: reader.end()
 
-    def setResults(self, results):
-        for reader, result in zip(self.readers, results):
-            reader.setResults(result)
-
-    def results(self):
-        return [reader.results() for reader in self.readers]
+    def copyFrom(self, src):
+        for d, s in zip(self.readers, src.readers):
+            d.copyFrom(s)
 
 ##__________________________________________________________________||

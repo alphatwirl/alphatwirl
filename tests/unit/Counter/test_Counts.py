@@ -31,13 +31,20 @@ class TestCounts(unittest.TestCase):
             }
         self.assertEqual(expected, counts.results())
 
+    def test_copyFrom(self):
+        counts = Counts()
+        src_counts = Counts()
+
         expected  = {
             10: {'n': 24.0, 'nvar': 3.0},
             20: {'n': 33.0, 'nvar': 5.0},
             30: {'n': 21.0, 'nvar': 4.0},
             }
-        counts.setResults(expected)
-        self.assertEqual(expected, counts.results())
+
+        src_counts._counts.update(expected)
+        counts.copyFrom(src_counts)
+        self.assertEqual(expected, src_counts._counts)
+        self.assertIsNot(counts._counts, src_counts._counts)
 
     def test_valNames(self):
         counts = Counts()
