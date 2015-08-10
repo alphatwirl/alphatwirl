@@ -9,7 +9,7 @@ function echo_and_excecute {
     }
 
 ##____________________________________________________________________________||
-heppydir=/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu
+heppydir=/Users/sakuma/work/cms/c150130_RA1_data/74X/MC/20150720_MC/20150720_SingleMu
 
 ##____________________________________________________________________________||
 thisdir=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
