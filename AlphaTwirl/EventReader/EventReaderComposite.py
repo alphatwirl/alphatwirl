@@ -7,8 +7,8 @@ class EventReaderComposite(object):
 
     This class is a composite in the composite pattern.
 
-    Examples of event readers are instances of `Counter`, and this
-    class.
+    Examples of event readers are instances of `Counter`,
+    `EventReaderWithSelection`, and this class.
 
     """
 
