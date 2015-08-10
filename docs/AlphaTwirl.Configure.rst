@@ -4,6 +4,14 @@ AlphaTwirl.Configure package
 Submodules
 ----------
 
+AlphaTwirl.Configure.EventReaderCollectorAssociatorBuilder module
+-----------------------------------------------------------------
+
+.. automodule:: AlphaTwirl.Configure.EventReaderCollectorAssociatorBuilder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.Configure.TableConfigCompleter module
 ------------------------------------------------
 

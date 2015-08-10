@@ -12,6 +12,14 @@ AlphaTwirl.Binning.Binning module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.Binning.Combine module
+---------------------------------
+
+.. automodule:: AlphaTwirl.Binning.Combine
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.Binning.Echo module
 ------------------------------
 

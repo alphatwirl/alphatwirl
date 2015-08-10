@@ -12,6 +12,14 @@ AlphaTwirl.Concurrently.CommunicationChannel module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.Concurrently.CommunicationChannel0 module
+----------------------------------------------------
+
+.. automodule:: AlphaTwirl.Concurrently.CommunicationChannel0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
