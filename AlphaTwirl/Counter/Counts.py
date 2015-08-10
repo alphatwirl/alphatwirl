@@ -24,8 +24,9 @@ class Counts(object):
     def valNames(self):
         return ('n', 'nvar')
 
-    def setResults(self, results):
-        self._counts = results
+    def copyFrom(self, src):
+        self._counts.clear()
+        self._counts.update(src._counts)
 
     def results(self):
         return self._counts
