@@ -6,9 +6,9 @@ import uuid
 class EventLoop(object):
     """An event loop
     """
-    def __init__(self, eventBuilder, eventSelection, component, reader):
+    def __init__(self, eventBuilder, eventSelection, dataset, reader):
         self.eventBuilder = eventBuilder
-        self.component = component
+        self.dataset = dataset
         self.reader = reader
         self.progressReportWriter = EventLoopProgressReportWriter()
         self.eventSelection = eventSelection
@@ -17,7 +17,7 @@ class EventLoop(object):
         self.taskid = uuid.uuid4()
 
     def __call__(self, progressReporter = None):
-        events = self.eventBuilder.build(self.component)
+        events = self.eventBuilder.build(self.dataset)
         self._reportProgress(progressReporter, events)
         self.reader.begin(events)
         for event in events:
@@ -29,7 +29,7 @@ class EventLoop(object):
 
     def _reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = self.progressReportWriter.write(self.taskid, self.component, event)
+        report = self.progressReportWriter.write(self.taskid, self.dataset, event)
         progressReporter.report(report)
 
 ##____________________________________________________________________________||

@@ -10,8 +10,8 @@ class MockEvent(object):
 
 ##____________________________________________________________________________||
 class MockEventBuilder(object):
-    def build(self, component):
-        return component._events
+    def build(self, dataset):
+        return dataset._events
 
 ##____________________________________________________________________________||
 class MockReader(object):
@@ -30,7 +30,7 @@ class MockReader(object):
         self._end = True
 
 ##____________________________________________________________________________||
-class MockComponent(object):
+class MockDataset(object):
     def __init__(self):
         self._events = None
         self.name = None
@@ -49,18 +49,18 @@ class TestEventLoop(unittest.TestCase):
     def test_call(self):
         eventBuilder = MockEventBuilder()
         eventSelection = MockEventSelection((102, 104, 105))
-        component = MockComponent()
+        dataset = MockDataset()
         event1 = MockEvent(101)
         event2 = MockEvent(102)
         event3 = MockEvent(103)
         event4 = MockEvent(104)
         event5 = MockEvent(105)
         events = [event1, event2, event3, event4, event5]
-        component._events = events
+        dataset._events = events
 
         reader = MockReader()
 
-        loop = EventLoop(eventBuilder, eventSelection, component, reader)
+        loop = EventLoop(eventBuilder, eventSelection, dataset, reader)
 
         self.assertFalse(reader._begin)
         self.assertEqual([ ], reader._eventIds)
