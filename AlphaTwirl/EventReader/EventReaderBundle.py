@@ -7,7 +7,10 @@ class AllEvents(object):
 
 ##__________________________________________________________________||
 class EventReaderBundle(object):
-    """A bundle of event readers
+    """A bundle of copies of an event reader.
+
+
+    Each copy reads events in a different data set.
 
     """
     def __init__(self, eventBuilder, eventLoopRunner, readerCollectorAssociator, eventSelection = None):
@@ -21,9 +24,9 @@ class EventReaderBundle(object):
     def begin(self):
         self.eventLoopRunner.begin()
 
-    def read(self, component):
-        reader = self.readerCollectorAssociator.make(component.name)
-        eventLoop = self.EventLoop(self.eventBuilder, self.eventSelection, component, reader)
+    def read(self, dataset):
+        reader = self.readerCollectorAssociator.make(dataset.name)
+        eventLoop = self.EventLoop(self.eventBuilder, self.eventSelection, dataset, reader)
         self.eventLoopRunner.run(eventLoop)
 
     def end(self):
