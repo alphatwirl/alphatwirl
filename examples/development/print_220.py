@@ -11,7 +11,7 @@ from AlphaTwirl.ProgressBar import ProgressBar, ProgressReport, ProgressMonitor
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--heppydir', default = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14/20150331_SingleMu', help = "Heppy results dir")
+parser.add_argument('-i', '--heppydir', default = '/Users/sakuma/work/cms/c150130_RA1_data/74X/MC/20150720_MC/20150720_SingleMu', help = "Heppy results dir")
 parser.add_argument('-o', '--outdir', default = 'tmp')
 parser.add_argument("-n", "--nevents", default = -1, type = int, help = "maximum number of events to process for each component")
 args = parser.parse_args()
