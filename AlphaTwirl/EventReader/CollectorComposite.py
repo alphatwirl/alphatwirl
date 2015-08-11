@@ -27,6 +27,11 @@ class CollectorComposite(object):
         """
         self.components.append(collector)
 
+    def addReader(self, datasetName, reader):
+        readerComposite = reader
+        for collector, reader in zip(self.components, readerComposite.readers):
+            collector.addReader(datasetName, reader)
+
     def collect(self):
         """collect results
 
