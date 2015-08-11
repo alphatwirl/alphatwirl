@@ -13,6 +13,6 @@ class CollectorDelegate(object):
         self.collector.addReader(datasetName, reader.reader)
 
     def collect(self):
-        self.collector.collector()
+        self.collector.collect()
 
 ##__________________________________________________________________||
