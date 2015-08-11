@@ -3,8 +3,10 @@ from EventReaderCollectorAssociatorComposite import EventReaderCollectorAssociat
 from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
 from EventReaderCollectorAssociator import EventReaderCollectorAssociator
+from Associator import Associator
 from Collector import Collector
 from CollectorComposite import CollectorComposite
+from CollectorDelegate import CollectorDelegate
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from EventReaderComposite import EventReaderComposite
