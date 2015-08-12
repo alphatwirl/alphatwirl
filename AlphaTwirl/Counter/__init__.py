@@ -1,6 +1,6 @@
 from Counter import Counter
 from WeightCalculatorOne import WeightCalculatorOne
 from GenericKeyComposer import GenericKeyComposer
-from GenericKeyComposerB import GenericKeyComposerB, GenericKeyComposerBFactory
+from GenericKeyComposerB import GenericKeyComposerB
 from NextKeyComposer import NextKeyComposer, NextKeyComposerFactory
 from Counts import Counts

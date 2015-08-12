@@ -44,12 +44,3 @@ class GenericKeyComposerB(object):
         return zip(self.branches, self.binnings, self.indices)
 
 ##____________________________________________________________________________||
-class GenericKeyComposerBFactory(object):
-    def __init__(self, branchNames, binnings, indices = None):
-        self.branchNames = branchNames
-        self.binnings = binnings
-        self.indices = indices
-    def __call__(self):
-        return GenericKeyComposerB(branchNames = self.branchNames, binnings = self.binnings, indices = self.indices)
-
-##____________________________________________________________________________||
