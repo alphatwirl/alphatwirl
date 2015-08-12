@@ -7,7 +7,7 @@ class AllEvents(object):
     def __call__(self, event): return True
 
 ##__________________________________________________________________||
-class EventReaderBundle2(object):
+class EventReader(object):
     def __init__(self, eventBuilder, eventLoopRunner, reader, collector, eventSelection = None):
         self.eventBuilder = eventBuilder
         self.eventLoopRunner = eventLoopRunner
