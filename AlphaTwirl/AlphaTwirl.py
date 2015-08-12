@@ -10,8 +10,10 @@ from .HeppyResult import HeppyResult
 from .EventReader import EventReader
 from .EventReader import MPEventLoopRunner
 from .EventReader import ReaderComposite
-from .EventReader import CollectorComposite
+from .EventReader import ReaderWithEventSelection
 from .EventReader import Collector
+from .EventReader import CollectorComposite
+from .EventReader import CollectorDelegate
 from .Concurrently import CommunicationChannel
 from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
@@ -38,7 +40,7 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def buildReaderAndCollector(tableConfigs, outDir, force, progressMonitor):
+def buildReaderAndCollector(eventSelection, tableConfigs, outDir, force, progressMonitor):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
@@ -59,13 +61,18 @@ def buildReaderAndCollector(tableConfigs, outDir, force, progressMonitor):
         collector0 = Collector(resultsCombinationMethod, deliveryMethod)
         reader.add(counter)
         collector.add(collector0)
+
+    if eventSelection is not None:
+        reader = ReaderWithEventSelection(reader, eventSelection)
+        collector = CollectorDelegate(collector)
+
     return reader, collector
 
 ##__________________________________________________________________||
-def createTreeReader(analyzerName, fileName, treeName, eventSelection, reader, collector, nevents, communicationChannel):
+def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevents, communicationChannel):
     eventLoopRunner = MPEventLoopRunner(communicationChannel)
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, eventSelection = eventSelection)
+    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector)
     return eventReader
 
 ##__________________________________________________________________||
@@ -118,6 +125,7 @@ class AlphaTwirl(object):
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
+                eventSelection = cfg['eventSelection'],
                 tableConfigs = cfg['tableConfigs'],
                 outDir = self.args.outDir,
                 force = self.args.force,
@@ -128,7 +136,6 @@ class AlphaTwirl(object):
                 analyzerName = cfg['analyzerName'],
                 fileName = cfg['fileName'],
                 treeName = cfg['treeName'],
-                eventSelection = cfg['eventSelection'],
                 reader = reader,
                 collector = collector,
                 nevents = self.args.nevents,
