@@ -1,4 +1,3 @@
-from EventReaderBundle import EventReaderBundle
 from EventReader import EventReader
 from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
