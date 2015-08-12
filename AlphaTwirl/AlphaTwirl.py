@@ -3,21 +3,22 @@ import argparse
 import sys
 import os
 
-from Configure import TableConfigCompleter
-from Configure import EventReaderCollectorAssociatorBuilder
-from HeppyResult import ComponentReaderComposite
-from HeppyResult import ComponentLoop
-from HeppyResult import HeppyResult
-from EventReader import EventReaderBundle
-from EventReader import EventReaderCollectorAssociator
-from EventReader import EventReaderCollectorAssociatorComposite
-from EventReader import EventLoopRunner
-from EventReader import MPEventLoopRunner
-from Concurrently import CommunicationChannel
-from Concurrently import CommunicationChannel0
-from ProgressBar import ProgressBar
-from ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from Counter import Counts
+from .Configure import TableConfigCompleter
+from .HeppyResult import ComponentReaderComposite
+from .HeppyResult import ComponentLoop
+from .HeppyResult import HeppyResult
+from .EventReader import EventReader
+from .EventReader import MPEventLoopRunner
+from .EventReader import ReaderComposite
+from .EventReader import CollectorComposite
+from .EventReader import Collector
+from .Concurrently import CommunicationChannel
+from .Concurrently import CommunicationChannel0
+from .ProgressBar import ProgressBar
+from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
+from .Counter import Counter, Counts, GenericKeyComposerB, NextKeyComposer
+from .CombineIntoList import CombineIntoList
+from .WriteListToFile import WriteListToFile
 
 try:
     from HeppyResult import BEventBuilder as EventBuilder
@@ -37,22 +38,35 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def buildTableCreators(tableConfigs, outDir, force, progressMonitor):
+def buildReaderAndCollector(tableConfigs, outDir, force, progressMonitor):
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
-    tableCreatorBuilder = EventReaderCollectorAssociatorBuilder()
-    tableCreators = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
+    if len(tableConfigs) == 0: return None, None
+    reader = ReaderComposite()
+    collector = CollectorComposite(progressMonitor.createReporter())
     for tblcfg in tableConfigs:
-        tableCreators.add(tableCreatorBuilder.build(tblcfg))
-    return tableCreators
+        keyComposer = GenericKeyComposerB(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+        nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
+        counter = Counter(
+            keyComposer = keyComposer,
+            countMethod = tblcfg['countsClass'](),
+            nextKeyComposer = nextKeyComposer,
+            weightCalculator = tblcfg['weight']
+        )
+        resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
+        deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
+        collector0 = Collector(resultsCombinationMethod, deliveryMethod)
+        reader.add(counter)
+        collector.add(collector0)
+    return reader, collector
 
 ##__________________________________________________________________||
-def createTreeReader(analyzerName, fileName, treeName, eventSelection, tableCreators, nevents, communicationChannel):
+def createTreeReader(analyzerName, fileName, treeName, eventSelection, reader, collector, nevents, communicationChannel):
     eventLoopRunner = MPEventLoopRunner(communicationChannel)
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReaderBundle = EventReaderBundle(eventBuilder, eventLoopRunner, tableCreators, eventSelection = eventSelection)
-    return eventReaderBundle
+    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, eventSelection = eventSelection)
+    return eventReader
 
 ##__________________________________________________________________||
 class AlphaTwirl(object):
@@ -103,19 +117,20 @@ class AlphaTwirl(object):
             self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
 
         for cfg in self.treeReaderConfigs:
-            tableCreators = buildTableCreators(
+            reader, collector = buildReaderAndCollector(
                 tableConfigs = cfg['tableConfigs'],
                 outDir = self.args.outDir,
                 force = self.args.force,
                 progressMonitor = self.progressMonitor,
             )
-            if len(tableCreators.components) == 0: continue
+            if reader is None: continue
             treeReader = createTreeReader(
                 analyzerName = cfg['analyzerName'],
                 fileName = cfg['fileName'],
                 treeName = cfg['treeName'],
                 eventSelection = cfg['eventSelection'],
-                tableCreators = tableCreators,
+                reader = reader,
+                collector = collector,
                 nevents = self.args.nevents,
                 communicationChannel = self.communicationChannel,
             )
