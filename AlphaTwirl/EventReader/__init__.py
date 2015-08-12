@@ -10,7 +10,7 @@ from CollectorComposite import CollectorComposite
 from CollectorDelegate import CollectorDelegate
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
-from EventReaderComposite import EventReaderComposite
+from ReaderComposite import ReaderComposite
 from EventReaderWithSelection import EventReaderWithSelection
 from EventSelectionAll import EventSelectionAll
 from EventSelectionAny import EventSelectionAny

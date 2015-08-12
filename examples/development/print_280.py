@@ -4,9 +4,9 @@ import os
 import argparse
 from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, ComponentReaderComposite, ComponentLoop
-from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
+from AlphaTwirl.Counter import Counts, GenericKeyComposer, NextKeyComposer, Counter
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReaderBundle,EventReaderCollectorAssociatorComposite
+from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReader, ReaderComposite, CollectorComposite
 from AlphaTwirl.ProgressBar import BProgressMonitor, ProgressBar
 from AlphaTwirl.Concurrently import CommunicationChannel
 
@@ -23,31 +23,31 @@ treeName = 'tree'
 
 outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
 binning1 = RoundLog(0.1, 1)
-keyComposer1 = GenericKeyComposerFactory(('met_pt', ), (binning1, ))
-counterFactory1 = CounterFactory(Counts, keyComposer1, (binning1, ))
+keyComposer1 = GenericKeyComposer(('met_pt', ), (binning1, ))
+nextKeyComposer1 = NextKeyComposer((binning1, ))
+counter1 = Counter(keyComposer1, Counts(), nextKeyComposer1)
 resultsCombinationMethod1 = CombineIntoList(('met', ))
 deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
-readerCollectorAssociator1 = EventReaderCollectorAssociator(counterFactory1, collector1)
 
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
 binning2 = RoundLog(0.1, 1)
-keyComposer2 = GenericKeyComposerFactory(('jet_pt', ), (binning2, ), (0, ))
-counterFactory2 = CounterFactory(Counts, keyComposer2, (binning2, ))
+keyComposer2 = GenericKeyComposer(('jet_pt', ), (binning2, ), (0, ))
+nextKeyComposer2 = NextKeyComposer((binning2, ))
+counter2 = Counter(keyComposer2, Counts(), nextKeyComposer2)
 resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
 deliveryMethod2 = WriteListToFile(outPath2)
 collector2 = Collector(resultsCombinationMethod2, deliveryMethod2)
-readerCollectorAssociator2 = EventReaderCollectorAssociator(counterFactory2, collector2)
 
 outPath3 = os.path.join(args.outdir, 'tbl_njets_nbjets.txt')
 binning31 = Echo()
 binning32 = Echo()
-keyComposer3 = GenericKeyComposerFactory(('nJet40', 'nBJet40'), (binning31, binning32))
-counterFactory3 = CounterFactory(Counts, keyComposer3, (binning31, binning32))
+keyComposer3 = GenericKeyComposer(('nJet40', 'nBJet40'), (binning31, binning32))
+nextKeyComposer3 = NextKeyComposer((binning31, binning32))
+counter3 = Counter(keyComposer3, Counts(), nextKeyComposer3)
 resultsCombinationMethod3 = CombineIntoList(('njets', 'nbjets'))
 deliveryMethod3 = WriteListToFile(outPath3)
 collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
-readerCollectorAssociator3 = EventReaderCollectorAssociator(counterFactory3, collector3)
 
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
@@ -58,11 +58,17 @@ communicationChannel = CommunicationChannel(8, progressMonitor)
 communicationChannel.begin()
 eventLoopRunner = MPEventLoopRunner(communicationChannel)
 
-eventReaderCollectorAssociatorComposite = EventReaderCollectorAssociatorComposite(progressMonitor.createReporter())
-eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator1)
-eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator2)
-eventReaderCollectorAssociatorComposite.add(readerCollectorAssociator3)
-readerBundle = EventReaderBundle(eventBuilder, eventLoopRunner, eventReaderCollectorAssociatorComposite)
+readers = ReaderComposite()
+readers.add(counter1)
+readers.add(counter2)
+readers.add(counter3)
+
+collectors = CollectorComposite(progressMonitor.createReporter())
+collectors.add(collector1)
+collectors.add(collector2)
+collectors.add(collector3)
+
+readerBundle = EventReader(eventBuilder, eventLoopRunner, readers, collectors)
 
 componentReaderComposite = ComponentReaderComposite()
 componentReaderComposite.add(readerBundle)

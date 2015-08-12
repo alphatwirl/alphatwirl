@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-class EventReaderComposite(object):
+class ReaderComposite(object):
 
     """A composite of event readers"
 

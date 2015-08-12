@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import CollectorComposite, EventReaderComposite
+from AlphaTwirl.EventReader import CollectorComposite, ReaderComposite
 import unittest
 
 ##____________________________________________________________________________||
@@ -40,8 +40,8 @@ class TestCollectorComposite(unittest.TestCase):
         collector2.add(collector4)
         collector1.add(collector5)
 
-        reader1 = EventReaderComposite()
-        reader2 = EventReaderComposite()
+        reader1 = ReaderComposite()
+        reader2 = ReaderComposite()
         reader3 = MockReader()
         reader4 = MockReader()
         reader5 = MockReader()

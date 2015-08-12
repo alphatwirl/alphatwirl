@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderComposite
+from AlphaTwirl.EventReader import ReaderComposite
 import unittest
 
 ##____________________________________________________________________________||
@@ -26,7 +26,7 @@ class MockEvent(object):
     pass
 
 ##____________________________________________________________________________||
-class TestEventReaderComposite(unittest.TestCase):
+class TestReaderComposite(unittest.TestCase):
 
     def test_event_two_readers_two_events(self):
         """
@@ -34,7 +34,7 @@ class TestEventReaderComposite(unittest.TestCase):
             |- reader1
             |- reader2
         """
-        composite = EventReaderComposite()
+        composite = ReaderComposite()
         reader1 = MockReader()
         reader2 = MockReader()
         composite.add(reader1)
@@ -65,8 +65,8 @@ class TestEventReaderComposite(unittest.TestCase):
             |      |- reader2
             |- reader3
         """
-        composite1 = EventReaderComposite()
-        composite2 = EventReaderComposite()
+        composite1 = ReaderComposite()
+        composite2 = ReaderComposite()
         reader1 = MockReader()
         reader2 = MockReader()
         reader3 = MockReader()
@@ -103,8 +103,8 @@ class TestEventReaderComposite(unittest.TestCase):
             |      |- reader2
             |- reader3
         """
-        dest_composite1 = EventReaderComposite()
-        dest_composite2 = EventReaderComposite()
+        dest_composite1 = ReaderComposite()
+        dest_composite2 = ReaderComposite()
         dest_reader1 = MockReader()
         dest_reader2 = MockReader()
         dest_reader3 = MockReader()
@@ -113,8 +113,8 @@ class TestEventReaderComposite(unittest.TestCase):
         dest_composite2.add(dest_reader2)
         dest_composite1.add(dest_reader3)
 
-        src_composite1 = EventReaderComposite()
-        src_composite2 = EventReaderComposite()
+        src_composite1 = ReaderComposite()
+        src_composite2 = ReaderComposite()
         src_reader1 = MockReader()
         src_reader2 = MockReader()
         src_reader3 = MockReader()

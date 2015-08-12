@@ -6,7 +6,7 @@ from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, EventLoop, EventReaderComposite
+from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, EventLoop, ReaderComposite
 from AlphaTwirl.ProgressBar import ProgressBar, ProgressMonitor
 
 ##__________________________________________________________________||
@@ -62,7 +62,7 @@ progressReporter = progressMonitor.createReporter()
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
-    readers = EventReaderComposite()
+    readers = ReaderComposite()
     readers.add(readerCollectorAssociator1.make(component.name))
     readers.add(readerCollectorAssociator2.make(component.name))
     readers.add(readerCollectorAssociator3.make(component.name))

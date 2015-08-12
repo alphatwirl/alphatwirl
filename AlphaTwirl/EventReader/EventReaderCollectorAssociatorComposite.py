@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..ProgressBar import ProgressReport
-from .EventReaderComposite import EventReaderComposite
+from .ReaderComposite import ReaderComposite
 from .CollectorComposite import CollectorComposite
 
 ##__________________________________________________________________||
@@ -32,18 +32,18 @@ class EventReaderCollectorAssociatorComposite(object):
         self.collector.add(associator.collector)
 
     def make(self, datasetName):
-        """make an `EventReaderComposite`.
+        """make an `ReaderComposite`.
 
 
         Args:
-            datasetName (str): the name of the data set that the components of the `EventReaderComposite` will read
+            datasetName (str): the name of the data set that the components of the `ReaderComposite` will read
 
         Returns:
-            an instance of `EventReaderComposite`
+            an instance of `ReaderComposite`
 
         """
 
-        readerComposite = EventReaderComposite()
+        readerComposite = ReaderComposite()
         for associator in self.components:
             reader = associator.make(datasetName)
             readerComposite.add(reader)
