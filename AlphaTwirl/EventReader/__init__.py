@@ -3,7 +3,6 @@ from EventReader import EventReader
 from EventReaderCollectorAssociatorComposite import EventReaderCollectorAssociatorComposite
 from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
-from EventReaderCollectorAssociator import EventReaderCollectorAssociator
 from Associator import Associator
 from Collector import Collector
 from CollectorComposite import CollectorComposite

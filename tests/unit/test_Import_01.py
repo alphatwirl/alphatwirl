@@ -67,7 +67,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventLoopProgressReportWriter))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventLoopRunner))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderBundle))
-        self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderCollectorAssociator))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.EventReaderCollectorAssociatorComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.ReaderComposite))
         self.assertTrue(inspect.isclass(AlphaTwirl.EventReader.MPEventLoopRunner))
