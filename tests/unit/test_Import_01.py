@@ -56,7 +56,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.Combine))
         self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoList))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.Counter))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Counter.CounterFactory))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.Counts))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.GenericKeyComposer))
         self.assertTrue(inspect.isclass(AlphaTwirl.Counter.GenericKeyComposerB))
