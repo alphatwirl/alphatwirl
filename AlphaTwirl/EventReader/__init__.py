@@ -11,6 +11,6 @@ from CollectorDelegate import CollectorDelegate
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from ReaderComposite import ReaderComposite
-from EventReaderWithSelection import EventReaderWithSelection
+from ReaderWithEventSelection import ReaderWithEventSelection
 from EventSelectionAll import EventSelectionAll
 from EventSelectionAny import EventSelectionAny

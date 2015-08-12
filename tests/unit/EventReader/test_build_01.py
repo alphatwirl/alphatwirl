@@ -1,7 +1,7 @@
 from AlphaTwirl.Counter import Counts, GenericKeyComposer, NextKeyComposer, Counter
 from AlphaTwirl.Binning import Echo
 from AlphaTwirl.EventReader import Associator
-from AlphaTwirl.EventReader import ReaderComposite, EventReaderWithSelection
+from AlphaTwirl.EventReader import ReaderComposite, ReaderWithEventSelection
 from AlphaTwirl.EventReader import Collector, CollectorComposite, CollectorDelegate
 import unittest
 
@@ -60,10 +60,10 @@ class TesEventReader_build_01(unittest.TestCase):
         collector3.add(collector4)
         collector3.add(collector5)
 
-        reader2 = EventReaderWithSelection(reader3, MockEventSelection())
+        reader2 = ReaderWithEventSelection(reader3, MockEventSelection())
         collector2 = CollectorDelegate(collector3)
 
-        reader6 = EventReaderWithSelection(reader7, MockEventSelection())
+        reader6 = ReaderWithEventSelection(reader7, MockEventSelection())
         collector6 = CollectorDelegate(collector7)
 
         reader1 = ReaderComposite()
@@ -90,11 +90,11 @@ class TesEventReader_build_01(unittest.TestCase):
         reader8_ds1 = reader1_ds1.readers[2]
 
         self.assertIsInstance(reader1_ds1, ReaderComposite)
-        self.assertIsInstance(reader2_ds1, EventReaderWithSelection)
+        self.assertIsInstance(reader2_ds1, ReaderWithEventSelection)
         self.assertIsInstance(reader3_ds1, ReaderComposite)
         self.assertIsInstance(reader4_ds1, Counter)
         self.assertIsInstance(reader5_ds1, Counter)
-        self.assertIsInstance(reader6_ds1, EventReaderWithSelection)
+        self.assertIsInstance(reader6_ds1, ReaderWithEventSelection)
         self.assertIsInstance(reader7_ds1, Counter)
         self.assertIsInstance(reader8_ds1, Counter)
 
@@ -116,11 +116,11 @@ class TesEventReader_build_01(unittest.TestCase):
         reader8_ds2 = reader1_ds2.readers[2]
 
         self.assertIsInstance(reader1_ds2, ReaderComposite)
-        self.assertIsInstance(reader2_ds2, EventReaderWithSelection)
+        self.assertIsInstance(reader2_ds2, ReaderWithEventSelection)
         self.assertIsInstance(reader3_ds2, ReaderComposite)
         self.assertIsInstance(reader4_ds2, Counter)
         self.assertIsInstance(reader5_ds2, Counter)
-        self.assertIsInstance(reader6_ds2, EventReaderWithSelection)
+        self.assertIsInstance(reader6_ds2, ReaderWithEventSelection)
         self.assertIsInstance(reader7_ds2, Counter)
         self.assertIsInstance(reader8_ds2, Counter)
 

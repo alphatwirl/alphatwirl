@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-class EventReaderWithSelection(object):
+class ReaderWithEventSelection(object):
 
     """An event reader with event selection"
 
