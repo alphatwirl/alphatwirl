@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReaderWithSelection
+from AlphaTwirl.EventReader import ReaderWithEventSelection
 import unittest
 
 ##____________________________________________________________________________||
@@ -36,12 +36,12 @@ class MockEvent(object):
         self.id = id
 
 ##____________________________________________________________________________||
-class TestEventReaderWithSelection(unittest.TestCase):
+class TestReaderWithEventSelection(unittest.TestCase):
 
     def test_one(self):
         reader = MockReader()
         eventSelection = MockEventSelection((102, 104, 105))
-        rws = EventReaderWithSelection(reader, eventSelection)
+        rws = ReaderWithEventSelection(reader, eventSelection)
 
         events = MockEvent(0)
         rws.begin(events)
@@ -66,10 +66,10 @@ class TestEventReaderWithSelection(unittest.TestCase):
     def test_copyFrom(self):
         reader = MockReader()
         eventSelection = MockEventSelection((102, 104, 105))
-        rws = EventReaderWithSelection(reader, eventSelection)
+        rws = ReaderWithEventSelection(reader, eventSelection)
 
         src_reader = MockReader()
-        src_rws = EventReaderWithSelection(src_reader, eventSelection)
+        src_rws = ReaderWithEventSelection(src_reader, eventSelection)
 
         self.assertIsNone(reader._copy)
         rws.copyFrom(src_rws)

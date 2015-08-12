@@ -53,12 +53,3 @@ class GenericKeyComposer(object):
         return (tuple(ret), )
 
 ##____________________________________________________________________________||
-class GenericKeyComposerFactory(object):
-    def __init__(self, branchNames, binnings, indices = None):
-        self.branchNames = branchNames
-        self.binnings = binnings
-        self.indices = indices
-    def __call__(self):
-        return GenericKeyComposer(branchNames = self.branchNames, binnings = self.binnings, indices = self.indices)
-
-##____________________________________________________________________________||

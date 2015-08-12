@@ -6,12 +6,12 @@ from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
 from AlphaTwirl.Counter import Counts, GenericKeyComposerFactory, CounterFactory
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, EventLoop, EventReaderComposite, EventLoopRunner
+from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, EventLoop, ReaderComposite, EventLoopRunner
 from AlphaTwirl.ProgressBar import ProgressMonitor, ProgressBar
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--heppydir', default = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14/20150331_SingleMu', help = "Heppy results dir")
+parser.add_argument('-i', '--heppydir', default = '/Users/sakuma/work/cms/c150130_RA1_data/74X/MC/20150720_MC/20150720_SingleMu', help = "Heppy results dir")
 parser.add_argument('-o', '--outdir', default = 'tmp')
 parser.add_argument("-n", "--nevents", default = -1, type = int, help = "maximum number of events to process for each component")
 args = parser.parse_args()
@@ -63,7 +63,7 @@ eventLoopRunner.begin()
 heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
-    readers = EventReaderComposite()
+    readers = ReaderComposite()
     readers.add(readerCollectorAssociator1.make(component.name))
     readers.add(readerCollectorAssociator2.make(component.name))
     readers.add(readerCollectorAssociator3.make(component.name))

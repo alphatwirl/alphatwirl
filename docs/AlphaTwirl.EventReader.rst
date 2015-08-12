@@ -68,10 +68,10 @@ AlphaTwirl.EventReader.EventReaderCollectorAssociatorComposite module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.EventReader.EventReaderComposite module
+AlphaTwirl.EventReader.ReaderComposite module
 --------------------------------------------------
 
-.. automodule:: AlphaTwirl.EventReader.EventReaderComposite
+.. automodule:: AlphaTwirl.EventReader.ReaderComposite
     :members:
     :undoc-members:
     :show-inheritance:

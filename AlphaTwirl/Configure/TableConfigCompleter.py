@@ -5,6 +5,22 @@ from ..Counter import Counts, WeightCalculatorOne
 
 ##__________________________________________________________________||
 class TableConfigCompleter(object):
+    """
+    an example complete config::
+
+        tblcfg = {
+            'binnings': (MockBinning(),),
+            'weight': MockWeight(),
+            'outFileName': 'tbl_component_met_pt.txt',
+            'branchNames': ('met_pt',),
+            'countsClass': MockCounts,
+            'outFilePath': '/tmp/tbl_component_met_pt.txt',
+            'outFile': True,
+            'outColumnNames': ('met_pt',),
+            'indices': None
+        }
+
+    """
     def __init__(self,
                  defaultCountsClass = Counts,
                  defaultWeight = WeightCalculatorOne(),
