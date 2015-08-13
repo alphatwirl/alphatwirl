@@ -4,7 +4,7 @@ import os
 import argparse
 from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder
-from AlphaTwirl.Counter import Counts, GenericKeyComposer, Counter
+from AlphaTwirl.Counter import Counts, GenericKeyComposer, NextKeyComposer, Counter
 from AlphaTwirl.Binning import RoundLog, Echo
 from AlphaTwirl.EventReader import Collector
 from AlphaTwirl.ProgressBar import ProgressBar, ProgressReport, ProgressMonitor
@@ -23,6 +23,7 @@ treeName = 'tree'
 outPath1 = os.path.join(args.outdir, 'tbl_met.txt')
 binning1 = RoundLog(0.1, 1)
 keyComposer1 = GenericKeyComposer(('met_pt', ), (binning1, ))
+nextKeyComposer1 = NextKeyComposer((binning1, ))
 resultsCombinationMethod1 = CombineIntoList(('met', ))
 deliveryMethod1 = WriteListToFile(outPath1)
 collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
@@ -30,6 +31,7 @@ collector1 = Collector(resultsCombinationMethod1, deliveryMethod1)
 outPath2 = os.path.join(args.outdir, 'tbl_jetpt.txt')
 binning2 = RoundLog(0.1, 1)
 keyComposer2 = GenericKeyComposer(('jet_pt', ), (binning2, ), (0, ))
+nextKeyComposer2 = NextKeyComposer((binning2, ))
 resultsCombinationMethod2 = CombineIntoList(('jet_pt', ))
 deliveryMethod2 = WriteListToFile(outPath2)
 collector2 = Collector(resultsCombinationMethod2, deliveryMethod2)
@@ -38,6 +40,7 @@ outPath3 = os.path.join(args.outdir, 'tbl_njets_nbjets.txt')
 binning31 = Echo()
 binning32 = Echo()
 keyComposer3 = GenericKeyComposer(('nJet40', 'nBJet40'), (binning31, binning32))
+nextKeyComposer3 = NextKeyComposer((binning31, binning32))
 resultsCombinationMethod3 = CombineIntoList(('njets', 'nbjets'))
 deliveryMethod3 = WriteListToFile(outPath3)
 collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
@@ -57,18 +60,23 @@ heppyResult = HeppyResult(args.heppydir)
 for component in heppyResult.components():
 
     counts1 = Counts()
-    counter1 = Counter(keyComposer1, counts1)
+    counter1 = Counter(keyComposer1, counts1, nextKeyComposer1)
     collector1.addReader(component.name, counter1)
 
     counts2 = Counts()
-    counter2 = Counter(keyComposer2, counts2)
+    counter2 = Counter(keyComposer2, counts2, nextKeyComposer2)
     collector2.addReader(component.name, counter2)
 
     counts3 = Counts()
-    counter3 = Counter(keyComposer3, counts3)
+    counter3 = Counter(keyComposer3, counts3, nextKeyComposer3)
     collector3.addReader(component.name, counter3)
 
     events = eventBuilder.build(component)
+
+    counter1.begin(events)
+    counter2.begin(events)
+    counter3.begin(events)
+
     for event in events:
 
         report = ProgressReport(component.name, event.iEvent + 1, event.nEvents)
@@ -79,6 +87,10 @@ for component in heppyResult.components():
         counter1.event(event)
         counter2.event(event)
         counter3.event(event)
+
+    counter1.end()
+    counter2.end()
+    counter3.end()
 
 collector1.collect()
 collector2.collect()

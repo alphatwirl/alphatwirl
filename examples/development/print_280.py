@@ -6,7 +6,7 @@ from AlphaTwirl import CombineIntoList, WriteListToFile
 from AlphaTwirl.HeppyResult import HeppyResult, EventBuilder, ComponentReaderComposite, ComponentLoop
 from AlphaTwirl.Counter import Counts, GenericKeyComposer, NextKeyComposer, Counter
 from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.EventReader import Collector, EventReaderCollectorAssociator, MPEventLoopRunner, EventReader, ReaderComposite, CollectorComposite
+from AlphaTwirl.EventReader import Collector, MPEventLoopRunner, EventReader, ReaderComposite, CollectorComposite
 from AlphaTwirl.ProgressBar import BProgressMonitor, ProgressBar
 from AlphaTwirl.Concurrently import CommunicationChannel
 
@@ -68,10 +68,10 @@ collectors.add(collector1)
 collectors.add(collector2)
 collectors.add(collector3)
 
-readerBundle = EventReader(eventBuilder, eventLoopRunner, readers, collectors)
+eventReader = EventReader(eventBuilder, eventLoopRunner, readers, collectors)
 
 componentReaderComposite = ComponentReaderComposite()
-componentReaderComposite.add(readerBundle)
+componentReaderComposite.add(eventReader)
 componentLoop = ComponentLoop(componentReaderComposite)
 
 heppyResult = HeppyResult(args.heppydir)
