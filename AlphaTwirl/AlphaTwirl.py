@@ -12,6 +12,7 @@ from .EventReader import MPEventLoopRunner
 from .EventReader import ReaderComposite
 from .EventReader import ReaderWithEventSelection
 from .EventReader import Collector
+from .EventReader import NullCollector
 from .EventReader import CollectorComposite
 from .EventReader import CollectorDelegate
 from .Concurrently import CommunicationChannel
@@ -40,13 +41,43 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
-def buildReaderAndCollector(eventSelection, tableConfigs, outDir, force, progressMonitor):
+def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, force, progressMonitor):
+    """
+        1:composite
+              |- scribble
+              |- scribble
+              |- scribble
+              |- 2:selection - 3:composite
+              |                      |- counter
+              |                      |- counter
+              |                      |- counter
+              |                      |- counter
+              |                      |- counter
+              |
+    """
+
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     if len(tableConfigs) == 0: return None, None
-    reader = ReaderComposite()
-    collector = CollectorComposite(progressMonitor.createReporter())
+    reader1 = ReaderComposite()
+    collector1 = CollectorComposite(progressMonitor.createReporter())
+
+    for scribbler in scribblers:
+        reader1.add(scribbler)
+        collector1.add(NullCollector())
+
+    reader3 = ReaderComposite()
+    collector3 = CollectorComposite(progressMonitor.createReporter())
+    if eventSelection is not None:
+        reader2 = ReaderWithEventSelection(reader3, eventSelection)
+        collector2 = CollectorDelegate(collector3)
+        reader1.add(reader2)
+        collector1.add(collector2)
+    else:
+        reader1.add(reader3)
+        collector1.add(collector3)
+
     for tblcfg in tableConfigs:
         keyComposer = GenericKeyComposerB(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
         nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
@@ -59,14 +90,11 @@ def buildReaderAndCollector(eventSelection, tableConfigs, outDir, force, progres
         resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
         deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
         collector0 = Collector(resultsCombinationMethod, deliveryMethod)
-        reader.add(counter)
-        collector.add(collector0)
+        reader3.add(counter)
+        collector3.add(collector0)
 
-    if eventSelection is not None:
-        reader = ReaderWithEventSelection(reader, eventSelection)
-        collector = CollectorDelegate(collector)
 
-    return reader, collector
+    return reader1, collector1
 
 ##__________________________________________________________________||
 def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevents, communicationChannel):
@@ -101,12 +129,13 @@ class AlphaTwirl(object):
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
-    def addTreeReader(self, analyzerName, fileName, treeName,
-                      tableConfigs, eventSelection = None):
+    def addTreeReader(self, analyzerName, fileName, treeName, scribblers = [ ],
+                      tableConfigs = [ ], eventSelection = None):
         cfg = dict(
             analyzerName = analyzerName,
             fileName = fileName,
             treeName = treeName,
+            scribblers = scribblers,
             tableConfigs = tableConfigs,
             eventSelection = eventSelection
             )
@@ -125,6 +154,7 @@ class AlphaTwirl(object):
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
+                scribblers = cfg['scribblers'],
                 eventSelection = cfg['eventSelection'],
                 tableConfigs = cfg['tableConfigs'],
                 outDir = self.args.outDir,
