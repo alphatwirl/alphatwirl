@@ -3,6 +3,7 @@ from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
 from Associator import Associator
 from Collector import Collector
+from NullCollector import NullCollector
 from CollectorComposite import CollectorComposite
 from CollectorDelegate import CollectorDelegate
 from EventLoop import EventLoop
