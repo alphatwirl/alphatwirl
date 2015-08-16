@@ -8,6 +8,7 @@ from Analyzer import Analyzer
 from ReadCounter import ReadCounter
 from TblCounter import TblCounter
 from TblXsec import TblXsec
+from TblComponentConfig import TblComponentConfig
 
 try:
     from EventBuilder import EventBuilder
