@@ -12,5 +12,6 @@ from TblXsec import TblXsec
 try:
     from EventBuilder import EventBuilder
     from BEventBuilder import BEventBuilder
+    from TblBranch import TblBranch
 except ImportError:
     pass
