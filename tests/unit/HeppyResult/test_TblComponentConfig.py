@@ -19,7 +19,7 @@ class MockComponent(object):
     def config(self): return self._cfg
 
 ##____________________________________________________________________________||
-class TblComponentConfig(unittest.TestCase):
+class TestTblComponentConfig(unittest.TestCase):
 
     def test_read(self):
         tblxsec = TblComponentConfig(
