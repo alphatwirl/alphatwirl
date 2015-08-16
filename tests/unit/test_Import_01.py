@@ -79,7 +79,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.ReadCounter))
         self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.ReadVersionInfo))
         self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.TblCounter))
-        self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.TblXsec))
+        self.assertTrue(inspect.isclass(AlphaTwirl.HeppyResult.TblComponentConfig))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressBar))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReport))
