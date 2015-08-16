@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..mkdir_p import mkdir_p
+from ..listToAlignedText import listToAlignedText
 import os
 import ROOT
 
@@ -42,15 +43,8 @@ class TblBranch(object):
             row.append(leafcount.GetName() if isArray else None)
             results.append(row)
 
-        transposed = [[r[i] for r in results] for i in range(len(results[0]))]
-        transposed = [[str(e) for e in r] for r in transposed]
-        columnWidths = [max([len(e) for e in r]) for r in transposed]
-        format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
-
         f = self._open(self.outPath)
-        for row in zip(*transposed):
-            f.write(format.format(*row))
-            f.write("\n")
+        f.write(listToAlignedText(results))
         self._close(f)
 
     def end(self): pass
