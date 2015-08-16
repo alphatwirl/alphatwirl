@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..mkdir_p import mkdir_p
+from ..listToAlignedText import listToAlignedText
 import os
 
 ##____________________________________________________________________________||
@@ -15,15 +16,8 @@ class TblXsec(object):
         self._rows.append([component.name, xsec])
 
     def end(self):
-        transposed = [[r[i] for r in self._rows] for i in range(len(self._rows[0]))]
-        transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
-        transposed = [[str(e) for e in r] for r in transposed]
-        columnWidths = [max([len(e) for e in r]) for r in transposed]
-        format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
         f = self._open(self._outPath)
-        for row in zip(*transposed):
-            f.write(format.format(*row))
-            f.write("\n")
+        f.write(listToAlignedText(self._rows))
         self._close(f)
 
     def _open(self, path):
