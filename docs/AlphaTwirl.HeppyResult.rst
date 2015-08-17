@@ -84,6 +84,22 @@ AlphaTwirl.HeppyResult.ReadVersionInfo module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.HeppyResult.TblBranch module
+---------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.TblBranch
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.HeppyResult.TblComponentConfig module
+------------------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.TblComponentConfig
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.HeppyResult.TblCounter module
 ----------------------------------------
 
@@ -92,10 +108,10 @@ AlphaTwirl.HeppyResult.TblCounter module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblXsec module
--------------------------------------
+AlphaTwirl.HeppyResult.TblTreeEntries module
+--------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblXsec
+.. automodule:: AlphaTwirl.HeppyResult.TblTreeEntries
     :members:
     :undoc-members:
     :show-inheritance:

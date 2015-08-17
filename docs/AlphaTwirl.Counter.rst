@@ -12,14 +12,6 @@ AlphaTwirl.Counter.Counter module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Counter.CounterFactory module
-----------------------------------------
-
-.. automodule:: AlphaTwirl.Counter.CounterFactory
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 AlphaTwirl.Counter.Counts module
 --------------------------------
 
