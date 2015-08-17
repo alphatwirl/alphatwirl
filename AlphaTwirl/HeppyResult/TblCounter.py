@@ -9,16 +9,16 @@ class TblCounter(object):
     """This class reads counter files of HeppyResult.
 
     Args:
-        outPath (str): a path to the output file
-        columnNames (list): a list of the column names of the output file.
         analyzerName (str): the name of the Heppy analyzer, e.g., skimAnalyzerCount
         fileName (str): the name of the counter file, e.g., SkimReport.txt
+        outPath (str): a path to the output file
         levels (list): a list of the levels to read
+        columnNames (list): a list of the column names of the output file.
     """
-    def __init__(self, outPath, columnNames, analyzerName, fileName, levels):
-        self._outPath = outPath
+    def __init__(self, analyzerName, fileName, outPath, levels, columnNames):
         self.analyzerName = analyzerName
         self.fileName = fileName
+        self._outPath = outPath
         self.levels = levels
         self.columnNames = columnNames
         self._readCounter = ReadCounter()

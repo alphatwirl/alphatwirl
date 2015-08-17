@@ -30,11 +30,11 @@ class TestTblCounter(unittest.TestCase):
 
     def test_read(self):
         tblnevt = TblCounter(
-            outPath = "t.txt",
-            columnNames = ('nevt', 'nevt_sumw'),
             analyzerName = 'skimAnalyzerCount',
             fileName = 'SkimReport.txt',
-            levels = ('All Events', 'Sum Weights')
+            outPath = "t.txt",
+            levels = ('All Events', 'Sum Weights'),
+            columnNames = ('nevt', 'nevt_sumw')
         )
 
         out = cStringIO.StringIO()
@@ -84,11 +84,11 @@ class TestTblCounter(unittest.TestCase):
 
     def test_read_empty(self):
         tblnevt = TblCounter(
-            outPath = "t.txt",
-            columnNames = ('nevt', 'nevt_sumw'),
             analyzerName = 'skimAnalyzerCount',
             fileName = 'SkimReport.txt',
-            levels = ('All Events', 'Sum Weights')
+            outPath = "t.txt",
+            levels = ('All Events', 'Sum Weights'),
+            columnNames = ('nevt', 'nevt_sumw')
         )
 
         out = cStringIO.StringIO()
