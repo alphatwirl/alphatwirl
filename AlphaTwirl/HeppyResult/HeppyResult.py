@@ -2,6 +2,7 @@
 
 ##____________________________________________________________________________||
 import os
+import re
 from Component import Component
 from ReadVersionInfo import ReadVersionInfo
 
@@ -14,6 +15,7 @@ class HeppyResult(object):
     def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
         self.path = os.path.normpath(path)
         allComponentNames = [n for n in os.listdir(self.path) if self._isComponent(n, excludeList)]
+        allComponentNames = sorted(allComponentNames, key = lambda n: [float(c) if c.isdigit() else c for c in re.findall('\d+|\D+', n)])
         if componentNames is not None:
             nonexistentComponent =  [c for c in componentNames if c not in allComponentNames]
             if len(nonexistentComponent) > 0:
