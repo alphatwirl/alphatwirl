@@ -64,4 +64,11 @@ class TestReadCounter(unittest.TestCase):
         self.assertEqual('Sum Weights', level)
         self.assertEqual({'count': 3.73134089883e+12, 'eff2': 154498.7447, 'eff1': 154498.74}, content)
 
+    def test_readLine_netative(self):
+        readCounter = ReadCounter()
+        line = "	 too many objects after requirements         -848739 	 -1.00 	 -0.1717"
+        level, content = readCounter._readLine(line)
+        self.assertEqual('too many objects after requirements', level)
+        self.assertEqual({'count': -848739, 'eff1': -1.0, 'eff2': -0.1717}, content)
+
 ##____________________________________________________________________________||
