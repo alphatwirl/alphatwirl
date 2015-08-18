@@ -14,11 +14,11 @@ def IsROOTNullPointer(tobject):
 
 ##__________________________________________________________________||
 class TblBranch(object):
-    def __init__(self, outPath, analyzerName, fileName, treeName):
-        self.outPath = outPath
+    def __init__(self, analyzerName, fileName, treeName, outPath):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
+        self.outPath = outPath
         self._done = False
 
     def begin(self): pass
