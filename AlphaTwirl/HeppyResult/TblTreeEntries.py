@@ -6,12 +6,12 @@ import ROOT
 
 ##__________________________________________________________________||
 class TblTreeEntries(object):
-    def __init__(self, analyzerName, fileName, treeName, outPath):
+    def __init__(self, analyzerName, fileName, treeName, outPath, columnName = 'n'):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
         self.outPath = outPath
-        self._rows = [['component', 'n']]
+        self._rows = [['component', columnName]]
 
     def begin(self): pass
 
