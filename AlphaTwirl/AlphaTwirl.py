@@ -175,13 +175,15 @@ class AlphaTwirl(object):
             )
             self.addComponentReader(treeReader)
 
-    def run(self):
-        self._build()
-        self.progressMonitor.begin()
-        self.communicationChannel.begin()
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
         componentLoop = ComponentLoop(heppyResult.components(), self.componentReaders)
+        return componentLoop
+
+    def run(self):
+        componentLoop = self._build()
+        self.progressMonitor.begin()
+        self.communicationChannel.begin()
         componentLoop()
         self.communicationChannel.end()
         self.progressMonitor.end()
