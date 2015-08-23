@@ -70,13 +70,14 @@ collectors.add(collector3)
 
 eventReader = EventReader(eventBuilder, eventLoopRunner, readers, collectors)
 
-componentReaderComposite = ComponentReaderComposite()
-componentReaderComposite.add(eventReader)
-componentLoop = ComponentLoop(componentReaderComposite)
 
 heppyResult = HeppyResult(args.heppydir)
 
-componentLoop(heppyResult.components())
+componentReaderComposite = ComponentReaderComposite()
+componentReaderComposite.add(eventReader)
+componentLoop = ComponentLoop(heppyResult, componentReaderComposite)
+
+componentLoop()
 communicationChannel.end()
 progressMonitor.end()
 
