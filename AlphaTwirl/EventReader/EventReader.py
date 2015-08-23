@@ -3,19 +3,12 @@ from .EventLoop import EventLoop
 from .Associator import Associator
 
 ##__________________________________________________________________||
-class AllEvents(object):
-    def __call__(self, event): return True
-
-##__________________________________________________________________||
 class EventReader(object):
-    def __init__(self, eventBuilder, eventLoopRunner, reader, collector, eventSelection = None):
+    def __init__(self, eventBuilder, eventLoopRunner, reader, collector):
         self.eventBuilder = eventBuilder
         self.eventLoopRunner = eventLoopRunner
         self.associator = Associator(reader, collector)
         self.collector = collector
-
-        self.eventSelection = eventSelection if eventSelection is not None else AllEvents()
-
         self.EventLoop = EventLoop
 
     def begin(self):
@@ -23,7 +16,7 @@ class EventReader(object):
 
     def read(self, dataset):
         reader = self.associator.make(dataset.name)
-        eventLoop = self.EventLoop(self.eventBuilder, self.eventSelection, dataset, reader)
+        eventLoop = self.EventLoop(self.eventBuilder, dataset, reader)
         self.eventLoopRunner.run(eventLoop)
 
     def end(self):

@@ -7,9 +7,6 @@ class MockEventBuilder(object):
         return dataset._events
 
 ##__________________________________________________________________||
-class MockEventSelection(object): pass
-
-##__________________________________________________________________||
 class MockReader(object):
     def __init__(self, name = None):
         self.name = name
@@ -55,11 +52,10 @@ class MockEventLoopRunner(object):
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
-    def __init__(self, eventBuilder, eventSelection, dataset, reader):
+    def __init__(self, eventBuilder, dataset, reader):
         self.eventBuilder = eventBuilder
         self.dataset = dataset
         self.reader = reader
-        self.eventSelection = eventSelection
 
 ##__________________________________________________________________||
 class TestEventReader(unittest.TestCase):
@@ -76,20 +72,6 @@ class TestEventReader(unittest.TestCase):
         dataset1.name = "dataset1"
         eventReader.read(dataset1)
         self.assertIs(eventBuilder, eventLoopRunner.eventLoop.eventBuilder)
-
-    def test_eventSelection_passed_to_EventLoop(self):
-        eventBuilder = MockEventBuilder()
-        eventLoopRunner = MockEventLoopRunner()
-        reader = MockReader()
-        collector = MockCollector()
-        eventSelection = MockEventSelection()
-        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, eventSelection)
-        eventReader.EventLoop = MockEventLoop
-
-        dataset1 = MockDataset()
-        dataset1.name = "dataset1"
-        eventReader.read(dataset1)
-        self.assertIs(eventSelection, eventLoopRunner.eventLoop.eventSelection)
 
     def test_eventLoopRunner_called(self):
         eventBuilder = MockEventBuilder()
