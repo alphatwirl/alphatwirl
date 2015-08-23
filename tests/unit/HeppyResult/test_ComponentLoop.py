@@ -14,6 +14,12 @@ class MockReader:
         return 2232
 
 ##__________________________________________________________________||
+class MockHeppyResult:
+    def __init__(self, components):
+        self._components = components
+    def components(self): return self._components
+
+##__________________________________________________________________||
 class MockComponent: pass
 
 ##__________________________________________________________________||
@@ -29,8 +35,9 @@ class TestComponentLoop(unittest.TestCase):
         component1 = MockComponent()
         component2 = MockComponent()
         components = [component1, component2]
+        heppyResult = MockHeppyResult(components)
 
-        componentLoop = ComponentLoop(components, reader)
+        componentLoop = ComponentLoop(heppyResult, reader)
 
         self.assertEqual(2232, componentLoop())
 

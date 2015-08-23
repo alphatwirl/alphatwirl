@@ -177,7 +177,7 @@ class AlphaTwirl(object):
 
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
-        componentLoop = ComponentLoop(heppyResult.components(), self.componentReaders)
+        componentLoop = ComponentLoop(heppyResult, self.componentReaders)
         return componentLoop
 
     def run(self):

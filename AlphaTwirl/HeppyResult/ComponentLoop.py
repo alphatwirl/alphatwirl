@@ -3,12 +3,12 @@
 ##____________________________________________________________________________||
 class ComponentLoop(object):
 
-    def __init__(self, components, reader):
+    def __init__(self, heppyResult, reader):
         self.reader = reader
-        self.components = components
+        self.heppyResult = heppyResult
     def __call__(self):
         self.reader.begin()
-        for component in self.components:
+        for component in self.heppyResult.components():
             self.reader.read(component)
         return self.reader.end()
 
