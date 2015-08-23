@@ -36,31 +36,20 @@ class MockDataset(object):
         self.name = None
 
 ##____________________________________________________________________________||
-class MockEventSelection(object):
-    def __init__(self, toSelect):
-        self.toSelect = toSelect
-
-    def __call__(self, event):
-        return event.id in self.toSelect
-
-##____________________________________________________________________________||
 class TestEventLoop(unittest.TestCase):
 
     def test_call(self):
         eventBuilder = MockEventBuilder()
-        eventSelection = MockEventSelection((102, 104, 105))
         dataset = MockDataset()
         event1 = MockEvent(101)
         event2 = MockEvent(102)
         event3 = MockEvent(103)
-        event4 = MockEvent(104)
-        event5 = MockEvent(105)
-        events = [event1, event2, event3, event4, event5]
+        events = [event1, event2, event3]
         dataset._events = events
 
         reader = MockReader()
 
-        loop = EventLoop(eventBuilder, eventSelection, dataset, reader)
+        loop = EventLoop(eventBuilder, dataset, reader)
 
         self.assertFalse(reader._begin)
         self.assertEqual([ ], reader._eventIds)
@@ -69,7 +58,7 @@ class TestEventLoop(unittest.TestCase):
         self.assertEqual(reader, loop())
 
         self.assertEqual(events, reader._begin)
-        self.assertEqual([102, 104, 105], reader._eventIds)
+        self.assertEqual([101, 102, 103], reader._eventIds)
         self.assertTrue(reader._end)
 
 ##____________________________________________________________________________||
