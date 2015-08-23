@@ -144,6 +144,8 @@ class AlphaTwirl(object):
 
     def _build(self):
 
+        if self.args is None: self.ArgumentParser().parse_args()
+
         self.progressBar = None if self.args.quiet else ProgressBar()
         if self.args.processes is None or self.args.processes == 0:
             self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
@@ -174,13 +176,12 @@ class AlphaTwirl(object):
             self.addComponentReader(treeReader)
 
     def run(self):
-        if self.args is None: self.ArgumentParser().parse_args()
         self._build()
         self.progressMonitor.begin()
         self.communicationChannel.begin()
-        componentLoop = ComponentLoop(self.componentReaders)
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
+        componentLoop = ComponentLoop(self.componentReaders)
         componentLoop(heppyResult.components())
         self.communicationChannel.end()
         self.progressMonitor.end()
