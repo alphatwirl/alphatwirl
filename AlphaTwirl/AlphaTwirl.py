@@ -181,10 +181,10 @@ class AlphaTwirl(object):
         return componentLoop
 
     def run(self):
-        componentLoop = self._build()
+        loop = self._build()
         self.progressMonitor.begin()
         self.communicationChannel.begin()
-        componentLoop()
+        loop()
         self.communicationChannel.end()
         self.progressMonitor.end()
 
