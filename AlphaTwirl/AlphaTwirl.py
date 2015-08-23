@@ -181,8 +181,8 @@ class AlphaTwirl(object):
         self.communicationChannel.begin()
         if self.args.components == ['all']: self.args.components = None
         heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
-        componentLoop = ComponentLoop(self.componentReaders)
-        componentLoop(heppyResult.components())
+        componentLoop = ComponentLoop(heppyResult.components(), self.componentReaders)
+        componentLoop()
         self.communicationChannel.end()
         self.progressMonitor.end()
 

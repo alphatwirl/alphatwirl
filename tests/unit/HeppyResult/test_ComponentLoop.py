@@ -1,7 +1,7 @@
 from AlphaTwirl.HeppyResult import ComponentLoop
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader:
     def __init__(self):
         self.beginCalled = False
@@ -13,15 +13,14 @@ class MockReader:
         self.endCalled = True
         return 2232
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockComponent: pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestComponentLoop(unittest.TestCase):
 
     def test_read(self):
         reader = MockReader()
-        componentLoop = ComponentLoop(reader)
 
         self.assertFalse(reader.beginCalled)
         self.assertEqual([ ], reader.readComponents)
@@ -31,10 +30,12 @@ class TestComponentLoop(unittest.TestCase):
         component2 = MockComponent()
         components = [component1, component2]
 
-        self.assertEqual(2232, componentLoop(components))
+        componentLoop = ComponentLoop(components, reader)
+
+        self.assertEqual(2232, componentLoop())
 
         self.assertTrue(reader.beginCalled)
         self.assertEqual(components, reader.readComponents)
         self.assertTrue(reader.endCalled)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
