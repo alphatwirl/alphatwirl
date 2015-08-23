@@ -41,6 +41,19 @@ class ArgumentParser(argparse.ArgumentParser):
         return args
 
 ##__________________________________________________________________||
+def build_progressMonitor_communicationChannel(quiet, processes):
+
+    progressBar = None if quiet else ProgressBar()
+    if processes is None or processes == 0:
+        progressMonitor = NullProgressMonitor() if quiet else ProgressMonitor(presentation = progressBar)
+        communicationChannel = CommunicationChannel0(progressMonitor)
+    else:
+        progressMonitor = NullProgressMonitor() if quiet else BProgressMonitor(presentation = progressBar)
+        communicationChannel = CommunicationChannel(processes, progressMonitor)
+
+    return progressMonitor, communicationChannel
+
+##__________________________________________________________________||
 def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, force, progressMonitor):
     """
         1:composite
@@ -146,13 +159,7 @@ class AlphaTwirl(object):
 
         if self.args is None: self.ArgumentParser().parse_args()
 
-        self.progressBar = None if self.args.quiet else ProgressBar()
-        if self.args.processes is None or self.args.processes == 0:
-            self.progressMonitor = NullProgressMonitor() if self.args.quiet else ProgressMonitor(presentation = self.progressBar)
-            self.communicationChannel = CommunicationChannel0(self.progressMonitor)
-        else:
-            self.progressMonitor = NullProgressMonitor() if self.args.quiet else BProgressMonitor(presentation = self.progressBar)
-            self.communicationChannel = CommunicationChannel(self.args.processes, self.progressMonitor)
+        self.progressMonitor, self.communicationChannel = build_progressMonitor_communicationChannel(self.args.quiet, self.args.processes)
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
