@@ -47,11 +47,6 @@ collector3 = Collector(resultsCombinationMethod3, deliveryMethod3)
 
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
-class AllEvents(object):
-    def __call__(self, event): return True
-
-eventSelection = AllEvents()
-
 progressBar = ProgressBar()
 progressMonitor = ProgressMonitor(progressBar)
 progressReporter = progressMonitor.createReporter()
@@ -81,8 +76,6 @@ for component in heppyResult.components():
 
         report = ProgressReport(component.name, event.iEvent + 1, event.nEvents)
         progressReporter.report(report)
-
-        if not eventSelection(event): continue
 
         counter1.event(event)
         counter2.event(event)

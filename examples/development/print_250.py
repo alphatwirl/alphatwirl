@@ -53,11 +53,6 @@ associator3 = Associator(counter3, collector3)
 
 eventBuilder = EventBuilder(analyzerName, fileName, treeName, args.nevents)
 
-class AllEvents(object):
-    def __call__(self, event): return True
-
-eventSelection = AllEvents()
-
 progressBar = ProgressBar()
 progressMonitor = ProgressMonitor(progressBar)
 eventLoopRunner = EventLoopRunner(progressMonitor)
@@ -71,7 +66,7 @@ for component in heppyResult.components():
     readers.add(associator2.make(component.name))
     readers.add(associator3.make(component.name))
 
-    eventLoop = EventLoop(eventBuilder, eventSelection, component, readers)
+    eventLoop = EventLoop(eventBuilder, component, readers)
     eventLoopRunner.run(eventLoop)
 
 eventLoopRunner.end()
