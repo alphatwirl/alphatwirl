@@ -15,6 +15,8 @@ class BEventBuilder(object):
         inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self._treeName)
-        return BEvents(tree, self._maxEvents)
+        ret = BEvents(tree, self._maxEvents)
+        ret.component = component
+        return ret
 
 ##____________________________________________________________________________||
