@@ -7,8 +7,8 @@ from Component import Component
 from ReadVersionInfo import ReadVersionInfo
 
 ##____________________________________________________________________________||
-defaultExcludeList = ('Chunks', 'failed')
-componentHasTheseFiles = ('config.pck', 'config.txt')
+defaultExcludeList = ['Chunks', 'failed']
+componentHasTheseFiles = ['config.pck', 'config.txt']
 
 ##____________________________________________________________________________||
 class HeppyResult(object):

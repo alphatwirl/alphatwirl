@@ -1,6 +1,6 @@
 from ComponentLoop import ComponentLoop
 from ComponentReaderComposite import ComponentReaderComposite
-from HeppyResult import HeppyResult, defaultExcludeList
+from HeppyResult import HeppyResult, defaultExcludeList, componentHasTheseFiles
 from Component import Component
 from ReadComponentConfig import ReadComponentConfig
 from ReadVersionInfo import ReadVersionInfo
