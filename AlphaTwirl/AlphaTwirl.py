@@ -54,6 +54,21 @@ def build_progressMonitor_communicationChannel(quiet, processes):
     return progressMonitor, communicationChannel
 
 ##__________________________________________________________________||
+def buildCounterAndCollector(tblcfg):
+    keyComposer = GenericKeyComposerB(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
+    nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
+    counter = Counter(
+        keyComposer = keyComposer,
+        countMethod = tblcfg['countsClass'](),
+        nextKeyComposer = nextKeyComposer,
+        weightCalculator = tblcfg['weight']
+    )
+    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
+    deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
+    collector0 = Collector(resultsCombinationMethod, deliveryMethod)
+    return counter, collector0
+
+##__________________________________________________________________||
 def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, force, progressMonitor):
     """
         1:composite
@@ -92,17 +107,7 @@ def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, fo
         collector1.add(collector3)
 
     for tblcfg in tableConfigs:
-        keyComposer = GenericKeyComposerB(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-        nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-        counter = Counter(
-            keyComposer = keyComposer,
-            countMethod = tblcfg['countsClass'](),
-            nextKeyComposer = nextKeyComposer,
-            weightCalculator = tblcfg['weight']
-        )
-        resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
-        deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
-        collector0 = Collector(resultsCombinationMethod, deliveryMethod)
+        counter, collector0 = buildCounterAndCollector(tblcfg)
         reader3.add(counter)
         collector3.add(collector0)
 
