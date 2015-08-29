@@ -18,11 +18,17 @@ class HeppyResult(object):
         path (str): the path to the Heppy result
         componentNames (list, optional): the list of the names of the components to read. If not given, all components except the ones listed in `excludeList` will be read.
         excludeList (list, optional): a list of the names of the directory in the Heppy result directory which are to be excluded to be considered as components. if not given, `defaultExcludeList` will be used.
+        isComponent (function, optional): a function that determines if a directory is a Heppy component. if not give, `IsComponent` will be used.
     """
 
-    def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
+    def __init__(self, path,
+                 componentNames = None,
+                 excludeList = defaultExcludeList,
+                 isComponent = None,
+    ):
         self.path = os.path.normpath(path)
-        allComponentNames = [n for n in os.listdir(self.path) if self._isComponent(n, excludeList)]
+        self.isComponent = IsComponent(excludeList, componentHasTheseFiles) if isComponent is None else isComponent
+        allComponentNames = [n for n in os.listdir(self.path) if self.isComponent(os.path.join(self.path, n))]
         allComponentNames = sorted(allComponentNames, key = lambda n: [float(c) if c.isdigit() else c for c in re.findall('\d+|\D+', n)])
         if componentNames is not None:
             nonexistentComponent =  [c for c in componentNames if c not in allComponentNames]
@@ -47,17 +53,22 @@ class HeppyResult(object):
     def components(self):
         return [getattr(self, n) for n in self.componentNames]
 
-    def _isComponent(self, name, excludeList):
-        if name in excludeList: return False
-        path = os.path.join(self.path, name)
-        if not os.path.isdir(path): return False
-        if not set(componentHasTheseFiles).issubset(set(os.listdir(path))): return False
-        return True
-
     def versionInfo(self):
         if self._versionInfo is None:
             path = os.path.join(self.path, 'versionInfo.txt')
             self._versionInfo = self._readVersionInfo(path)
         return self._versionInfo
+
+##__________________________________________________________________||
+class IsComponent(object):
+    def __init__(self, excludeList, componentHasTheseFiles):
+        self.excludeList = excludeList
+        self.componentHasTheseFiles = componentHasTheseFiles
+
+    def __call__(self, path):
+        if not os.path.isdir(path): return False
+        if os.path.basename(path) in self.excludeList: return False
+        if not set(self.componentHasTheseFiles).issubset(set(os.listdir(path))): return False
+        return True
 
 ##__________________________________________________________________||
