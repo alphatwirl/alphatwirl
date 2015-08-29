@@ -12,6 +12,14 @@ componentHasTheseFiles = ['config.pck', 'config.txt']
 
 ##__________________________________________________________________||
 class HeppyResult(object):
+    """A Heppy result
+
+    Args:
+        path (str): the path to the Heppy result
+        componentNames (list, optional): the list of the names of the components to read. If not given, all components except the ones listed in `excludeList` will be read.
+        excludeList (list, optional): a list of the names of the directory in the Heppy result directory which are to be excluded to be considered as components. if not given, `defaultExcludeList` will be used.
+    """
+
     def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
         self.path = os.path.normpath(path)
         allComponentNames = [n for n in os.listdir(self.path) if self._isComponent(n, excludeList)]
