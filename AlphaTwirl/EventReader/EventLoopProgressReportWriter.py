@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..ProgressBar import ProgressReport
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class EventLoopProgressReportWriter(object):
     """A progress report writer of an event loop
 
@@ -14,4 +14,4 @@ class EventLoopProgressReportWriter(object):
             taskid = taskid
         )
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from .WeightCalculatorOne import WeightCalculatorOne
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Counter(object):
     def __init__(self, keyComposer, countMethod, nextKeyComposer = None,
                  weightCalculator = WeightCalculatorOne()):
@@ -34,4 +34,4 @@ class Counter(object):
     def results(self):
         return self.countMethod.results()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

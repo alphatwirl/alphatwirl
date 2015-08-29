@@ -1,7 +1,7 @@
 import AlphaTwirl.Counter as Counter
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinningPlusOneNext(object):
     def __call__(self, val):
         return val
@@ -9,7 +9,7 @@ class MockBinningPlusOneNext(object):
     def next(self, val):
         return val + 1
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinningNoneNext(object):
     def __call__(self, val):
         return val
@@ -17,7 +17,7 @@ class MockBinningNoneNext(object):
     def next(self, val):
         return None
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinningSameNext(object):
     def __call__(self, val):
         return val
@@ -25,7 +25,7 @@ class MockBinningSameNext(object):
     def next(self, val):
         return val
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestNextKeyComposer(unittest.TestCase):
 
     def test_call(self):
@@ -53,4 +53,4 @@ class TestNextKeyComposer(unittest.TestCase):
         keyComposer = Counter.NextKeyComposer(binnings)
         self.assertEqual(((12, 8, 20), (11, 8, 21)), keyComposer((11, 8, 20)))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

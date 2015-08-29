@@ -1,11 +1,11 @@
 from AlphaTwirl.Events import Events
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockFile(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTree(object):
     def __init__(self, Entries = 100):
         self.Entries = Entries
@@ -24,7 +24,7 @@ class MockTree(object):
             self.iEvent = -1
         return nbytes
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMockTree(unittest.TestCase):
 
     def test_mocktree(self):
@@ -44,7 +44,7 @@ class TestMockTree(unittest.TestCase):
         self.assertEqual(0, tree.GetEntry(3))
         self.assertEqual(-1, tree.iEvent)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestEvents(unittest.TestCase):
 
     def setUp(self):
@@ -142,4 +142,4 @@ class TestEvents(unittest.TestCase):
         self.assertRaises(IndexError, events.__getitem__, 4)
         self.assertEqual(-1, events.iEvent)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

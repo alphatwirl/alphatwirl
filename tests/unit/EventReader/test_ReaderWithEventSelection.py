@@ -1,7 +1,7 @@
 from AlphaTwirl.EventReader import ReaderWithEventSelection
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
 
     def __init__(self):
@@ -22,7 +22,7 @@ class MockReader(object):
     def copyFrom(self, src):
         self._copy = src
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEventSelection(object):
     def __init__(self, toSelect):
         self.toSelect = toSelect
@@ -30,12 +30,12 @@ class MockEventSelection(object):
     def __call__(self, event):
         return event.id in self.toSelect
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvent(object):
     def __init__(self, id):
         self.id = id
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestReaderWithEventSelection(unittest.TestCase):
 
     def test_one(self):
@@ -75,4 +75,4 @@ class TestReaderWithEventSelection(unittest.TestCase):
         rws.copyFrom(src_rws)
         self.assertIs(src_reader, reader._copy)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

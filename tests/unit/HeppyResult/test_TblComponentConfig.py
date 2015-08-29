@@ -2,15 +2,15 @@ from AlphaTwirl.HeppyResult import TblComponentConfig
 import unittest
 import cStringIO
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockOpen(object):
     def __init__(self, out): self._out = out
     def __call__(self, path): return self._out
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mockClose(file): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockComponent(object):
     def __init__(self, name, xsec):
         self.name = name
@@ -18,7 +18,7 @@ class MockComponent(object):
 
     def config(self): return self._cfg
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestTblComponentConfig(unittest.TestCase):
 
     def test_read(self):
@@ -74,4 +74,4 @@ class TestTblComponentConfig(unittest.TestCase):
         expected = ' component xsec\n'
         self.assertEqual(expected, out.getvalue())
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

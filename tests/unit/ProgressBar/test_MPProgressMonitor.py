@@ -46,14 +46,14 @@ class MockPresentForTestLastWaitTime(object):
 ##__________________________________________________________________||
 class MockReport(object): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockQueue(object):
     def __init__(self): self.queue = [ ]
     def put(self, report): self.queue.append(report)
     def get(self): return self.queue.pop(0)
     def empty(self): return len(self.queue) == 0
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMPProgressMonitor(unittest.TestCase):
 
     def test_monitor(self):

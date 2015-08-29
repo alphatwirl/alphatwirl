@@ -3,7 +3,7 @@ from ..mkdir_p import mkdir_p
 from ..listToAlignedText import listToAlignedText
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TblComponentConfig(object):
     def __init__(self, outPath, columnNames, keys):
         self._outPath = outPath
@@ -28,4 +28,4 @@ class TblComponentConfig(object):
 
     def _close(self, file): file.close()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

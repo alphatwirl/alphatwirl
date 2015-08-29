@@ -1,11 +1,11 @@
 #!/usr/bin/env Rscript
 # Tai Sakuma <sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(gdata))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 d1 <-  read.table('tbl_process.txt', header = TRUE)
 d1$component <- factor(d1$component, levels = unique(d1$component))
 d1$phasespace <- factor(d1$phasespace, levels = unique(d1$phasespace))
@@ -31,4 +31,4 @@ d <- d[order(d$process, d$met), ]
 write.fwf(as.data.frame(d), 'tbl_out_R.txt')
 
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

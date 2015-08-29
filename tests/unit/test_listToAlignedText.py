@@ -1,7 +1,7 @@
 from AlphaTwirl import listToAlignedText
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestListToAlignedText(unittest.TestCase):
 
     def test_one(self):
@@ -38,4 +38,4 @@ class TestListToAlignedText(unittest.TestCase):
         expected = " component v1 nvar n\n"
         self.assertEqual(expected, actual)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

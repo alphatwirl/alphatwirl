@@ -2,7 +2,7 @@
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 import uuid
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class EventLoop(object):
     """An event loop
     """
@@ -30,4 +30,4 @@ class EventLoop(object):
         report = self.progressReportWriter.write(self.taskid, self.dataset, event)
         progressReporter.report(report)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

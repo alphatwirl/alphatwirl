@@ -1,7 +1,7 @@
 import unittest
 import cStringIO
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasPandas = False
 try:
     import pandas as pd
@@ -12,13 +12,13 @@ except ImportError:
         def read_table(self, *args, **kargs): pass
     pd = PD()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
     from pandas.util.testing import assert_frame_equal
     return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1),
                               check_less_precise = True, check_names = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_process = pd.read_table(cStringIO.StringIO(
 """    process  nBJet40          n          nvar  luminosity
  DYJetsToLL        0   0.950682  1.078378e-03           1
@@ -46,7 +46,7 @@ tbl_process = pd.read_table(cStringIO.StringIO(
  WJetsToLNu        4   0.000000  0.000000e+00           1
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_stack_process = pd.read_table(cStringIO.StringIO(
 """       process  nBJet40  luminosity          n          nvar  stack
        QCD        0           1   3.049929  2.827426e-01      1
@@ -77,7 +77,7 @@ WJetsToLNu        6           1   0.000167  2.775919e-08      4
 WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_stack_process_order = pd.read_table(cStringIO.StringIO(
 """       process  nBJet40  luminosity          n          nvar  stack
 DYJetsToLL        0           1   0.950682  1.078378e-03      1
@@ -108,7 +108,7 @@ WJetsToLNu        6           1   0.000167  2.775919e-08      4
 WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
 
@@ -134,4 +134,4 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
             )
         self.assertEqual(expect, actual)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

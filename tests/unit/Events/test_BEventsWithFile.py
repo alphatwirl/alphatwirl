@@ -1,7 +1,7 @@
 import unittest
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasROOT = False
 try:
     import ROOT
@@ -11,7 +11,7 @@ try:
 except ImportError:
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
 @unittest.skip("skip TestBEventsWithFile")
 class TestBEventsWithFile(unittest.TestCase):
@@ -88,4 +88,4 @@ class TestBEventsWithFile(unittest.TestCase):
         self.assertEqual(438, len(trigger_path))
         self.assertEqual(438, len(trigger_decision))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

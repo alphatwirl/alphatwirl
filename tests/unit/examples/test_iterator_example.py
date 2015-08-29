@@ -1,13 +1,13 @@
 import AlphaTwirl
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def genFunc():
     yield 101
     yield 102
     yield 103
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class IteClass(object):
     def __init__(self):
         self.val = 100
@@ -21,7 +21,7 @@ class IteClass(object):
         self.val = 103
         yield self
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestExampleGeneratorFunction(unittest.TestCase):
 
     def test_genFunc_Iteration(self):
@@ -36,7 +36,7 @@ class TestExampleGeneratorFunction(unittest.TestCase):
         self.assertEqual(103, next(it))
         self.assertRaises(StopIteration, next, it)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestExampleIterableObject(unittest.TestCase):
 
     def test_iteObj_Iteration(self):
@@ -58,4 +58,4 @@ class TestExampleIterableObject(unittest.TestCase):
         self.assertRaises(StopIteration, next, it)
 
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

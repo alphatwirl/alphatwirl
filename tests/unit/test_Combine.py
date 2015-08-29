@@ -2,12 +2,12 @@ from AlphaTwirl import Combine
 import collections
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self, results): self._results = results
     def results(self): return self._results
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCombine(unittest.TestCase):
 
     def test_one_reader(self):
@@ -188,4 +188,4 @@ class TestCombine(unittest.TestCase):
         combine = Combine()
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

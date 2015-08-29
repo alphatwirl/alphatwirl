@@ -1,19 +1,19 @@
 from AlphaTwirl.EventReader import EventLoop
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvent(object):
     def __init__(self, id):
         self.id = id
         self.iEvent = 0
         self.nEvents = 0
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEventBuilder(object):
     def build(self, dataset):
         return dataset._events
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self):
         self._eventIds = [ ]
@@ -29,13 +29,13 @@ class MockReader(object):
     def end(self):
         self._end = True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockDataset(object):
     def __init__(self):
         self._events = None
         self.name = None
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestEventLoop(unittest.TestCase):
 
     def test_call(self):
@@ -61,4 +61,4 @@ class TestEventLoop(unittest.TestCase):
         self.assertEqual([101, 102, 103], reader._eventIds)
         self.assertTrue(reader._end)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

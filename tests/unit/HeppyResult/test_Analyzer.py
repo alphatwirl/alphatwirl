@@ -2,7 +2,7 @@ import os
 from AlphaTwirl.HeppyResult import Analyzer
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_listdir(path):
     heppyDir = 'dir/201522_SingleMu'
     filesInHeppyDir = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'versionInfo.txt']
@@ -17,7 +17,7 @@ def mock_listdir(path):
 
     return [ ]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_isdir(path):
     heppyDir = 'dir/201522_SingleMu'
     dirsInHeppy = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks']
@@ -31,7 +31,7 @@ def mock_isdir(path):
     if path in dirsInComponent: return True
     return False
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestAnalyzer(unittest.TestCase):
 
     def setUp(self):
@@ -52,4 +52,4 @@ class TestAnalyzer(unittest.TestCase):
         self.assertEqual('PileUpAnalyzer', self.analyzer.name)
 
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

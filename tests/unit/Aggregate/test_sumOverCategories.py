@@ -1,7 +1,7 @@
 import unittest
 import cStringIO
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasPandas = False
 try:
     import pandas as pd
@@ -12,12 +12,12 @@ except ImportError:
         def read_table(self, *args, **kargs): pass
     pd = PD()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
     from pandas.util.testing import assert_frame_equal
     return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1), check_names = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_1_A_B_C = pd.read_table(cStringIO.StringIO(
 """A B C n nvar
 a X 2 1   10
@@ -37,7 +37,7 @@ c Z 1 6   60
 c Z 3 3   30
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_1_A_B = pd.read_table(cStringIO.StringIO(
 """A B n nvar
 a X 1   10
@@ -51,7 +51,7 @@ c Y 8   80
 c Z 9   90
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_1_A = pd.read_table(cStringIO.StringIO(
 """A  n nvar
 a  6   60
@@ -59,7 +59,7 @@ b 15  150
 c 24  240
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_1_B = pd.read_table(cStringIO.StringIO(
 """B  n nvar
 X 12  120
@@ -67,13 +67,13 @@ Y 15  150
 Z 18  180
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_1 = pd.read_table(cStringIO.StringIO(
 """n nvar
 45  450
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_sumOverCategories(unittest.TestCase):
 
@@ -123,4 +123,4 @@ class Test_sumOverCategories(unittest.TestCase):
         actual = sumOverCategories(tbl_1_A, categories = ('A', ), variables = ('n', 'nvar'))
         self.assertEqual(expect, actual)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

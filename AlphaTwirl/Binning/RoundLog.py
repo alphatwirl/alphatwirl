@@ -2,10 +2,10 @@
 from Round import Round
 import math
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def returnTrue(x): return True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class RoundLog(object):
     def __init__(self, width = 0.1, aBoundary = 1, retvalue = 'lowedge', valid = returnTrue):
         self._round = Round(width = width, aBoundary = math.log10(aBoundary), retvalue = retvalue)
@@ -21,4 +21,4 @@ class RoundLog(object):
         bin = math.log10(bin)
         return 10**self._round.next(bin)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

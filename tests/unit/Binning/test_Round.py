@@ -1,7 +1,7 @@
 from AlphaTwirl.Binning import Round
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestRound(unittest.TestCase):
 
     def test_init(self):
@@ -129,4 +129,4 @@ class TestRound(unittest.TestCase):
         self.assertEqual( -0.5, binning(  0))
         self.assertEqual( None, binning( -1))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

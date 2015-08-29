@@ -2,7 +2,7 @@
 from .mkdir_p import mkdir_p
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class WritePandasDataFrameToFile(object):
     def __init__(self, outPath):
         self._outPath = outPath
@@ -23,4 +23,4 @@ class WritePandasDataFrameToFile(object):
 
     def _close(self, file): file.close()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

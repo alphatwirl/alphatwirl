@@ -1,12 +1,12 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 import re
 import collections
 import ast
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class ReadCounter(object):
     def __call__(self, path):
         if not os.path.isfile(path): return None
@@ -35,4 +35,4 @@ class ReadCounter(object):
         eff2 = match.group(4)
         return level, dict(count = ast.literal_eval(count), eff1 = float(eff1), eff2 = float(eff2))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -3,7 +3,7 @@ import os
 import ROOT
 from ..Events import Events
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class EventBuilder(object):
     def __init__(self, analyzerName, fileName, treeName, maxEvents = -1, brancheNames = None):
         self._analyzerName = analyzerName
@@ -24,4 +24,4 @@ class EventBuilder(object):
         for b in self._brancheNames:
             tree.SetBranchStatus(b, 1)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasROOT = False
 try:
     import ROOT
@@ -10,11 +10,11 @@ try:
 except ImportError:
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockFile(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockLeaf(object):
     def __init__(self, name, typename):
         self.name = name
@@ -26,7 +26,7 @@ class MockLeaf(object):
     def GetTypeName(self):
         return self.typename
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTree(object):
     def __init__(self, Entries = 100):
         self.Entries = Entries
@@ -60,10 +60,10 @@ class MockTree(object):
     def GetLeaf(self, name):
         return self.leafs[name]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockArray(object): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBranchAddressManager(object):
     def __init__(self):
         self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
@@ -72,10 +72,10 @@ class MockBranchAddressManager(object):
             return MockArray(), MockArray()
         return None, None
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockVector(object): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBranchAddressManagerForVector(object):
     def __init__(self):
         self.leafNames = ('trigger_path', )
@@ -84,12 +84,12 @@ class MockBranchAddressManagerForVector(object):
             return MockVector()
         return None
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBranch(object):
     def __init__(self, name, array, countarray):
         pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMockTree(unittest.TestCase):
 
     def test_mocktree(self):
@@ -109,7 +109,7 @@ class TestMockTree(unittest.TestCase):
         self.assertEqual(0, tree.GetEntry(3))
         self.assertEqual(-1, tree.iEvent)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
 class TestBranchBuilder(unittest.TestCase):
 
@@ -185,4 +185,4 @@ class TestBranchBuilder(unittest.TestCase):
 
         self.assertIsNone(builder(tree, 'EventAuxiliary'))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

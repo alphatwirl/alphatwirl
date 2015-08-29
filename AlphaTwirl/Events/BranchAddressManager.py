@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import array
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class BranchAddressManager(object):
     """The branch address manager for ROOT TTree
 
@@ -71,7 +71,7 @@ class BranchAddressManager(object):
         self.__class__.arrayDict[(tree, branchName)] = itsArray
         self.__class__.counterArrayDict[(tree, branchName)] = itsCountArray
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def inspectLeaf(tree, bname):
 
 
@@ -100,7 +100,7 @@ def inspectLeaf(tree, bname):
         countmax = leafcount.GetMaximum() if isArray else None
         )
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def IsROOTNullPointer(tobject):
     try:
         tobject.GetName()
@@ -108,4 +108,4 @@ def IsROOTNullPointer(tobject):
     except ReferenceError:
         return True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

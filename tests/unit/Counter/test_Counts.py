@@ -1,7 +1,7 @@
 from AlphaTwirl.Counter import Counts
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCounts(unittest.TestCase):
 
     def test_counts(self):
@@ -63,4 +63,4 @@ class TestCounts(unittest.TestCase):
                      5: {'n': 0.0, 'nvar': 0.0}}
         self.assertEqual(expected, counts.results())
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

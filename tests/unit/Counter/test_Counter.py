@@ -1,11 +1,11 @@
 import AlphaTwirl.Counter as Counter
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvent(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockCounts(object):
     def __init__(self):
         self._counts = [ ]
@@ -31,15 +31,15 @@ class MockCounts(object):
     def results(self):
         return self._counts
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockWeightCalculator(object):
     def __call__(self, event):
         return 1.0
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinning(object): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockKeyComposer(object):
     def __init__(self, listOfKeys = [ ]):
         self.listOfKeys = listOfKeys
@@ -51,7 +51,7 @@ class MockKeyComposer(object):
     def __call__(self, event):
         return self.listOfKeys.pop()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockNextKeyComposer(object):
     def __init__(self, nextdic):
         self.nextdic = nextdic
@@ -59,7 +59,7 @@ class MockNextKeyComposer(object):
     def __call__(self, key):
         return self.nextdic[key]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestMockKeyComposer(unittest.TestCase):
 
     def test_call(self):
@@ -71,7 +71,7 @@ class TestMockKeyComposer(unittest.TestCase):
         self.assertEqual((13, 5), keycomposer(MockEvent()))
         self.assertRaises(IndexError, keycomposer, MockEvent())
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCounter(unittest.TestCase):
 
     def test_events(self):
@@ -137,4 +137,4 @@ class TestCounter(unittest.TestCase):
         counter.copyFrom(src_counter)
         self.assertEqual([((11,), 1.0)], counts._counts)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

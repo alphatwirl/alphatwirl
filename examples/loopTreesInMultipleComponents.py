@@ -7,10 +7,10 @@ from optparse import OptionParser
 
 import AlphaTwirl
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 ROOT.gROOT.SetBatch(1)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 parser = OptionParser()
 parser.add_option('-i', '--inputDir', default = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14//201525_SingleMu', action = 'store', type = 'string', help = "the Heppy out dir")
 parser.add_option("-n", "--nevents", default = -1, action = "store", type = 'long', help = "maximum number of events to process")
@@ -19,7 +19,7 @@ parser.add_option('-r', '--rootFileName', default = 'tree.root', action = 'store
 parser.add_option("-t", "--treeName", default = 'tree', action = "store", type = 'string', help = "the name of the tree")
 (options, args) = parser.parse_args(sys.argv)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 heppyResult = AlphaTwirl.HeppyResult.HeppyResult(options.inputDir)
 for component in heppyResult.components():
     analyzer = getattr(component, options.analyzerName)
@@ -34,4 +34,4 @@ for component in heppyResult.components():
         print '%35s %6d %10d %9d' % (component.name, run, lumi, eventId),
         print
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

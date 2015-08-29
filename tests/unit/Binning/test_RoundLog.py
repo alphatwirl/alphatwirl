@@ -1,7 +1,7 @@
 from AlphaTwirl.Binning import RoundLog
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestRoundLog(unittest.TestCase):
 
     def test_init(self):
@@ -45,4 +45,4 @@ class TestRoundLog(unittest.TestCase):
         binning = RoundLog(0.1, 100)
         self.assertEqual( 100, binning( 100))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

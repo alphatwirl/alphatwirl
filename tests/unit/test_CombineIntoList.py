@@ -2,7 +2,7 @@ from AlphaTwirl import countsToList, CombineIntoList
 import collections
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self, results):
         self._results = results
@@ -13,7 +13,7 @@ class MockReader(object):
     def results(self):
         return self._results
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCountsToList(unittest.TestCase):
 
     def test_call(self):
@@ -70,7 +70,7 @@ class TestCountsToList(unittest.TestCase):
         columns = ("v1", )
         self.assertEqual(expected, countsToList(counts, columns))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_oneReader(self):
@@ -177,4 +177,4 @@ class TestCombineIntoList(unittest.TestCase):
         combine = CombineIntoList(keyNames = ('v1', ))
         self.assertEqual(None, combine.combine(datasetReaderPairs))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

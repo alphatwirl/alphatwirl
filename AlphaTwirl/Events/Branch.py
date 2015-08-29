@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from BranchAddressManager import BranchAddressManager
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Branch(object):
     """This class encloses an array.array object, which is typically used
     to set the address of a branch of a ROOT TTree. This class is
@@ -52,4 +52,4 @@ class Branch(object):
         if self.countarray is None: return 1
         return self.countarray[0]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

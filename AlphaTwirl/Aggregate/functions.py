@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import pandas as pd
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def sumOverCategories(tbl, categories, variables):
 
     if categories is None: categories = ()
@@ -20,7 +20,7 @@ def sumOverCategories(tbl, categories, variables):
     tbl = tbl.groupby(factor_names)[variables].sum().reset_index()
     return tbl
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def combine_MC_yields_in_datasets_into_xsec_in_processes(
         tbl_yield, tbl_process, tbl_nevt, tbl_xsec, use_nevt_sumw = False):
     """return a data frame for cross sections for each process.
@@ -202,7 +202,7 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
 
     return tbl
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def stack_counts_categories(tbl, variables, category, order = None):
     """return a data frame with stacked contents
 
@@ -247,4 +247,4 @@ def stack_counts_categories(tbl, variables, category, order = None):
     if isFirst: return None
     return ret
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

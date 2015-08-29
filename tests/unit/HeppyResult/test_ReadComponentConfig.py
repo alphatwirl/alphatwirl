@@ -3,7 +3,7 @@ import unittest
 import cStringIO
 import os
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
 	addWeight      :   1.0
 	efficiency     :   CFG: eff
@@ -11,10 +11,10 @@ sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
 	xSection       :   28730000
 """
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_isfile(path): return False
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestReadComponentConfig(unittest.TestCase):
     def test_read(self):
         readConfig = ReadComponentConfig()
@@ -31,4 +31,4 @@ class TestReadComponentConfig(unittest.TestCase):
 
         os.path.isfile = isfile_org
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

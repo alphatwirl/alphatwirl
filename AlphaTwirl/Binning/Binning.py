@@ -1,9 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def returnTrue(x): return True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Binning(object):
     def __init__(self, boundaries = None, lows = None, ups = None,
                  retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
@@ -68,4 +68,4 @@ class Binning(object):
         ret = "%5s %10s %10s\n" % ("bin", "low", "up")
         return ret + "\n".join("%5s %10s %10s" % (str(b), str(l), str(u)) for b, l, u in zip(self.bins, self.lows, self.ups))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

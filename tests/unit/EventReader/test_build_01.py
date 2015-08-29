@@ -12,11 +12,11 @@ class MockProgressReporter(object): pass
 class MockResultsCombinationMethod(object):
     def combine(self, pairs) :pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEventSelection(object):
     def __call__(self, event): return True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TesEventReader_build_01(unittest.TestCase):
 
     def test_two(self):
@@ -156,4 +156,4 @@ class TesEventReader_build_01(unittest.TestCase):
         self.assertIs(reader7_ds2, collector7._datasetReaderPairs[1][1])
         self.assertIs(reader8_ds2, collector8._datasetReaderPairs[1][1])
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

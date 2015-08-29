@@ -2,7 +2,7 @@
 import Binning
 import pandas
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def buildBinningFromTbl(path, retvalue = 'lowedge'):
     tbl = pandas.read_table(path, delim_whitespace=True)
     if retvalue == 'number':
@@ -10,4 +10,4 @@ def buildBinningFromTbl(path, retvalue = 'lowedge'):
     if retvalue == 'lowedge':
         return Binning.Binning(lows = tbl.low.tolist(), ups = tbl.up.tolist(), retvalue = retvalue)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

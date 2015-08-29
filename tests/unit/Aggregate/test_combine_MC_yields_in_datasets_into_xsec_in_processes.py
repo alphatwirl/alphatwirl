@@ -1,7 +1,7 @@
 import unittest
 import cStringIO
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasPandas = False
 try:
     import pandas as pd
@@ -12,13 +12,13 @@ except ImportError:
         def read_table(self, *args, **kargs): pass
     pd = PD()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
     from pandas.util.testing import assert_frame_equal
     return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1),
                               check_less_precise = True, check_names = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_component_met = pd.read_table(cStringIO.StringIO(
 """component  njets   HT         MET   n  nvar
       QCD_HT_1000ToInf      4  800  125.892541   1     1
@@ -62,7 +62,7 @@ tbl_component_met = pd.read_table(cStringIO.StringIO(
                 T_tWch      5  800  144.543977   2     2
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_process = pd.read_table(cStringIO.StringIO(
 """             component             phasespace  process
       QCD_HT_500To1000       QCD_HT_500To1000  QCD
@@ -74,7 +74,7 @@ tbl_process = pd.read_table(cStringIO.StringIO(
                 TTJets                 TTJets  TTJets
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_xsec = pd.read_table(cStringIO.StringIO(
 """             component     xsec
       QCD_HT_1000ToInf    769.7
@@ -86,7 +86,7 @@ tbl_xsec = pd.read_table(cStringIO.StringIO(
                 TTJets    809.1
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_nevt = pd.read_table(cStringIO.StringIO(
 """             component     nevt     nevt_sumw
       QCD_HT_1000ToInf  1130720       1356864
@@ -98,7 +98,7 @@ tbl_nevt = pd.read_table(cStringIO.StringIO(
                 TTJets 25446993   26719342.65
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tbl_process_met = pd.read_table(cStringIO.StringIO(
 """process  njets   HT         MET      xsec       xsecvar
     QCD      4  800  114.815362 5.255887e-04  2.762435e-07
@@ -173,7 +173,7 @@ tbl_process_met_sumw = pd.read_table(cStringIO.StringIO(
  TTJets      5  800  144.543977 2.240826e-03  6.785543e-08
 """), delim_whitespace = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
 
@@ -204,4 +204,4 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
         ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
         self.assertEqual(expect, actual)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

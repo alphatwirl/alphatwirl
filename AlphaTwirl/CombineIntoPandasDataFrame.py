@@ -3,7 +3,7 @@
 from Combine import Combine
 import pandas
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def countsToDataFrame(counts, keyNames):
     valNames = counts.values()[0].keys()
     d = [k + tuple([v[n] for n in valNames]) for k, v in counts.iteritems()]
@@ -11,7 +11,7 @@ def countsToDataFrame(counts, keyNames):
     columns = tuple(keyNames) + tuple(valNames)
     return pandas.DataFrame(d, columns = columns)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class CombineIntoPandasDataFrame(object):
     def __init__(self, keyNames):
         self.datasetColumnName = 'component'
@@ -28,4 +28,4 @@ class CombineIntoPandasDataFrame(object):
             return pandas.DataFrame(d, columns = columns)
         return countsToDataFrame(combined, (self.datasetColumnName, ) + self.keyNames)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -3,7 +3,7 @@ import os
 import ROOT
 from ..Events import BEvents
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class BEventBuilder(object):
     def __init__(self, analyzerName, fileName, treeName, maxEvents = -1):
         self._analyzerName = analyzerName
@@ -19,4 +19,4 @@ class BEventBuilder(object):
         ret.component = component
         return ret
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -4,7 +4,7 @@ from ..listToAlignedText import listToAlignedText
 import os
 from ReadCounter import ReadCounter
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TblCounter(object):
     """This class reads counter files of HeppyResult.
 
@@ -65,4 +65,4 @@ class TblCounter(object):
 
     def _close(self, file): file.close()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

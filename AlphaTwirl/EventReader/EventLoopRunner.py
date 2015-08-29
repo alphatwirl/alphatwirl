@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..ProgressBar import NullProgressMonitor
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class EventLoopRunner(object):
     """This class runs instances of `EventLoop`.
 
@@ -17,4 +17,4 @@ class EventLoopRunner(object):
 
     def end(self): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

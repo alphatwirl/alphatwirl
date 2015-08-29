@@ -1,12 +1,12 @@
 from AlphaTwirl.EventReader import Associator
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self):
         self.content = [ ]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockCollector(object):
     def __init__(self):
         self.readers = [ ]
@@ -14,7 +14,7 @@ class MockCollector(object):
     def addReader(self, datasetName, reader):
         self.readers.append((datasetName, reader))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestAssociator(unittest.TestCase):
 
     def test_make(self):
@@ -34,4 +34,4 @@ class TestAssociator(unittest.TestCase):
         associator = Associator(reader)
         reader1 = associator.make("data1")
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

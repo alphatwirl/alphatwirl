@@ -13,7 +13,7 @@ alphaTwirl = AlphaTwirl.AlphaTwirl()
 parser = alphaTwirl.ArgumentParser()
 args = parser.parse_args()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 alphaTwirl.addComponentReader(TblXsec(os.path.join(args.outDir, 'tbl_xsec.txt')))
 
 tblNevt = TblCounter(
@@ -25,7 +25,7 @@ tblNevt = TblCounter(
     )
 alphaTwirl.addComponentReader(tblNevt)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 tblcfg = [
     dict(outFileName = 'tbl_component_met.txt',
          branchNames = ('met_pt', ),

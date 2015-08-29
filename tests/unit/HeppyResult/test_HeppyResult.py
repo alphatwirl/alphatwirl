@@ -2,7 +2,7 @@ import os
 from AlphaTwirl.HeppyResult import HeppyResult
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_listdir(path):
     heppyDir = 'dir/201522_SingleMu'
     filesInHeppyDir = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'versionInfo.txt', 'AnotherDir']
@@ -17,7 +17,7 @@ def mock_listdir(path):
 
     return [ ]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_isdir(path):
     heppyDir = 'dir/201522_SingleMu'
     dirsInHeppy = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'AnotherDir']
@@ -31,14 +31,14 @@ def mock_isdir(path):
     if path in dirsInComponent: return True
     return False
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_readVersionInfo(path):
     return {
         'tag': 'RA1cmg_v2.3',
         'full': 'Tag for production: \nRA1cmg_v2.3\n\nExtra information: \n'
     }
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestHeppyResult(unittest.TestCase):
 
     def setUp(self):
@@ -116,4 +116,4 @@ class TestHeppyResult(unittest.TestCase):
         info2 = self.heppy.versionInfo()
         self.assertIs(info1, info2)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

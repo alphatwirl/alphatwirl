@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class GenericKeyComposerB(object):
     """This class is a faster version of GenericKeyComposer.
 
@@ -43,4 +43,4 @@ class GenericKeyComposerB(object):
             self.branches.append(branch)
         return zip(self.branches, self.binnings, self.indices)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

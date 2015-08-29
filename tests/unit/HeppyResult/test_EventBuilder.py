@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasROOT = False
 try:
     import ROOT
@@ -10,17 +10,17 @@ try:
 except ImportError:
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockAnalyzer(object):
     def __init__(self):
         self.path = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT'
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockComponent(object):
     def __init__(self):
         self.treeProducerSusyAlphaT = MockAnalyzer()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTObject(object):
     def __init__(self, name):
         self.name = name
@@ -29,7 +29,7 @@ class MockTObject(object):
     def SetBranchStatus(self, bname, status):
         self.brancheStatus.add((bname, status))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTFile(object):
     def Open(self, path):
         self.path = path
@@ -37,17 +37,17 @@ class MockTFile(object):
     def Get(self, name):
         return MockTObject(name)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockROOT(object):
     def __init__(self): self.TFile = MockTFile()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvents(object):
     def __init__(self, tree, maxEvents):
         self.tree = tree
         self.maxEvents = maxEvents
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
 class TestEventBuilder(unittest.TestCase):
 
@@ -94,4 +94,4 @@ class TestEventBuilder(unittest.TestCase):
         expected = set([('*', 0), ('nBJet40', 1), ('met_pt', 1), ('nJet40', 1), ('jet_pt', 1)])
         self.assertEqual(expected, events.tree.brancheStatus)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

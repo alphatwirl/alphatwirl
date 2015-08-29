@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import copy
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class Associator(object):
 
     """This class associates event readers and a result collector.
@@ -38,9 +38,9 @@ class Associator(object):
         self.collector.addReader(datasetName, reader)
         return reader
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class NullCollector(object):
     def collect(self): return None
     def addReader(self, datasetName, reader): pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -1,18 +1,18 @@
 from AlphaTwirl.EventReader import Collector
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockMethod(object):
     def __init__(self):
         self.readers = None
     def collect(self, readers):
         self.readers = readers
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockResultsCombinationMethod(object):
     def __init__(self):
         self.readers = None
@@ -20,14 +20,14 @@ class MockResultsCombinationMethod(object):
         self.readers = readers
         return 4234
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockDeliveryMethod(object):
     def __init__(self):
         self.results = None
     def deliver(self, results):
         self.results = results
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCollector(unittest.TestCase):
 
     def test_collect(self):
@@ -49,4 +49,4 @@ class TestCollector(unittest.TestCase):
         self.assertEqual(4234, deliveryMethod.results)
 
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

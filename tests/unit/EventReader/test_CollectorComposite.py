@@ -1,7 +1,7 @@
 from AlphaTwirl.EventReader import CollectorComposite, ReaderComposite
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockCollector(object):
     def __init__(self):
         self._datasetReaderPairs = [ ]
@@ -13,11 +13,11 @@ class MockCollector(object):
     def collect(self):
         self._collected = True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestCollectorComposite(unittest.TestCase):
 
     def test_collect(self):
@@ -71,5 +71,5 @@ class TestCollectorComposite(unittest.TestCase):
         self.assertTrue(collector4._collected)
         self.assertTrue(collector5._collected)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 

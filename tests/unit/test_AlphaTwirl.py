@@ -1,11 +1,11 @@
 from AlphaTwirl import AlphaTwirl
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockComponentReader(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestAlphaTwirl(unittest.TestCase):
 
     def test_init(self):
@@ -20,4 +20,4 @@ class TestAlphaTwirl(unittest.TestCase):
         componentReader = MockComponentReader()
         alphaTwirl.addComponentReader(componentReader)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

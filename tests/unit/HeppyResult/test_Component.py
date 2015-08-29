@@ -3,7 +3,7 @@ from AlphaTwirl.HeppyResult import Component
 import unittest
 import pickle
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_listdir(path):
     heppyDir = 'dir/201522_SingleMu'
     filesInHeppyDir = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks', 'versionInfo.txt']
@@ -18,7 +18,7 @@ def mock_listdir(path):
 
     return [ ]
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_isdir(path):
     heppyDir = 'dir/201522_SingleMu'
     dirsInHeppy = ['failed', 'QCD_HT_100To250', 'QCD_HT_250To500', 'TTJets', 'Chunks']
@@ -32,11 +32,11 @@ def mock_isdir(path):
     if path in dirsInComponent: return True
     return False
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def mock_readComponentConfig(path):
     return { "isMC" : "True", 'xSection': '670500' }
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestComponent(unittest.TestCase):
 
     def setUp(self):
@@ -87,4 +87,4 @@ class TestComponent(unittest.TestCase):
         dumps = pickle.dumps(self.component)
         obj = pickle.loads(dumps)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

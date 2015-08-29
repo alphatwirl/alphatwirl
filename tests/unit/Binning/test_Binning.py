@@ -1,7 +1,7 @@
 from AlphaTwirl.Binning import Binning
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestBinning(unittest.TestCase):
     def test_call(self):
         bins = (1, 2, 3, 4)
@@ -140,4 +140,4 @@ class TestBinning(unittest.TestCase):
         self.assertEqual( 2, binning( 45))
         self.assertIsNone(binning( 9))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

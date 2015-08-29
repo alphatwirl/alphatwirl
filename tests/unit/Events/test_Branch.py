@@ -2,7 +2,7 @@ from AlphaTwirl.Events import Branch
 import unittest
 import array
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestBranch(unittest.TestCase):
 
     def test_array(self):
@@ -26,4 +26,4 @@ class TestBranch(unittest.TestCase):
         self.assertEqual(112.4, met_pt[0])
         self.assertRaises(IndexError, met_pt.__getitem__, 1)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

@@ -1,7 +1,7 @@
 from AlphaTwirl.Events import BranchAddressManager
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockLeaf(object):
     def __init__(self, name, typename, leafcount = None, maximum = None):
         self.name = name
@@ -13,11 +13,11 @@ class MockLeaf(object):
     def GetLeafCount(self): return self.leafcount
     def GetMaximum(self): return self.maximum
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockNullLeaf(object):
     def GetName(self): raise ReferenceError('null object')
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockTree(object):
 
     def __init__(self, leaves):
@@ -38,7 +38,7 @@ class MockTree(object):
     def SetBranchAddress(self, name, address):
         self.branchaddress.append((name, address))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestBranchAddressManager(unittest.TestCase):
 
 
@@ -115,4 +115,4 @@ class TestBranchAddressManager(unittest.TestCase):
         self.assertEqual('i', array_ele_pt_count.typecode)
         self.assertEqual(1, array_ele_pt_count.buffer_info()[1])
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

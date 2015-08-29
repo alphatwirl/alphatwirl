@@ -1,7 +1,7 @@
 import collections
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 hasPandas = False
 try:
     import pandas
@@ -10,12 +10,12 @@ try:
 except ImportError:
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
     from pandas.util.testing import assert_frame_equal
     return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1), check_names = True)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
     def __init__(self, results):
         self._results = results
@@ -29,7 +29,7 @@ class MockReader(object):
     def results(self):
         return self._results
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class TestCountsToDataFrame(unittest.TestCase):
     def setUp(self):
@@ -115,7 +115,7 @@ class TestCountsToDataFrame(unittest.TestCase):
         columns = ("v1", )
         self.assertEqual(expected, countsToDataFrame(counts, columns))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class TestCombineIntoPandasDataFrame(unittest.TestCase):
     def setUp(self):
@@ -234,4 +234,4 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
         combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
         self.assertEqual(None, combine.combine(datasetReaderPairs))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

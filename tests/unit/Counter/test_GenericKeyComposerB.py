@@ -2,11 +2,11 @@ import AlphaTwirl.Counter as Counter
 import unittest
 import logging
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvent(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinningEcho(object):
     def __call__(self, val):
         return val
@@ -14,7 +14,7 @@ class MockBinningEcho(object):
     def next(self, val):
         return val + 1
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockBinningNone(object):
     def __call__(self, val):
         return None
@@ -22,7 +22,7 @@ class MockBinningNone(object):
     def next(self, val):
         return val + 1
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestGenericKeyComposerB(unittest.TestCase):
 
     def test_call_1var(self):
@@ -126,4 +126,4 @@ class TestGenericKeyComposerB(unittest.TestCase):
         event.var3[:] = [111, 222, 333]
         self.assertEqual(((8, 232, 333), ), keyComposer(event))
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

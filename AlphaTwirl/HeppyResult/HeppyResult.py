@@ -1,16 +1,16 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 import os
 import re
 from Component import Component
 from ReadVersionInfo import ReadVersionInfo
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 defaultExcludeList = ['Chunks', 'failed']
 componentHasTheseFiles = ['config.pck', 'config.txt']
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class HeppyResult(object):
     def __init__(self, path, componentNames = None, excludeList = defaultExcludeList):
         self.path = os.path.normpath(path)
@@ -52,4 +52,4 @@ class HeppyResult(object):
             self._versionInfo = self._readVersionInfo(path)
         return self._versionInfo
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

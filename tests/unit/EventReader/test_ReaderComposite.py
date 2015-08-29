@@ -1,7 +1,7 @@
 from AlphaTwirl.EventReader import ReaderComposite
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockReader(object):
 
     def __init__(self):
@@ -21,11 +21,11 @@ class MockReader(object):
     def copyFrom(self, src):
         self._copy = src
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEvent(object):
     pass
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestReaderComposite(unittest.TestCase):
 
     def test_event_two_readers_two_events(self):
@@ -129,4 +129,4 @@ class TestReaderComposite(unittest.TestCase):
         self.assertIs(src_reader2, dest_reader2._copy)
         self.assertIs(src_reader3, dest_reader3._copy)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

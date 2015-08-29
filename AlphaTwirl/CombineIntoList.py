@@ -2,7 +2,7 @@
 
 from Combine import Combine
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 def countsToList(counts, keyNames):
     valNames = counts.values()[0].keys()
     d = [k + tuple([v[n] for n in valNames]) for k, v in counts.iteritems()]
@@ -11,7 +11,7 @@ def countsToList(counts, keyNames):
     d.insert(0, columns)
     return d
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class CombineIntoList(object):
     def __init__(self, keyNames):
         self.datasetColumnName = 'component'
@@ -27,4 +27,4 @@ class CombineIntoList(object):
             return [columns]
         return countsToList(combined, (self.datasetColumnName, ) + self.keyNames)
 
-##____________________________________________________________________________||
+##__________________________________________________________________||

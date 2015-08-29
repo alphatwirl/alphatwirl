@@ -1,7 +1,7 @@
 from AlphaTwirl.EventReader import EventLoopRunner
 import unittest
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class MockEventLoop(object):
     def __init__(self):
         self.called = False
@@ -9,7 +9,7 @@ class MockEventLoop(object):
     def __call__(self, progressReporter):
         self.called = True
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
 class TestEventLoopRunner(unittest.TestCase):
 
     def setUp(self):
@@ -27,4 +27,4 @@ class TestEventLoopRunner(unittest.TestCase):
     def test_end(self):
         self.runner.end()
 
-##____________________________________________________________________________||
+##__________________________________________________________________||
