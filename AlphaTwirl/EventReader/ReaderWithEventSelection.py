@@ -13,6 +13,7 @@ class ReaderWithEventSelection(object):
         self.selection = selection
 
     def begin(self, event):
+        if hasattr(self.selection, 'begin'): self.selection.begin(event)
         self.reader.begin(event)
 
     def event(self, event):
@@ -20,6 +21,7 @@ class ReaderWithEventSelection(object):
         self.reader.event(event)
 
     def end(self):
+        if hasattr(self.selection, 'end'): self.selection.end(event)
         self.reader.end()
 
     def copyFrom(self, src):
