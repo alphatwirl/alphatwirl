@@ -15,7 +15,7 @@ class TblBrilCalc(object):
     def __init__(self, outPath, csvFileName = 'brilcalc.csv'):
         self._outPath = outPath
         self._csvFileName = csvFileName
-        self._rows = [['component', 'delivered', 'recorded']]
+        self._rows = [['component', 'luminosity']]
 
     def begin(self): pass
 
@@ -39,12 +39,7 @@ class TblBrilCalc(object):
         delivered = [l/1000000 for l in delivered] # /ub
         delivered = sum(delivered)
 
-        recorded = [l['recorded'] for l in lumi_csv]
-        recorded = [float(l) for l in recorded] # /ub
-        recorded = [l/1000000 for l in recorded] # /ub
-        recorded = sum(recorded)
-
-        row = [component.name, delivered, recorded]
+        row = [component.name, delivered]
         self._rows.append(row)
 
     def end(self):
