@@ -30,7 +30,13 @@ class TblCounter(object):
     def begin(self): pass
 
     def read(self, component):
-        path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
+        try:
+            path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
+        except AttributeError, e:
+            import logging
+            logging.warning(e)
+            return
+
         counter = self._readCounter(path)
 
         if self.levels is None:
