@@ -8,6 +8,7 @@ from Analyzer import Analyzer
 from ReadCounter import ReadCounter
 from TblCounter import TblCounter
 from TblComponentConfig import TblComponentConfig
+from TblBrilCalc import TblBrilCalc
 
 try:
     from EventBuilder import EventBuilder
