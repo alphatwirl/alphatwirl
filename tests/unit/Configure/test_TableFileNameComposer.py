@@ -12,4 +12,12 @@ class TestTableFileNameComposer(unittest.TestCase):
         )
         self.assertEqual("tbl_component_var1_1_var2_var3_2.txt", actual)
 
+    def test_empty(self):
+        compose = TableFileNameComposer()
+        actual = compose(
+            columnNames = ( ),
+            indices = ( )
+        )
+        self.assertEqual("tbl_component.txt", actual)
+
 ##__________________________________________________________________||

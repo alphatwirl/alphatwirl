@@ -10,11 +10,14 @@ class TableFileNameComposer(object):
     'tbl_component_var1_1_var2_var3_2.txt'
 
     """
-    def __call__(self, columnNames, indices, prefix = 'tbl_component_', suffix = '.txt'):
+    def __call__(self, columnNames, indices, prefix = 'tbl_component', suffix = '.txt'):
         # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
         # l will be ['var1', '1', 'var2', 'var3', '2']
         l = columnNames if indices is None else [str(e) for sublist in zip(columnNames, indices) for e in sublist if e is not None]
-        ret = prefix + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
+        if l:
+            ret = prefix + '_' + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
+        else:
+            ret = prefix + suffix # e.g. "tbl_component.txt"
         return ret
 
 ##__________________________________________________________________||
