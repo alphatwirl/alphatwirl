@@ -14,6 +14,7 @@ try:
     from EventBuilder import EventBuilder
     from BEventBuilder import BEventBuilder
     from TblBranch import TblBranch
+    from TblBranchSize import TblBranchSize
     from TblTreeEntries import TblTreeEntries
 except ImportError:
     pass
