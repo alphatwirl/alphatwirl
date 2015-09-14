@@ -14,11 +14,16 @@ def IsROOTNullPointer(tobject):
 
 ##__________________________________________________________________||
 class TblBranchSize(object):
-    def __init__(self, analyzerName, fileName, treeName, outPath):
+    def __init__(self, analyzerName, fileName, treeName, outPath,
+                 addType = True, addSize = False, addTitle = False):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
         self.outPath = outPath
+
+        self.addType = addType
+        self.addSize = addSize
+        self.addTitle = addTitle
 
         self.branchOrder = [ ]
         self.branchDict = { }
@@ -43,6 +48,7 @@ class TblBranchSize(object):
                 branch_entry['isarray'] = '1' if isArray else '0'
                 branch_entry['countname'] = leafcount.GetName() if isArray else None
                 branch_entry['components'] = [ ]
+                branch_entry['title'] = leaf.GetBranch().GetTitle()
                 self.branchDict[branchName] = branch_entry
             component_entry = { }
             zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
@@ -55,8 +61,14 @@ class TblBranchSize(object):
 
     def end(self):
 
+        columns = ['name']
+        if self.addType: columns.extend(['type', 'isarray', 'countname'])
+        if self.addSize: columns.extend(['size', 'uncompressed_size', 'compression_factor'])
+        if self.addTitle: columns.extend(['title'])
+
         results = [ ]
-        results.append(['name', 'type', 'isarray', 'countname', 'size', 'uncompressed_size', 'compression_factor'])
+        results.append(columns)
+
 
         for n in self.branchOrder:
             bentry = self.branchDict[n]
@@ -66,16 +78,24 @@ class TblBranchSize(object):
             cf = usize/size if size > 0 else 0
             row = [ ]
             row.append(bentry['name'])
-            row.append(bentry['type'])
-            row.append(bentry['isarray'])
-            row.append(bentry['countname'])
-            row.append('{:10.6f}'.format(size))
-            row.append('{:10.6f}'.format(usize))
-            row.append('{:10.2f}'.format(cf))
+            if self.addType:
+                row.append(bentry['type'])
+                row.append(bentry['isarray'])
+                row.append(bentry['countname'])
+            if self.addSize:
+                row.append('{:10.6f}'.format(size))
+                row.append('{:10.6f}'.format(usize))
+                row.append('{:10.2f}'.format(cf))
+            if self.addTitle:
+                row.append('"{}"'.format(bentry['title']))
             results.append(row)
 
+        formatDict = { }
+        if self.addTitle:
+            formatDict.update({'title':'{}'})
+
         f = self._open(self.outPath)
-        f.write(listToAlignedText(results))
+        f.write(listToAlignedText(results, formatDict))
         self._close(f)
 
     def _open(self, path):
