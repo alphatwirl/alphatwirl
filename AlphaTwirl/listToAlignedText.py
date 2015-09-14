@@ -29,7 +29,7 @@ def listToAlignedText(src):
         columnWidths = [max([len(e) for e in r]) for r in transposed]
         # e.g., columnWidths = [9, 2, 4, 1]
 
-        format = " {:>" + "s} {:>".join([str(e) for e in columnWidths]) + "s}"
+        format = " " + " ".join(['{:>' + str(e) + 's}' for e in columnWidths])
         # e.g., format = "{:>9s} {:>4s} {:>4s} {:>11s}"
 
         ret = "\n".join([format.format(*row) for row in zip(*transposed)]) + "\n"
