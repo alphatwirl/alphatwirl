@@ -3,6 +3,9 @@
 ##__________________________________________________________________||
 def listToAlignedText(src):
 
+        if not src: return '' # src = [ ]
+        if not src[0]: return '' # src = [()]
+
         # e.g.,
         # src = [
         #     ('component', 'v1', 'nvar', 'n'),
@@ -12,7 +15,6 @@ def listToAlignedText(src):
         #     ('data2',  333, 6.0, 300909234),
         #     ('data2',   11, 2.0, 323432.2234),
         # ]
-
 
         transposed = [[r[i] for r in src] for i in range(len(src[0]))]
         # e.g.,
@@ -29,7 +31,10 @@ def listToAlignedText(src):
         columnWidths = [max([len(e) for e in r]) for r in transposed]
         # e.g., columnWidths = [9, 2, 4, 1]
 
-        format = " " + " ".join(['{:>' + str(e) + 's}' for e in columnWidths])
+        formatList = ['{:>' + str(e) + 's}' for e in columnWidths]
+        # e.g., formatList = ['{:>9s}', '{:>4s}', '{:>4s}', '{:>11s}']
+
+        format = " " + " ".join(formatList)
         # e.g., format = "{:>9s} {:>4s} {:>4s} {:>11s}"
 
         ret = "\n".join([format.format(*row) for row in zip(*transposed)]) + "\n"

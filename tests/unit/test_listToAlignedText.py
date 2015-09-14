@@ -27,7 +27,7 @@ class TestListToAlignedText(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_empty(self):
+    def test_headonly(self):
 
         src = [
             ('component', 'v1', 'nvar', 'n'),
@@ -36,6 +36,24 @@ class TestListToAlignedText(unittest.TestCase):
         actual = listToAlignedText(src)
 
         expected = " component v1 nvar n\n"
+        self.assertEqual(expected, actual)
+
+    def test_empty_one(self):
+        src = [ ]
+        actual = listToAlignedText(src)
+        expected = ""
+        self.assertEqual(expected, actual)
+
+    def test_empty_two(self):
+        src = [()]
+        actual = listToAlignedText(src)
+        expected = ""
+        self.assertEqual(expected, actual)
+
+    def test_empty_three(self):
+        src = [(), (), ()]
+        actual = listToAlignedText(src)
+        expected = ""
         self.assertEqual(expected, actual)
 
 ##__________________________________________________________________||
