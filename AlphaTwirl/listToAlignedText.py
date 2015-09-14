@@ -1,10 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-def listToAlignedText(src):
-
-        if not src: return '' # src = [ ]
-        if not src[0]: return '' # src = [()]
+def listToAlignedText(src, formatDict = None):
 
         # e.g.,
         # src = [
@@ -15,6 +12,9 @@ def listToAlignedText(src):
         #     ('data2',  333, 6.0, 300909234),
         #     ('data2',   11, 2.0, 323432.2234),
         # ]
+
+        if not src: return '' # src = [ ]
+        if not src[0]: return '' # e.g., src = [(), (), ()]
 
         transposed = [[r[i] for r in src] for i in range(len(src[0]))]
         # e.g.,
@@ -33,6 +33,21 @@ def listToAlignedText(src):
 
         formatList = ['{:>' + str(e) + 's}' for e in columnWidths]
         # e.g., formatList = ['{:>9s}', '{:>4s}', '{:>4s}', '{:>11s}']
+
+        if formatDict is not None:
+                # e.g., formatDict = {'n': '{}'}
+
+                columnNames = src[0]
+                # e.g., columnNames = ('component', 'v1', 'nvar', 'n')
+
+                formatDict0 = dict(zip(columnNames, formatList))
+                # e.g., formatDict0 = {'component':'{:>9s}', 'v1':'{:>4s}', 'nvar':'{:>4s}', 'n':'{:>11s}'}
+
+                formatDict0.update(formatDict)
+                # e.g., formatDict0 = {'component':'{:>9s}', 'v1':'{:>4s}', 'nvar':'{:>4s}', 'n':'{}'}
+
+                formatList = [formatDict0[c] for c in columnNames]
+                # e.g., formatList = ['{:>9s}', '{:>4s}', '{:>4s}', '{}']
 
         format = " " + " ".join(formatList)
         # e.g., format = "{:>9s} {:>4s} {:>4s} {:>11s}"

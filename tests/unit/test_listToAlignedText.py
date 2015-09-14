@@ -27,6 +27,31 @@ class TestListToAlignedText(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_formatDict(self):
+
+        src = [
+            ('component', 'v1', 'nvar', 'n'),
+            ('data1',  100, 6.0,   40),
+            ('data1',    2, 9.0, 3.3),
+            ('data1', 3124, 3.0, 0.0000001),
+            ('data2',  333, 6.0, 300909234),
+            ('data2',   11, 2.0, 323432.2234),
+        ]
+
+        formatDict = dict(n = '{}')
+
+        actual = listToAlignedText(src, formatDict)
+
+        expected = """ component   v1 nvar n
+     data1  100    6 40
+     data1    2    9 3.3
+     data1 3124    3 1e-07
+     data2  333    6 300909234
+     data2   11    2 323432.2234
+"""
+
+        self.assertEqual(expected, actual)
+
     def test_headonly(self):
 
         src = [
