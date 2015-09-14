@@ -2,6 +2,7 @@
 from ..mkdir_p import mkdir_p
 from ..listToAlignedText import listToAlignedText
 import os
+from operator import itemgetter
 import ROOT
 
 ##__________________________________________________________________||
@@ -15,7 +16,8 @@ def IsROOTNullPointer(tobject):
 ##__________________________________________________________________||
 class TblBranch(object):
     def __init__(self, analyzerName, fileName, treeName, outPath,
-                 addType = True, addSize = False, addTitle = False):
+                 addType = True, addSize = False, addTitle = False, sortBySize = False
+    ):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
@@ -24,6 +26,8 @@ class TblBranch(object):
         self.addType = addType
         self.addSize = addSize
         self.addTitle = addTitle
+
+        self.sortBySize = sortBySize
 
         self.branchOrder = [ ]
         self.branchDict = { }
@@ -61,14 +65,7 @@ class TblBranch(object):
 
     def end(self):
 
-        columns = ['name']
-        if self.addType: columns.extend(['type', 'isarray', 'countname'])
-        if self.addSize: columns.extend(['size', 'uncompressed_size', 'compression_factor'])
-        if self.addTitle: columns.extend(['title'])
-
         results = [ ]
-        results.append(columns)
-
 
         for n in self.branchOrder:
             bentry = self.branchDict[n]
@@ -89,6 +86,16 @@ class TblBranch(object):
             if self.addTitle:
                 row.append('"{}"'.format(bentry['title']))
             results.append(row)
+
+        columns = ['name']
+        if self.addType: columns.extend(['type', 'isarray', 'countname'])
+        if self.addSize: columns.extend(['size', 'uncompressed_size', 'compression_factor'])
+        if self.addTitle: columns.extend(['title'])
+
+        if self.addSize and self.sortBySize:
+            results = sorted(results, key = itemgetter(columns.index('size')), reverse = True)
+
+        results.insert(0, columns)
 
         formatDict = { }
         if self.addTitle:
