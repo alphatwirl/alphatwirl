@@ -6,12 +6,16 @@ import ROOT
 
 ##__________________________________________________________________||
 class TblTreeEntries(object):
-    def __init__(self, analyzerName, fileName, treeName, outPath, columnName = 'n'):
+    def __init__(self, analyzerName, fileName, treeName, outPath):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
         self.outPath = outPath
-        self._rows = [['component', columnName]]
+        self._rows = [
+            ['component', 'n',
+             'size', 'uncompressed_size', 'compression_factor',
+             'analyzer', 'file', 'tree',
+            ]]
 
     def begin(self): pass
 
@@ -20,7 +24,21 @@ class TblTreeEntries(object):
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self.treeName)
 
-        row = [component.name, tree.GetEntries()]
+        size = tree.GetDirectory().GetKey(tree.GetName()).GetNbytes()
+        size += tree.GetZipBytes()
+        size /= 1024.0*1024.0 # MB
+        uncompressed_size = tree.GetDirectory().GetKey(tree.GetName()).GetKeylen()
+        uncompressed_size += tree.GetTotBytes()
+        uncompressed_size /= 1024.0*1024.0 # MB
+        compression_factor = uncompressed_size/size if size > 0 else 0
+
+        size = round(size, 3)
+        uncompressed_size = round(uncompressed_size, 3)
+        compression_factor = round(compression_factor, 3)
+
+        row = [component.name, tree.GetEntries(),
+               size, uncompressed_size, compression_factor,
+               self.analyzerName, self.fileName, self.treeName]
         self._rows.append(row)
 
     def end(self):
