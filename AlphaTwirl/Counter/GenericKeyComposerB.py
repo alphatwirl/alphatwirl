@@ -1,10 +1,13 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import itertools
 
 ##__________________________________________________________________||
 class GenericKeyComposerB(object):
     """This class is a faster version of GenericKeyComposer.
 
     This class can be used with BEvents.
+
+    This class supports inclusive indices '*'
 
     (this docstring is under development.)
 
@@ -19,17 +22,26 @@ class GenericKeyComposerB(object):
 
     def __call__(self, event):
         if self._zip is None: return ()
-        ret = [ ]
+        var_bins_list = [ ]
         for branche, binning, index in self._zip:
-            if index is not None:
-                if len(branche) <= index: return ()
-                var = branche[index]
+            var_bins = self._var_bins(branche, binning, index)
+            if not var_bins: return ()
+            var_bins_list.append(var_bins)
+        return tuple(itertools.product(*var_bins_list))
+
+    def _var_bins(self, branche, binning, index):
+        if index is None:
+            vars = [branche[0]]
+        elif index == '*':
+            vars = [branche[i] for i in  range(len(branche))]
+        else:
+            if len(branche) <= index:
+                vars = [ ]
             else:
-                var = branche[0]
-            var_bin = binning(var)
-            if var_bin is None: return ()
-            ret.append(var_bin)
-        return (tuple(ret), )
+                vars = [branche[index]]
+        var_bins = [binning(var) for var in vars]
+        var_bins = [b for b in var_bins if b is not None]
+        return var_bins
 
     def _zipArrays(self, event):
         self.branches = [ ]

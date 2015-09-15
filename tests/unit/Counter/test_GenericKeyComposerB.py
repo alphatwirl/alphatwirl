@@ -126,4 +126,46 @@ class TestGenericKeyComposerB(unittest.TestCase):
         event.var3[:] = [111, 222, 333]
         self.assertEqual(((8, 232, 333), ), keyComposer(event))
 
+    def test_indices_inclusive_1(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ), indices = ('*', ))
+        event = MockEvent()
+        event.var1 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
+        self.assertEqual(((12, ), (8, ), (6, )), keyComposer(event))
+
+    def test_indices_inclusive_2(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningEcho()), indices = ('*', None))
+        event = MockEvent()
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
+        event.var2[:] = [5, ]
+        self.assertEqual(((12, 5), (8, 5), (6, 5)), keyComposer(event))
+
+    def test_indices_inclusive_3(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningNone()), indices = ('*', None))
+        event = MockEvent()
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
+        event.var2[:] = [5, ]
+        self.assertEqual(( ), keyComposer(event))
+
+    def test_indices_inclusive_4(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', 'var2'), (MockBinningEcho(), MockBinningEcho()), indices = ('*', '*'))
+        event = MockEvent()
+        event.var1 = [ ]
+        event.var2 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12, 8, 6]
+        event.var2[:] = [5, 2]
+        self.assertEqual(((12, 5), (12, 2), (8, 5), (8, 2), (6, 5), (6, 2)), keyComposer(event))
+
 ##__________________________________________________________________||
