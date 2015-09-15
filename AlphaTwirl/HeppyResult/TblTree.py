@@ -5,7 +5,7 @@ import os
 import ROOT
 
 ##__________________________________________________________________||
-class TblTreeEntries(object):
+class TblTree(object):
     def __init__(self, analyzerName, fileName, treeName, outPath):
         self.analyzerName = analyzerName
         self.fileName = fileName
