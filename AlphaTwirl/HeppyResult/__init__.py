@@ -7,6 +7,7 @@ from ReadVersionInfo import ReadVersionInfo
 from Analyzer import Analyzer
 from ReadCounter import ReadCounter
 from TblCounter import TblCounter
+from TblCounterLong import TblCounterLong
 from TblComponentConfig import TblComponentConfig
 from TblBrilCalc import TblBrilCalc
 
