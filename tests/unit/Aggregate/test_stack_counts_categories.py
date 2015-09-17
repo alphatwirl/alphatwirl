@@ -109,6 +109,71 @@ WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
 
 ##__________________________________________________________________||
+tbl_stack_process_bottom = pd.read_table(cStringIO.StringIO(
+"""       process  nBJet40  luminosity          n          nvar  stack
+    TTJets        0           1   2.573971  4.288517e-04      1
+    TTJets        1           1   6.839210  1.139487e-03      1
+    TTJets        2           1   4.743245  7.902762e-04      1
+    TTJets        3           1   0.572808  9.543608e-05      1
+    TTJets        4           1   0.028824  4.802339e-06      1
+    TTJets        5           1   0.001833  3.053510e-07      1
+    TTJets        6           1   0.000167  2.775919e-08      1
+    TTJets        7           1   0.000000  0.000000e+00      1
+       QCD        0           1   5.623900  2.831715e-01      2
+       QCD        1           1   9.883535  8.645233e-01      2
+       QCD        2           1   4.963358  2.184022e-02      2
+       QCD        3           1   0.573484  9.565958e-05      2
+       QCD        4           1   0.028824  4.802339e-06      2
+       QCD        5           1   0.001833  3.053510e-07      2
+       QCD        6           1   0.000167  2.775919e-08      2
+       QCD        7           1   0.000000  0.000000e+00      2
+DYJetsToLL        0           1   6.574582  2.842498e-01      3
+DYJetsToLL        1           1  10.039651  8.647102e-01      3
+DYJetsToLL        2           1   4.981857  2.186322e-02      3
+DYJetsToLL        3           1   0.575289  9.688107e-05      3
+DYJetsToLL        4           1   0.028824  4.802339e-06      3
+DYJetsToLL        5           1   0.001833  3.053510e-07      3
+DYJetsToLL        6           1   0.000167  2.775919e-08      3
+DYJetsToLL        7           1   0.000000  0.000000e+00      3
+WJetsToLNu        0           1  29.984430  5.212911e-01      4
+WJetsToLNu        1           1  14.154765  9.043123e-01      4
+WJetsToLNu        2           1   5.284329  2.480550e-02      4
+WJetsToLNu        3           1   0.590226  1.526588e-04      4
+WJetsToLNu        4           1   0.028824  4.802339e-06      4
+WJetsToLNu        5           1   0.001833  3.053510e-07      4
+WJetsToLNu        6           1   0.000167  2.775919e-08      4
+WJetsToLNu        7           1   0.000000  0.000000e+00      4
+"""), delim_whitespace = True)
+
+##__________________________________________________________________||
+tbl_stack_process_top = pd.read_table(cStringIO.StringIO(
+"""       process  nBJet40  luminosity          n          nvar  stack
+DYJetsToLL        0           1   0.950682  1.078378e-03      1
+DYJetsToLL        1           1   0.156116  1.868890e-04      1
+DYJetsToLL        2           1   0.018499  2.300486e-05      1
+DYJetsToLL        3           1   0.001805  1.221497e-06      1
+DYJetsToLL        4           1   0.000000  0.000000e+00      1
+WJetsToLNu        0           1  24.360530  2.381197e-01      2
+WJetsToLNu        1           1   4.271230  3.978906e-02      2
+WJetsToLNu        2           1   0.320971  2.965279e-03      2
+WJetsToLNu        3           1   0.016742  5.699920e-05      2
+WJetsToLNu        4           1   0.000000  0.000000e+00      2
+       QCD        0           1  27.410459  5.208623e-01      3
+       QCD        1           1   7.315555  9.031729e-01      3
+       QCD        2           1   0.541084  2.401522e-02      3
+       QCD        3           1   0.017418  5.722269e-05      3
+       QCD        4           1   0.000000  0.000000e+00      3
+    TTJets        0           1  29.984430  5.212911e-01      4
+    TTJets        1           1  14.154765  9.043123e-01      4
+    TTJets        2           1   5.284329  2.480550e-02      4
+    TTJets        3           1   0.590226  1.526588e-04      4
+    TTJets        4           1   0.028824  4.802339e-06      4
+    TTJets        5           1   0.001833  3.053510e-07      4
+    TTJets        6           1   0.000167  2.775919e-08      4
+    TTJets        7           1   0.000000  0.000000e+00      4
+"""), delim_whitespace = True)
+
+##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
 
@@ -122,6 +187,26 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
             variables = ('n', 'nvar'),
             category = 'process',
             order = ('QCD', 'T', 'DYJetsToLL', 'GJets', 'TTJets', 'WJetsToLNu', 'ZJetsToNuNu'),
+            )
+        self.assertEqual(expect, actual)
+
+    def test_specified_bottom(self):
+        expect = tbl_stack_process_bottom
+        actual = stack_counts_categories(
+            tbl_process,
+            variables = ('n', 'nvar'),
+            category = 'process',
+            bottom = ('TTJets', 'QCD'),
+            )
+        self.assertEqual(expect, actual)
+
+    def test_specified_top(self):
+        expect = tbl_stack_process_top
+        actual = stack_counts_categories(
+            tbl_process,
+            variables = ('n', 'nvar'),
+            category = 'process',
+            top = ('TTJets', 'QCD'),
             )
         self.assertEqual(expect, actual)
 

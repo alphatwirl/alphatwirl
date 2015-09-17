@@ -203,11 +203,20 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     return tbl
 
 ##__________________________________________________________________||
-def stack_counts_categories(tbl, variables, category, order = None):
+def stack_counts_categories(tbl, variables, category, order = None,
+                            bottom = None, top = None):
     """return a data frame with stacked contents
 
     This function stacks contents of the data frame by the category in
-    the given order. It does what ROOT THStack does with histograms.
+    an order. It does what ROOT THStack does with histograms.
+
+    By default, the decreasing order of variables will be used as the
+    stack order.
+
+    The order of the stack can be controlled by `order`, 'bottom`, or
+    'top`. Categories to be stacked in the bottom or top can be
+    specified by 'bottom` or 'top`. If `order` is given, it will fully
+    specify the the order and `bottom` and `top` will be ignored.
 
     Args:
 
@@ -218,15 +227,30 @@ def stack_counts_categories(tbl, variables, category, order = None):
     category (string): the name of the category by which to stack,
       e.g., "process"
 
-    order (list): the list of values in the category in the order in
-      which to stack. The first element will be in the bottom. If
-      None, the decreasing order of variables will be used
+    order (list): a list of values in the category in the order in
+      which to stack. The first element will be in the bottom. The
+      last element will be in the top.
+
+    bottom (list): a list of values in the category to stack in the
+      bottom. The first element will be in the bottom.
+
+    top (list): a list of values in the category to stack in the
+      top. The first element will be in the top.
 
     """
 
     if order is None:
         d = tbl.groupby(category)[variables].sum().reset_index()
         order = d.sort(list(variables))[category]
+        order = list(order)
+        if bottom is not None:
+            for b in bottom:
+                if b in order: order.remove(b)
+            order = list(bottom) + order
+        if top is not None:
+            for t in top:
+                if t in order: order.remove(t)
+            order =  order + list(reversed(top))
 
     isFirst = True
     stack = 1
