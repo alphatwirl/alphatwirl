@@ -37,8 +37,8 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(MockCounts, tblcfg_out['countsClass'])
         self.assertTrue(tblcfg_out['outFile'])
         self.assertIs(completer.defaultWeight, tblcfg_out['weight'])
-        self.assertEqual('tbl_component_met_pt.txt', tblcfg_out['outFileName'])
-        self.assertEqual('/tmp/tbl_component_met_pt.txt', tblcfg_out['outFilePath'])
+        self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])
+        self.assertEqual('/tmp/tbl_n_component_met_pt.txt', tblcfg_out['outFilePath'])
         self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
         self.assertEqual(('met_pt', ), tblcfg_out['branchNames'])
 
