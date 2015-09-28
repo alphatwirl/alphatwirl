@@ -17,7 +17,7 @@ def sumOverCategories(tbl, categories, variables):
         tbl = tbl.drop([c for c in tbl.columns if c not in variables], axis = 1)
         return tbl
 
-    tbl = tbl.groupby(factor_names)[variables].sum().reset_index()
+    tbl = tbl.groupby(factor_names)[variables].sum().reset_index().dropna()
     return tbl
 
 ##__________________________________________________________________||
