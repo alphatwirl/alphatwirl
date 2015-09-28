@@ -34,12 +34,12 @@ class TblBrilCalc(object):
         fieldnames = ('runfill', 'time', 'nls', 'ncms', 'delivered', 'recorded')
         lumi_csv = csv.DictReader(csvfile, fieldnames)
         lumi_csv = [l for l in lumi_csv] # read all
-        delivered = [l['delivered'] for l in lumi_csv]
-        delivered = [float(l) for l in delivered] # /ub
-        delivered = [l/1000000 for l in delivered] # /ub
-        delivered = sum(delivered)
+        recorded = [l['recorded'] for l in lumi_csv]
+        recorded = [float(l) for l in recorded] # /ub
+        recorded = [l/1000000 for l in recorded] # /ub
+        recorded = sum(recorded)
 
-        row = [component.name, delivered]
+        row = [component.name, recorded]
         self._rows.append(row)
 
     def end(self):
