@@ -93,7 +93,7 @@ class TblBranch(object):
         if self.addTitle: columns.extend(['title'])
 
         if self.addSize and self.sortBySize:
-            results = sorted(results, key = itemgetter(columns.index('size')), reverse = True)
+            results = sorted(results, key = lambda x: float(itemgetter(columns.index('size'))(x)), reverse = True)
 
         results.insert(0, columns)
 
