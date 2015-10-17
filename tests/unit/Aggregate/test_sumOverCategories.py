@@ -123,4 +123,9 @@ class Test_sumOverCategories(unittest.TestCase):
         actual = sumOverCategories(tbl_1_A, categories = ('A', ), variables = ('n', 'nvar'))
         self.assertEqual(expect, actual)
 
+    def test_nonexistent_variables(self):
+        expect = tbl_1_A_B
+        actual = sumOverCategories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar', 'xxx'))
+        self.assertEqual(expect, actual)
+
 ##__________________________________________________________________||

@@ -5,6 +5,9 @@ import pandas as pd
 def sumOverCategories(tbl, categories, variables):
 
     if categories is None: categories = ()
+
+    variables = tuple([v for v in variables if v in tbl.columns.values])
+
     factor_names = [c for c in tbl.columns if c not in categories + variables]
 
     if len(factor_names) == 0:
