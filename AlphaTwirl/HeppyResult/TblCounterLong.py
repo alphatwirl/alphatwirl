@@ -17,14 +17,18 @@ class TblCounterLong(object):
         analyzerName (str): the name of the Heppy analyzer, e.g., skimAnalyzerCount
         fileName (str): the name of the counter file, e.g., SkimReport.txt
         outPath (str): a path to the output file
+        levels (list): a list of the levels to read. If not given, all levels will be read
+        columnNames (list): a list of the column names of the output file. the default is ('component', 'level', 'count')
 
     """
-    def __init__(self, analyzerName, fileName, outPath):
+    def __init__(self, analyzerName, fileName, outPath, levels = None, columnNames = ('component', 'level', 'count')):
         self.analyzerName = analyzerName
         self.fileName = fileName
         self._outPath = outPath
+        self.levels = levels
+
         self._readCounter = ReadCounter()
-        self._rows = [['component', 'level', 'count']]
+        self._rows = [columnNames]
 
     def begin(self): pass
 
@@ -39,6 +43,7 @@ class TblCounterLong(object):
         counter = self._readCounter(path)
 
         for level, var in counter.items():
+            if not self.levels is None and not level in self.levels: continue
             # quote if space is in a level, e.g., "Sum Weights"
             if ' ' in level: level =  '"' + level + '"'
             self._rows.append([component.name, level, var['count']])
