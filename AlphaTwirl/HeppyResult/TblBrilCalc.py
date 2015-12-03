@@ -30,10 +30,11 @@ class TblBrilCalc(object):
             logging.warning(e)
             return
 
-        import csv
+        import csv, re
         fieldnames = ('runfill', 'time', 'nls', 'ncms', 'delivered', 'recorded')
         lumi_csv = csv.DictReader(csvfile, fieldnames)
         lumi_csv = [l for l in lumi_csv] # read all
+        lumi_csv = [l for l in lumi_csv if re.search(r'^[0-9]*:[0-9]*$', l['runfill'])] # e.g. '258159:4449' for the runfill field
         recorded = [l['recorded'] for l in lumi_csv]
         recorded = [float(l) for l in recorded] # /ub
         recorded = [l/1000000 for l in recorded] # /ub
