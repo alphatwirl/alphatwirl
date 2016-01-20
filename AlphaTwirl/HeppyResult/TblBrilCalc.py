@@ -23,6 +23,8 @@ class TblBrilCalc(object):
 
         path = os.path.join(component.path, self._csvFileName)
 
+        if not os.path.exists(path): return
+
         try:
             csvfile = filter(lambda row: row[0]!='#', open(path))
         except IOError, e:
@@ -44,6 +46,8 @@ class TblBrilCalc(object):
         self._rows.append(row)
 
     def end(self):
+        if len(self._rows) == 1: return
+
         f = self._open(self._outPath)
         f.write(listToAlignedText(self._rows))
         self._close(f)
