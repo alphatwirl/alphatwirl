@@ -12,9 +12,9 @@ def mockClose(file): pass
 
 ##__________________________________________________________________||
 class MockComponent(object):
-    def __init__(self, name, xsec):
+    def __init__(self, name, cfg):
         self.name = name
-        self._cfg = dict(xSection = xsec)
+        self._cfg = cfg
 
     def config(self): return self._cfg
 
@@ -34,16 +34,16 @@ class TestTblComponentConfig(unittest.TestCase):
 
         tblxsec.begin()
 
-        component = MockComponent("QCD_HT_100To250", 28730000)
+        component = MockComponent("QCD_HT_100To250", dict(xSection = 28730000))
         tblxsec.read(component)
 
-        component = MockComponent("TTJets", 809.1)
+        component = MockComponent("TTJets", dict(xSection = 809.1))
         tblxsec.read(component)
 
-        component = MockComponent("TBarToLeptons_sch", 1.34784)
+        component = MockComponent("TBarToLeptons_sch", dict(xSection = 1.34784))
         tblxsec.read(component)
 
-        component = MockComponent("TBarToLeptons_tch", 26.23428)
+        component = MockComponent("TBarToLeptons_tch", dict(xSection = 26.23428))
         tblxsec.read(component)
 
         tblxsec.end()
