@@ -14,10 +14,16 @@ class TblComponentConfig(object):
     def begin(self): pass
 
     def read(self, component):
-        vals =  [component.config()[k] for k in self._keys]
+
+        cfg = component.config()
+        if not all([k in cfg for k in self._keys]): return
+
+        vals =  [cfg[k] for k in self._keys]
         self._rows.append([component.name] + vals)
 
     def end(self):
+        if len(self._rows) == 1: return
+
         f = self._open(self._outPath)
         f.write(listToAlignedText(self._rows))
         self._close(f)

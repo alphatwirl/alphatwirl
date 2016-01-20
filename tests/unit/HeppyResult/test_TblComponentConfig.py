@@ -4,8 +4,12 @@ import cStringIO
 
 ##__________________________________________________________________||
 class MockOpen(object):
-    def __init__(self, out): self._out = out
-    def __call__(self, path): return self._out
+    def __init__(self, out):
+        self._out = out
+        self._called = False
+    def __call__(self, path):
+        self._called = True
+        return self._out
 
 ##__________________________________________________________________||
 def mockClose(file): pass
@@ -21,32 +25,32 @@ class MockComponent(object):
 ##__________________________________________________________________||
 class TestTblComponentConfig(unittest.TestCase):
 
-    def test_read(self):
-        tblxsec = TblComponentConfig(
+    def test_read_one_column(self):
+        tbl_cfg = TblComponentConfig(
             outPath = "t.txt",
             columnNames = ('xsec', ),
             keys = ('xSection', )
         )
 
         out = cStringIO.StringIO()
-        tblxsec._open = MockOpen(out)
-        tblxsec._close = mockClose
+        tbl_cfg._open = MockOpen(out)
+        tbl_cfg._close = mockClose
 
-        tblxsec.begin()
+        tbl_cfg.begin()
 
         component = MockComponent("QCD_HT_100To250", dict(xSection = 28730000))
-        tblxsec.read(component)
+        tbl_cfg.read(component)
 
         component = MockComponent("TTJets", dict(xSection = 809.1))
-        tblxsec.read(component)
+        tbl_cfg.read(component)
 
         component = MockComponent("TBarToLeptons_sch", dict(xSection = 1.34784))
-        tblxsec.read(component)
+        tbl_cfg.read(component)
 
         component = MockComponent("TBarToLeptons_tch", dict(xSection = 26.23428))
-        tblxsec.read(component)
+        tbl_cfg.read(component)
 
-        tblxsec.end()
+        tbl_cfg.end()
 
         expected = '\n'.join([
             '         component     xsec',
@@ -57,21 +61,121 @@ class TestTblComponentConfig(unittest.TestCase):
 
         self.assertEqual(expected, out.getvalue())
 
-    def test_read_empty(self):
-        tblxsec = TblComponentConfig(
+    def test_read_two_column(self):
+        tbl_cfg = TblComponentConfig(
+            outPath = "t.txt",
+            columnNames = ('col1', 'col2'),
+            keys = ('Column1', 'Column2')
+        )
+
+        out = cStringIO.StringIO()
+        tbl_cfg._open = MockOpen(out)
+        tbl_cfg._close = mockClose
+
+        tbl_cfg.begin()
+
+        component = MockComponent("QCD_HT_100To250", dict(Column1 = 10.0, Column2 = 120.0))
+        tbl_cfg.read(component)
+
+        component = MockComponent("TTJets", dict(Column1 = 20.0, Column2 = 130.0))
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_sch", dict(Column1 = 30.0, Column2 = 140.0))
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_tch", dict(Column1 = 40.0, Column2 = 150.0))
+        tbl_cfg.read(component)
+
+        tbl_cfg.end()
+
+        expected = '\n'.join([
+            '         component col1 col2',
+            '   QCD_HT_100To250   10  120',
+            '            TTJets   20  130',
+            ' TBarToLeptons_sch   30  140',
+            ' TBarToLeptons_tch   40  150']) + '\n'
+
+        self.assertEqual(expected, out.getvalue())
+
+    def test_read_no_component(self):
+        tbl_cfg = TblComponentConfig(
             outPath = "t.txt",
             columnNames = ('xsec', ),
             keys = ('xSection', )
         )
 
         out = cStringIO.StringIO()
-        tblxsec._open = MockOpen(out)
-        tblxsec._close = mockClose
+        mockOpen = MockOpen(out)
+        tbl_cfg._open = mockOpen
+        tbl_cfg._close = mockClose
 
-        tblxsec.begin()
-        tblxsec.end()
+        tbl_cfg.begin()
+        tbl_cfg.end()
 
-        expected = ' component xsec\n'
+        self.assertFalse(mockOpen._called)
+
+    def test_read_no_key_in_some_components(self):
+        tbl_cfg = TblComponentConfig(
+            outPath = "t.txt",
+            columnNames = ('xsec', ),
+            keys = ('xSection', )
+        )
+ 
+        out = cStringIO.StringIO()
+        tbl_cfg._open = MockOpen(out)
+        tbl_cfg._close = mockClose
+
+        tbl_cfg.begin()
+
+        component = MockComponent("QCD_HT_100To250", dict(xSection = 28730000))
+        tbl_cfg.read(component)
+
+        component = MockComponent("TTJets", dict())
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_sch", dict(xSection = 1.34784))
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_tch", dict())
+        tbl_cfg.read(component)
+
+        tbl_cfg.end()
+
+        expected = '\n'.join([
+            '         component     xsec',
+            '   QCD_HT_100To250 28730000',
+            ' TBarToLeptons_sch  1.34784']) + '\n'
+
         self.assertEqual(expected, out.getvalue())
+
+    def test_read_no_key_in_any_components(self):
+        tbl_cfg = TblComponentConfig(
+            outPath = "t.txt",
+            columnNames = ('xsec', ),
+            keys = ('xSection', )
+        )
+
+        out = cStringIO.StringIO()
+        mockOpen = MockOpen(out)
+        tbl_cfg._open = mockOpen
+        tbl_cfg._close = mockClose
+
+        tbl_cfg.begin()
+
+        component = MockComponent("QCD_HT_100To250", dict())
+        tbl_cfg.read(component)
+
+        component = MockComponent("TTJets", dict())
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_sch", dict())
+        tbl_cfg.read(component)
+
+        component = MockComponent("TBarToLeptons_tch", dict())
+        tbl_cfg.read(component)
+
+        tbl_cfg.end()
+
+        self.assertFalse(mockOpen._called)
 
 ##__________________________________________________________________||
