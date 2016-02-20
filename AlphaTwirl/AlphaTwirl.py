@@ -10,7 +10,6 @@ from .HeppyResult import HeppyResult
 from .EventReader import EventReader
 from .EventReader import MPEventLoopRunner
 from .EventReader import ReaderComposite
-from .EventReader import ReaderWithEventSelection
 from .EventReader import Collector
 from .EventReader import NullCollector
 from .EventReader import CollectorComposite
