@@ -23,14 +23,18 @@ class ReaderComposite(object):
         self.readers.append(reader)
 
     def begin(self, event):
-        for reader in self.readers: reader.begin(event)
+        for reader in self.readers:
+            if not hasattr(reader, 'begin'): continue
+            reader.begin(event)
 
     def event(self, event):
         for reader in self.readers:
             if reader.event(event) is False: break
 
     def end(self):
-        for reader in self.readers: reader.end()
+        for reader in self.readers:
+            if not hasattr(reader, 'end'): continue
+            reader.end()
 
     def copyFrom(self, src):
         for d, s in zip(self.readers, src.readers):

@@ -39,7 +39,16 @@ class MockReader_without_copyFrom(object):
         self._ended = True
 
 ##__________________________________________________________________||
-class MockReader_WithReturn(object):
+class MockReader_without_begin_end(object):
+
+    def __init__(self):
+        self._events = [ ]
+
+    def event(self, event):
+        self._events.append(event)
+
+##__________________________________________________________________||
+class MockReader_with_return(object):
     def __init__(self):
         self._events = [ ]
         self._ret = None
@@ -181,10 +190,10 @@ class TestReaderComposite(unittest.TestCase):
             |- reader4
         """
         composite = ReaderComposite()
-        reader1 = MockReader_WithReturn()
-        reader2 = MockReader_WithReturn()
-        reader3 = MockReader_WithReturn()
-        reader4 = MockReader_WithReturn()
+        reader1 = MockReader_with_return()
+        reader2 = MockReader_with_return()
+        reader3 = MockReader_with_return()
+        reader4 = MockReader_with_return()
         composite.add(reader1)
         composite.add(reader2)
         composite.add(reader3)
@@ -207,5 +216,37 @@ class TestReaderComposite(unittest.TestCase):
         self.assertIsNone(ret)
 
         composite.end()
+
+    def test_no_begin_end(self):
+        """
+        composite
+            |- reader1
+            |- reader2 (without begin end)
+            |- reader3
+        """
+        composite = ReaderComposite()
+        reader1 = MockReader()
+        reader2 = MockReader_without_begin_end()
+        reader3 = MockReader()
+        composite.add(reader1)
+        composite.add(reader2)
+        composite.add(reader3)
+
+        events = MockEvent()
+        composite.begin(events)
+        self.assertIs(events, reader1._beganWith)
+
+        event1 = MockEvent()
+        composite.event(event1)
+
+        event2 = MockEvent()
+        composite.event(event2)
+        self.assertEqual([event1, event2], reader1._events)
+        self.assertEqual([event1, event2], reader2._events)
+        self.assertEqual([event1, event2], reader3._events)
+
+        composite.end()
+        self.assertTrue(reader1._ended)
+        self.assertTrue(reader3._ended)
 
 ##__________________________________________________________________||
