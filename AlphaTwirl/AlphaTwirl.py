@@ -75,13 +75,13 @@ def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, fo
               |- scribble
               |- scribble
               |- scribble
-              |- 2:selection - 3:composite
-              |                      |- counter
-              |                      |- counter
-              |                      |- counter
-              |                      |- counter
-              |                      |- counter
-              |
+              |- 2:selection
+              |- 3:composite
+              |        |- counter
+              |        |- counter
+              |        |- counter
+              |        |- counter
+              |        |- counter
     """
 
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
@@ -95,16 +95,14 @@ def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, fo
         reader1.add(scribbler)
         collector1.add(NullCollector())
 
+    if eventSelection is not None:
+        reader1.add(eventSelection)
+        collector1.add(NullCollector())
+
     reader3 = ReaderComposite()
     collector3 = CollectorComposite(progressMonitor.createReporter())
-    if eventSelection is not None:
-        reader2 = ReaderWithEventSelection(reader3, eventSelection)
-        collector2 = CollectorDelegate(collector3)
-        reader1.add(reader2)
-        collector1.add(collector2)
-    else:
-        reader1.add(reader3)
-        collector1.add(collector3)
+    reader1.add(reader3)
+    collector1.add(collector3)
 
     for tblcfg in tableConfigs:
         counter, collector0 = buildCounterAndCollector(tblcfg)
