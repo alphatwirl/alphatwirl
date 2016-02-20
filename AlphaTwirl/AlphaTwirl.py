@@ -71,17 +71,16 @@ def buildCounterAndCollector(tblcfg):
 ##__________________________________________________________________||
 def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, force, progressMonitor):
     """
-        1:composite
-              |- scribble
-              |- scribble
-              |- scribble
-              |- 2:selection
-              |- 3:composite
-              |        |- counter
-              |        |- counter
-              |        |- counter
-              |        |- counter
-              |        |- counter
+          composite
+              |- scribbler
+              |- scribbler
+              |- scribbler
+              |- selection
+              |- counter
+              |- counter
+              |- counter
+              |- counter
+              |- counter
     """
 
     tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
@@ -99,16 +98,10 @@ def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, fo
         reader1.add(eventSelection)
         collector1.add(NullCollector())
 
-    reader3 = ReaderComposite()
-    collector3 = CollectorComposite(progressMonitor.createReporter())
-    reader1.add(reader3)
-    collector1.add(collector3)
-
     for tblcfg in tableConfigs:
         counter, collector0 = buildCounterAndCollector(tblcfg)
-        reader3.add(counter)
-        collector3.add(collector0)
-
+        reader1.add(counter)
+        collector1.add(collector0)
 
     return reader1, collector1
 
