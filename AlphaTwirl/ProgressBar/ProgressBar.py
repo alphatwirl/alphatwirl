@@ -49,7 +49,7 @@ class ProgressBar(object):
         bar = (':' * int(percent * 40)).ljust(40, " ")
         percent = round(percent * 100, 2)
         name = report.name[0:nameFieldLength]
-        return " {3:6.2f}% {2:s} | {4:7d} / {5:7d} |:  {0:<{1}s} ".format(name, nameFieldLength, bar, percent, report.done, report.total)
+        return " {3:6.2f}% {2:s} | {4:8d} / {5:8d} |:  {0:<{1}s} ".format(name, nameFieldLength, bar, percent, report.done, report.total)
 
     def _need_to_update(self, report):
         if self._time() - self.lastTime > self.interval: return True
