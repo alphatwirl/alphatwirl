@@ -68,13 +68,13 @@ def buildCounterAndCollector(tblcfg):
     return counter, collector0
 
 ##__________________________________________________________________||
-def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, force, progressMonitor):
+def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progressMonitor):
     """
           composite
-              |- scribbler
-              |- scribbler
-              |- scribbler
-              |- selection
+              |- preTableReader
+              |- preTableReader
+              |- preTableReader
+              |- preTableReader
               |- counter
               |- counter
               |- counter
@@ -89,12 +89,8 @@ def buildReaderAndCollector(scribblers, eventSelection, tableConfigs, outDir, fo
     reader1 = ReaderComposite()
     collector1 = CollectorComposite(progressMonitor.createReporter())
 
-    for scribbler in scribblers:
-        reader1.add(scribbler)
-        collector1.add(NullCollector())
-
-    if eventSelection is not None:
-        reader1.add(eventSelection)
+    for reader in preTableReaders:
+        reader1.add(reader)
         collector1.add(NullCollector())
 
     for tblcfg in tableConfigs:
@@ -137,15 +133,15 @@ class AlphaTwirl(object):
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
-    def addTreeReader(self, analyzerName, fileName, treeName, scribblers = [ ],
-                      tableConfigs = [ ], eventSelection = None):
+    def addTreeReader(self, analyzerName, fileName, treeName,
+                      preTableReaders = [ ], tableConfigs = [ ]):
+
         cfg = dict(
             analyzerName = analyzerName,
             fileName = fileName,
             treeName = treeName,
-            scribblers = scribblers,
+            preTableReaders = preTableReaders,
             tableConfigs = tableConfigs,
-            eventSelection = eventSelection
             )
 
         self.treeReaderConfigs.append(cfg)
@@ -158,8 +154,7 @@ class AlphaTwirl(object):
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
-                scribblers = cfg['scribblers'],
-                eventSelection = cfg['eventSelection'],
+                preTableReaders = cfg['preTableReaders'],
                 tableConfigs = cfg['tableConfigs'],
                 outDir = self.args.outDir,
                 force = self.args.force,
