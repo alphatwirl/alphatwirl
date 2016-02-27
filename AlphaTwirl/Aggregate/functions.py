@@ -20,8 +20,22 @@ def sumOverCategories(tbl, categories, variables):
         tbl = tbl.drop([c for c in tbl.columns if c not in variables], axis = 1)
         return tbl
 
-    tbl = tbl.groupby(factor_names)[variables].sum().reset_index().dropna()
-    return tbl
+    ret = tbl.groupby(factor_names)[variables].sum().reset_index().dropna()
+
+    ret = ret.reset_index(drop = True)
+
+    # keep dtype
+    for col in ret.columns:
+        if not col in tbl.columns: continue
+        if ret[col].dtype is tbl[col].dtype: continue
+        if tbl[col].dtype.name == 'category':
+            ret[col] = ret[col].astype('category',
+                                       categories = tbl[col].cat.categories,
+                                       ordered = tbl[col].cat.ordered)
+            continue
+        ret[col] = ret[col].astype(tbl[col].dtype)
+
+    return ret
 
 ##__________________________________________________________________||
 def combine_MC_yields_in_datasets_into_xsec_in_processes(
