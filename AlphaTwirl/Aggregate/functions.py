@@ -280,6 +280,9 @@ def stack_counts_categories(tbl, variables, category, order = None,
         else:
             ret = ret.append(d, ignore_index = True)
     if isFirst: return None
+
+    ret = keep_dtype(ret, tbl)
+
     return ret
 
 ##__________________________________________________________________||

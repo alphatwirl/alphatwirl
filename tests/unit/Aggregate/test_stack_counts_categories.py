@@ -46,6 +46,9 @@ tbl_process = pd.read_table(cStringIO.StringIO(
  WJetsToLNu        4   0.000000  0.000000e+00           1
 """), delim_whitespace = True)
 
+tbl_process['process'] = tbl_process[:]['process'].astype('category', ordered = True)
+tbl_process['nBJet40'] = tbl_process[:]['nBJet40'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 tbl_stack_process = pd.read_table(cStringIO.StringIO(
 """       process  nBJet40  luminosity          n          nvar  stack
@@ -77,6 +80,9 @@ WJetsToLNu        6           1   0.000167  2.775919e-08      4
 WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
 
+tbl_stack_process['process'] = tbl_stack_process[:]['process'].astype('category', ordered = True)
+tbl_stack_process['nBJet40'] = tbl_stack_process[:]['nBJet40'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 tbl_stack_process_order = pd.read_table(cStringIO.StringIO(
 """       process  nBJet40  luminosity          n          nvar  stack
@@ -107,6 +113,9 @@ WJetsToLNu        5           1   0.001833  3.053510e-07      4
 WJetsToLNu        6           1   0.000167  2.775919e-08      4
 WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
+
+tbl_stack_process_order['process'] = tbl_stack_process_order[:]['process'].astype('category', ordered = True)
+tbl_stack_process_order['nBJet40'] = tbl_stack_process_order[:]['nBJet40'].astype('category', ordered = True)
 
 ##__________________________________________________________________||
 tbl_stack_process_bottom = pd.read_table(cStringIO.StringIO(
@@ -145,6 +154,9 @@ WJetsToLNu        6           1   0.000167  2.775919e-08      4
 WJetsToLNu        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
 
+tbl_stack_process_bottom['process'] = tbl_stack_process_bottom[:]['process'].astype('category', ordered = True)
+tbl_stack_process_bottom['nBJet40'] = tbl_stack_process_bottom[:]['nBJet40'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 tbl_stack_process_top = pd.read_table(cStringIO.StringIO(
 """       process  nBJet40  luminosity          n          nvar  stack
@@ -172,6 +184,9 @@ WJetsToLNu        4           1   0.000000  0.000000e+00      2
     TTJets        6           1   0.000167  2.775919e-08      4
     TTJets        7           1   0.000000  0.000000e+00      4
 """), delim_whitespace = True)
+
+tbl_stack_process_top['process'] = tbl_stack_process_top[:]['process'].astype('category', ordered = True)
+tbl_stack_process_top['nBJet40'] = tbl_stack_process_top[:]['nBJet40'].astype('category', ordered = True)
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
