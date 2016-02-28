@@ -24,16 +24,7 @@ def sumOverCategories(tbl, categories, variables):
 
     ret = ret.reset_index(drop = True)
 
-    # keep dtype
-    for col in ret.columns:
-        if not col in tbl.columns: continue
-        if ret[col].dtype is tbl[col].dtype: continue
-        if tbl[col].dtype.name == 'category':
-            ret[col] = ret[col].astype('category',
-                                       categories = tbl[col].cat.categories,
-                                       ordered = tbl[col].cat.ordered)
-            continue
-        ret[col] = ret[col].astype(tbl[col].dtype)
+    ret = keep_dtype(ret, tbl)
 
     return ret
 
@@ -215,9 +206,12 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     del tbl['n']
     del tbl['nvar']
 
-    tbl = sumOverCategories(tbl, categories = ('phasespace', ), variables = ('xsec', 'xsecvar'))
+    ret = sumOverCategories(tbl, categories = ('phasespace', ), variables = ('xsec', 'xsecvar'))
 
-    return tbl
+    ret = keep_dtype(ret, tbl_process, columns = ['process'])
+    ret = keep_dtype(ret, tbl_yield)
+
+    return ret
 
 ##__________________________________________________________________||
 def stack_counts_categories(tbl, variables, category, order = None,
@@ -287,5 +281,22 @@ def stack_counts_categories(tbl, variables, category, order = None,
             ret = ret.append(d, ignore_index = True)
     if isFirst: return None
     return ret
+
+##__________________________________________________________________||
+def keep_dtype(dest, src, columns = None):
+
+    columns = dest.columns if columns is None else columns
+
+    for col in columns:
+        if not col in src.columns: continue
+        if dest[col].dtype is src[col].dtype: continue
+        if src[col].dtype.name == 'category':
+            dest[col] = dest[col].astype('category',
+                                       categories = src[col].cat.categories,
+                                       ordered = src[col].cat.ordered)
+            continue
+        dest[col] = dest[col].astype(src[col].dtype)
+
+    return dest
 
 ##__________________________________________________________________||

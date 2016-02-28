@@ -62,6 +62,9 @@ tbl_component_met = pd.read_table(cStringIO.StringIO(
                 T_tWch      5  800  144.543977   2     2
 """), delim_whitespace = True)
 
+tbl_component_met['component'] = tbl_component_met[:]['component'].astype('category', ordered = True)
+tbl_component_met['HT'] = tbl_component_met[:]['HT'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 tbl_process = pd.read_table(cStringIO.StringIO(
 """             component             phasespace  process
@@ -73,6 +76,10 @@ tbl_process = pd.read_table(cStringIO.StringIO(
              TBar_tWch              TBar_tWch  T
                 TTJets                 TTJets  TTJets
 """), delim_whitespace = True)
+
+tbl_process['component'] = tbl_process[:]['component'].astype('category', ordered = True)
+tbl_process['phasespace'] = tbl_process[:]['phasespace'].astype('category', ordered = True)
+tbl_process['process'] = tbl_process[:]['process'].astype('category', ordered = True)
 
 ##__________________________________________________________________||
 tbl_xsec = pd.read_table(cStringIO.StringIO(
@@ -86,6 +93,8 @@ tbl_xsec = pd.read_table(cStringIO.StringIO(
                 TTJets    809.1
 """), delim_whitespace = True)
 
+tbl_xsec['component'] = tbl_xsec[:]['component'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 tbl_nevt = pd.read_table(cStringIO.StringIO(
 """             component     nevt     nevt_sumw
@@ -97,6 +106,8 @@ tbl_nevt = pd.read_table(cStringIO.StringIO(
              TBar_tWch   971800       1068980
                 TTJets 25446993   26719342.65
 """), delim_whitespace = True)
+
+tbl_nevt['component'] = tbl_nevt[:]['component'].astype('category', ordered = True)
 
 ##__________________________________________________________________||
 tbl_process_met = pd.read_table(cStringIO.StringIO(
@@ -136,6 +147,9 @@ tbl_process_met = pd.read_table(cStringIO.StringIO(
  TTJets      5  800  144.543977 2.352867e-03  7.481061e-08
 """), delim_whitespace = True)
 
+tbl_process_met['process'] = tbl_process_met[:]['process'].astype('category', ordered = True)
+tbl_process_met['HT'] = tbl_process_met[:]['HT'].astype('category', ordered = True)
+
 tbl_process_met_sumw = pd.read_table(cStringIO.StringIO(
 """process  njets   HT         MET      xsec       xsecvar
     QCD      4  800  114.815362 4.552830e-04  2.072826e-07
@@ -173,6 +187,9 @@ tbl_process_met_sumw = pd.read_table(cStringIO.StringIO(
  TTJets      5  800  144.543977 2.240826e-03  6.785543e-08
 """), delim_whitespace = True)
 
+tbl_process_met_sumw['process'] = tbl_process_met_sumw[:]['process'].astype('category', ordered = True)
+tbl_process_met_sumw['HT'] = tbl_process_met_sumw[:]['HT'].astype('category', ordered = True)
+
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
@@ -184,6 +201,8 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
         expect = tbl_process_met
         actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec)
         ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
+        self.assertIsNot(tbl_component_met, actual)
+        self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
 
