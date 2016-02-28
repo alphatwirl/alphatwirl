@@ -78,6 +78,7 @@ class TestEventBuilder(unittest.TestCase):
         self.assertEqual('tree', events.tree.name)
         self.assertEqual(100, events.maxEvents)
         self.assertEqual(set(), events.tree.brancheStatus)
+        self.assertIs(component, events.component)
 
     def test_build_brancheNames(self):
         eventBuilder = EventBuilder(

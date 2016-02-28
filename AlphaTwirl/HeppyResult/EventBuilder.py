@@ -17,7 +17,9 @@ class EventBuilder(object):
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self._treeName)
         if self._brancheNames is not None: self._disableAllUnnecessaryBranches(tree)
-        return Events(tree, self._maxEvents)
+        ret = Events(tree, self._maxEvents)
+        ret.component = component
+        return ret
 
     def _disableAllUnnecessaryBranches(self, tree):
         tree.SetBranchStatus('*', 0)
