@@ -9,5 +9,3 @@ from CollectorDelegate import CollectorDelegate
 from EventLoop import EventLoop
 from EventLoopProgressReportWriter import EventLoopProgressReportWriter
 from ReaderComposite import ReaderComposite
-from EventSelectionAll import EventSelectionAll
-from EventSelectionAny import EventSelectionAny
