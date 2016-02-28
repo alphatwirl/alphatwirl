@@ -68,22 +68,6 @@ AlphaTwirl.EventReader.EventReader module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.EventReader.EventSelectionAll module
------------------------------------------------
-
-.. automodule:: AlphaTwirl.EventReader.EventSelectionAll
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-AlphaTwirl.EventReader.EventSelectionAny module
------------------------------------------------
-
-.. automodule:: AlphaTwirl.EventReader.EventSelectionAny
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 AlphaTwirl.EventReader.MPEventLoopRunner module
 -----------------------------------------------
 
@@ -104,14 +88,6 @@ AlphaTwirl.EventReader.ReaderComposite module
 ---------------------------------------------
 
 .. automodule:: AlphaTwirl.EventReader.ReaderComposite
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-AlphaTwirl.EventReader.ReaderWithEventSelection module
-------------------------------------------------------
-
-.. automodule:: AlphaTwirl.EventReader.ReaderWithEventSelection
     :members:
     :undoc-members:
     :show-inheritance:

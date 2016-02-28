@@ -92,6 +92,14 @@ AlphaTwirl.HeppyResult.TblBranch module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.HeppyResult.TblBrilCalc module
+-----------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.TblBrilCalc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.HeppyResult.TblComponentConfig module
 ------------------------------------------------
 
@@ -108,10 +116,18 @@ AlphaTwirl.HeppyResult.TblCounter module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblTreeEntries module
+AlphaTwirl.HeppyResult.TblCounterLong module
 --------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblTreeEntries
+.. automodule:: AlphaTwirl.HeppyResult.TblCounterLong
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.HeppyResult.TblTree module
+-------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.TblTree
     :members:
     :undoc-members:
     :show-inheritance:
