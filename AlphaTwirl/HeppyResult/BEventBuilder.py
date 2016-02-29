@@ -11,6 +11,12 @@ class BEventBuilder(object):
         self._treeName = treeName
         self._maxEvents = maxEvents
 
+    def getNumberOfEventsInDataset(self, component):
+        inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
+        file = ROOT.TFile.Open(inputPath)
+        tree = file.Get(self._treeName)
+        return self._minimumPositiveValue([self._maxEvents, tree.GetEntries()])
+
     def build(self, component, start = 0, nEvents = -1):
         inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
         file = ROOT.TFile.Open(inputPath)

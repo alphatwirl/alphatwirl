@@ -25,6 +25,9 @@ class MockTObject(object):
     def __init__(self, name):
         self.name = name
 
+    def GetEntries(self):
+        return 5500
+
 ##__________________________________________________________________||
 class MockTFile(object):
     def Open(self, path):
@@ -144,5 +147,31 @@ class TestBEventBuilder(unittest.TestCase):
         self.assertIsInstance(events, MockEvents)
         self.assertEqual('tree', events.tree.name)
         self.assertIs(component, events.component)
+
+    def test_getNumberOfEventsInDataset(self):
+        eventBuilder = BEventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            )
+
+        component = MockComponent()
+        self.assertEqual(5500, eventBuilder.getNumberOfEventsInDataset(component))
+
+    def test_getNumberOfEventsInDataset_maxEvents(self):
+        eventBuilder = BEventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 1000
+            )
+
+        component = MockComponent()
+        self.assertEqual(1000, eventBuilder.getNumberOfEventsInDataset(component))
+
+    def test_getNumberOfEventsInDataset_maxEvents_2(self):
+        eventBuilder = BEventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 8000
+            )
+
+        component = MockComponent()
+        self.assertEqual(5500, eventBuilder.getNumberOfEventsInDataset(component))
 
 ##__________________________________________________________________||
