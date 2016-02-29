@@ -35,10 +35,20 @@ class Events(object):
 
     """
 
-    def __init__(self, tree, maxEvents = -1):
+    def __init__(self, tree, maxEvents = -1, start = 0):
+
+        if start < 0:
+            raise ValueError("start must be greater than or equal to zero: {} is given".format(start))
+
         self.file = tree.GetDirectory() # so a file won't close
         self.tree = tree
-        self.nEvents = min(self.tree.GetEntries(), maxEvents) if (maxEvents > -1) else self.tree.GetEntries()
+        nEventsInTree = self.tree.GetEntries()
+        start = min(nEventsInTree, start)
+        if maxEvents > -1:
+            self.nEvents = min(nEventsInTree - start, maxEvents)
+        else:
+            self.nEvents = nEventsInTree - start
+        self.start = start
         self.iEvent = -1
 
     def __getitem__(self, i):
@@ -46,12 +56,12 @@ class Events(object):
             self.iEvent = -1
             raise IndexError("the index is out of range: " + str(i))
         self.iEvent = i
-        self.tree.GetEntry(self.iEvent)
+        self.tree.GetEntry(self.start + self.iEvent)
         return self
 
     def __iter__(self):
         for self.iEvent in xrange(self.nEvents):
-            self.tree.GetEntry(self.iEvent)
+            self.tree.GetEntry(self.start + self.iEvent)
             yield self
         self.iEvent = -1
 
