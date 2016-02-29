@@ -29,6 +29,9 @@ class MockTObject(object):
     def SetBranchStatus(self, bname, status):
         self.brancheStatus.add((bname, status))
 
+    def GetEntries(self):
+        return 5500
+
 ##__________________________________________________________________||
 class MockTFile(object):
     def Open(self, path):
@@ -168,5 +171,31 @@ class TestEventBuilder(unittest.TestCase):
 
         expected = set([('*', 0), ('nBJet40', 1), ('met_pt', 1), ('nJet40', 1), ('jet_pt', 1)])
         self.assertEqual(expected, events.tree.brancheStatus)
+
+    def test_getNumberOfEventsInDataset(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            )
+
+        component = MockComponent()
+        self.assertEqual(5500, eventBuilder.getNumberOfEventsInDataset(component))
+
+    def test_getNumberOfEventsInDataset_maxEvents(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 1000
+            )
+
+        component = MockComponent()
+        self.assertEqual(1000, eventBuilder.getNumberOfEventsInDataset(component))
+
+    def test_getNumberOfEventsInDataset_maxEvents_2(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 8000
+            )
+
+        component = MockComponent()
+        self.assertEqual(5500, eventBuilder.getNumberOfEventsInDataset(component))
 
 ##__________________________________________________________________||
