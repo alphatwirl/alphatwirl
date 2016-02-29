@@ -43,9 +43,10 @@ class MockROOT(object):
 
 ##__________________________________________________________________||
 class MockEvents(object):
-    def __init__(self, tree, maxEvents):
+    def __init__(self, tree, maxEvents, start = 0):
         self.tree = tree
         self.maxEvents = maxEvents
+        self.start = start
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
@@ -65,18 +66,91 @@ class TestEventBuilder(unittest.TestCase):
 
     def test_build(self):
         eventBuilder = EventBuilder(
-            analyzerName = 'treeProducerSusyAlphaT',
-            fileName = 'tree.root',
-            treeName = 'tree',
-            maxEvents = 100)
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 1000
+            )
 
         component = MockComponent()
-        events = eventBuilder.build(component)
+        events = eventBuilder.build(component, start = 10, nEvents = 100)
 
         self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
         self.assertIsInstance(events, MockEvents)
         self.assertEqual('tree', events.tree.name)
+        self.assertEqual(10, events.start)
         self.assertEqual(100, events.maxEvents)
+        self.assertEqual(set(), events.tree.brancheStatus)
+        self.assertIs(component, events.component)
+
+    def test_build_default_maxEvents_start_nEvents(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree'
+            # don't give maxEvents
+            )
+
+        component = MockComponent()
+        events = eventBuilder.build(component) # don't give start or nEvents
+
+        self.assertEqual(0, events.start)
+        self.assertEqual(-1, events.maxEvents)
+
+        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
+        self.assertIsInstance(events, MockEvents)
+        self.assertEqual('tree', events.tree.name)
+        self.assertEqual(set(), events.tree.brancheStatus)
+        self.assertIs(component, events.component)
+
+    def test_build_default_maxEvents(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree'
+            # don't give maxEvents
+            )
+
+        component = MockComponent()
+        events = eventBuilder.build(component, start = 10, nEvents = 100) # give start or nEvents
+
+        self.assertEqual(10, events.start)
+        self.assertEqual(100, events.maxEvents)
+
+        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
+        self.assertIsInstance(events, MockEvents)
+        self.assertEqual('tree', events.tree.name)
+        self.assertEqual(set(), events.tree.brancheStatus)
+        self.assertIs(component, events.component)
+
+
+    def test_build_default_start_nEvents(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree'
+            # don't give maxEvents
+            )
+
+        component = MockComponent()
+        events = eventBuilder.build(component, start = 10, nEvents = 100) # give start or nEvents
+
+        self.assertEqual(10, events.start)
+        self.assertEqual(100, events.maxEvents)
+
+        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
+        self.assertIsInstance(events, MockEvents)
+        self.assertEqual('tree', events.tree.name)
+        self.assertEqual(set(), events.tree.brancheStatus)
+        self.assertIs(component, events.component)
+
+    def test_build_maxEvents_smaller_than_nEvents(self):
+        eventBuilder = EventBuilder(
+            analyzerName = 'treeProducerSusyAlphaT', fileName = 'tree.root', treeName = 'tree',
+            maxEvents = 30
+            )
+
+        component = MockComponent()
+        events = eventBuilder.build(component, start = 10, nEvents = 100)
+
+        self.assertEqual(10, events.start)
+        self.assertEqual(30, events.maxEvents)
+
+        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
+        self.assertIsInstance(events, MockEvents)
+        self.assertEqual('tree', events.tree.name)
         self.assertEqual(set(), events.tree.brancheStatus)
         self.assertIs(component, events.component)
 

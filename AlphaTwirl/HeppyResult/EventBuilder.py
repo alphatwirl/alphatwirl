@@ -12,14 +12,20 @@ class EventBuilder(object):
         self._maxEvents = maxEvents
         self._brancheNames = brancheNames
 
-    def build(self, component):
+    def build(self, component, start = 0, nEvents = -1):
         inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self._treeName)
         if self._brancheNames is not None: self._disableAllUnnecessaryBranches(tree)
-        ret = Events(tree, self._maxEvents)
+        maxEvents = self._minimumPositiveValue([self._maxEvents, nEvents])
+        ret = Events(tree, maxEvents, start)
         ret.component = component
         return ret
+
+    def _minimumPositiveValue(self, vals):
+        vals = [v for v in vals if v >= 0]
+        if not vals: return -1
+        return min(vals)
 
     def _disableAllUnnecessaryBranches(self, tree):
         tree.SetBranchStatus('*', 0)
