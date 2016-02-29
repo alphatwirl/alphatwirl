@@ -4,8 +4,8 @@ from BranchBuilder import BranchBuilder
 
 ##__________________________________________________________________||
 class BEvents(Events):
-    def __init__(self, tree, maxEvents = -1):
-        super(BEvents, self).__init__(tree, maxEvents)
+    def __init__(self, tree, maxEvents = -1, start = 0):
+        super(BEvents, self).__init__(tree, maxEvents, start)
         tree.SetBranchStatus('*', 0)
         self.branches = { }
         self.buildBranch = BranchBuilder()

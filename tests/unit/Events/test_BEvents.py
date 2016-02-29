@@ -147,4 +147,15 @@ class TestBEvents(unittest.TestCase):
         met_pt = event.met_pt
         self.assertTrue(tree.getEntryCalled)
 
+    def test_pass_arguments_to_base_class(self):
+        tree = MockTree(Entries = 1000)
+        events = BEvents(tree, 100)
+        self.assertEqual(100, events.nEvents)
+        self.assertEqual(0, events.start)
+
+        events = BEvents(tree, 100, 20)
+        self.assertEqual(100, events.nEvents)
+        self.assertEqual(20, events.start)
+
+
 ##__________________________________________________________________||
