@@ -11,12 +11,18 @@ class BEventBuilder(object):
         self._treeName = treeName
         self._maxEvents = maxEvents
 
-    def build(self, component):
+    def build(self, component, start = 0, nEvents = -1):
         inputPath = os.path.join(getattr(component, self._analyzerName).path, self._fileName)
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self._treeName)
-        ret = BEvents(tree, self._maxEvents)
+        maxEvents = self._minimumPositiveValue([self._maxEvents, nEvents])
+        ret = BEvents(tree, maxEvents, start)
         ret.component = component
         return ret
+
+    def _minimumPositiveValue(self, vals):
+        vals = [v for v in vals if v >= 0]
+        if not vals: return -1
+        return min(vals)
 
 ##__________________________________________________________________||
