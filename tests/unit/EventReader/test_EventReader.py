@@ -153,7 +153,7 @@ class TestEventReader(unittest.TestCase):
         self.assertIs(dataset1, eventLoop.dataset)
         self.assertIsInstance(eventLoop.reader, MockReader)
         self.assertEqual(20, eventLoop.start)
-        self.assertEqual(10, eventLoop.nEvents)
+        self.assertEqual(5, eventLoop.nEvents)
 
         self.assertEqual(("dataset1", eventLoop.reader), collector.pairs[2])
 
@@ -164,11 +164,11 @@ class TestEventReader(unittest.TestCase):
         self.assertTrue(eventLoopRunner.ended)
         self.assertTrue(collector.collected)
 
-    def test_create_starting_event_list(self):
+    def test_create_start_nEvents_list(self):
         obj = EventReader(MockEventBuilder(), MockEventLoopRunner(), MockReader(), MockCollector())
-        self.assertEqual([0, 10, 20, 30], obj._create_starting_event_list(40, 10))
-        self.assertEqual([0, 10, 20, 30, 40], obj._create_starting_event_list(41, 10))
-        self.assertEqual([0], obj._create_starting_event_list(40, 40))
-        self.assertEqual([0], obj._create_starting_event_list(40, 50))
+        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], obj._create_start_nEvents_list(40, 10))
+        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10), (40, 1)], obj._create_start_nEvents_list(41, 10))
+        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 40))
+        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 50))
 
 ##__________________________________________________________________||

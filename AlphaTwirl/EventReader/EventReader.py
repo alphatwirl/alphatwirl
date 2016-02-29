@@ -39,19 +39,19 @@ class EventReader(object):
     def _split_the_dataset_run_multiple_eventLoops(self, dataset):
         nTotal = self.eventBuilder.getNumberOfEventsInDataset(dataset)
         nPerRun = self.maxEventsPerRun
-        starts = self._create_starting_event_list(nTotal, nPerRun)
-        for start in starts:
+        for start, nEvents in self._create_start_nEvents_list(nTotal, nPerRun):
             reader = self.associator.make(dataset.name)
             eventLoop = self.EventLoop(
                 self.eventBuilder, dataset, reader,
-                start = start, nEvents = nPerRun
+                start = start, nEvents = nEvents
             )
             self.eventLoopRunner.run(eventLoop)
 
-    def _create_starting_event_list(self, nTotal, nPerRun):
+    def _create_start_nEvents_list(self, nTotal, nPerRun):
         nLoops = nTotal/nPerRun
-        if nTotal % nPerRun > 0: nLoops += 1
-        starts = [i*nPerRun for i in range(nLoops)]
-        return starts
+        ret = [(i*nPerRun, nPerRun) for i in range(nLoops)]
+        if nTotal % nPerRun > 0:
+            ret.append((nLoops*nPerRun, nTotal % nPerRun))
+        return ret
 
 ##__________________________________________________________________||
