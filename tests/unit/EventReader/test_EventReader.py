@@ -2,37 +2,30 @@ from AlphaTwirl.EventReader import EventReader
 import unittest
 
 ##__________________________________________________________________||
-class MockEventBuilder(object):
-    def build(self, dataset):
-        return dataset._events
+class MockEventBuilder(object): pass
 
 ##__________________________________________________________________||
-class MockReader(object):
-    def __init__(self, name = None):
-        self.name = name
-        self._eventIds = [ ]
+class MockReader(object): pass
 
-    def event(self, event):
-        self._eventIds.append(event.id)
+##__________________________________________________________________||
+class MockCollectorReturn(object): pass
 
 ##__________________________________________________________________||
 class MockCollector(object):
-    def __init__(self):
+    def __init__(self, ret):
         self.collected = False
-
-        self._datasetReaderPairs = [ ]
+        self.ret = ret
 
     def addReader(self, datasetName, reader):
-        self._datasetReaderPairs.append((datasetName, reader))
+        self.datasetName = datasetName
+        self.reader = reader
 
     def collect(self):
         self.collected = True
-        return 1234
+        return self.ret
 
 ##__________________________________________________________________||
-class MockDataset(object):
-    def __init__(self):
-        self._events = None
+class MockDataset(object): pass
 
 ##__________________________________________________________________||
 class MockEventLoopRunner(object):
@@ -60,66 +53,37 @@ class MockEventLoop(object):
 ##__________________________________________________________________||
 class TestEventReader(unittest.TestCase):
 
-    def test_eventBuilder_passed_to_EventLoop(self):
+    def test_standard(self):
         eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
         reader = MockReader()
-        collector = MockCollector()
-        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector)
-        eventReader.EventLoop = MockEventLoop
+        collector = MockCollector(MockCollectorReturn())
+        obj = EventReader(eventBuilder, eventLoopRunner, reader, collector)
+        obj.EventLoop = MockEventLoop
 
-        dataset1 = MockDataset()
-        dataset1.name = "dataset1"
-        eventReader.read(dataset1)
-        self.assertIs(eventBuilder, eventLoopRunner.eventLoop.eventBuilder)
-
-    def test_eventLoopRunner_called(self):
-        eventBuilder = MockEventBuilder()
-        eventLoopRunner = MockEventLoopRunner()
-        reader = MockReader()
-        collector = MockCollector()
-        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector)
-        eventReader.EventLoop = MockEventLoop
-
+        # begin
         self.assertFalse(eventLoopRunner.began)
-        eventReader.begin()
+        obj.begin()
         self.assertTrue(eventLoopRunner.began)
 
-        self.assertIsNone(eventLoopRunner.eventLoop)
+        # read
         dataset1 = MockDataset()
         dataset1.name = "dataset1"
-        eventReader.read(dataset1)
-        self.assertIs(dataset1, eventLoopRunner.eventLoop.dataset)
-        self.assertIsInstance(eventLoopRunner.eventLoop, MockEventLoop)
+        obj.read(dataset1)
+        eventLoop1 =  eventLoopRunner.eventLoop
+        self.assertIsInstance(eventLoop1, MockEventLoop)
+        self.assertIs(eventBuilder, eventLoop1.eventBuilder)
+        self.assertIs(dataset1, eventLoop1.dataset)
+        self.assertIsInstance(eventLoop1.reader, MockReader)
 
+        self.assertEqual("dataset1", collector.datasetName)
+        self.assertIs(eventLoop1.reader, collector.reader)
+
+        # end
         self.assertFalse(eventLoopRunner.ended)
-        eventReader.end()
-        self.assertTrue(eventLoopRunner.ended)
-
-    def test_packages_read_and_collected(self):
-        eventBuilder = MockEventBuilder()
-        eventLoopRunner = MockEventLoopRunner()
-        reader = MockReader()
-        collector = MockCollector()
-        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector)
-        eventReader.EventLoop = MockEventLoop
-
-        eventReader.begin()
-
-        dataset1 = MockDataset()
-        dataset1.name = "dataset1"
-        eventReader.read(dataset1)
-        self.assertIs("dataset1", eventLoopRunner.eventLoop.dataset.name)
-        self.assertEqual(collector._datasetReaderPairs[0][1], eventLoopRunner.eventLoop.reader)
-
-        dataset2 = MockDataset()
-        dataset2.name = "dataset2"
-        eventReader.read(dataset2)
-        self.assertIs("dataset2", eventLoopRunner.eventLoop.dataset.name)
-        self.assertEqual(collector._datasetReaderPairs[1][1], eventLoopRunner.eventLoop.reader)
-
         self.assertFalse(collector.collected)
-        self.assertEqual(1234, eventReader.end())
+        self.assertIs(collector.ret, obj.end())
+        self.assertTrue(eventLoopRunner.ended)
         self.assertTrue(collector.collected)
 
 ##__________________________________________________________________||
