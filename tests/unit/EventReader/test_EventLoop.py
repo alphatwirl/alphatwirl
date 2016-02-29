@@ -2,63 +2,91 @@ from AlphaTwirl.EventReader import EventLoop
 import unittest
 
 ##__________________________________________________________________||
-class MockEvent(object):
-    def __init__(self, id):
-        self.id = id
-        self.iEvent = 0
-        self.nEvents = 0
+class MockEvent(object): pass
 
 ##__________________________________________________________________||
 class MockEventBuilder(object):
-    def build(self, dataset):
-        return dataset._events
+    def __init__(self, events):
+        self.events = events
+
+    def build(self, dataset, start, nEvents):
+        self.dataset = dataset
+        self.start = start
+        self.nEvents = nEvents
+        return self.events
+
+##__________________________________________________________________||
+class MockDataset(object): pass
 
 ##__________________________________________________________________||
 class MockReader(object):
     def __init__(self):
-        self._eventIds = [ ]
-        self._begin = False
-        self._end = False
+        self.events = [ ]
+        self.beginCalled = None
+        self.endCalled = False
 
     def begin(self, event):
-        self._begin = event
+        self.beginCalled = event
 
     def event(self, event):
-        self._eventIds.append(event.id)
+        self.events.append(event)
 
     def end(self):
-        self._end = True
-
-##__________________________________________________________________||
-class MockDataset(object):
-    def __init__(self):
-        self._events = None
-        self.name = None
+        self.endCalled = True
 
 ##__________________________________________________________________||
 class TestEventLoop(unittest.TestCase):
 
     def test_call(self):
-        eventBuilder = MockEventBuilder()
+
+        events = [MockEvent(), MockEvent(), MockEvent()]
+        eventBuilder = MockEventBuilder(events)
+
         dataset = MockDataset()
-        event1 = MockEvent(101)
-        event2 = MockEvent(102)
-        event3 = MockEvent(103)
-        events = [event1, event2, event3]
-        dataset._events = events
 
         reader = MockReader()
 
-        loop = EventLoop(eventBuilder, dataset, reader)
+        obj = EventLoop(eventBuilder, dataset, reader, start = 100, nEvents = 10000)
 
-        self.assertFalse(reader._begin)
-        self.assertEqual([ ], reader._eventIds)
-        self.assertFalse(reader._end)
+        self.assertIsNone(reader.beginCalled)
+        self.assertFalse(reader.endCalled)
+        self.assertEqual([ ], reader.events)
 
-        self.assertEqual(reader, loop())
+        self.assertEqual(reader, obj())
 
-        self.assertEqual(events, reader._begin)
-        self.assertEqual([101, 102, 103], reader._eventIds)
-        self.assertTrue(reader._end)
+        self.assertEqual(dataset, eventBuilder.dataset)
+        self.assertEqual(100, eventBuilder.start)
+        self.assertEqual(10000, eventBuilder.nEvents)
+
+        self.assertIs(events, reader.beginCalled)
+        self.assertIsNot(events, reader.events)
+        self.assertEqual(events, reader.events)
+        self.assertTrue(reader.endCalled)
+
+    def test_call_default_options(self):
+
+        events = [MockEvent(), MockEvent(), MockEvent()]
+        eventBuilder = MockEventBuilder(events)
+
+        dataset = MockDataset()
+
+        reader = MockReader()
+
+        obj = EventLoop(eventBuilder, dataset, reader) # don't give start or nEvents
+
+        self.assertIsNone(reader.beginCalled)
+        self.assertFalse(reader.endCalled)
+        self.assertEqual([ ], reader.events)
+
+        self.assertEqual(reader, obj())
+
+        self.assertEqual(dataset, eventBuilder.dataset)
+        self.assertEqual(0, eventBuilder.start) # the default value
+        self.assertEqual(-1, eventBuilder.nEvents) # the default value
+
+        self.assertIs(events, reader.beginCalled)
+        self.assertIsNot(events, reader.events)
+        self.assertEqual(events, reader.events)
+        self.assertTrue(reader.endCalled)
 
 ##__________________________________________________________________||
