@@ -101,10 +101,10 @@ def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progre
     return reader1, collector1
 
 ##__________________________________________________________________||
-def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevents, communicationChannel):
+def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevents, maxEventsPerRun, communicationChannel):
     eventLoopRunner = MPEventLoopRunner(communicationChannel)
     eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector)
+    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, maxEventsPerRun)
     return eventReader
 
 ##__________________________________________________________________||
@@ -126,6 +126,7 @@ class AlphaTwirl(object):
         parser.add_argument("-q", "--quiet", action = "store_true", default = False, help = "quiet mode")
         parser.add_argument('-o', '--outDir', default = 'tbl/out', action = 'store')
         parser.add_argument("-n", "--nevents", action = "store", default = -1, type = int, help = "maximum number of events to process for each component")
+        parser.add_argument("--max-events-per-process", action = "store", default = -1, type = int, help = "maximum number of events per process")
         parser.add_argument("-c", "--components", default = None, nargs = '*', help = "the list of components")
         parser.add_argument("--force", action = "store_true", default = False, dest="force", help = "recreate all output files")
         return parser
@@ -168,6 +169,7 @@ class AlphaTwirl(object):
                 reader = reader,
                 collector = collector,
                 nevents = self.args.nevents,
+                maxEventsPerRun = self.args.max_events_per_process,
                 communicationChannel = self.communicationChannel,
             )
             self.addComponentReader(treeReader)
