@@ -20,8 +20,9 @@ class MockTree(object):
         self.iEvent = -1
         self.branchstatus = [ ]
         self.getEntryCalled = False
+        self.directory = MockFile()
     def GetDirectory(self):
-        return MockFile()
+        return self.directory
     def GetEntries(self):
         return self.Entries
     def GetEntry(self, ientry):
@@ -125,11 +126,12 @@ class TestBEvents(unittest.TestCase):
 
     def test_getattr_getentry(self):
         tree = MockTree()
-        events = BEvents(tree)
+        events = BEvents(tree, start = 10)
         branchBuilder = MockBranchBuilder()
         events.buildBranch = branchBuilder
 
         self.assertEqual(-1, events.iEvent)
+        self.assertEqual(-1, tree.iEvent)
         self.assertFalse(tree.getEntryCalled)
         branchBuilder.next = MockBranch()
         jet_pt = events.jet_pt
@@ -139,6 +141,7 @@ class TestBEvents(unittest.TestCase):
         event = next(it)
         tree.getEntryCalled = False
         self.assertEqual(0, events.iEvent)
+        self.assertEqual(10, tree.iEvent)
         self.assertFalse(tree.getEntryCalled)
         jet_pt = event.jet_pt
         self.assertFalse(tree.getEntryCalled)
@@ -146,6 +149,8 @@ class TestBEvents(unittest.TestCase):
         tree.getEntryCalled = False
         met_pt = event.met_pt
         self.assertTrue(tree.getEntryCalled)
+        self.assertEqual(0, events.iEvent)
+        self.assertEqual(10, tree.iEvent)
 
     def test_pass_arguments_to_base_class(self):
         tree = MockTree(Entries = 1000)
