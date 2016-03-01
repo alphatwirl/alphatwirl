@@ -60,6 +60,35 @@ class TestCombine(unittest.TestCase):
         combine = Combine()
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
+    def test_two_readers_the_same_dataset(self):
+
+        counts1  = {
+            (1, ): {'n': 4.0, 'nvar': 6.0},
+            (2, ): {'n': 3.0, 'nvar': 9.0},
+            (3, ): {'n': 2.0, 'nvar': 3.0},
+        }
+
+        reader1 = MockReader(counts1)
+
+        counts2  = {
+            (2, ): {'n': 3.0, 'nvar': 6.0},
+            (4, ): {'n': 2.0, 'nvar': 2.0},
+        }
+
+        reader2 = MockReader(counts2)
+
+        datasetReaderPairs = [('data1', reader1), ('data1', reader2)]
+
+        expected  = {
+            ('data1', 1): {'n': 4.0, 'nvar':  6.0},
+            ('data1', 2): {'n': 6.0, 'nvar': 15.0},
+            ('data1', 3): {'n': 2.0, 'nvar':  3.0},
+            ('data1', 4): {'n': 2.0, 'nvar':  2.0},
+        }
+
+        combine = Combine()
+        self.assertEqual(expected, combine.combine(datasetReaderPairs))
+
     def test_two_readers_ordered_values(self):
 
         counts1  = {
