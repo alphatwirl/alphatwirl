@@ -252,7 +252,7 @@ def stack_counts_categories(tbl, variables, category, order = None,
 
     if order is None:
         d = tbl.groupby(category)[variables].sum().reset_index()
-        order = d.sort(list(variables))[category]
+        order = d.sort_values(list(variables))[category]
         order = list(order)
         if bottom is not None:
             for b in bottom:

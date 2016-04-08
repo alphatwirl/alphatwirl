@@ -15,7 +15,7 @@ except ImportError:
 ##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
     from pandas.util.testing import assert_frame_equal
-    return assert_frame_equal(df1.sort(axis = 1), df2.sort(axis = 1),
+    return assert_frame_equal(df1.sort_index(axis = 1), df2.sort_index(axis = 1),
                               check_less_precise = True, check_names = True)
 
 ##__________________________________________________________________||
