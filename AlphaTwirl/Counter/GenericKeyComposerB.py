@@ -32,8 +32,7 @@ class GenericKeyComposerB(object):
         return tuple(itertools.product(*bins_list))
 
     def _idxs(self, branche, index):
-        if index is None: return [0]
-        if index == '*': return range(len(branche))
+        if index == -99: return range(len(branche))
         if index < len(branche): return [index]
         return [ ]
 
@@ -55,6 +54,15 @@ class GenericKeyComposerB(object):
                 logging.warning(e)
                 return None
             self.branches.append(branch)
-        return zip(self.branches, self.binnings, self.indices)
+        indices = self._parse_indices_config(self.indices)
+        return zip(self.branches, self.binnings, indices)
+
+    def _parse_indices_config(self, indices):
+        parseDict = {
+            None: 0,  # use the first element when index is not given
+            '*': -99, # the wildcard
+        }
+        ret = [i if not i in parseDict else parseDict[i] for i in indices]
+        return ret
 
 ##__________________________________________________________________||
