@@ -28,8 +28,12 @@ class GenericKeyComposerB(object):
             idxs = self._idxs(branch, index)
             vals = self._vals(branch, idxs)
             bins = self._bins(binning, vals)
-            if not bins: return ()
             bins_list.append(bins)
+
+        for bins in bins_list:
+            bins[:] = [b for b in bins if b is not None]
+            if not bins: return ()
+
         return tuple(itertools.product(*bins_list))
 
     def _idxs(self, branch, index):
@@ -42,7 +46,6 @@ class GenericKeyComposerB(object):
 
     def _bins(self, binning, vals):
         bins = [binning(val) for val in vals]
-        bins = [b for b in bins if b is not None]
         return bins
 
     def _zipArrays(self, event):
