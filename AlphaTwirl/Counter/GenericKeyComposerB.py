@@ -24,22 +24,26 @@ class GenericKeyComposerB(object):
         if self._zip is None: return ()
         bins_list = [ ]
         for branche, binning, index in self._zip:
-            bins = self._bins(branche, binning, index)
+            vals = self._vals(branche, index)
+            bins = self._bins(binning, vals)
             if not bins: return ()
             bins_list.append(bins)
         return tuple(itertools.product(*bins_list))
 
-    def _bins(self, branche, binning, index):
+    def _vals(self, branche, index):
         if index is None:
-            vars = [branche[0]]
+            vals = [branche[0]]
         elif index == '*':
-            vars = [branche[i] for i in  range(len(branche))]
+            vals = [branche[i] for i in range(len(branche))]
         else:
             if len(branche) <= index:
-                vars = [ ]
+                vals = [ ]
             else:
-                vars = [branche[index]]
-        bins = [binning(var) for var in vars]
+                vals = [branche[index]]
+        return vals
+
+    def _bins(self, binning, vals):
+        bins = [binning(val) for val in vals]
         bins = [b for b in bins if b is not None]
         return bins
 
