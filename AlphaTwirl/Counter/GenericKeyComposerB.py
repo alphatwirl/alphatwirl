@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import itertools
+import re
 
 ##__________________________________________________________________||
 class GenericKeyComposerB(object):
@@ -32,7 +33,7 @@ class GenericKeyComposerB(object):
         return tuple(itertools.product(*bins_list))
 
     def _idxs(self, branche, index):
-        if index == -99: return range(len(branche))
+        if index == '*': return range(len(branche))
         if index < len(branche): return [index]
         return [ ]
 
@@ -58,11 +59,43 @@ class GenericKeyComposerB(object):
         return zip(self.branches, self.binnings, indices)
 
     def _parse_indices_config(self, indices):
-        parseDict = {
-            None: 0,  # use the first element when index is not given
-            '*': -99, # the wildcard
-        }
-        ret = [i if not i in parseDict else parseDict[i] for i in indices]
-        return ret
+        indices = list(indices)
+
+        # indices e.g., [None, None, '(*)', '(*)', '\\1', '\\2']
+
+        # replace None with 0
+        indices = [0 if i is None else i for i in indices]
+        # e.g., [0, 0, '(*)', '(*)', '\\1', '\\2']
+
+        # search for elements in parentheses, e.g. '(*)'
+        # at the momentum, only the asterisk '*' can be in the parentheses
+        idxRefs = [re.search(r'^\((.*)\)$', i) if isinstance(i, basestring) else None for i in indices]
+        # e.g., [None, None, <Match object>, <Match object>, None, None]
+
+        # remove parentheses
+        indices = [r.group(1) if r else i for i, r in zip(indices, idxRefs)]
+        # e.g., [0, 0, '*', '*', '\\1', '\\2']
+
+        ref = 1
+        for i, v in enumerate(idxRefs):
+            if v:
+                idxRefs[i] = ref
+                ref += 1
+        # e.g., idxRefs  = [None, None, 1, 2, None, None]
+
+        idxCites = [int(i[1:]) if isinstance(i, basestring) and i.startswith('\\') else None for i in indices]
+        # e.g., [None, None, None, None, 1, 2] # the original refs
+
+        idxCites = [None if i is None else idxRefs.index(i) for i in idxCites]
+        # e.g., [None, None, None, None, 2, 3] # indices in the list indices
+
+        # use negative numbers, to distinguish from the real indices
+        idxCites = [None if i is None else -i for i in idxCites]
+        # e.g., [None, None, None, None, -2, -3]
+
+        indices = [i if c is None else c for i, c in zip(indices, idxCites)]
+        # e.g., [0, '*', '*', -2, -3]
+
+        return indices
 
 ##__________________________________________________________________||
