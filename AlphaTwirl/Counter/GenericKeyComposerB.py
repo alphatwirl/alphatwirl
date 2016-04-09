@@ -32,15 +32,16 @@ class GenericKeyComposerB(object):
 
     def _vals(self, branche, index):
         if index is None:
-            vals = [branche[0]]
-        elif index == '*':
-            vals = [branche[i] for i in range(len(branche))]
-        else:
-            if len(branche) <= index:
-                vals = [ ]
-            else:
-                vals = [branche[index]]
-        return vals
+            return [branche[0]]
+
+        if index == '*':
+            return [branche[i] for i in range(len(branche))]
+
+        if index < len(branche):
+            return [branche[index]]
+
+        return [ ]
+
 
     def _bins(self, binning, vals):
         bins = [binning(val) for val in vals]
