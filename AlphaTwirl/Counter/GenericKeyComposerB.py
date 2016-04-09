@@ -22,14 +22,14 @@ class GenericKeyComposerB(object):
 
     def __call__(self, event):
         if self._zip is None: return ()
-        var_bins_list = [ ]
+        bins_list = [ ]
         for branche, binning, index in self._zip:
-            var_bins = self._var_bins(branche, binning, index)
-            if not var_bins: return ()
-            var_bins_list.append(var_bins)
-        return tuple(itertools.product(*var_bins_list))
+            bins = self._bins(branche, binning, index)
+            if not bins: return ()
+            bins_list.append(bins)
+        return tuple(itertools.product(*bins_list))
 
-    def _var_bins(self, branche, binning, index):
+    def _bins(self, branche, binning, index):
         if index is None:
             vars = [branche[0]]
         elif index == '*':
@@ -39,9 +39,9 @@ class GenericKeyComposerB(object):
                 vars = [ ]
             else:
                 vars = [branche[index]]
-        var_bins = [binning(var) for var in vars]
-        var_bins = [b for b in var_bins if b is not None]
-        return var_bins
+        bins = [binning(var) for var in vars]
+        bins = [b for b in bins if b is not None]
+        return bins
 
     def _zipArrays(self, event):
         self.branches = [ ]
