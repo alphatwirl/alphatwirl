@@ -209,7 +209,49 @@ class TestGenericKeyComposerB(unittest.TestCase):
         keyComposer.begin(event)
 
         event.var1[:] = [12, 8, 6]
-        event.var2[:] = [5, 2]
+        event.var2[:] = [5, None, 2]
         self.assertEqual(((12, 5), (12, 2), (8, 5), (8, 2), (6, 5), (6, 2)), keyComposer(event))
+
+        import time
+        import itertools
+        start_time = time.time()
+        for _ in itertools.repeat(None, 100000):
+            keyComposer(event)
+        print
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print
+
+
+    def test_indices_reference_1(self):
+        keyComposer = Counter.GenericKeyComposerB(
+            ('var1', 'var2', 'var3', 'var4'),
+            (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            indices = (None, '(*)', '\\1', '*')
+        )
+
+        event = MockEvent()
+        event.var1 = [ ]
+        event.var2 = [ ]
+        event.var3 = [ ]
+        event.var4 = [ ]
+        keyComposer.begin(event)
+
+        event.var1[:] = [12]
+        event.var2[:] = [5,  None,   2,    4, 30]
+        event.var3[:] = [10,   13,  20, None, 22, 50]
+        event.var4[:] = [100, 200]
+        self.assertEqual(
+            (
+                (12, 5, 10, 100), (12, 5, 10, 200),
+                (12, 2, 20, 100), (12, 2, 20, 200),
+                (12, 30, 22, 100), (12, 30, 22, 200)
+            ),
+            keyComposer(event)
+        )
+
+    def test_parse_indices_config_1(self):
+        keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ))
+        keyComposer._parse_indices_config((None, None, '(*)', '(*)', '\\1', '\\2'))
+
 
 ##__________________________________________________________________||

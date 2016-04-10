@@ -18,28 +18,53 @@ class GenericKeyComposerB(object):
         self.binnings = binnings
         self.indices = indices if indices is not None else [None]*len(self.branchNames)
 
+        self.backrefMap = { }
+
     def begin(self, event):
         self._zip = self._zipArrays(event)
 
     def __call__(self, event):
         if self._zip is None: return ()
         bins_list = [ ]
-        for branch, binning, index in self._zip:
-            idxs = self._idxs(branch, index)
+        binIdxMap = { }
+        self.backrefMap.clear()
+        for keyIdx, branch, binning, branchIdx, idxCite in self._zip:
+            idxs = self._determine_branch_indices_to_read(branch, branchIdx, keyIdx, idxCite)
             vals = self._vals(branch, idxs)
             bins = self._bins(binning, vals)
             bins_list.append(bins)
 
-        for bins in bins_list:
-            bins[:] = [b for b in bins if b is not None]
-            if not bins: return ()
+        idxs_list = [ ]
+        idxs_list_u = [ ]
+        for bins, idxCite in zip(bins_list, self.idxCites):
+            if idxCite is None:
+                idxs = range(len(bins))
+                idxs_list.append(idxs)
+                idxs_list_u.append(idxs)
+            else:
+                idxs_list.append(idxs_list[idxCite])
 
-        return tuple(itertools.product(*bins_list))
+        for bins, idxs in zip(bins_list, idxs_list):
+            idxsToRemove = [i for i, b in enumerate(bins) if b is None]
+            idxs[:] = [i for i in idxs if i not in idxsToRemove]
 
-    def _idxs(self, branch, index):
-        if index == '*': return range(len(branch))
-        if index < len(branch): return [index]
-        return [ ]
+        idxs_list_v = tuple(itertools.product(*idxs_list_u))
+        for i in range(len(idxs_list_u)):
+            idxs_list_u[i][:] = [j[i] for j in  idxs_list_v]
+        ret = [ ]
+        for i in range(len(idxs_list[0])):
+            ret.append(tuple([b[idxs[i]] for b, idxs in zip(bins_list, idxs_list)]))
+        return tuple(ret)
+
+    def _determine_branch_indices_to_read(self, branch, index, keyIdx, idxCite):
+        if idxCite is None:
+            if index == '*': ret = range(len(branch))
+            elif index < len(branch): ret = [index]
+            else: ret = [ ]
+        else:
+            ret = self.backrefMap[idxCite]
+        self.backrefMap[keyIdx] = ret
+        return ret
 
     def _vals(self, branch, idxs):
         return [branch[i] for i in idxs]
@@ -58,8 +83,9 @@ class GenericKeyComposerB(object):
                 logging.warning(e)
                 return None
             self.branches.append(branch)
-        indices = self._parse_indices_config(self.indices)
-        return zip(self.branches, self.binnings, indices)
+        self.idxCites, self.indices = self._parse_indices_config(self.indices)
+        self.keyIdxs = range(len(self.branches))
+        return zip(self.keyIdxs, self.branches, self.binnings, self.indices, self.idxCites)
 
     def _parse_indices_config(self, indices):
         indices = list(indices)
@@ -92,13 +118,9 @@ class GenericKeyComposerB(object):
         idxCites = [None if i is None else idxRefs.index(i) for i in idxCites]
         # e.g., [None, None, None, None, 2, 3] # indices in the list indices
 
-        # use negative numbers, to distinguish from the real indices
-        idxCites = [None if i is None else -i for i in idxCites]
-        # e.g., [None, None, None, None, -2, -3]
-
         indices = [i if c is None else c for i, c in zip(indices, idxCites)]
         # e.g., [0, '*', '*', -2, -3]
 
-        return indices
+        return idxCites, indices
 
 ##__________________________________________________________________||
