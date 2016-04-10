@@ -159,6 +159,7 @@ class GenericKeyComposerB(object):
             IdxsList[i][:] = [p[i] for p in prod]
 
     def _build_key(self, bins_list, binIdxsList):
+        if not binIdxsList: return tuple()
         ret = [ ]
         for i in range(len(binIdxsList[0])):
             ret.append(tuple([b[idxs[i]] for b, idxs in zip(bins_list, binIdxsList)]))
