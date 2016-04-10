@@ -212,17 +212,7 @@ class TestGenericKeyComposerB(unittest.TestCase):
         event.var2[:] = [5, None, 2]
         self.assertEqual(((12, 5), (12, 2), (8, 5), (8, 2), (6, 5), (6, 2)), keyComposer(event))
 
-        import time
-        import itertools
-        start_time = time.time()
-        for _ in itertools.repeat(None, 100000):
-            keyComposer(event)
-        print
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print
-
-
-    def test_indices_reference_1(self):
+    def test_back_reference_1(self):
         keyComposer = Counter.GenericKeyComposerB(
             ('var1', 'var2', 'var3', 'var4'),
             (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
@@ -245,6 +235,94 @@ class TestGenericKeyComposerB(unittest.TestCase):
                 (12, 5, 10, 100), (12, 5, 10, 200),
                 (12, 2, 20, 100), (12, 2, 20, 200),
                 (12, 30, 22, 100), (12, 30, 22, 200)
+            ),
+            keyComposer(event)
+        )
+
+    def test_back_reference_2(self):
+        keyComposer = Counter.GenericKeyComposerB(
+            ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta'),
+            (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            indices = (None, '(*)', '\\1', '(*)', '\\2')
+        )
+
+        event = MockEvent()
+        event.ev = [ ]
+        event.jet_pt = [ ]
+        event.jet_eta = [ ]
+        event.mu_pt = [ ]
+        event.mu_eta = [ ]
+        keyComposer.begin(event)
+
+        event.ev[:] = [1001]
+        event.jet_pt[:]  = [15.0, 12.0, None, 10.0]
+        event.jet_eta[:] = [None,  1.2,  2.2,  0.5]
+        event.mu_pt[:]   = [20.0, 11.0, 13.0]
+        event.mu_eta[:]  = [2.5,  None, 1.0]
+
+        self.assertEqual(
+            (
+                (1001, 12.0, 1.2, 20.0, 2.5),
+                (1001, 12.0, 1.2, 13.0, 1.0),
+                (1001, 10.0, 0.5, 20.0, 2.5),
+                (1001, 10.0, 0.5, 13.0, 1.0),
+            ),
+            keyComposer(event)
+        )
+
+    def test_back_reference_3_empty(self):
+        keyComposer = Counter.GenericKeyComposerB(
+            ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta'),
+            (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            indices = (None, '(*)', '\\1', '(*)', '\\2')
+        )
+
+        event = MockEvent()
+        event.ev = [ ]
+        event.jet_pt = [ ]
+        event.jet_eta = [ ]
+        event.mu_pt = [ ]
+        event.mu_eta = [ ]
+        keyComposer.begin(event)
+
+        event.ev[:] = [1001]
+        event.jet_pt[:]  = [15.0, None, None, 10.0]
+        event.jet_eta[:] = [None,  1.2,  2.2,  None]
+        event.mu_pt[:]   = [20.0, 11.0, 13.0]
+        event.mu_eta[:]  = [2.5,  None, 1.0]
+
+        self.assertEqual((), keyComposer(event)
+        )
+
+    def test_back_reference_4_reffer_twice(self):
+        keyComposer = Counter.GenericKeyComposerB(
+            ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta', 'jet_phi'),
+            (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            indices = (None, '(*)', '\\1', '(*)', '\\2', '\\1')
+        )
+
+        event = MockEvent()
+        event.ev = [ ]
+        event.jet_pt = [ ]
+        event.jet_eta = [ ]
+        event.mu_pt = [ ]
+        event.mu_eta = [ ]
+        event.jet_phi = [ ]
+        keyComposer.begin(event)
+
+        event.ev[:] = [1001]
+        event.jet_pt[:]  = [15.0, 12.0, None, 10.0]
+        event.jet_eta[:] = [None,  1.2,  2.2,  0.5]
+        event.mu_pt[:]   = [20.0, 11.0, 13.0]
+        event.mu_eta[:]  = [2.5,  None, 1.0]
+        event.jet_phi[:] = [ 0.1,  0.6,  None, 0.3]
+
+        self.assertEqual(
+            (
+                (1001, 12.0, 1.2, 20.0, 2.5, 0.6),
+                (1001, 12.0, 1.2, 13.0, 1.0, 0.6),
+                (1001, 10.0, 0.5, 20.0, 2.5, 0.3),
+                (1001, 10.0, 0.5, 13.0, 1.0, 0.3),
             ),
             keyComposer(event)
         )
