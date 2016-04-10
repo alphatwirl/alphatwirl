@@ -34,6 +34,11 @@ class GenericKeyComposerB(object):
             bins = self._bins(binning, vals)
             bins_list.append(bins)
 
+        if not self.useBackref:
+            for bins in bins_list:
+                bins[:] = [b for b in bins if b is not None]
+            return tuple(itertools.product(*bins_list))
+
         idxs_list = [ ]
         idxs_list_u = [ ]
         for bins, idxCite in zip(bins_list, self.idxCites):
@@ -84,6 +89,7 @@ class GenericKeyComposerB(object):
                 return None
             self.branches.append(branch)
         self.idxCites, self.indices = self._parse_indices_config(self.indices)
+        self.useBackref = any([e is not None for e in self.idxCites])
         self.keyIdxs = range(len(self.branches))
         return zip(self.keyIdxs, self.branches, self.binnings, self.indices, self.idxCites)
 
