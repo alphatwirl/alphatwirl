@@ -39,7 +39,7 @@ class GenericKeyComposerB(object):
         # ]
 
         if not self.useBackref:
-            return self._first_path_without_backref(bins_list)
+            return self._fast_path_without_backref(bins_list)
 
         binIdxsList_uniq, binIdxsList_referring = self._build_binIdxs_lists(bins_list, self.backrefIdxs)
         # e.g., backrefIdxs = [None, None, 1, None, 3]
@@ -131,7 +131,7 @@ class GenericKeyComposerB(object):
         self.backrefMap[keyIdx] = ret
         return ret
 
-    def _first_path_without_backref(self, bins_list):
+    def _fast_path_without_backref(self, bins_list):
         for bins in bins_list:
             bins[:] = [b for b in bins if b is not None]
         return tuple(itertools.product(*bins_list))
