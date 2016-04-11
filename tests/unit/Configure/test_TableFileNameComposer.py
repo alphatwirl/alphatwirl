@@ -28,4 +28,12 @@ class TestTableFileNameComposer(unittest.TestCase):
         )
         self.assertEqual("tbl_n_component_var1_1_var2_var3.txt", actual)
 
+    def test_backref(self):
+        compose = TableFileNameComposer()
+        actual = compose(
+            columnNames = ('var1', 'var2', 'var3', 'var4', 'var5'),
+            indices = (1, None, '*', '(*)', '\\1')
+        )
+        self.assertEqual("tbl_n_component_var1_1_var2_var3_var4_var5.txt", actual)
+
 ##__________________________________________________________________||
