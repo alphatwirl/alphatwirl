@@ -1,4 +1,5 @@
 from ProgressBar import ProgressBar
+from ProgressPrint import ProgressPrint
 from ProgressMonitor import ProgressMonitor, Queue
 from MPProgressMonitor import MPProgressMonitor
 from ProgressReporter import ProgressReporter
