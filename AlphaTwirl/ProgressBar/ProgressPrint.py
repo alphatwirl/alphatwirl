@@ -7,7 +7,7 @@ class ProgressPrint(object):
     def __init__(self):
         self.reports = collections.OrderedDict()
         self.lines = [ ]
-        self.interval = 5.0 # [second]
+        self.interval = 60.0 # [second]
         self._readTime()
         self.last = [ ]
 
