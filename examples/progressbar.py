@@ -4,6 +4,7 @@ from AlphaTwirl.ProgressBar import ProgressReport, BProgressMonitor
 from AlphaTwirl.ProgressBar import ProgressBar
 from AlphaTwirl.ProgressBar import ProgressPrint
 from AlphaTwirl.Concurrently import CommunicationChannel
+import sys
 import time, random
 import uuid
 
@@ -22,8 +23,7 @@ class Task(object):
         return None
 
 ##__________________________________________________________________||
-progressBar = ProgressBar()
-# progressBar = ProgressPrint()
+progressBar = ProgressBar() if sys.stdout.isatty() else ProgressPrint()
 
 ##__________________________________________________________________||
 progressMonitor = BProgressMonitor(presentation = progressBar)
