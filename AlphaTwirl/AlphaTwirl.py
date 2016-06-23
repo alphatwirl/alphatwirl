@@ -17,6 +17,7 @@ from .EventReader import CollectorDelegate
 from .Concurrently import CommunicationChannel
 from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
+from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
 from .Counter import Counter, Counts, GenericKeyComposerB, NextKeyComposer
 from .CombineIntoList import CombineIntoList
@@ -42,7 +43,13 @@ class ArgumentParser(argparse.ArgumentParser):
 ##__________________________________________________________________||
 def build_progressMonitor_communicationChannel(quiet, processes):
 
-    progressBar = None if quiet else ProgressBar()
+    if quiet:
+        progressBar = None
+    elif sys.stdout.isatty():
+        progressBar = ProgressBar()
+    else:
+        progressBar = ProgressPrint()
+
     if processes is None or processes == 0:
         progressMonitor = NullProgressMonitor() if quiet else ProgressMonitor(presentation = progressBar)
         communicationChannel = CommunicationChannel0(progressMonitor)
