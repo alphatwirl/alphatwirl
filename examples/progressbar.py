@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
-from AlphaTwirl.ProgressBar import ProgressBar, ProgressReport, BProgressMonitor
+from AlphaTwirl.ProgressBar import ProgressReport, BProgressMonitor
+from AlphaTwirl.ProgressBar import ProgressBar
+from AlphaTwirl.ProgressBar import ProgressPrint
 from AlphaTwirl.Concurrently import CommunicationChannel
 import time, random
 import uuid
@@ -21,6 +23,9 @@ class Task(object):
 
 ##__________________________________________________________________||
 progressBar = ProgressBar()
+# progressBar = ProgressPrint()
+
+##__________________________________________________________________||
 progressMonitor = BProgressMonitor(presentation = progressBar)
 channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
 progressMonitor.begin()
