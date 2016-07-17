@@ -44,6 +44,14 @@ AlphaTwirl.ProgressBar.ProgressMonitor module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.ProgressBar.ProgressPrint module
+-------------------------------------------
+
+.. automodule:: AlphaTwirl.ProgressBar.ProgressPrint
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.ProgressBar.ProgressReport module
 --------------------------------------------
 
