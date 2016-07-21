@@ -1,4 +1,5 @@
 from AlphaTwirl import AlphaTwirl
+from AlphaTwirl import AlphaTwirlConfigurer
 from AlphaTwirlOld import AlphaTwirlOld
 import Events
 import HeppyResult
