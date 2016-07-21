@@ -29,14 +29,14 @@ except ImportError:
     pass
 
 ##__________________________________________________________________||
-class ArgumentParser(argparse.ArgumentParser):
+class ArgumentParserWrapper(argparse.ArgumentParser):
 
     def __init__(self, owner, *args, **kwargs):
-        super(ArgumentParser, self).__init__(*args, **kwargs)
+        super(ArgumentParserWrapper, self).__init__(*args, **kwargs)
         self.owner = owner
 
     def parse_args(self, *args, **kwargs):
-        args = super(ArgumentParser, self).parse_args(*args, **kwargs)
+        args = super(ArgumentParserWrapper, self).parse_args(*args, **kwargs)
         self.owner.args = args
         return args
 
@@ -123,7 +123,7 @@ class AlphaTwirl(object):
         self.treeReaderConfigs = [ ]
 
     def ArgumentParser(self, *args, **kwargs):
-        parser = ArgumentParser(self, *args, **kwargs)
+        parser = ArgumentParserWrapper(self, *args, **kwargs)
         parser = self._add_arguments(parser)
         return parser
 
