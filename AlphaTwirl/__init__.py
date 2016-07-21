@@ -1,5 +1,5 @@
 from AlphaTwirl import AlphaTwirl
-from AlphaTwirlOld import AlphaTwirlOld, createTreeReader
+from AlphaTwirlOld import AlphaTwirlOld
 import Events
 import HeppyResult
 import Binning
