@@ -143,6 +143,9 @@ class AlphaTwirl(object):
 
         self.cfg = config if config is not None else config_default.copy()
 
+        self.progressMonitor, self.communicationChannel = build_progressMonitor_communicationChannel(self.cfg['quiet'], self.cfg['processes'])
+
+
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
@@ -160,8 +163,6 @@ class AlphaTwirl(object):
         self.treeReaderConfigs.append(cfg)
 
     def _build(self):
-
-        self.progressMonitor, self.communicationChannel = build_progressMonitor_communicationChannel(self.cfg['quiet'], self.cfg['processes'])
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
