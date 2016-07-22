@@ -147,7 +147,6 @@ class AlphaTwirl(object):
         self.progressMonitor.begin()
         self.communicationChannel.begin()
 
-
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
@@ -202,6 +201,8 @@ class AlphaTwirl(object):
     def run(self):
         loop = self._build()
         loop()
+
+    def end(self):
         self.communicationChannel.end()
         self.progressMonitor.end()
 
