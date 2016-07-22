@@ -29,18 +29,6 @@ except ImportError:
     pass
 
 ##__________________________________________________________________||
-class ArgumentParserWrapper(argparse.ArgumentParser):
-
-    def __init__(self, owner, *args, **kwargs):
-        super(ArgumentParserWrapper, self).__init__(*args, **kwargs)
-        self.owner = owner
-
-    def parse_args(self, *args, **kwargs):
-        args = super(ArgumentParserWrapper, self).parse_args(*args, **kwargs)
-        self.owner.args = args
-        return args
-
-##__________________________________________________________________||
 def build_progressMonitor_communicationChannel(quiet, processes):
 
     if quiet:
@@ -115,30 +103,49 @@ def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevent
     return eventReader
 
 ##__________________________________________________________________||
-class ArgumentReader(object):
-    def __init__(self, owner, *args, **kwargs):
-        self.parser = ArgumentParserWrapper(owner, *args, **kwargs)
-        self.parser.add_argument('-i', '--heppydir', default = '/Users/sakuma/work/cms/c150130_RA1_data/74X/MC/20150713_MC/20150713_SingleMu', action = 'store', help = "Heppy results dir")
-        self.parser.add_argument("-p", "--processes", action = "store", default = None, type = int, help = "number of processes to run in parallel")
-        self.parser.add_argument("-q", "--quiet", action = "store_true", default = False, help = "quiet mode")
-        self.parser.add_argument('-o', '--outDir', default = 'tbl/out', action = 'store')
-        self.parser.add_argument("-n", "--nevents", action = "store", default = -1, type = int, help = "maximum number of events to process for each component")
-        self.parser.add_argument("--max-events-per-process", action = "store", default = -1, type = int, help = "maximum number of events per process")
-        self.parser.add_argument("-c", "--components", default = None, nargs = '*', help = "the list of components")
-        self.parser.add_argument("--force", action = "store_true", default = False, dest="force", help = "recreate all output files")
+config_default = dict(
+    heppydir = '/Users/sakuma/work/cms/c150130_RA1_data/80X/MC/20160708_B01_MCMiniAODv2_SM/AtLogic_MCMiniAODv2_SM',
+    processes = None,
+    quiet = False,
+    outDir = 'tbl/out',
+    nevents = -1,
+    max_events_per_process = -1,
+    components = None,
+    force = False
+)
 
+##__________________________________________________________________||
+class AlphaTwirlConfigurerFromArgs():
+
+    def __init__(self):
+        self.cfg = config_default.copy()
+
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--heppydir', default = self.cfg['heppydir'], help = 'Heppy results dir')
+        parser.add_argument('-p', '--processes', default = self.cfg['processes'], type = int, help = 'number of processes to run in parallel')
+        parser.add_argument('-q', '--quiet', action = 'store_true', default = self.cfg['quiet'], help = 'quiet mode')
+        parser.add_argument('-o', '--outDir', default = 'tbl/out')
+        parser.add_argument('-n', '--nevents', default = -1, type = int, help = 'maximum number of events to process for each component')
+        parser.add_argument('--max-events-per-process', default = -1, type = int, help = 'maximum number of events per process')
+        parser.add_argument('-c', '--components', default = None, nargs = '*', help = 'the list of components')
+        parser.add_argument('--force', action = 'store_true', default = False, dest='force', help = 'recreate all output files')
+
+    def configure(self, args):
+        self.cfg.update(vars(args))
+        return self.cfg.copy()
 
 ##__________________________________________________________________||
 class AlphaTwirl(object):
 
-    def __init__(self):
-        self.args = None
+    def __init__(self, config = None):
         self.componentReaders = ComponentReaderComposite()
         self.treeReaderConfigs = [ ]
 
-    def ArgumentParser(self, *args, **kwargs):
-        argumentReader = ArgumentReader(self, *args, **kwargs)
-        return argumentReader.parser
+        self.cfg = config if config is not None else config_default.copy()
+
+        self.progressMonitor, self.communicationChannel = build_progressMonitor_communicationChannel(self.cfg['quiet'], self.cfg['processes'])
+        self.progressMonitor.begin()
+        self.communicationChannel.begin()
 
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
@@ -158,16 +165,17 @@ class AlphaTwirl(object):
 
     def _build(self):
 
-        if self.args is None: self.ArgumentParser().parse_args()
+        self._build_treeReader()
+        return self._build_loop()
 
-        self.progressMonitor, self.communicationChannel = build_progressMonitor_communicationChannel(self.args.quiet, self.args.processes)
+    def _build_treeReader(self):
 
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
                 preTableReaders = cfg['preTableReaders'],
                 tableConfigs = cfg['tableConfigs'],
-                outDir = self.args.outDir,
-                force = self.args.force,
+                outDir = self.cfg['outDir'],
+                force = self.cfg['force'],
                 progressMonitor = self.progressMonitor,
             )
             if reader is None: continue
@@ -177,22 +185,24 @@ class AlphaTwirl(object):
                 treeName = cfg['treeName'],
                 reader = reader,
                 collector = collector,
-                nevents = self.args.nevents,
-                maxEventsPerRun = self.args.max_events_per_process,
+                nevents = self.cfg['nevents'],
+                maxEventsPerRun = self.cfg['max_events_per_process'],
                 communicationChannel = self.communicationChannel,
             )
             self.addComponentReader(treeReader)
 
-        if self.args.components == ['all']: self.args.components = None
-        heppyResult = HeppyResult(path = self.args.heppydir, componentNames = self.args.components)
+    def _build_loop(self):
+
+        if self.cfg['components'] == ['all']: self.cfg['components'] = None
+        heppyResult = HeppyResult(path = self.cfg['heppydir'], componentNames = self.cfg['components'])
         componentLoop = ComponentLoop(heppyResult, self.componentReaders)
         return componentLoop
 
     def run(self):
         loop = self._build()
-        self.progressMonitor.begin()
-        self.communicationChannel.begin()
         loop()
+
+    def end(self):
         self.communicationChannel.end()
         self.progressMonitor.end()
 
