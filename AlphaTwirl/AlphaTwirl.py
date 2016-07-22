@@ -164,6 +164,11 @@ class AlphaTwirl(object):
 
     def _build(self):
 
+        self._build_treeReader()
+        return self._build_loop()
+
+    def _build_treeReader(self):
+
         for cfg in self.treeReaderConfigs:
             reader, collector = buildReaderAndCollector(
                 preTableReaders = cfg['preTableReaders'],
@@ -184,6 +189,8 @@ class AlphaTwirl(object):
                 communicationChannel = self.communicationChannel,
             )
             self.addComponentReader(treeReader)
+
+    def _build_loop(self):
 
         if self.cfg['components'] == ['all']: self.cfg['components'] = None
         heppyResult = HeppyResult(path = self.cfg['heppydir'], componentNames = self.cfg['components'])
