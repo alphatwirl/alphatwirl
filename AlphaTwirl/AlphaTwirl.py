@@ -153,26 +153,18 @@ class AlphaTwirl(object):
     def addTreeReader(self, analyzerName, fileName, treeName,
                       preTableReaders = [ ], tableConfigs = [ ]):
 
-        cfg = dict(
-            analyzerName = analyzerName,
-            fileName = fileName,
-            treeName = treeName,
+        reader, collector = buildReaderAndCollector(
             preTableReaders = preTableReaders,
             tableConfigs = tableConfigs,
-            )
-
-        reader, collector = buildReaderAndCollector(
-            preTableReaders = cfg['preTableReaders'],
-            tableConfigs = cfg['tableConfigs'],
             outDir = self.cfg['outDir'],
             force = self.cfg['force'],
             progressMonitor = self.progressMonitor,
         )
         if reader is None: return
         treeReader = createTreeReader(
-            analyzerName = cfg['analyzerName'],
-            fileName = cfg['fileName'],
-            treeName = cfg['treeName'],
+            analyzerName = analyzerName,
+            fileName = fileName,
+            treeName = treeName,
             reader = reader,
             collector = collector,
             nevents = self.cfg['nevents'],
