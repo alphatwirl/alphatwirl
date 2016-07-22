@@ -161,37 +161,27 @@ class AlphaTwirl(object):
             tableConfigs = tableConfigs,
             )
 
-        self.treeReaderConfigs.append(cfg)
+        reader, collector = buildReaderAndCollector(
+            preTableReaders = cfg['preTableReaders'],
+            tableConfigs = cfg['tableConfigs'],
+            outDir = self.cfg['outDir'],
+            force = self.cfg['force'],
+            progressMonitor = self.progressMonitor,
+        )
+        if reader is None: return
+        treeReader = createTreeReader(
+            analyzerName = cfg['analyzerName'],
+            fileName = cfg['fileName'],
+            treeName = cfg['treeName'],
+            reader = reader,
+            collector = collector,
+            nevents = self.cfg['nevents'],
+            maxEventsPerRun = self.cfg['max_events_per_process'],
+            communicationChannel = self.communicationChannel,
+        )
+        self.addComponentReader(treeReader)
 
     def _build(self):
-
-        self._build_treeReader()
-        return self._build_loop()
-
-    def _build_treeReader(self):
-
-        for cfg in self.treeReaderConfigs:
-            reader, collector = buildReaderAndCollector(
-                preTableReaders = cfg['preTableReaders'],
-                tableConfigs = cfg['tableConfigs'],
-                outDir = self.cfg['outDir'],
-                force = self.cfg['force'],
-                progressMonitor = self.progressMonitor,
-            )
-            if reader is None: continue
-            treeReader = createTreeReader(
-                analyzerName = cfg['analyzerName'],
-                fileName = cfg['fileName'],
-                treeName = cfg['treeName'],
-                reader = reader,
-                collector = collector,
-                nevents = self.cfg['nevents'],
-                maxEventsPerRun = self.cfg['max_events_per_process'],
-                communicationChannel = self.communicationChannel,
-            )
-            self.addComponentReader(treeReader)
-
-    def _build_loop(self):
 
         if self.cfg['components'] == ['all']: self.cfg['components'] = None
         heppyResult = HeppyResult(path = self.cfg['heppydir'], componentNames = self.cfg['components'])
