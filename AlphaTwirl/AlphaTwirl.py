@@ -115,7 +115,7 @@ config_default = dict(
 )
 
 ##__________________________________________________________________||
-class AlphaTwirlConfigurer():
+class AlphaTwirlConfigurerFromArgs():
 
     def __init__(self):
         self.cfg = config_default.copy()
