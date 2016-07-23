@@ -7,9 +7,6 @@ from .HeppyResult import ComponentReaderComposite
 from .HeppyResult import ComponentLoop
 from .HeppyResult import HeppyResult
 from .EventReader import Collector
-from .EventReader import NullCollector
-from .EventReader import CollectorComposite
-from .EventReader import CollectorDelegate
 from .Concurrently import CommunicationChannel
 from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
