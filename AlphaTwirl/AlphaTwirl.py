@@ -58,11 +58,7 @@ config_default = dict(
     heppydir = '/Users/sakuma/work/cms/c150130_RA1_data/80X/MC/20160708_B01_MCMiniAODv2_SM/AtLogic_MCMiniAODv2_SM',
     processes = None,
     quiet = False,
-    outDir = 'tbl/out',
-    nevents = -1,
-    max_events_per_process = -1,
     components = None,
-    force = False
 )
 
 ##__________________________________________________________________||
@@ -75,11 +71,7 @@ class AlphaTwirlConfigurerFromArgs():
         parser.add_argument('-i', '--heppydir', default = self.cfg['heppydir'], help = 'Heppy results dir')
         parser.add_argument('-p', '--processes', default = self.cfg['processes'], type = int, help = 'number of processes to run in parallel')
         parser.add_argument('-q', '--quiet', action = 'store_true', default = self.cfg['quiet'], help = 'quiet mode')
-        parser.add_argument('-o', '--outDir', default = 'tbl/out')
-        parser.add_argument('-n', '--nevents', default = -1, type = int, help = 'maximum number of events to process for each component')
-        parser.add_argument('--max-events-per-process', default = -1, type = int, help = 'maximum number of events per process')
         parser.add_argument('-c', '--components', default = None, nargs = '*', help = 'the list of components')
-        parser.add_argument('--force', action = 'store_true', default = False, dest='force', help = 'recreate all output files')
 
     def configure(self, args):
         self.cfg.update(vars(args))
