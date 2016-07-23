@@ -77,11 +77,6 @@ def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progre
               |- counter
     """
 
-    tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
-    tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
-    if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
-    if len(tableConfigs) == 0: return None, None
-
     reader_collector_pair = [(reader, NullCollector()) for reader in preTableReaders]
     reader_collector_pair.extend([buildCounterAndCollector(tblcfg) for tblcfg in tableConfigs])
 
