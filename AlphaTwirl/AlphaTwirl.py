@@ -81,19 +81,18 @@ def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progre
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     if len(tableConfigs) == 0: return None, None
-    reader1 = ReaderComposite()
-    collector1 = CollectorComposite(progressMonitor.createReporter())
 
-    for reader in preTableReaders:
-        reader1.add(reader)
-        collector1.add(NullCollector())
+    reader_collector_pair = [(reader, NullCollector()) for reader in preTableReaders]
+    reader_collector_pair.extend([buildCounterAndCollector(tblcfg) for tblcfg in tableConfigs])
 
-    for tblcfg in tableConfigs:
-        counter, collector0 = buildCounterAndCollector(tblcfg)
-        reader1.add(counter)
-        collector1.add(collector0)
+    reader = ReaderComposite()
+    collector = CollectorComposite(progressMonitor.createReporter())
 
-    return reader1, collector1
+    for r, c in reader_collector_pair:
+        reader.add(r)
+        collector.add(c)
+
+    return reader, collector
 
 ##__________________________________________________________________||
 config_default = dict(
