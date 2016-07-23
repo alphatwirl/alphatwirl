@@ -137,23 +137,6 @@ class AlphaTwirl(object):
     def addComponentReader(self, reader):
         self.componentReaders.add(reader)
 
-    def addTreeReader(self, analyzerName, fileName, treeName,
-                      preTableReaders = [ ], tableConfigs = [ ]):
-
-        reader, collector = buildReaderAndCollector(
-            preTableReaders = preTableReaders,
-            tableConfigs = tableConfigs,
-            outDir = self.cfg['outDir'],
-            force = self.cfg['force'],
-            progressMonitor = self.progressMonitor,
-        )
-        if reader is None: return
-
-        eventLoopRunner = MPEventLoopRunner(self.communicationChannel)
-        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.cfg['nevents'])
-        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, self.cfg['max_events_per_process'])
-        self.addComponentReader(eventReader)
-
     def _build(self):
 
         if self.cfg['components'] == ['all']: self.cfg['components'] = None
