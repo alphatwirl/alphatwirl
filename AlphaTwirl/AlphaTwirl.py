@@ -96,13 +96,6 @@ def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progre
     return reader1, collector1
 
 ##__________________________________________________________________||
-def createTreeReader(analyzerName, fileName, treeName, reader, collector, nevents, maxEventsPerRun, communicationChannel):
-    eventLoopRunner = MPEventLoopRunner(communicationChannel)
-    eventBuilder = EventBuilder(analyzerName, fileName, treeName, nevents)
-    eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, maxEventsPerRun)
-    return eventReader
-
-##__________________________________________________________________||
 config_default = dict(
     heppydir = '/Users/sakuma/work/cms/c150130_RA1_data/80X/MC/20160708_B01_MCMiniAODv2_SM/AtLogic_MCMiniAODv2_SM',
     processes = None,
@@ -161,17 +154,11 @@ class AlphaTwirl(object):
             progressMonitor = self.progressMonitor,
         )
         if reader is None: return
-        treeReader = createTreeReader(
-            analyzerName = analyzerName,
-            fileName = fileName,
-            treeName = treeName,
-            reader = reader,
-            collector = collector,
-            nevents = self.cfg['nevents'],
-            maxEventsPerRun = self.cfg['max_events_per_process'],
-            communicationChannel = self.communicationChannel,
-        )
-        self.addComponentReader(treeReader)
+
+        eventLoopRunner = MPEventLoopRunner(self.communicationChannel)
+        eventBuilder = EventBuilder(analyzerName, fileName, treeName, self.cfg['nevents'])
+        eventReader = EventReader(eventBuilder, eventLoopRunner, reader, collector, self.cfg['max_events_per_process'])
+        self.addComponentReader(eventReader)
 
     def _build(self):
 
