@@ -3,13 +3,9 @@ import argparse
 import sys
 import os
 
-from .Configure import TableConfigCompleter
 from .HeppyResult import ComponentReaderComposite
 from .HeppyResult import ComponentLoop
 from .HeppyResult import HeppyResult
-from .EventReader import EventReader
-from .EventReader import MPEventLoopRunner
-from .EventReader import ReaderComposite
 from .EventReader import Collector
 from .EventReader import NullCollector
 from .EventReader import CollectorComposite
@@ -19,14 +15,9 @@ from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
 from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from .Counter import Counter, Counts, GenericKeyComposerB, NextKeyComposer
+from .Counter import Counter, GenericKeyComposerB, NextKeyComposer
 from .CombineIntoList import CombineIntoList
 from .WriteListToFile import WriteListToFile
-
-try:
-    from HeppyResult import BEventBuilder as EventBuilder
-except ImportError:
-    pass
 
 ##__________________________________________________________________||
 def build_progressMonitor_communicationChannel(quiet, processes):
