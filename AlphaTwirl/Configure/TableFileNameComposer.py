@@ -19,9 +19,9 @@ class TableFileNameComposer(object):
             indices = [None if isinstance(i, basestring) and i.startswith('\\') else i for i in indices]
         l = columnNames if indices is None else [str(e) for sublist in zip(columnNames, indices) for e in sublist if e is not None]
         if l:
-            ret = prefix + '_' + '_'.join(l) + suffix # e.g. "tbl_component_var1_1_var2_var3_2.txt"
+            ret = prefix + '_' + '_'.join(l) + suffix # e.g. "tbl_n_component_var1_1_var2_var3_2.txt"
         else:
-            ret = prefix + suffix # e.g. "tbl_component.txt"
+            ret = prefix + suffix # e.g. "tbl_n_component.txt"
         return ret
 
 ##__________________________________________________________________||
