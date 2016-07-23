@@ -63,33 +63,6 @@ def buildCounterAndCollector(tblcfg):
     return counter, collector0
 
 ##__________________________________________________________________||
-def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progressMonitor):
-    """
-          composite
-              |- preTableReader
-              |- preTableReader
-              |- preTableReader
-              |- preTableReader
-              |- counter
-              |- counter
-              |- counter
-              |- counter
-              |- counter
-    """
-
-    reader_collector_pair = [(reader, NullCollector()) for reader in preTableReaders]
-    reader_collector_pair.extend([buildCounterAndCollector(tblcfg) for tblcfg in tableConfigs])
-
-    reader = ReaderComposite()
-    collector = CollectorComposite(progressMonitor.createReporter())
-
-    for r, c in reader_collector_pair:
-        reader.add(r)
-        collector.add(c)
-
-    return reader, collector
-
-##__________________________________________________________________||
 config_default = dict(
     heppydir = '/Users/sakuma/work/cms/c150130_RA1_data/80X/MC/20160708_B01_MCMiniAODv2_SM/AtLogic_MCMiniAODv2_SM',
     processes = None,
