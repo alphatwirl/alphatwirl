@@ -50,8 +50,8 @@ def buildCounterAndCollector(tblcfg):
     )
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
-    collector0 = Collector(resultsCombinationMethod, deliveryMethod)
-    return counter, collector0
+    collector = Collector(resultsCombinationMethod, deliveryMethod)
+    return counter, collector
 
 ##__________________________________________________________________||
 config_default = dict(
