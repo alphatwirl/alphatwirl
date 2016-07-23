@@ -1,6 +1,5 @@
 from AlphaTwirl import AlphaTwirl
 from AlphaTwirl import AlphaTwirlConfigurerFromArgs
-from AlphaTwirl import buildCounterAndCollector
 from AlphaTwirlOld import AlphaTwirlOld
 import Events
 import HeppyResult

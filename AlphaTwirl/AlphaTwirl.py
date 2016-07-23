@@ -6,13 +6,11 @@ import os
 from .HeppyResult import ComponentReaderComposite
 from .HeppyResult import ComponentLoop
 from .HeppyResult import HeppyResult
-from .EventReader import Collector
 from .Concurrently import CommunicationChannel
 from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
 from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from .Counter import Counter, GenericKeyComposerB, NextKeyComposer
 from .CombineIntoList import CombineIntoList
 from .WriteListToFile import WriteListToFile
 
@@ -34,21 +32,6 @@ def build_progressMonitor_communicationChannel(quiet, processes):
         communicationChannel = CommunicationChannel(processes, progressMonitor)
 
     return progressMonitor, communicationChannel
-
-##__________________________________________________________________||
-def buildCounterAndCollector(tblcfg):
-    keyComposer = GenericKeyComposerB(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
-    nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    counter = Counter(
-        keyComposer = keyComposer,
-        countMethod = tblcfg['countsClass'](),
-        nextKeyComposer = nextKeyComposer,
-        weightCalculator = tblcfg['weight']
-    )
-    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
-    deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
-    collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return counter, collector
 
 ##__________________________________________________________________||
 config_default = dict(
