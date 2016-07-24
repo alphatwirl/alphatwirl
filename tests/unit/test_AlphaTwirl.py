@@ -11,10 +11,6 @@ class TestAlphaTwirl(unittest.TestCase):
     def test_init(self):
         alphaTwirl = AlphaTwirl()
 
-    def test_ArgumentParser(self):
-        alphaTwirl = AlphaTwirl()
-        alphaTwirl.ArgumentParser()
-
     def test_addComponentReader(self):
         alphaTwirl = AlphaTwirl()
         componentReader = MockComponentReader()
