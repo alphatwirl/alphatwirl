@@ -327,8 +327,4 @@ class TestGenericKeyComposerB(unittest.TestCase):
             keyComposer(event)
         )
 
-    def test_parse_indices_config_1(self):
-        Counter.parse_indices_config((None, None, '(*)', '(*)', '\\1', '\\2'))
-
-
 ##__________________________________________________________________||
