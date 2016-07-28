@@ -328,8 +328,7 @@ class TestGenericKeyComposerB(unittest.TestCase):
         )
 
     def test_parse_indices_config_1(self):
-        keyComposer = Counter.GenericKeyComposerB(('var1', ), (MockBinningEcho(), ))
-        keyComposer._parse_indices_config((None, None, '(*)', '(*)', '\\1', '\\2'))
+        Counter.parse_indices_config((None, None, '(*)', '(*)', '\\1', '\\2'))
 
 
 ##__________________________________________________________________||
