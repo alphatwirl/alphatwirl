@@ -38,7 +38,7 @@ class KeyValueComposer(object):
                 )
             )
 
-        self.backrefMap = { }
+        self._backref_map = { }
 
     def begin(self, event):
         self._zip = self._zipArrays(event)
@@ -46,14 +46,9 @@ class KeyValueComposer(object):
     def __call__(self, event):
         if self._zip is None: return ()
 
-        bins_list, vals_list = self._read_branches()
-        import pprint
-        print "bins_list:"
-        pprint.pprint(bins_list)
-        print "vals_list:"
-        pprint.pprint(vals_list)
+        keys, vals = self._unzip_and_read_event_attributes(self._zip)
         # e.g.,
-        # bins_list = [
+        # keys = [
         #     [1001],
         #     [15.0, 12.0, None, 10.0],
         #     [None, 1.2, 2.2, 0.5],
@@ -61,36 +56,26 @@ class KeyValueComposer(object):
         #     [2.5, None, 1.0],
         #     [0.1, 0.6, None, 0.3]
         # ]
-        # vals_list = [
+        # vals = [
         #     [21.0, 13.0, 15.0, 11.0],
         #     [22.0, 15.0, 16.0]
         # ]
 
-        if not self.useBackref:
-            return self._fast_path_without_backref(bins_list, vals_list)
+        if not self._use_backref:
+            return self._fast_path_without_backref(keys, vals)
 
         # e.g.,
         # backrefIdxs = [None, None, 1, None, 3, 1, 1, 3]
 
-        print "self.backrefIdxs:"
-        pprint.pprint(self.backrefIdxs)
-
-        idxsList_uniq, binIdxsList_referring, valIdxsList_referring = self._build_idxs_lists(bins_list, vals_list, self.backrefIdxs)
-        print "idxsList_uniq:"
-        pprint.pprint(idxsList_uniq)
-        print "binIdxsList_referring:"
-        pprint.pprint(binIdxsList_referring)
-        print "valIdxsList_referring:"
-        pprint.pprint(valIdxsList_referring)
-
+        uniq_idxs, ref_key_idxs, ref_val_idxs = self._build_uniq_ref_idxs(keys, vals, self.backref_idxs)
         # e.g.,
-        # idxsList_uniq = [
+        # uniq_idxs = [
         #     [0],
         #     [0, 1, 2, 3],
         #     [0, 1, 2]
         # ]
         #
-        # binIdxsList_referring = [
+        # ref_key_idxs = [
         #     [0],
         #     [0, 1, 2, 3],
         #     [0, 1, 2, 3],
@@ -99,46 +84,34 @@ class KeyValueComposer(object):
         #     [0, 1, 2, 3],
         # ]
         #
-        # valIdxsList_referring = [
+        # ref_val_idxs = [
         #     [0, 1, 2, 3],
         #     [0, 1, 2]]
         # ]
         #
         # these 5 lists are the same object:
         #   binIdxsList_uniq[1]
-        #   binIdxsList_referring[1]
-        #   binIdxsList_referring[2]
-        #   binIdxsList_referring[5]
-        #   valIdxsList_referring[0]
+        #   ref_key_idxs[1]
+        #   ref_key_idxs[2]
+        #   ref_key_idxs[5]
+        #   ref_val_idxs[0]
         #
         # so are these 3 lists:
         #   binIdxsList_uniq[2]
-        #   binIdxsList_referring[3]
-        #   binIdxsList_referring[4]
-        #   valIdxsList_referring[1]
+        #   ref_key_idxs[3]
+        #   ref_key_idxs[4]
+        #   ref_val_idxs[1]
 
-        print [id(o) for o in idxsList_uniq]
-        print [id(o) for o in binIdxsList_referring]
-        print [id(o) for o in valIdxsList_referring]
-
-        self._remove_idxs_for_None_elements(bins_list, binIdxsList_referring)
-        self._remove_idxs_for_None_elements(vals_list, valIdxsList_referring)
-
-        print "idxsList_uniq:"
-        pprint.pprint(idxsList_uniq)
-        print "binIdxsList_referring:"
-        pprint.pprint(binIdxsList_referring)
-        print "valIdxsList_referring:"
-        pprint.pprint(valIdxsList_referring)
-
+        self._remove_idxs_for_None_elements(keys, ref_key_idxs)
+        self._remove_idxs_for_None_elements(vals, ref_val_idxs)
         # e.g.,
-        # idxsList_uniq = [
+        # uniq_idxs = [
         #     [0],
         #     [1, 3],
         #     [0, 2]
         # ]
         #
-        # binIdxsList_referring = [
+        # ref_key_idxs = [
         #     [0],
         #     [1, 3],
         #     [1, 3],
@@ -146,29 +119,20 @@ class KeyValueComposer(object):
         #     [0, 2],
         # ]
         #
-        # valIdxsList_referring = [
+        # ref_val_idxs = [
         #     [1, 3],
         #     [0, 2]
         # ]
 
-        self._expand_idxsList_with_all_combinations(idxsList_uniq)
-
-        print "idxsList_uniq:"
-        pprint.pprint(idxsList_uniq)
-        print "binIdxsList_referring:"
-        pprint.pprint(binIdxsList_referring)
-        print "valIdxsList_referring:"
-        pprint.pprint(valIdxsList_referring)
-
-
+        self._expand_idxs_with_all_combinations(uniq_idxs)
         # e.g.,
-        # idxsList_uniq = [
+        # uniq_idxs = [
         #     [0, 0, 0, 0],
         #     [1, 1, 3, 3],
         #     [0, 2, 0, 2]
         # ]
         #
-        # binIdxsList_referring = [
+        # ref_key_idxs = [
         #     [0, 0, 0, 0],
         #     [1, 1, 3, 3],
         #     [1, 1, 3, 3],
@@ -177,12 +141,12 @@ class KeyValueComposer(object):
         #     [1, 1, 3, 3],
         # ]
         #
-        # valIdxsList_referring = [
+        # ref_val_idxs = [
         #     [1, 1, 3, 3],
         #     [0, 2, 0, 2]
         # ]
 
-        key = self._build_ret(bins_list, binIdxsList_referring) if self.keyIndices else None
+        key = self._build_ret(keys, ref_key_idxs) if self.keyIndices else None
         # e.g.,
         # key = (
         #     (1001, 12.0, 1.2, 20.0, 2.5, 0.6),
@@ -191,7 +155,7 @@ class KeyValueComposer(object):
         #     (1001, 10.0, 0.5, 13.0, 1.0, 0.3)
         # )
 
-        val = self._build_ret(vals_list, valIdxsList_referring) if self.valIndices else None
+        val = self._build_ret(vals, ref_val_idxs) if self.valIndices else None
         # e.g.,
         # val = (
         #     (13.0, 22.0),
@@ -202,82 +166,71 @@ class KeyValueComposer(object):
 
         return key, val
 
-        key, val = self._build_key_val(bins_list, vals_list, binIdxsList_referring)
-        # e.g.,
-        # key = (
-        #    (1001, 12, 1, 20, 2),
-        #    (1001, 12, 1, 13, 1),
-        #    (1001, 10, 0, 20, 2),
-        #    (1001, 10, 0, 13, 1),
-        # )
-
-        return key, val
-
-    def _read_branches(self):
-        self.backrefMap.clear()
-        bins_list = [ ]
-        vals_list = [ ]
-        for keyIdx, branch, binning, branchIdx, backrefIdx in self._zip:
-            idxs = self._determine_branch_indices_to_read(branch, branchIdx, keyIdx, backrefIdx)
-            vals = [(branch[i] if i < len(branch) else None) for i in idxs]
+    def _unzip_and_read_event_attributes(self, the_zip):
+        self._backref_map.clear()
+        keys = [ ]
+        vals = [ ]
+        for var_idx, attr, binning, conf_attr_idx, backref_idx in the_zip:
+            attr_idxs = self._determine_attr_indices_to_read(attr, conf_attr_idx, var_idx, backref_idx)
+            attr_vals = [(attr[i] if i < len(attr) else None) for i in attr_idxs]
             if binning is not None:
-                bins = [binning(val) for val in vals]
-                bins_list.append(bins)
+                bins = [binning(val) for val in attr_vals]
+                keys.append(bins)
             else:
-                vals_list.append(vals)
-        return bins_list, vals_list
-
-    def _determine_branch_indices_to_read(self, branch, branchIdx, keyIdx, backrefIdx):
-        if backrefIdx is None:
-            if branchIdx == '*': ret = range(len(branch))
-            elif branchIdx < len(branch): ret = [branchIdx]
-            else: ret = [ ]
-        else:
-            ret = self.backrefMap[backrefIdx]
-        self.backrefMap[keyIdx] = ret
-        return ret
-
-    def _fast_path_without_backref(self, bins_list, vals_list):
-        for bins in bins_list:
-            bins[:] = [b for b in bins if b is not None]
-        for vals in vals_list:
-            vals[:] = [v for v in vals if v is not None]
-        prod = tuple(itertools.product(*(bins_list + vals_list)))
-        keys = tuple(e[0:len(bins_list)] for e in prod) if bins_list else None
-        vals = tuple(e[len(bins_list):] for e in prod) if vals_list else None
+                vals.append(attr_vals)
         return keys, vals
 
-    def _build_idxs_lists(self, bins_list, vals_list, backrefIdxs):
-        uniq_list, referring_list = self._build_binIdxs_lists(bins_list + vals_list, backrefIdxs)
-        return uniq_list, referring_list[:len(bins_list)], referring_list[len(bins_list):]
+    def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx):
+        if backref_idx is None:
+            if conf_attr_idx == '*': ret = range(len(attr))
+            elif conf_attr_idx < len(attr): ret = [conf_attr_idx]
+            else: ret = [ ] # conf_attr_idx is out of the range
+        else:
+            ret = self._backref_map[backref_idx]
+        self._backref_map[var_idx] = ret
+        return ret
 
-    def _build_binIdxs_lists(self, bins_list, backrefIdxs):
-        uniq_list = [ ]
-        referring_list = [ ]
-        for bins, backrefIdx in zip(bins_list, backrefIdxs):
+    def _fast_path_without_backref(self, keys_list, vals_list):
+        for keys in keys_list:
+            keys[:] = [k for k in keys if k is not None]
+        for vals in vals_list:
+            vals[:] = [v for v in vals if v is not None]
+        prod = tuple(itertools.product(*(keys_list + vals_list)))
+        keys = tuple(e[0:len(keys_list)] for e in prod) if keys_list else None
+        vals = tuple(e[len(keys_list):] for e in prod) if vals_list else None
+        return keys, vals
+
+    def _build_uniq_ref_idxs(self, keys, vals, backref_idxs):
+        uniq_idxs, ref_idxs = self._build_uniq_ref_idxs_sub(keys + vals, backref_idxs)
+        return uniq_idxs, ref_idxs[:len(keys)], ref_idxs[len(keys):]
+
+    def _build_uniq_ref_idxs_sub(self, keys, backref_idxs):
+        uniq_idxs = [ ]
+        ref_idxs = [ ]
+        for keys, backrefIdx in zip(keys, backref_idxs):
             if backrefIdx is None:
-                idxs = range(len(bins))
-                uniq_list.append(idxs)
-                referring_list.append(idxs)
+                idxs = range(len(keys))
+                uniq_idxs.append(idxs)
+                ref_idxs.append(idxs)
             else:
-                referring_list.append(referring_list[backrefIdx])
-        return uniq_list, referring_list
+                ref_idxs.append(ref_idxs[backrefIdx])
+        return uniq_idxs, ref_idxs
 
-    def _remove_idxs_for_None_elements(self, bins_list, idxsList):
-        for bins, idxs in zip(bins_list, idxsList):
-            idxsToRemove = [i for i, b in enumerate(bins) if b is None]
-            idxs[:] = [i for i in idxs if i not in idxsToRemove]
+    def _remove_idxs_for_None_elements(self, varis, idxs):
+        for bins, idxs in zip(varis, idxs):
+            idxs_to_remove = [i for i, b in enumerate(bins) if b is None]
+            idxs[:] = [i for i in idxs if i not in idxs_to_remove]
 
-    def _expand_idxsList_with_all_combinations(self, IdxsList):
-        prod = tuple(itertools.product(*IdxsList))
-        for i in range(len(IdxsList)):
-            IdxsList[i][:] = [p[i] for p in prod]
+    def _expand_idxs_with_all_combinations(self, idxs):
+        prod = tuple(itertools.product(*idxs))
+        for i in range(len(idxs)):
+            idxs[i][:] = [p[i] for p in prod]
 
-    def _build_ret(self, bins_list, idxsList):
-        if not idxsList: return tuple()
+    def _build_ret(self, varis, idxs):
+        if not idxs: return tuple()
         ret = [ ]
-        for i in range(len(idxsList[0])):
-            ret.append(tuple([b[idxs[i]] for b, idxs in zip(bins_list, idxsList)]))
+        for i in range(len(idxs[0])):
+            ret.append(tuple([b[subidxs[i]] for b, subidxs in zip(varis, idxs)]))
         val = [ ]
         return tuple(ret)
 
@@ -285,17 +238,17 @@ class KeyValueComposer(object):
         attrs = [ ]
         for varname in self.keyAttrNames + self.valAttrNames:
             try:
-                branch = getattr(event, varname)
+                attr = getattr(event, varname)
             except AttributeError, e:
                 import logging
                 logging.warning(e)
                 return None
-            attrs.append(branch)
-        indices = self.keyIndices + self.valIndices
-        self.backrefIdxs, indices = parse_indices_config(indices)
-        self.useBackref = any([e is not None for e in self.backrefIdxs])
-        self.keyIdxs = range(len(attrs))
+            attrs.append(attr)
+        attr_idxs = self.keyIndices + self.valIndices
+        self.backref_idxs, attr_idxs = parse_indices_config(attr_idxs)
+        self._use_backref = any([e is not None for e in self.backref_idxs])
+        var_idxs = range(len(attrs))
         binnings = self.binnings + (None, )*len(self.valAttrNames)
-        return zip(self.keyIdxs, attrs, binnings, indices, self.backrefIdxs)
+        return zip(var_idxs, attrs, binnings, attr_idxs, self.backref_idxs)
 
 ##__________________________________________________________________||
