@@ -168,16 +168,14 @@ class KeyValueComposer(object):
 
     def _unzip_and_read_event_attributes(self, the_zip):
         self._backref_map.clear()
-        keys = [ ]
-        vals = [ ]
+        varis = [ ]
         for var_idx, attr, binning, conf_attr_idx, backref_idx in the_zip:
             attr_idxs = self._determine_attr_indices_to_read(attr, conf_attr_idx, var_idx, backref_idx)
             attr_vals = [(attr[i] if i < len(attr) else None) for i in attr_idxs]
-            if binning is not None:
-                bins = [binning(val) for val in attr_vals]
-                keys.append(bins)
-            else:
-                vals.append(attr_vals)
+            varis.append(attr_vals)
+        keys = varis[:len(self.keyAttrNames)]
+        vals = varis[len(self.keyAttrNames):]
+        keys = [[b(v) for v in vs] for b, vs in zip(self.binnings, keys)]
         return keys, vals
 
     def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx):
