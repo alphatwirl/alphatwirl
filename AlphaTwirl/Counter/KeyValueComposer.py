@@ -48,7 +48,6 @@ class KeyValueComposer(object):
 
         varis = self._unzip_and_read_event_attributes(self._zip)
         keys, vals = self._seprate_into_keys_and_vals(varis)
-        keys = self._apply_binnings(self.binnings, keys)
         # e.g.,
         # keys = [
         #     [1001],
@@ -64,6 +63,7 @@ class KeyValueComposer(object):
         # ]
 
         if not self._use_backref:
+            keys = self._apply_binnings(self.binnings, keys)
             return self._fast_path_without_backref(keys, vals)
 
         # e.g.,
@@ -103,6 +103,8 @@ class KeyValueComposer(object):
         #   ref_key_idxs[3]
         #   ref_key_idxs[4]
         #   ref_val_idxs[1]
+
+        keys = self._apply_binnings(self.binnings, keys)
 
         self._remove_idxs_for_None_elements(keys, ref_key_idxs)
         self._remove_idxs_for_None_elements(vals, ref_val_idxs)
