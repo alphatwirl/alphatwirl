@@ -46,7 +46,9 @@ class KeyValueComposer(object):
     def __call__(self, event):
         if self._zip is None: return ()
 
-        keys, vals = self._unzip_and_read_event_attributes(self._zip)
+        varis = self._unzip_and_read_event_attributes(self._zip)
+        keys, vals = self._seprate_into_keys_and_vals(varis)
+        keys = self._apply_binnings(self.binnings, keys)
         # e.g.,
         # keys = [
         #     [1001],
@@ -173,10 +175,16 @@ class KeyValueComposer(object):
             attr_idxs = self._determine_attr_indices_to_read(attr, conf_attr_idx, var_idx, backref_idx)
             attr_vals = [(attr[i] if i < len(attr) else None) for i in attr_idxs]
             varis.append(attr_vals)
+        return varis
+
+    def _seprate_into_keys_and_vals(self, varis):
         keys = varis[:len(self.keyAttrNames)]
         vals = varis[len(self.keyAttrNames):]
-        keys = [[b(v) for v in vs] for b, vs in zip(self.binnings, keys)]
         return keys, vals
+
+    def _apply_binnings(self, binnings, keys):
+        keys = [[b(v) for v in vs] for b, vs in zip(binnings, keys)]
+        return keys
 
     def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx):
         if backref_idx is None:
