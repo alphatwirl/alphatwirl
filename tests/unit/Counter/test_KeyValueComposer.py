@@ -1,6 +1,7 @@
 import AlphaTwirl.Counter as Counter
 import unittest
 import logging
+import math
 
 ##__________________________________________________________________||
 class MockEvent(object):
@@ -11,16 +12,20 @@ class MockBinningEcho(object):
     def __call__(self, val):
         return val
 
-    def next(self, val):
-        return val + 1
+##__________________________________________________________________||
+class MockBinningFloor(object):
+    def __init__(self, max = None):
+        self.max = max
+
+    def __call__(self, val):
+        if val is None: return None
+        if self.max is not None and not val <= self.max: return None
+        return int(math.floor(val))
 
 ##__________________________________________________________________||
 class MockBinningNone(object):
     def __call__(self, val):
         return None
-
-    def next(self, val):
-        return val + 1
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_arguments(unittest.TestCase):
@@ -683,7 +688,14 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
     def test_back_reference_example_twice(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta', 'jet_phi'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (
+                MockBinningFloor(),
+                MockBinningFloor(),
+                MockBinningFloor(max = 3), # <- use max for jet_eta
+                MockBinningFloor(),
+                MockBinningFloor(max = 2), # <- use max for mu_eta
+                MockBinningEcho(),
+            ),
             keyIndices = (None, '(*)', '\\1', '(*)', '\\2', '\\1'),
             valAttrNames = ('jet_energy', 'muon_energy'),
             valIndices = ('\\1', '\\2'),
@@ -693,35 +705,35 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.ev = [ ]
         event.jet_pt = [ ]
         event.jet_eta = [ ]
-        event.mu_pt = [ ]
-        event.mu_eta = [ ]
         event.jet_phi = [ ]
         event.jet_energy = [ ]
+        event.mu_pt = [ ]
+        event.mu_eta = [ ]
         event.muon_energy = [ ]
         obj.begin(event)
 
         event.ev[:] = [1001]
-        event.jet_pt[:]  = [15.0, 12.0, None, 10.0]
-        event.jet_eta[:] = [None,  1.2,  2.2,  0.5]
-        event.mu_pt[:]   = [20.0, 11.0, 13.0]
-        event.mu_eta[:]  = [2.5,  None, 1.0]
-        event.jet_phi[:] = [ 0.1,  0.6,  None, 0.3]
-        event.jet_energy[:] = [21.0, 13.0, 15.0, 11.0]
-        event.muon_energy[:] = [22.0, 15.0, 16.0]
+        event.jet_pt[:]  =    [ 15.3, 12.9,  9.2, 10.5]
+        event.jet_eta[:] =    [ -1.2,  5.2,  2.2,  0.5] # <- 2nd value is greater than max
+        event.jet_phi[:] =    [  0.1,  0.6,  1.2] # <- the last value is missing
+        event.jet_energy[:] = [ 16.2, 13.1, 10.1, 11.8]
+        event.mu_pt[:]  =      [ 20.2, 11.9, 13.3,  5.2]
+        event.mu_eta[:] =      [ 2.2,   1.2, -1.5, -0.5] # <- 1st value is greater than max
+        event.muon_energy[:] = [ 22.1, 15.2, 16.3] # <- the last value is missing
 
         self.assertEqual(
             (
                 (
-                    (1001, 12.0, 1.2, 20.0, 2.5, 0.6),
-                    (1001, 12.0, 1.2, 13.0, 1.0, 0.6),
-                    (1001, 10.0, 0.5, 20.0, 2.5, 0.3),
-                    (1001, 10.0, 0.5, 13.0, 1.0, 0.3),
+                    (1001, 15, -2, 11,  1, 0.1),
+                    (1001, 15, -2, 13, -2, 0.1),
+                    (1001,  9,  2, 11,  1, 1.2),
+                    (1001,  9,  2, 13, -2, 1.2)
                 ),
                 (
-                    (13.0, 22.0),
-                    (13.0, 16.0),
-                    (11.0, 22.0),
-                    (11.0, 16.0)
+                    (16.2, 15.2),
+                    (16.2, 16.3),
+                    (10.1, 15.2),
+                    (10.1, 16.3)
                 )
             ),
             obj(event)
