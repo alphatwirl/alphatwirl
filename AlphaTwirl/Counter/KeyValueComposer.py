@@ -39,7 +39,29 @@ class KeyValueComposer(object):
             )
 
     def begin(self, event):
-        self._zipped = self._zip_arrays(event)
+        attr_names = self.keyAttrNames + self.valAttrNames
+        idxs_conf = self.keyIndices + self.valIndices
+        self.backref_idxs, idxs_conf = parse_indices_config(idxs_conf)
+        arrays = self._collect_arrays(event,  attr_names) 
+        self._use_backref = any([e is not None for e in self.backref_idxs])
+
+        self._zipped = self._zip_arrays(arrays, idxs_conf, self.backref_idxs) if arrays is not None else None
+
+    def _collect_arrays(self, event, attr_names):
+        ret = [ ]
+        for varname in attr_names:
+            try:
+                attr = getattr(event, varname)
+            except AttributeError, e:
+                import logging
+                logging.warning(e)
+                return None
+            ret.append(attr)
+        return ret
+
+    def _zip_arrays(self, arrays, idxs_conf, backref_idxs):
+        array_idxs = range(len(arrays))
+        return zip(array_idxs, arrays, idxs_conf, backref_idxs)
 
     def __call__(self, event):
         if self._zipped is None: return ()
@@ -232,21 +254,5 @@ class KeyValueComposer(object):
                 key = tuple(key[i] for i in idxs)
                 val = tuple(val[i] for i in idxs)
                 return key, val
-
-    def _zip_arrays(self, event):
-        attrs = [ ]
-        for varname in self.keyAttrNames + self.valAttrNames:
-            try:
-                attr = getattr(event, varname)
-            except AttributeError, e:
-                import logging
-                logging.warning(e)
-                return None
-            attrs.append(attr)
-        attr_idxs = self.keyIndices + self.valIndices
-        self.backref_idxs, attr_idxs = parse_indices_config(attr_idxs)
-        self._use_backref = any([e is not None for e in self.backref_idxs])
-        var_idxs = range(len(attrs))
-        return zip(var_idxs, attrs, attr_idxs, self.backref_idxs)
 
 ##__________________________________________________________________||
