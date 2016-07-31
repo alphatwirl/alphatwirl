@@ -104,10 +104,8 @@ class KeyValueComposer(object):
         #   ref_key_idxs[4]
         #   ref_val_idxs[1]
 
-        keys = self._apply_binnings(self.binnings, keys)
-
-        self._remove_idxs_for_None_elements(keys, ref_key_idxs)
-        self._remove_idxs_for_None_elements(vals, ref_val_idxs)
+        # self._remove_idxs_for_None_elements(keys, ref_key_idxs)
+        # self._remove_idxs_for_None_elements(vals, ref_val_idxs)
         # e.g.,
         # uniq_idxs = [
         #     [0],
@@ -159,6 +157,7 @@ class KeyValueComposer(object):
         #     (1001, 10.0, 0.5, 13.0, 1.0, 0.3)
         # )
 
+
         val = self._build_ret(vals, ref_val_idxs) if self.valIndices else None
         # e.g.,
         # val = (
@@ -167,6 +166,10 @@ class KeyValueComposer(object):
         #     (11.0, 22.0),
         #     (11.0, 16.0)
         # )
+
+        key = self._apply_binnings_2(self.binnings, key)
+
+        key, val = self._remove_None(key, val)
 
         return key, val
 
@@ -187,6 +190,32 @@ class KeyValueComposer(object):
     def _apply_binnings(self, binnings, keys):
         keys = [[b(v) for v in vs] for b, vs in zip(binnings, keys)]
         return keys
+
+    def _apply_binnings_2(self, binnings, keys):
+        if keys is None: return None
+        return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
+
+    def _remove_None(self, key, val):
+        if key is None:
+            if val is None:
+                return key, val
+            else:
+                idxs = tuple(i for i, e in enumerate(val) if None not in e)
+                val = tuple(val[i] for i in idxs)
+                return key, val
+        else:
+            if val is None:
+                idxs = tuple(i for i, e in enumerate(key) if None not in e)
+                key = tuple(key[i] for i in idxs)
+                return key, val
+            else:
+                idxs_key = set(i for i, e in enumerate(key) if None not in e)
+                idxs_val = set(i for i, e in enumerate(val) if None not in e)
+                idxs = idxs_key & idxs_val # intersection
+                idxs = sorted(list(idxs))
+                key = tuple(key[i] for i in idxs)
+                val = tuple(val[i] for i in idxs)
+                return key, val
 
     def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx):
         if backref_idx is None:
