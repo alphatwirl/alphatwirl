@@ -56,6 +56,10 @@ class KeyValueComposer(object):
             return self._fast_path_without_backref(varis)
 
         keys, vals = self._seprate_into_keys_and_vals(varis)
+
+        # temporarily use keys as varis
+        keys = varis
+
         # e.g.,
         # keys = [
         #     [1001],
@@ -72,7 +76,7 @@ class KeyValueComposer(object):
 
 
         # e.g.,
-        # backrefIdxs = [None, None, 1, None, 3, 1, 1, 3]
+        # backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
 
         uniq_idxs, ref_key_idxs, ref_val_idxs = self._build_uniq_ref_idxs(keys, vals, backref_idxs)
         # e.g.,
@@ -151,26 +155,8 @@ class KeyValueComposer(object):
         #     [0, 2, 0, 2]
         # ]
 
-        key = self._build_ret(keys, ref_key_idxs) if self.keyIndices else None
-        # e.g.,
-        # key = (
-        #     (1001, 12.0, 1.2, 20.0, 2.5, 0.6),
-        #     (1001, 12.0, 1.2, 13.0, 1.0, 0.6),
-        #     (1001, 10.0, 0.5, 20.0, 2.5, 0.3),
-        #     (1001, 10.0, 0.5, 13.0, 1.0, 0.3)
-        # )
-
-
-        val = self._build_ret(vals, ref_val_idxs) if self.valIndices else None
-        # e.g.,
-        # val = (
-        #     (13.0, 22.0),
-        #     (13.0, 16.0),
-        #     (11.0, 22.0),
-        #     (11.0, 16.0)
-        # )
-
-        return key, val
+        keys = self._build_ret(keys, ref_key_idxs)
+        return self._seprate_into_keys_and_vals_2(keys)
 
     def _unzip_and_read_event_attributes(self, zipped):
         backref_map = { }
