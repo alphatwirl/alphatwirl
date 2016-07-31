@@ -63,7 +63,6 @@ class KeyValueComposer(object):
         # ]
 
         if not self._use_backref:
-            keys = self._apply_binnings(self.binnings, keys)
             return self._fast_path_without_backref(keys, vals)
 
         # e.g.,
@@ -228,14 +227,12 @@ class KeyValueComposer(object):
         return ret
 
     def _fast_path_without_backref(self, keys_list, vals_list):
-        for keys in keys_list:
-            keys[:] = [k for k in keys if k is not None]
-        for vals in vals_list:
-            vals[:] = [v for v in vals if v is not None]
         prod = tuple(itertools.product(*(keys_list + vals_list)))
-        keys = tuple(e[0:len(keys_list)] for e in prod) if keys_list else None
-        vals = tuple(e[len(keys_list):] for e in prod) if vals_list else None
-        return keys, vals
+        key = tuple(e[0:len(keys_list)] for e in prod) if keys_list else None
+        val = tuple(e[len(keys_list):] for e in prod) if vals_list else None
+        key = self._apply_binnings_2(self.binnings, key)
+        key, val = self._remove_None(key, val)
+        return key, val
 
     def _build_uniq_ref_idxs(self, keys, vals, backref_idxs):
         uniq_idxs, ref_idxs = self._build_uniq_ref_idxs_sub(keys + vals, backref_idxs)
