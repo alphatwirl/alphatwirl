@@ -103,8 +103,6 @@ class KeyValueComposer(object):
         #   ref_key_idxs[4]
         #   ref_val_idxs[1]
 
-        # self._remove_idxs_for_None_elements(keys, ref_key_idxs)
-        # self._remove_idxs_for_None_elements(vals, ref_val_idxs)
         # e.g.,
         # uniq_idxs = [
         #     [0],
@@ -186,10 +184,6 @@ class KeyValueComposer(object):
         vals = varis[len(self.keyAttrNames):]
         return keys, vals
 
-    def _apply_binnings(self, binnings, keys):
-        keys = [[b(v) for v in vs] for b, vs in zip(binnings, keys)]
-        return keys
-
     def _apply_binnings_2(self, binnings, keys):
         if keys is None: return None
         return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
@@ -226,10 +220,10 @@ class KeyValueComposer(object):
         self._backref_map[var_idx] = ret
         return ret
 
-    def _fast_path_without_backref(self, keys_list, vals_list):
-        prod = tuple(itertools.product(*(keys_list + vals_list)))
-        key = tuple(e[0:len(keys_list)] for e in prod) if keys_list else None
-        val = tuple(e[len(keys_list):] for e in prod) if vals_list else None
+    def _fast_path_without_backref(self, keys, vals):
+        prod = tuple(itertools.product(*(keys + vals)))
+        key = tuple(e[0:len(keys)] for e in prod) if keys else None
+        val = tuple(e[len(keys):] for e in prod) if vals else None
         key = self._apply_binnings_2(self.binnings, key)
         key, val = self._remove_None(key, val)
         return key, val
@@ -249,11 +243,6 @@ class KeyValueComposer(object):
             else:
                 ref_idxs.append(ref_idxs[backrefIdx])
         return uniq_idxs, ref_idxs
-
-    def _remove_idxs_for_None_elements(self, varis, idxs):
-        for bins, idxs in zip(varis, idxs):
-            idxs_to_remove = [i for i, b in enumerate(bins) if b is None]
-            idxs[:] = [i for i in idxs if i not in idxs_to_remove]
 
     def _expand_idxs_with_all_combinations(self, idxs):
         prod = tuple(itertools.product(*idxs))
