@@ -43,8 +43,9 @@ class KeyValueComposer(object):
 
     def __call__(self, event):
         if self._zipped is None: return ()
-        key, val = self._read_zipped(self._zipped, self.backref_idxs)
-        key = self._apply_binnings_2(self.binnings, key)
+        varis = self._read_zipped(self._zipped, self.backref_idxs)
+        key, val =  self._seprate_into_keys_and_vals_2(varis)
+        key = self._apply_binnings(self.binnings, key)
         key, val = self._remove_None(key, val)
         return key, val
 
@@ -54,11 +55,6 @@ class KeyValueComposer(object):
 
         if not self._use_backref:
             return self._fast_path_without_backref(varis)
-
-        keys, vals = self._seprate_into_keys_and_vals(varis)
-
-        # temporarily use keys as varis
-        keys = varis
 
         # e.g.,
         # keys = [
@@ -78,7 +74,7 @@ class KeyValueComposer(object):
         # e.g.,
         # backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
 
-        uniq_idxs, ref_key_idxs, ref_val_idxs = self._build_uniq_ref_idxs(keys, vals, backref_idxs)
+        uniq_idxs, ref_key_idxs = self._build_uniq_ref_idxs(varis, backref_idxs)
         # e.g.,
         # uniq_idxs = [
         #     [0],
@@ -155,22 +151,17 @@ class KeyValueComposer(object):
         #     [0, 2, 0, 2]
         # ]
 
-        keys = self._build_ret(keys, ref_key_idxs)
-        return self._seprate_into_keys_and_vals_2(keys)
+        varis = self._build_ret(varis, ref_key_idxs)
+        return varis
 
     def _unzip_and_read_event_attributes(self, zipped):
         backref_map = { }
         varis = [ ]
-        for var_idx, attr, binning, conf_attr_idx, backref_idx in zipped:
+        for var_idx, attr, conf_attr_idx, backref_idx in zipped:
             attr_idxs = self._determine_attr_indices_to_read(attr, conf_attr_idx, var_idx, backref_idx, backref_map)
             attr_vals = [(attr[i] if i < len(attr) else None) for i in attr_idxs]
             varis.append(attr_vals)
         return varis
-
-    def _seprate_into_keys_and_vals(self, varis):
-        keys = varis[:len(self.keyAttrNames)]
-        vals = varis[len(self.keyAttrNames):]
-        return keys, vals
 
     def _seprate_into_keys_and_vals_2(self, varis):
         key = [v[:len(self.keyAttrNames)] for v in varis] if self.keyAttrNames else None
@@ -189,13 +180,9 @@ class KeyValueComposer(object):
 
     def _fast_path_without_backref(self, varis):
         varis = tuple(itertools.product(*varis))
-        return self._seprate_into_keys_and_vals_2(varis)
+        return varis
 
-    def _build_uniq_ref_idxs(self, keys, vals, backref_idxs):
-        uniq_idxs, ref_idxs = self._build_uniq_ref_idxs_sub(keys + vals, backref_idxs)
-        return uniq_idxs, ref_idxs[:len(keys)], ref_idxs[len(keys):]
-
-    def _build_uniq_ref_idxs_sub(self, keys, backref_idxs):
+    def _build_uniq_ref_idxs(self, keys, backref_idxs):
         uniq_idxs = [ ]
         ref_idxs = [ ]
         for keys, backrefIdx in zip(keys, backref_idxs):
@@ -220,7 +207,7 @@ class KeyValueComposer(object):
         val = [ ]
         return tuple(ret)
 
-    def _apply_binnings_2(self, binnings, keys):
+    def _apply_binnings(self, binnings, keys):
         if keys is None: return None
         return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
 
@@ -260,7 +247,6 @@ class KeyValueComposer(object):
         self.backref_idxs, attr_idxs = parse_indices_config(attr_idxs)
         self._use_backref = any([e is not None for e in self.backref_idxs])
         var_idxs = range(len(attrs))
-        binnings = self.binnings + (None, )*len(self.valAttrNames)
-        return zip(var_idxs, attrs, binnings, attr_idxs, self.backref_idxs)
+        return zip(var_idxs, attrs, attr_idxs, self.backref_idxs)
 
 ##__________________________________________________________________||
