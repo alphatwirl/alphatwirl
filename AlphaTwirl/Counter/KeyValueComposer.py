@@ -51,6 +51,10 @@ class KeyValueComposer(object):
     def _read_zipped(self, zipped, backref_idxs):
 
         varis = self._unzip_and_read_event_attributes(zipped)
+
+        if not self._use_backref:
+            return self._fast_path_without_backref(varis)
+
         keys, vals = self._seprate_into_keys_and_vals(varis)
         # e.g.,
         # keys = [
@@ -66,8 +70,6 @@ class KeyValueComposer(object):
         #     [22.0, 15.0, 16.0]
         # ]
 
-        if not self._use_backref:
-            return self._fast_path_without_backref(keys, vals)
 
         # e.g.,
         # backrefIdxs = [None, None, 1, None, 3, 1, 1, 3]
@@ -184,6 +186,11 @@ class KeyValueComposer(object):
         vals = varis[len(self.keyAttrNames):]
         return keys, vals
 
+    def _seprate_into_keys_and_vals_2(self, varis):
+        key = [v[:len(self.keyAttrNames)] for v in varis] if self.keyAttrNames else None
+        val = [v[len(self.keyAttrNames):] for v in varis] if self.valAttrNames else None
+        return key, val
+
     def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx, backref_map):
         if backref_idx is None:
             if conf_attr_idx == '*': ret = range(len(attr))
@@ -194,11 +201,9 @@ class KeyValueComposer(object):
         backref_map[var_idx] = ret
         return ret
 
-    def _fast_path_without_backref(self, keys, vals):
-        prod = tuple(itertools.product(*(keys + vals)))
-        key = tuple(e[0:len(keys)] for e in prod) if keys else None
-        val = tuple(e[len(keys):] for e in prod) if vals else None
-        return key, val
+    def _fast_path_without_backref(self, varis):
+        varis = tuple(itertools.product(*varis))
+        return self._seprate_into_keys_and_vals_2(varis)
 
     def _build_uniq_ref_idxs(self, keys, vals, backref_idxs):
         uniq_idxs, ref_idxs = self._build_uniq_ref_idxs_sub(keys + vals, backref_idxs)
