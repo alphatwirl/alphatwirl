@@ -43,6 +43,9 @@ class KeyValueComposer(object):
         idxs_conf = self.keyIndices + self.valIndices
         self.backref_idxs, idxs_conf = parse_indices_config(idxs_conf)
         arrays = self._collect_arrays(event,  attr_names) 
+
+        self._active = True if arrays else False
+
         self._use_backref = any([e is not None for e in self.backref_idxs])
 
         self._zipped = self._zip_arrays(arrays, idxs_conf, self.backref_idxs) if arrays is not None else None
@@ -60,16 +63,62 @@ class KeyValueComposer(object):
         return ret
 
     def _zip_arrays(self, arrays, idxs_conf, backref_idxs):
+        self._array_reader = BackrefMultipleArrayReader(arrays, idxs_conf, backref_idxs)
         array_idxs = range(len(arrays))
         return zip(array_idxs, arrays, idxs_conf, backref_idxs)
 
     def __call__(self, event):
-        if self._zipped is None: return ()
-        varis = self._read_zipped(self._zipped, self.backref_idxs)
+        if not self._active: return None, None
+
+        varis = self._array_reader.read()
+
+        # if self._zipped is None: return ()
+        # varis = self._read_zipped(self._zipped, self.backref_idxs)
         key, val =  self._seprate_into_keys_and_vals_2(varis)
         key = self._apply_binnings(self.binnings, key)
         key, val = self._remove_None(key, val)
         return key, val
+
+    def _seprate_into_keys_and_vals_2(self, varis):
+        key = [v[:len(self.keyAttrNames)] for v in varis] if self.keyAttrNames else None
+        val = [v[len(self.keyAttrNames):] for v in varis] if self.valAttrNames else None
+        return key, val
+
+    def _apply_binnings(self, binnings, keys):
+        if keys is None: return None
+        return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
+
+    def _remove_None(self, key, val):
+        if key is None:
+            if val is None:
+                return key, val
+            else:
+                idxs = tuple(i for i, e in enumerate(val) if None not in e)
+                val = tuple(val[i] for i in idxs)
+                return key, val
+        else:
+            if val is None:
+                idxs = tuple(i for i, e in enumerate(key) if None not in e)
+                key = tuple(key[i] for i in idxs)
+                return key, val
+            else:
+                idxs_key = set(i for i, e in enumerate(key) if None not in e)
+                idxs_val = set(i for i, e in enumerate(val) if None not in e)
+                idxs = idxs_key & idxs_val # intersection
+                idxs = sorted(list(idxs))
+                key = tuple(key[i] for i in idxs)
+                val = tuple(val[i] for i in idxs)
+                return key, val
+
+##__________________________________________________________________||
+class BackrefMultipleArrayReader(object):
+    def __init__(self, arrays, idxs_conf, backref_idxs):
+        self.backref_idxs = backref_idxs
+        self._use_backref = any([e is not None for e in backref_idxs])
+        self._zipped = zip(range(len(arrays)), arrays, idxs_conf, backref_idxs)
+
+    def read(self):
+        return self._read_zipped(self._zipped, self.backref_idxs)
 
     def _read_zipped(self, zipped, backref_idxs):
 
@@ -185,11 +234,6 @@ class KeyValueComposer(object):
             varis.append(attr_vals)
         return varis
 
-    def _seprate_into_keys_and_vals_2(self, varis):
-        key = [v[:len(self.keyAttrNames)] for v in varis] if self.keyAttrNames else None
-        val = [v[len(self.keyAttrNames):] for v in varis] if self.valAttrNames else None
-        return key, val
-
     def _determine_attr_indices_to_read(self, attr, conf_attr_idx, var_idx, backref_idx, backref_map):
         if backref_idx is None:
             if conf_attr_idx == '*': ret = range(len(attr))
@@ -228,31 +272,4 @@ class KeyValueComposer(object):
             ret.append(tuple([b[subidxs[i]] for b, subidxs in zip(varis, idxs)]))
         val = [ ]
         return tuple(ret)
-
-    def _apply_binnings(self, binnings, keys):
-        if keys is None: return None
-        return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
-
-    def _remove_None(self, key, val):
-        if key is None:
-            if val is None:
-                return key, val
-            else:
-                idxs = tuple(i for i, e in enumerate(val) if None not in e)
-                val = tuple(val[i] for i in idxs)
-                return key, val
-        else:
-            if val is None:
-                idxs = tuple(i for i, e in enumerate(key) if None not in e)
-                key = tuple(key[i] for i in idxs)
-                return key, val
-            else:
-                idxs_key = set(i for i, e in enumerate(key) if None not in e)
-                idxs_val = set(i for i, e in enumerate(val) if None not in e)
-                idxs = idxs_key & idxs_val # intersection
-                idxs = sorted(list(idxs))
-                key = tuple(key[i] for i in idxs)
-                val = tuple(val[i] for i in idxs)
-                return key, val
-
 ##__________________________________________________________________||
