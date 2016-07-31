@@ -108,6 +108,20 @@ class BackrefMultipleArrayReader(object):
         #     (1001, 10.5, 0.5, 5.2, -0.5, None, 11.8, None)
         # )
 
+        varis = self._remove_None(varis)
+        # e.g.,
+        # varis = (
+        #     (1001, 15.3, -1.2, 20.2, 2.2, 0.1, 16.2, 22.1),
+        #     (1001, 15.3, -1.2, 11.9, 1.2, 0.1, 16.2, 15.2),
+        #     (1001, 15.3, -1.2, 13.3, -1.5, 0.1, 16.2, 16.3),
+        #     (1001, 12.9, 5.2, 20.2, 2.2, 0.6, 13.1, 22.1),
+        #     (1001, 12.9, 5.2, 11.9, 1.2, 0.6, 13.1, 15.2),
+        #     (1001, 12.9, 5.2, 13.3, -1.5, 0.6, 13.1, 16.3),
+        #     (1001, 9.2, 2.2, 20.2, 2.2, 1.2, 10.1, 22.1),
+        #     (1001, 9.2, 2.2, 11.9, 1.2, 1.2, 10.1, 15.2),
+        #     (1001, 9.2, 2.2, 13.3, -1.5, 1.2, 10.1, 16.3)
+        # )
+
         return varis
 
     def _unzip_and_read_arrays(self, zipped):
@@ -153,4 +167,8 @@ class BackrefMultipleArrayReader(object):
             ret.append(tuple([b[subidxs[i]] for b, subidxs in zip(varis, idxs)]))
         val = [ ]
         return tuple(ret)
+
+    def _remove_None(self, varis):
+        return tuple(v for v in varis if None not in v)
+
 ##__________________________________________________________________||
