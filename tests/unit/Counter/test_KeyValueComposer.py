@@ -1,6 +1,7 @@
 import AlphaTwirl.Counter as Counter
 import unittest
 import logging
+import math
 
 ##__________________________________________________________________||
 class MockEvent(object):
@@ -11,16 +12,15 @@ class MockBinningEcho(object):
     def __call__(self, val):
         return val
 
-    def next(self, val):
-        return val + 1
-
 ##__________________________________________________________________||
-class MockBinningNone(object):
-    def __call__(self, val):
-        return None
+class MockBinningFloor(object):
+    def __init__(self, max = None):
+        self.max = max
 
-    def next(self, val):
-        return val + 1
+    def __call__(self, val):
+        if val is None: return None
+        if self.max is not None and not val <= self.max: return None
+        return int(math.floor(val))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_arguments(unittest.TestCase):
@@ -62,7 +62,7 @@ class TestKeyValueComposer_simple(unittest.TestCase):
     def test_1Key_1Val(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
+            binnings = (MockBinningFloor(max = 30), ),
             valAttrNames = ('var2', ),
         )
 
@@ -71,14 +71,18 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        event.var2[:] = [20, ]
-        self.assertEqual((((12, ), ), ((20, ), )), obj(event))
+        event.var1[:] = [12.5, ]
+        event.var2[:] = [20.3, ]
+        self.assertEqual((((12, ), ), ((20.3, ), )), obj(event))
+
+        event.var1[:] = [32.5, ] # <- out of range
+        event.var2[:] = [20.3, ]
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_1Key_1Val_mix_list_tuple(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ['var1', ], # <- list
-            binnings = (MockBinningEcho(), ),
+            binnings = (MockBinningFloor(max = 30), ),
             valAttrNames = ('var2', ), # <- tuple
         )
 
@@ -87,14 +91,18 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        event.var2[:] = [20, ]
-        self.assertEqual((((12, ), ), ((20, ), )), obj(event))
+        event.var1[:] = [12.5, ]
+        event.var2[:] = [20.3, ]
+        self.assertEqual((((12, ), ), ((20.3, ), )), obj(event))
+
+        event.var1[:] = [32.5, ] # <- out of range
+        event.var2[:] = [20.3, ]
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_1Key_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
+            binnings = (MockBinningFloor(max = 30), ),
             valAttrNames = None, # <- None
         )
 
@@ -102,13 +110,16 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
+        event.var1[:] = [12.5, ]
         self.assertEqual((((12, ), ), None), obj(event))
+
+        event.var1[:] = [32.5, ] # out of range
+        self.assertEqual((( ), None), obj(event))
 
     def test_1Key_emptyVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
+            binnings = (MockBinningFloor(max = 30), ),
             valAttrNames = (), # <- empty
         )
 
@@ -116,8 +127,11 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
+        event.var1[:] = [12.5, ]
         self.assertEqual((((12, ), ), None), obj(event))
+
+        event.var1[:] = [32.5, ] # out of range
+        self.assertEqual((( ), None), obj(event))
 
     def test_NoneKey_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -129,8 +143,8 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        self.assertEqual((None, ((12, ), )), obj(event))
+        event.var1[:] = [12.8, ]
+        self.assertEqual((None, ((12.8, ), )), obj(event))
 
     def test_emptyKey_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -142,8 +156,8 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        self.assertEqual((None, ((12, ), )), obj(event))
+        event.var1[:] = [12.8, ]
+        self.assertEqual((None, ((12.8, ), )), obj(event))
 
     def test_NoneKey_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -159,7 +173,7 @@ class TestKeyValueComposer_simple(unittest.TestCase):
     def test_2Keys_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningEcho())
+            binnings = (MockBinningFloor(max = 30), MockBinningFloor(max = 50))
         )
 
         event = MockEvent()
@@ -167,14 +181,22 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [15, ]
-        event.var2[:] = [22, ]
+        event.var1[:] = [15.3, ]
+        event.var2[:] = [22.8, ]
         self.assertEqual((((15, 22), ), None), obj(event))
+
+        event.var1[:] = [45.3, ] # <- out of range
+        event.var2[:] = [22.8, ]
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [45.3, ]
+        event.var2[:] = [52.8, ] # <- out of range 
+        self.assertEqual((( ), None), obj(event))
 
     def test_2Keys_1Val(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(max = 30), MockBinningFloor(max = 50)),
             valAttrNames = ('var3', ),
         )
 
@@ -184,71 +206,19 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var3 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [15, ]
-        event.var2[:] = [22, ]
-        event.var3[:] = [101, ]
-        self.assertEqual((((15, 22), ), ((101, ), )), obj(event))
+        event.var1[:] = [15.2, ]
+        event.var2[:] = [22.8, ]
+        event.var3[:] = [101.1, ]
+        self.assertEqual((((15, 22), ), ((101.1, ), )), obj(event))
 
-##__________________________________________________________________||
-class TestKeyValueComposer_bin_out_of_range(unittest.TestCase):
+        event.var1[:] = [45.2, ] # <- out of range
+        event.var2[:] = [22.8, ]
+        event.var3[:] = [234.9, ]
+        self.assertEqual((( ), ( )), obj(event))
 
-    def test_1Key_NoneVal(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', ),
-            binnings = (MockBinningNone(), )
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, ]
-        self.assertEqual((( ), None), obj(event))
-
-    def test_2Keys_NoneVal_1(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningNone(), MockBinningEcho())
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [15, ]
-        event.var2[:] = [22, ]
-        self.assertEqual((( ), None), obj(event))
-
-    def test_2Keys_NoneVal_2(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningNone())
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [15, ]
-        event.var2[:] = [22, ]
-        self.assertEqual((( ), None), obj(event))
-
-    def test_1Key_1Val(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', ),
-            binnings = (MockBinningNone(), ),
-            valAttrNames = ('var2', ),
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, ]
-        event.var2[:] = [20, ]
+        event.var1[:] = [15.2, ] # <- out of range
+        event.var2[:] = [82.8, ] # <- out of range
+        event.var3[:] = [34.9, ]
         self.assertEqual((( ), ( )), obj(event))
 
 ##__________________________________________________________________||
@@ -257,49 +227,70 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
     def test_1Key_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
-            keyIndices = (0, )
+            binnings = (MockBinningFloor(max = 30), ),
+            keyIndices = (2, )
         )
         event = MockEvent()
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        self.assertEqual((((12, ), ), None), obj(event))
+        event.var1[:] = [12.5, 20.2, 10.2, 10.8]
+        self.assertEqual((((10, ), ), None), obj(event))
+
+        event.var1[:] = [12.5, 20.2, 35.2, 10.8] # out of range of the binning
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [12.5, 20.2] # out of range of the list
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [12.5, 32.2, 10.2, 10.8] # another element out of range
+        self.assertEqual((((10, ), ), None), obj(event))
 
     def test_NoneKey_1Val_valIndices(self):
         obj = Counter.KeyValueComposer(
             valAttrNames = ('var1', ),
-            valIndices = (0, )
+            valIndices = (2, )
         )
         event = MockEvent()
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        self.assertEqual((None, ((12, ), )), obj(event))
+        event.var1[:] = [12.5, 20.2, 10.2, 10.8]
+        self.assertEqual((None, ((10.2, ), )), obj(event))
 
     def test_1Key_keyIndices_1Val_valIndices(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
-            keyIndices = (0, ),
+            binnings = (MockBinningFloor(max = 30), ),
+            keyIndices = (2, ),
             valAttrNames = ('var2', ),
-            valIndices = (0, )
+            valIndices = (2, )
         )
         event = MockEvent()
         event.var1 = [ ]
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, ]
-        event.var2[:] = [20, ]
-        self.assertEqual((((12, ), ), ((20, ), )), obj(event))
+        event.var1[:] = [12.5, 20.2, 10.2, 10.8]
+        event.var2[:] = [30.1, 42.5, 19.2, 71.2]
+        self.assertEqual((((10, ), ), ((19.2, ), )), obj(event))
+
+        event.var1[:] = [12.5, 20.2, 30.2, 10.8] # out of range of the binning
+        event.var2[:] = [30.1, 42.5, 19.2, 71.2]
+        self.assertEqual((( ), ( )), obj(event))
+
+        event.var1[:] = [12.5, 20.2]
+        event.var2[:] = [30.1, 42.5, 19.2, 71.2]
+        self.assertEqual((( ), ( )), obj(event))
+
+        event.var1[:] = [12.5, 20.2, 30.2, 10.8]
+        event.var2[:] = [30.1, 42.5] # out of range of the list
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_3Key_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2', 'var3'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(), MockBinningFloor(max = 300), MockBinningFloor()),
             keyIndices = (1, None, 2))
 
         event = MockEvent()
@@ -308,91 +299,20 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         event.var3 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [232, ]
-        event.var3[:] = [111, 222, 333]
+        event.var1[:] = [12.5, 8.2, 6.1]
+        event.var2[:] = [232.2, ]
+        event.var3[:] = [111.1, 222.2, 333.3]
         self.assertEqual((((8, 232, 333), ), None), obj(event))
 
-##__________________________________________________________________||
-class TestKeyValueComposer_indices_simple_out_of_range(unittest.TestCase):
-
-    def test_1Key_keyIndices_NoneVal(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
-            keyIndices =  (1, )
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 8, 6]
-        self.assertEqual((((8, ), ), None), obj(event))
-
-        event.var1[:] = [3, ]
+        event.var1[:] = [12.5, 8.2, 6.1]
+        event.var2[:] = [ ] # out of range of the list
+        event.var3[:] = [111.1, 222.2, 333.3]
         self.assertEqual((( ), None), obj(event))
 
-    def test_1Key_keyIndices_1Val(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
-            keyIndices =  (1, ),
-            valAttrNames = ('var2', ),
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [33]
-        self.assertEqual((((8, ), ), ((33, ), )), obj(event))
-
-        event.var1[:] = [3, ]
-        event.var2[:] = [44]
-        self.assertEqual((( ), ( )), obj(event))
-
-    def test_1Key_keyIndices_1Val_valIndices(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
-            keyIndices = (1, ),
-            valAttrNames = ('var2', ),
-            valIndices = (1, )
-        )
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 13]
-        event.var2[:] = [20, 30]
-        self.assertEqual((((13, ), ), ((30, ), )), obj(event))
-
-        event.var1[:] = [22]
-        event.var2[:] = [25, 35]
-        self.assertEqual((( ), ( )), obj(event))
-
-        event.var1[:] = [32, 44]
-        event.var2[:] = [52]
-        self.assertEqual((( ), ( )), obj(event))
-
-    def test_NoneKey_1Val_valIndices(self):
-        obj = Counter.KeyValueComposer(
-            valAttrNames = ('var1', ),
-            valIndices = (1, )
-        )
-        event = MockEvent()
-        event.var1 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 13]
-        self.assertEqual((None, ((13, ), )), obj(event))
-
-        event.var1[:] = [22]
-        self.assertEqual((None, ( )), obj(event))
+        event.var1[:] = [12.5, 8.2, 6.1]
+        event.var2[:] = [421.5] # out of range of binning
+        event.var3[:] = [111.1, 222.2, 333.3]
+        self.assertEqual((( ), None), obj(event))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
@@ -400,7 +320,7 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
     def test_1Key_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', ),
-            binnings = (MockBinningEcho(), ),
+            binnings = (MockBinningFloor(max = 30), ),
             keyIndices = ('*', )
         )
 
@@ -408,13 +328,22 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var1 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, 8, 6]
+        event.var1[:] = [12.8, 8.6, 6.2]
         self.assertEqual((((12, ), (8, ), (6, )), None), obj(event))
+
+        event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
+        self.assertEqual((((12, ), (6, )), None), obj(event))
+
+        event.var1[:] = [42.8, 38.6, 56.2] # all elements out of range
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [ ] # list empty
+        self.assertEqual((( ), None), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_1Wildcard(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(max = 30), MockBinningFloor(max = 50)),
             keyIndices = ('*', None)
         )
 
@@ -423,14 +352,30 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [5, ]
-        self.assertEqual((((12, 5), (8, 5), (6, 5)), None), obj(event))
+        event.var1[:] = [12.8, 8.6, 6.2]
+        event.var2[:] = [35.2, ]
+        self.assertEqual((((12, 35), (8, 35), (6, 35)), None), obj(event))
+
+        event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
+        event.var2[:] = [35.2, ]
+        self.assertEqual((((12, 35), (6, 35)), None), obj(event))
+
+        event.var1[:] = [ ] # list empty
+        event.var2[:] = [35.2, ]
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [12.8, 8.6, 6.2]
+        event.var2[:] = [ ] # list empty
+        self.assertEqual((( ), None), obj(event))
+
+        event.var1[:] = [ ] # list empty
+        event.var2[:] = [ ] # list empty
+        self.assertEqual((( ), None), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_2Wildcards(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(max = 30), MockBinningFloor(max = 50)),
             keyIndices = ('*', '*')
         )
 
@@ -439,14 +384,41 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var2 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [5, None, 2]
-        self.assertEqual((((12, 5), (12, 2), (8, 5), (8, 2), (6, 5), (6, 2)), None), obj(event))
+        event.var1[:] = [12.8, 18.6, 26.2]
+        event.var2[:] = [15.2, 22.3, 12.8]
+        self.assertEqual(
+            (
+                (
+                    (12, 15), (12, 22), (12, 12),
+                    (18, 15), (18, 22), (18, 12),
+                    (26, 15), (26, 22), (26, 12),
+                ),
+                None
+            ),
+            obj(event)
+        )
+
+        event.var1[:] = [12.8, 38.6, 26.2]  # 1 element out of range
+        event.var2[:] = [55.2, 22.3, 12.8]  # 1 element out of range
+        self.assertEqual(
+            (
+                (
+                    (12, 22), (12, 12),
+                    (26, 22), (26, 12),
+                ),
+                None
+            ),
+            obj(event)
+        )
+
+        event.var1[:] = [ ]  # empty list
+        event.var2[:] = [55.2, 22.3, 12.8] # 1 element out of range
+        self.assertEqual((( ), None), obj(event))
 
     def test_2Keys_keyIndices_2Val_valIndices_4Wildcards(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(max = 30), MockBinningFloor(max = 50)),
             keyIndices = ('*', '*'),
             valAttrNames = ('var3', 'var4'),
             valIndices = ('*', '*'),
@@ -459,10 +431,10 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var4 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12, 6]
-        event.var2[:] = [5, None, 2]
-        event.var3[:] = [20, 21, 22]
-        event.var4[:] = [44, 55]
+        event.var1[:] = [12.5, 6.2]
+        event.var2[:] = [ 5.1, 60.2, 2.8] # 1 element out of range
+        event.var3[:] = [20.2, 21.9, 22.4]
+        event.var4[:] = [44.4, 55.5]
         self.assertEqual(
             (
                 (
@@ -472,53 +444,18 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
                     (6, 2), (6, 2), (6, 2), (6, 2), (6, 2), (6, 2)
                 ),
                 (
-                    (20, 44), (20, 55), (21, 44), (21, 55), (22, 44), (22, 55),
-                    (20, 44), (20, 55), (21, 44), (21, 55), (22, 44), (22, 55),
-                    (20, 44), (20, 55), (21, 44), (21, 55), (22, 44), (22, 55),
-                    (20, 44), (20, 55), (21, 44), (21, 55), (22, 44), (22, 55)
+                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
+                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
+                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
+                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5)
                 )
             ), obj(event))
 
-##__________________________________________________________________||
-class TestKeyValueComposer_indices_wildcard_bin_out_of_range(unittest.TestCase):
-
-    def test_2Keys_keyIndices_NoneVal(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningNone()),
-            keyIndices =  ('*', None)
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [5, ]
-        self.assertEqual((( ), None), obj(event))
-
-    def test_2Keys_keyIndices_2Vals(self):
-        obj = Counter.KeyValueComposer(
-            keyAttrNames = ('var1', 'var2'),
-            binnings = (MockBinningEcho(), MockBinningNone()),
-            keyIndices =  ('*', None),
-            valAttrNames = ('var3', 'var4')
-        )
-
-        event = MockEvent()
-        event.var1 = [ ]
-        event.var2 = [ ]
-        event.var3 = [ ]
-        event.var4 = [ ]
-        obj.begin(event)
-
-        event.var1[:] = [12, 8, 6]
-        event.var2[:] = [5, ]
-        event.var3[:] = [15, ]
-        event.var4[:] = [25, ]
+        event.var1[:] = [12.5, 6.2]
+        event.var2[:] = [ 5.1, 60.2, 2.8] # 1 element out of range
+        event.var3[:] = [20.2, 21.9, 22.4]
+        event.var4[:] = [] # empty list
         self.assertEqual((( ), ( )), obj(event))
-
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_backref(unittest.TestCase):
@@ -526,7 +463,7 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
     def test_3Keys_keyIndices_1Val_valIndices(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2', 'var3'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(), MockBinningFloor(max = 40), MockBinningFloor(max = 80)),
             keyIndices = (None, '(*)', '\\1'),
             valAttrNames = ('var4', ),
             valIndices = ('\\1', ),
@@ -539,10 +476,10 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12]
-        event.var2[:] = [  5,  None,   2,    4, 30]
-        event.var3[:] = [ 10,    13,  20, None, 22, 50]
-        event.var4[:] = [100,   200, 300,  400]
+        event.var1[:] = [12.5]
+        event.var2[:] = [  5.2,  40.2,   2.4,   4.2, 30.9] # 1 element out of range
+        event.var3[:] = [ 10.8,  13.6,  20.2,  85.7, 22.3, 50.1] # 1 element out of range
+        event.var4[:] = [  100,   200,   300,  400]
         self.assertEqual(
             (
                 (
@@ -553,16 +490,16 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
             obj(event)
         )
 
-        event.var1[:] = [12]
-        event.var2[:] = [   5,  None,     2,    4, None]
-        event.var3[:] = [None,    13,  None, None, 22, 50]
-        event.var4[:] = [100,   200, 300,  400]
+        event.var1[:] = [12.5]
+        event.var2[:] = [  5.2,  40.2,  2.4,  4.2, 45.2] # 1 element out of range
+        event.var3[:] = [ 85.9,  13.6, 90.1, 81.2, 22.3, 50.1] # 3 elements out of range
+        event.var4[:] = [  100,   200,  300,  400]
         self.assertEqual((( ), ( )), obj(event))
 
     def test_4Keys_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('var1', 'var2', 'var3', 'var4'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(), MockBinningFloor(max = 40), MockBinningFloor(max = 80), MockBinningFloor()),
             keyIndices = (None, '(*)', '\\1', '*')
         )
 
@@ -573,10 +510,10 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12]
-        event.var2[:] = [5,  None,   2,    4, 30]
-        event.var3[:] = [10,   13,  20, None, 22, 50]
-        event.var4[:] = [100, 200]
+        event.var1[:] = [ 12.5]
+        event.var2[:] = [  5.2,  40.2,   2.4,   4.2, 30.9] # 1 element out of range
+        event.var3[:] = [ 10.8,  13.6,  20.2,  85.7, 22.3, 50.1] # 1 element out of range
+        event.var4[:] = [  100,   200]
         self.assertEqual(
             (
                 (
@@ -589,10 +526,10 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
             obj(event)
         )
 
-        event.var1[:] = [12]
-        event.var2[:] = [   5,  None, None,    4, None]
-        event.var3[:] = [None,    13,   20, None, 22, 50]
-        event.var4[:] = [100, 200]
+        event.var1[:] = [ 12.5]
+        event.var2[:] = [  5.2,  40.2,  52.4,   4.2, 60.9] # 1 element out of range
+        event.var3[:] = [ 90.8,  13.6,  20.2,  85.7, 22.3, 50.1] # 1 element out of range
+        event.var4[:] = [  100,   200]
         self.assertEqual((( ), None), obj(event))
 
     def test_NoneKeys_4Val_valIndices(self):
@@ -608,32 +545,26 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4 = [ ]
         obj.begin(event)
 
-        event.var1[:] = [12]
-        event.var2[:] = [5,  None,   2,    4, 30]
-        event.var3[:] = [10,   13,  20, None, 22, 50]
-        event.var4[:] = [100, 200]
+        event.var1[:] = [ 12.5]
+        event.var2[:] = [  5.2,   4.2, 30.9]
+        event.var3[:] = [ 10.8,  13.6,  20.2, 22.3, 50.1]
+        event.var4[:] = [  100,   200]
         self.assertEqual(
             (
                 None,
                 (
-                    (12, 5, 10, 100), (12, 5, 10, 200),
-                    (12, 2, 20, 100), (12, 2, 20, 200),
-                    (12, 30, 22, 100), (12, 30, 22, 200)
+                    (12.5,  5.2, 10.8, 100), (12.5,  5.2, 10.8, 200),
+                    (12.5,  4.2, 13.6, 100), (12.5,  4.2, 13.6, 200),
+                    (12.5, 30.9, 20.2, 100), (12.5, 30.9, 20.2, 200),
                 )
             ),
             obj(event)
         )
 
-        event.var1[:] = [12]
-        event.var2[:] = [None,  None,   2,    4, 30]
-        event.var3[:] = [  10,    13, None, None, None, 50]
-        event.var4[:] = [100, 200]
-        self.assertEqual((None, ( )), obj(event))
-
     def test_4Keys_keyIndices_1Val_valIndices_2Backrefs(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('ev', 'jet_pt', 'jet_eta', 'mu_pt'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (MockBinningFloor(), MockBinningFloor(max = 40), MockBinningFloor(max = 4), MockBinningFloor(max = 40)),
             keyIndices = (None, '(*)', '\\1', '(*)'),
             valAttrNames = ('mu_eta', ),
             valIndices = ('\\2', )
@@ -648,18 +579,18 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         obj.begin(event)
 
         event.ev[:] = [1001]
-        event.jet_pt[:]  = [15.0, 12.0, None, 10.0]
-        event.jet_eta[:] = [None,  1.2,  2.2,  0.5]
-        event.mu_pt[:]   = [20.0, 11.0, 13.0]
-        event.mu_eta[:]  = [2.5,  None, 1.0]
+        event.jet_pt[:]  = [15.0, 12.0, 45.2, 10.0] # 1 element out of range
+        event.jet_eta[:] = [ 4.5,  1.2,  2.2,  0.5] # 1 element out of range
+        event.mu_pt[:]   = [20.0, 41.0, 13.0] # 1 element out of range
+        event.mu_eta[:]  = [ 2.5,  0.2, 1.0]
 
         self.assertEqual(
             (
                 (
-                    (1001, 12.0, 1.2, 20.0, ),
-                    (1001, 12.0, 1.2, 13.0, ),
-                    (1001, 10.0, 0.5, 20.0, ),
-                    (1001, 10.0, 0.5, 13.0, ),
+                    (1001, 12, 1, 20, ),
+                    (1001, 12, 1, 13, ),
+                    (1001, 10, 0, 20, ),
+                    (1001, 10, 0, 13, ),
                 ),
                 (
                     (2.5, ),
@@ -683,7 +614,14 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
     def test_back_reference_example_twice(self):
         obj = Counter.KeyValueComposer(
             keyAttrNames = ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta', 'jet_phi'),
-            binnings = (MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho(), MockBinningEcho()),
+            binnings = (
+                MockBinningFloor(),
+                MockBinningFloor(),
+                MockBinningFloor(max = 3), # <- use max for jet_eta
+                MockBinningFloor(),
+                MockBinningFloor(max = 2), # <- use max for mu_eta
+                MockBinningEcho(),
+            ),
             keyIndices = (None, '(*)', '\\1', '(*)', '\\2', '\\1'),
             valAttrNames = ('jet_energy', 'muon_energy'),
             valIndices = ('\\1', '\\2'),
@@ -693,35 +631,35 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.ev = [ ]
         event.jet_pt = [ ]
         event.jet_eta = [ ]
-        event.mu_pt = [ ]
-        event.mu_eta = [ ]
         event.jet_phi = [ ]
         event.jet_energy = [ ]
+        event.mu_pt = [ ]
+        event.mu_eta = [ ]
         event.muon_energy = [ ]
         obj.begin(event)
 
         event.ev[:] = [1001]
-        event.jet_pt[:]  = [15.0, 12.0, None, 10.0]
-        event.jet_eta[:] = [None,  1.2,  2.2,  0.5]
-        event.mu_pt[:]   = [20.0, 11.0, 13.0]
-        event.mu_eta[:]  = [2.5,  None, 1.0]
-        event.jet_phi[:] = [ 0.1,  0.6,  None, 0.3]
-        event.jet_energy[:] = [21.0, 13.0, 15.0, 11.0]
-        event.muon_energy[:] = [22.0, 15.0, 16.0]
+        event.jet_pt[:]  =    [ 15.3, 12.9,  9.2, 10.5]
+        event.jet_eta[:] =    [ -1.2,  5.2,  2.2,  0.5] # <- 2nd value is greater than max
+        event.jet_phi[:] =    [  0.1,  0.6,  1.2] # <- the last value is missing
+        event.jet_energy[:] = [ 16.2, 13.1, 10.1, 11.8]
+        event.mu_pt[:]  =      [ 20.2, 11.9, 13.3,  5.2]
+        event.mu_eta[:] =      [ 2.2,   1.2, -1.5, -0.5] # <- 1st value is greater than max
+        event.muon_energy[:] = [ 22.1, 15.2, 16.3] # <- the last value is missing
 
         self.assertEqual(
             (
                 (
-                    (1001, 12.0, 1.2, 20.0, 2.5, 0.6),
-                    (1001, 12.0, 1.2, 13.0, 1.0, 0.6),
-                    (1001, 10.0, 0.5, 20.0, 2.5, 0.3),
-                    (1001, 10.0, 0.5, 13.0, 1.0, 0.3),
+                    (1001, 15, -2, 11,  1, 0.1),
+                    (1001, 15, -2, 13, -2, 0.1),
+                    (1001,  9,  2, 11,  1, 1.2),
+                    (1001,  9,  2, 13, -2, 1.2)
                 ),
                 (
-                    (13.0, 22.0),
-                    (13.0, 16.0),
-                    (11.0, 22.0),
-                    (11.0, 16.0)
+                    (16.2, 15.2),
+                    (16.2, 16.3),
+                    (10.1, 15.2),
+                    (10.1, 16.3)
                 )
             ),
             obj(event)
