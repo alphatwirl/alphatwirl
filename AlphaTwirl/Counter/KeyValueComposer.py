@@ -41,12 +41,18 @@ class KeyValueComposer(object):
         self._backref_map = { }
 
     def begin(self, event):
-        self._zip = self._zipArrays(event)
+        self._zipped = self._zipArrays(event)
 
     def __call__(self, event):
-        if self._zip is None: return ()
+        if self._zipped is None: return ()
+        key, val = self._read_zipped(self._zipped)
+        key = self._apply_binnings_2(self.binnings, key)
+        key, val = self._remove_None(key, val)
+        return key, val
 
-        varis = self._unzip_and_read_event_attributes(self._zip)
+    def _read_zipped(self, zipped):
+
+        varis = self._unzip_and_read_event_attributes(zipped)
         keys, vals = self._seprate_into_keys_and_vals(varis)
         # e.g.,
         # keys = [
@@ -164,16 +170,12 @@ class KeyValueComposer(object):
         #     (11.0, 16.0)
         # )
 
-        key = self._apply_binnings_2(self.binnings, key)
-
-        key, val = self._remove_None(key, val)
-
         return key, val
 
-    def _unzip_and_read_event_attributes(self, the_zip):
+    def _unzip_and_read_event_attributes(self, zipped):
         self._backref_map.clear()
         varis = [ ]
-        for var_idx, attr, binning, conf_attr_idx, backref_idx in the_zip:
+        for var_idx, attr, binning, conf_attr_idx, backref_idx in zipped:
             attr_idxs = self._determine_attr_indices_to_read(attr, conf_attr_idx, var_idx, backref_idx)
             attr_vals = [(attr[i] if i < len(attr) else None) for i in attr_idxs]
             varis.append(attr_vals)
@@ -224,8 +226,6 @@ class KeyValueComposer(object):
         prod = tuple(itertools.product(*(keys + vals)))
         key = tuple(e[0:len(keys)] for e in prod) if keys else None
         val = tuple(e[len(keys):] for e in prod) if vals else None
-        key = self._apply_binnings_2(self.binnings, key)
-        key, val = self._remove_None(key, val)
         return key, val
 
     def _build_uniq_ref_idxs(self, keys, vals, backref_idxs):
