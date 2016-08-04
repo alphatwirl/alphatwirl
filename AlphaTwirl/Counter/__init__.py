@@ -6,3 +6,4 @@ from KeyValueComposer import KeyValueComposer
 from parse_indices_config import parse_indices_config
 from NextKeyComposer import NextKeyComposer
 from Counts import Counts
+from BackrefMultipleArrayReader import BackrefMultipleArrayReader
