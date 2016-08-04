@@ -4,6 +4,14 @@ import itertools
 ##__________________________________________________________________||
 class BackrefMultipleArrayReader(object):
     def __init__(self, arrays, idxs_conf, backref_idxs):
+
+        if not len(arrays) == len(idxs_conf) == len(backref_idxs):
+            raise ValueError(
+                "these three arguments must have the same length: arrays = {}, idxs_conf = {}, backref_idxs = {}".format(
+                    arrays, idxs_conf, backref_idxs
+                )
+            )
+
         self.backref_idxs = backref_idxs
         self._use_backref = any([e is not None for e in backref_idxs])
         self._zipped = zip(range(len(arrays)), arrays, idxs_conf, backref_idxs)
