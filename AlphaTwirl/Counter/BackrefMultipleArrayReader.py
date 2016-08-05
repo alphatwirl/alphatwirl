@@ -4,21 +4,32 @@ import numbers
 
 ##__________________________________________________________________||
 class BackrefMultipleArrayReader(object):
-    def __init__(self, arrays, idxs_conf, backref_idxs):
+    def __init__(self, arrays, idxs_conf, backref_idxs = None):
 
-        if not len(arrays) == len(idxs_conf) == len(backref_idxs):
+        if not len(arrays) == len(idxs_conf):
             raise ValueError(
-                "these three arguments must have the same length: arrays = {}, idxs_conf = {}, backref_idxs = {}".format(
-                    arrays, idxs_conf, backref_idxs
+                "these two arguments must have the same length: arrays = {}, idxs_conf = {}".format(
+                    arrays, idxs_conf
                 )
             )
+
+        if backref_idxs is not None:
+            if not len(idxs_conf) == len(backref_idxs):
+                raise ValueError(
+                    "backref_idxs must have the same length as idxs_conf: idxs_conf = {}, backref_idxs = {}".format(
+                        idxs_conf, backref_idxs
+                    )
+                )
 
         self.arrays = arrays
         self.wildcard_conf = tuple(c == '*' for c in idxs_conf)
         self.idxs_conf = tuple(c if isinstance(c, numbers.Number) else None for c in idxs_conf)
-        self.backref_idxs = backref_idxs
 
-        use_backref = any([e is not None for e in backref_idxs])
+        if backref_idxs is None:
+            use_backref = False
+        else:
+            use_backref = any([e is not None for e in backref_idxs])
+
         if not use_backref:
             self._read = self._fast_read_without_backref
             self._zipped = zip(self.arrays, self.idxs_conf, self.wildcard_conf)
@@ -31,11 +42,11 @@ class BackrefMultipleArrayReader(object):
         # self.arrays = [[], [], [], [], [], [], [], []]
         # self.idxs_conf = (0, None, None, None, None, None, None, None)
         # self.wildcard_conf = (False, True, False, True, False, False, False, False)
-        # self.backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
+        # backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
 
         self.uniq_idxs = [ ]
         self.ref_idxs = [ ]
-        for i in self.backref_idxs:
+        for i in backref_idxs:
             if i is None:
                 l = [ ]
                 self.uniq_idxs.append(l)
