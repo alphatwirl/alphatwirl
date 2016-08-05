@@ -10,7 +10,6 @@ class TestBackrefMultipleArrayReader_init(unittest.TestCase):
             Counter.BackrefMultipleArrayReader,
             arrays = [[ ] ],
             idxs_conf = ( ),
-            backref_idxs = ( )
             )
 
         self.assertRaises(
@@ -18,7 +17,6 @@ class TestBackrefMultipleArrayReader_init(unittest.TestCase):
             Counter.BackrefMultipleArrayReader,
             arrays = [[ ], [ ]],
             idxs_conf = (2, 3, 4),
-            backref_idxs = (None, None)
             )
 
         self.assertRaises(
@@ -29,15 +27,21 @@ class TestBackrefMultipleArrayReader_init(unittest.TestCase):
             backref_idxs = (None, None, 1)
             )
 
+    def test_argument_length_2(self):
+            Counter.BackrefMultipleArrayReader(
+                arrays = [[ ], [ ]],
+                idxs_conf = (1, 2),
+                backref_idxs = None
+            )
+
 ##__________________________________________________________________||
 class TestBackrefMultipleArrayReader_simple(unittest.TestCase):
 
     def test_empty(self):
         arrays = [ ]
         idxs_conf = ( )
-        backref_idxs = ( )
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         self.assertEqual((( ), ), obj.read())
@@ -45,9 +49,8 @@ class TestBackrefMultipleArrayReader_simple(unittest.TestCase):
     def test_1_element(self):
         arrays = [[ ]]
         idxs_conf = (0, )
-        backref_idxs = (None, )
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [12, 13, 14]
@@ -59,9 +62,8 @@ class TestBackrefMultipleArrayReader_simple(unittest.TestCase):
     def test_3_elements(self):
         arrays = [[], [], []]
         idxs_conf = (1, 0, 2)
-        backref_idxs = [None, None, None]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [12, 13, 14]
@@ -91,9 +93,8 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
     def test_1_wildcard(self):
         arrays = [[ ]]
         idxs_conf = ('*', )
-        backref_idxs = [None, ]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [ ]
@@ -111,9 +112,8 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
     def test_1_index_1_wildcard(self):
         arrays = [[ ], [ ]]
         idxs_conf = (1, '*')
-        backref_idxs = [None, None]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [ ]
@@ -139,9 +139,8 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
     def test_2_wildcards(self):
         arrays = [[ ], [ ]]
         idxs_conf = ('*', '*')
-        backref_idxs = [None, None]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [ ]
@@ -197,9 +196,8 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
     def test_3_wildcards(self):
         arrays = [[ ], [ ], [ ]]
         idxs_conf = ('*', '*', '*')
-        backref_idxs = [None, None, None]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [ ]
@@ -235,12 +233,11 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
                 (14, 105, 1001), (14, 105, 1002), (14, 105, 1003),
             ), obj.read())
 
-    def test_2_indices__wildcards(self):
+    def test_2_indices_wildcards(self):
         arrays = [[ ], [ ], [ ], [ ], [ ]]
         idxs_conf = (1, '*', '*', 2, '*')
-        backref_idxs = [None, None, None, None, None]
         obj = Counter.BackrefMultipleArrayReader(
-            arrays = arrays, idxs_conf = idxs_conf, backref_idxs = backref_idxs
+            arrays = arrays, idxs_conf = idxs_conf
         )
 
         arrays[0][:] = [ ]
@@ -265,6 +262,18 @@ class TestBackrefMultipleArrayReader_wildcard(unittest.TestCase):
                 (66, 14, 105, 444, 1001), (66, 14, 105, 444, 1002), (66, 14, 105, 444, 1003),
             ), obj.read())
 
+        # #
+        # # measure time
+        # # python -m unittest tests.unit.Counter.test_BackrefMultipleArrayReader.TestBackrefMultipleArrayReader_wildcard.test_2_indices_wildcards
+        # from datetime import datetime
+        # tick = datetime.now()
+        # for i in range(100000): obj.read()
+        # tock = datetime.now()
+        # diff = tock - tick
+        # print 'time: ', diff.total_seconds()
+        # 
+        # # time:  0.930973 08/05 12:14
+        # # time:  0.507036 08/05 13:14
 
 ##__________________________________________________________________||
 class TestBackrefMultipleArrayReader_backref(unittest.TestCase):
@@ -345,5 +354,34 @@ class TestBackrefMultipleArrayReader_backref(unittest.TestCase):
                 (1001, 14, 106, 52, 85, 405, 209, 92)
             ), obj.read())
 
+        # #
+        # # measure time
+        # # python -m unittest tests.unit.Counter.test_BackrefMultipleArrayReader.TestBackrefMultipleArrayReader_backref.test_1_index_2_wildcards_4_backrefs
+        # 
+        # # import cProfile, pstats, StringIO
+        # from datetime import datetime
+        # 
+        # # pr = cProfile.Profile()
+        # # pr.enable()
+        # 
+        # tick = datetime.now()
+        # for i in range(30000): obj.read()
+        # tock = datetime.now()
+        # 
+        # # pr.disable()
+        # 
+        # diff = tock - tick
+        # print 'time: ', diff.total_seconds()
+        # 
+        # # s = StringIO.StringIO()
+        # # sortby = 'cumulative'
+        # # ps = pstats.Stats(pr, stream = s).strip_dirs().sort_stats(sortby)
+        # # ps.print_stats()
+        # # print s.getvalue()
+        # 
+        # # time:  1.188824 08/05 10:31 # before starting refactoring
+        # # time:  0.975665 08/05 12:08
+        # # time:  0.611698 08/05 12:20 # if comment out self._unzip_and_read_arrays(zipped)
+        # # time:  0.527065 08/05 12:24 # use _zipped2, _zipped3
 
 ##__________________________________________________________________||
