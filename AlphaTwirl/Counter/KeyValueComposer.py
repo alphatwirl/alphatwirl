@@ -43,7 +43,6 @@ class KeyValueComposer(object):
         backref_idxs, idxs_conf = parse_indices_config(idxs_conf)
         arrays = self._collect_arrays(event,  attr_names)
 
-        self._active = True if arrays else False
         self._array_reader = BackrefMultipleArrayReader(arrays, idxs_conf, backref_idxs)
 
     def _collect_arrays(self, event, attr_names):
@@ -59,7 +58,6 @@ class KeyValueComposer(object):
         return ret
 
     def __call__(self, event):
-        if not self._active: return None, None
         varis = self._array_reader.read()
         key, val =  self._seprate_into_keys_and_vals(varis)
         key = self._apply_binnings(self.binnings, key)
@@ -67,8 +65,8 @@ class KeyValueComposer(object):
         return key, val
 
     def _seprate_into_keys_and_vals(self, varis):
-        key = [v[:len(self.keyAttrNames)] for v in varis] if self.keyAttrNames else None
-        val = [v[len(self.keyAttrNames):] for v in varis] if self.valAttrNames else None
+        key = [v[:len(self.keyAttrNames)] for v in varis]
+        val = [v[len(self.keyAttrNames):] for v in varis]
         return key, val
 
     def _apply_binnings(self, binnings, keys):
@@ -76,19 +74,6 @@ class KeyValueComposer(object):
         return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
 
     def _remove_None(self, key, val):
-        if key is None and val is None:
-            return key, val
-
-        if key is None and val is not None:
-            idxs = tuple(i for i, e in enumerate(val) if None not in e)
-            val = tuple(val[i] for i in idxs)
-            return key, val
-
-        if key is not None and val is None:
-            idxs = tuple(i for i, e in enumerate(key) if None not in e)
-            key = tuple(key[i] for i in idxs)
-            return key, val
-
         idxs_key = set(i for i, e in enumerate(key) if None not in e)
         idxs_val = set(i for i, e in enumerate(val) if None not in e)
         idxs = idxs_key & idxs_val # intersection

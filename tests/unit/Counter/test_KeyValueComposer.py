@@ -111,10 +111,15 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, ]
-        self.assertEqual((((12, ), ), None), obj(event))
+
+        self.assertEqual(
+            (
+                ((12, ), ),
+                (( ), )
+            ), obj(event))
 
         event.var1[:] = [32.5, ] # out of range
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_1Key_emptyVal(self):
         obj = Counter.KeyValueComposer(
@@ -128,10 +133,15 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, ]
-        self.assertEqual((((12, ), ), None), obj(event))
+
+        self.assertEqual(
+            (
+                ((12, ), ),
+                (( ), )
+            ), obj(event))
 
         event.var1[:] = [32.5, ] # out of range
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_NoneKey_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -144,7 +154,11 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.8, ]
-        self.assertEqual((None, ((12.8, ), )), obj(event))
+        self.assertEqual(
+            (
+                (( ), ),
+                ((12.8, ), )
+            ), obj(event))
 
     def test_emptyKey_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -157,7 +171,11 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.8, ]
-        self.assertEqual((None, ((12.8, ), )), obj(event))
+        self.assertEqual(
+            (
+                (( ), ),
+                ((12.8, ), )
+            ), obj(event))
 
     def test_NoneKey_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -168,7 +186,10 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event = MockEvent()
         obj.begin(event)
 
-        self.assertEqual((None, None), obj(event))
+        self.assertEqual(
+            (
+                (( ), ), (( ), )
+            ), obj(event))
 
     def test_2Keys_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -183,15 +204,19 @@ class TestKeyValueComposer_simple(unittest.TestCase):
 
         event.var1[:] = [15.3, ]
         event.var2[:] = [22.8, ]
-        self.assertEqual((((15, 22), ), None), obj(event))
+        self.assertEqual(
+            (
+                ((15, 22), ),
+                (( ), ),
+            ), obj(event))
 
         event.var1[:] = [45.3, ] # <- out of range
         event.var2[:] = [22.8, ]
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [45.3, ]
-        event.var2[:] = [52.8, ] # <- out of range 
-        self.assertEqual((( ), None), obj(event))
+        event.var2[:] = [52.8, ] # <- out of range
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_2Keys_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -235,16 +260,24 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, 20.2, 10.2, 10.8]
-        self.assertEqual((((10, ), ), None), obj(event))
+        self.assertEqual(
+            (
+                ((10, ), ),
+                (( ), )
+            ), obj(event))
 
         event.var1[:] = [12.5, 20.2, 35.2, 10.8] # out of range of the binning
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [12.5, 20.2] # out of range of the list
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [12.5, 32.2, 10.2, 10.8] # another element out of range
-        self.assertEqual((((10, ), ), None), obj(event))
+        self.assertEqual(
+            (
+                ((10, ), ),
+                (( ), )
+            ), obj(event))
 
     def test_NoneKey_1Val_valIndices(self):
         obj = Counter.KeyValueComposer(
@@ -256,7 +289,11 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, 20.2, 10.2, 10.8]
-        self.assertEqual((None, ((10.2, ), )), obj(event))
+        self.assertEqual(
+            (
+                (( ), ),
+                ((10.2, ), )
+            ), obj(event))
 
     def test_1Key_keyIndices_1Val_valIndices(self):
         obj = Counter.KeyValueComposer(
@@ -302,17 +339,21 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         event.var1[:] = [12.5, 8.2, 6.1]
         event.var2[:] = [232.2, ]
         event.var3[:] = [111.1, 222.2, 333.3]
-        self.assertEqual((((8, 232, 333), ), None), obj(event))
+        self.assertEqual(
+            (
+                ((8, 232, 333), ),
+                (( ), )
+            ), obj(event))
 
         event.var1[:] = [12.5, 8.2, 6.1]
         event.var2[:] = [ ] # out of range of the list
         event.var3[:] = [111.1, 222.2, 333.3]
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [12.5, 8.2, 6.1]
         event.var2[:] = [421.5] # out of range of binning
         event.var3[:] = [111.1, 222.2, 333.3]
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
@@ -329,16 +370,24 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.8, 8.6, 6.2]
-        self.assertEqual((((12, ), (8, ), (6, )), None), obj(event))
+        self.assertEqual(
+            (
+                ((12, ), (8, ), (6, )),
+                (( ), ( ), ( ))
+            ), obj(event))
 
         event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
-        self.assertEqual((((12, ), (6, )), None), obj(event))
+        self.assertEqual(
+            (
+                ((12, ), (6, )),
+                (( ), ( ))
+            ), obj(event))
 
         event.var1[:] = [42.8, 38.6, 56.2] # all elements out of range
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [ ] # list empty
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_1Wildcard(self):
         obj = Counter.KeyValueComposer(
@@ -354,23 +403,31 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
 
         event.var1[:] = [12.8, 8.6, 6.2]
         event.var2[:] = [35.2, ]
-        self.assertEqual((((12, 35), (8, 35), (6, 35)), None), obj(event))
+        self.assertEqual(
+            (
+                ((12, 35), (8, 35), (6, 35)),
+                (( ), ( ), ( ))
+            ), obj(event))
 
         event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
         event.var2[:] = [35.2, ]
-        self.assertEqual((((12, 35), (6, 35)), None), obj(event))
+        self.assertEqual(
+            (
+                ((12, 35), (6, 35)),
+                (( ), ( ))
+            ), obj(event))
 
         event.var1[:] = [ ] # list empty
         event.var2[:] = [35.2, ]
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [12.8, 8.6, 6.2]
         event.var2[:] = [ ] # list empty
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
         event.var1[:] = [ ] # list empty
         event.var2[:] = [ ] # list empty
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_2Wildcards(self):
         obj = Counter.KeyValueComposer(
@@ -393,7 +450,11 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
                     (18, 15), (18, 22), (18, 12),
                     (26, 15), (26, 22), (26, 12),
                 ),
-                None
+                (
+                    ( ), ( ), ( ),
+                    ( ), ( ), ( ),
+                    ( ), ( ), ( ),
+                )
             ),
             obj(event)
         )
@@ -406,14 +467,17 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
                     (12, 22), (12, 12),
                     (26, 22), (26, 12),
                 ),
-                None
+                (
+                    ( ), ( ),
+                    ( ), ( ),
+                ),
             ),
             obj(event)
         )
 
         event.var1[:] = [ ]  # empty list
         event.var2[:] = [55.2, 22.3, 12.8] # 1 element out of range
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_2Keys_keyIndices_2Val_valIndices_4Wildcards(self):
         obj = Counter.KeyValueComposer(
@@ -521,7 +585,11 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
                     (12, 2, 20, 100), (12, 2, 20, 200),
                     (12, 30, 22, 100), (12, 30, 22, 200)
                 ),
-                None
+                (
+                    ( ), ( ),
+                    ( ), ( ),
+                    ( ), ( )
+                )
             ),
             obj(event)
         )
@@ -530,7 +598,7 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var2[:] = [  5.2,  40.2,  52.4,   4.2, 60.9] # 1 element out of range
         event.var3[:] = [ 90.8,  13.6,  20.2,  85.7, 22.3, 50.1] # 1 element out of range
         event.var4[:] = [  100,   200]
-        self.assertEqual((( ), None), obj(event))
+        self.assertEqual((( ), ( )), obj(event))
 
     def test_NoneKeys_4Val_valIndices(self):
         obj = Counter.KeyValueComposer(
@@ -551,7 +619,11 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4[:] = [  100,   200]
         self.assertEqual(
             (
-                None,
+                (
+                    ( ), ( ),
+                    ( ), ( ),
+                    ( ), ( ),
+                ),
                 (
                     (12.5,  5.2, 10.8, 100), (12.5,  5.2, 10.8, 200),
                     (12.5,  4.2, 13.6, 100), (12.5,  4.2, 13.6, 200),
