@@ -37,9 +37,6 @@ class MockWeightCalculator(object):
         return 1.0
 
 ##__________________________________________________________________||
-class MockBinning(object): pass
-
-##__________________________________________________________________||
 class MockKeyValueComposer(object):
     def __init__(self, keyval_list = [ ]):
         self.keyval_list = keyval_list
