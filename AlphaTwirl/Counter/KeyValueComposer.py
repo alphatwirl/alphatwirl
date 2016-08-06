@@ -17,33 +17,39 @@ class KeyValueComposer(object):
     """
     def __init__(self, keyAttrNames = None, binnings = None, keyIndices = None,
                  valAttrNames = None, valIndices = None):
-        self.keyAttrNames = tuple(keyAttrNames) if keyAttrNames is not None else ()
-        self.binnings = tuple(binnings) if binnings is not None else ()
-        self.keyIndices = tuple(keyIndices) if keyIndices is not None else (None, )*len(self.keyAttrNames)
-        self.valAttrNames = tuple(valAttrNames) if valAttrNames is not None else ()
-        self.valIndices = tuple(valIndices) if valIndices is not None else (None, )*len(self.valAttrNames)
+        key_attr_names = tuple(keyAttrNames) if keyAttrNames is not None else ()
+        key_idxs = tuple(keyIndices) if keyIndices is not None else (None, )*len(key_attr_names)
+        val_attr_names = tuple(valAttrNames) if valAttrNames is not None else ()
+        val_idxs = tuple(valIndices) if valIndices is not None else (None, )*len(val_attr_names)
 
-        if not len(self.keyAttrNames) == len(self.binnings) == len(self.keyIndices):
+        self.binnings = tuple(binnings) if binnings is not None else ()
+
+        if not len(key_attr_names) == len(self.binnings) == len(key_idxs):
             raise ValueError(
                 "the three tuples must have the same length: keyAttrNames = {}, binnings = {}, keyIndices = {}".format(
-                    self.keyAttrNames, self.binnings, self.keyIndices
+                    key_attr_names, self.binnings, key_idxs
                 )
             )
 
-        if not len(self.valAttrNames) == len(self.valIndices):
+        if not len(val_attr_names) == len(val_idxs):
             raise ValueError(
                 "the two tuples must have the same length: valAttrNames = {}, valIndices = {}".format(
-                    self.valAttrNames, self.valIndices
+                    val_attr_names, val_idxs
                 )
             )
 
-    def begin(self, event):
-        attr_names = self.keyAttrNames + self.valAttrNames
-        idxs_conf = self.keyIndices + self.valIndices
-        backref_idxs, idxs_conf = parse_indices_config(idxs_conf)
-        arrays = self._collect_arrays(event,  attr_names)
+        self._lenkey = len(key_attr_names)
+        self.attr_names = key_attr_names + val_attr_names
+        self.idxs_conf = key_idxs + val_idxs
+        self.backref_idxs, self.idxs_conf = parse_indices_config(self.idxs_conf)
 
-        self._array_reader = BackrefMultipleArrayReader(arrays, idxs_conf, backref_idxs)
+        self.ArrayReader = BackrefMultipleArrayReader
+
+    def begin(self, event):
+        arrays = self._collect_arrays(event,  self.attr_names)
+        self.active = True if arrays is not None else False
+        if not self.active: return
+        self._array_reader = self.ArrayReader(arrays, self.idxs_conf, self.backref_idxs)
 
     def _collect_arrays(self, event, attr_names):
         ret = [ ]
@@ -58,17 +64,63 @@ class KeyValueComposer(object):
         return ret
 
     def __call__(self, event):
+        if not self.active: return ()
+
         arrays = self._array_reader.read()
+        # e.g.,
+        # arrays = (
+        #     (1001, 15.3, -1.2, 20.2,  2.2, 0.1, 16.2, 22.1),
+        #     (1001, 15.3, -1.2, 11.9,  1.2, 0.1, 16.2, 15.2),
+        #     (1001, 15.3, -1.2, 13.3, -1.5, 0.1, 16.2, 16.3),
+        #     (1001, 12.9,  5.2, 20.2,  2.2, 0.6, 13.1, 22.1),
+        #     (1001, 12.9,  5.2, 11.9,  1.2, 0.6, 13.1, 15.2),
+        #     (1001, 12.9,  5.2, 13.3, -1.5, 0.6, 13.1, 16.3),
+        #     (1001,  9.2,  2.2, 20.2,  2.2, 1.2, 10.1, 22.1),
+        #     (1001,  9.2,  2.2, 11.9,  1.2, 1.2, 10.1, 15.2),
+        #     (1001,  9.2,  2.2, 13.3, -1.5, 1.2, 10.1, 16.3)
+        # )
+
 
         # separate into keys and vals
-        lenkey = len(self.keyAttrNames)
-        keyvals = tuple((e[:lenkey], e[lenkey:]) for e in arrays)
+        keyvals = tuple((e[:self._lenkey], e[self._lenkey:]) for e in arrays)
+        # e.g.,
+        # keyvals = (
+        #     ((1001, 15.3, -1.2, 20.2,  2.2, 0.1), (16.2, 22.1)),
+        #     ((1001, 15.3, -1.2, 11.9,  1.2, 0.1), (16.2, 15.2)),
+        #     ((1001, 15.3, -1.2, 13.3, -1.5, 0.1), (16.2, 16.3)),
+        #     ((1001, 12.9,  5.2, 20.2,  2.2, 0.6), (13.1, 22.1)),
+        #     ((1001, 12.9,  5.2, 11.9,  1.2, 0.6), (13.1, 15.2)),
+        #     ((1001, 12.9,  5.2, 13.3, -1.5, 0.6), (13.1, 16.3)),
+        #     ((1001,  9.2,  2.2, 20.2,  2.2, 1.2), (10.1, 22.1)),
+        #     ((1001,  9.2,  2.2, 11.9,  1.2, 1.2), (10.1, 15.2)),
+        #     ((1001,  9.2,  2.2, 13.3, -1.5, 1.2), (10.1, 16.3))
+        # )
+
 
         # apply binnings
         keyvals = tuple((tuple(b(k) for b, k in zip(self.binnings, kk)), vv) for kk, vv in keyvals)
+        # e.g.,
+        # keyvals = (
+        #     ((1001, 15,   -2, 20, None, 0.1), (16.2, 22.1)),
+        #     ((1001, 15,   -2, 11,    1, 0.1), (16.2, 15.2)),
+        #     ((1001, 15,   -2, 13,   -2, 0.1), (16.2, 16.3)),
+        #     ((1001, 12, None, 20, None, 0.6), (13.1, 22.1)),
+        #     ((1001, 12, None, 11,    1, 0.6), (13.1, 15.2)),
+        #     ((1001, 12, None, 13,   -2, 0.6), (13.1, 16.3)),
+        #     ((1001,  9,    2, 20, None, 1.2), (10.1, 22.1)),
+        #     ((1001,  9,    2, 11,    1, 1.2), (10.1, 15.2)),
+        #     ((1001,  9,    2, 13,   -2, 1.2), (10.1, 16.3))
+        # )
 
         # remove None
         keyvals = tuple(e for e in keyvals if None not in e[0] and None not in e[1])
+        # e.g.,
+        # keyvals = (
+        #     ((1001, 15, -2, 11,  1, 0.1), (16.2, 15.2)),
+        #     ((1001, 15, -2, 13, -2, 0.1), (16.2, 16.3)),
+        #     ((1001,  9,  2, 11,  1, 1.2), (10.1, 15.2)),
+        #     ((1001,  9,  2, 13, -2, 1.2), (10.1, 16.3))
+        # )
 
         return keyvals
 
