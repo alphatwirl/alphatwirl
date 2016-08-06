@@ -8,11 +8,10 @@ class Counts(object):
     def __init__(self):
         self._counts = { }
 
-    def count(self, key, w = 1, nvar = None):
-        if nvar is None: nvar = w**2
+    def count(self, key, w = 1):
         self.addKey(key)
         self._counts[key]['n'] += w
-        self._counts[key]['nvar'] += nvar
+        self._counts[key]['nvar'] += w**2
 
     def addKey(self, key):
         if key not in self._counts:

@@ -23,14 +23,6 @@ class TestCounts(unittest.TestCase):
         expected  = {1: {'n': 4.0, 'nvar': 6.0}, 2: {'n': 3.0, 'nvar': 9.0}}
         self.assertEqual(expected, counts.results())
 
-        counts.count(3, 2, 3)
-        expected  = {
-            1: {'n': 4.0, 'nvar': 6.0},
-            2: {'n': 3.0, 'nvar': 9.0},
-            3: {'n': 2.0, 'nvar': 3.0},
-            }
-        self.assertEqual(expected, counts.results())
-
     def test_copyFrom(self):
         counts = Counts()
         src_counts = Counts()
