@@ -7,22 +7,24 @@ import collections
 class Counts(object):
     def __init__(self):
         self._counts = { }
+        self._val_names = ('n', 'nvar') # (count, variance)
 
-    def count(self, key, w = 1, nvar = None):
-        if nvar is None: nvar = w**2
+    def count(self, key, val = None, weight = 1):
         self.addKey(key)
-        self._counts[key]['n'] += w
-        self._counts[key]['nvar'] += nvar
+        self._counts[key][self._val_names[0]] += weight
+        self._counts[key][self._val_names[1]] += weight**2
 
     def addKey(self, key):
         if key not in self._counts:
-            self._counts[key] = collections.OrderedDict((('n', 0.0), ('nvar', 0.0)))
+            self._counts[key] = collections.OrderedDict(
+                ((self._val_names[0], 0.0), (self._val_names[1], 0.0))
+            )
 
     def keys(self):
         return self._counts.keys()
 
     def valNames(self):
-        return ('n', 'nvar')
+        return self._val_names
 
     def copyFrom(self, src):
         self._counts.clear()

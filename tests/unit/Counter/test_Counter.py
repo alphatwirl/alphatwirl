@@ -12,7 +12,7 @@ class MockCounts(object):
         self._keys = set()
         self._addedkeys = set()
 
-    def count(self, key, weight):
+    def count(self, key, val, weight):
         self._counts.append((key, weight))
         self._keys.add(key)
 
@@ -35,9 +35,6 @@ class MockCounts(object):
 class MockWeightCalculator(object):
     def __call__(self, event):
         return 1.0
-
-##__________________________________________________________________||
-class MockBinning(object): pass
 
 ##__________________________________________________________________||
 class MockKeyValueComposer(object):
