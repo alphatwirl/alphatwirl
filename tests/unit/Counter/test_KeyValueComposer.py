@@ -73,11 +73,14 @@ class TestKeyValueComposer_simple(unittest.TestCase):
 
         event.var1[:] = [12.5, ]
         event.var2[:] = [20.3, ]
-        self.assertEqual((((12, ), ), ((20.3, ), )), obj(event))
+        self.assertEqual(
+            (
+                ((12, ), (20.3, )),
+            ), obj(event))
 
         event.var1[:] = [32.5, ] # <- out of range
         event.var2[:] = [20.3, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_1Key_1Val_mix_list_tuple(self):
         obj = Counter.KeyValueComposer(
@@ -93,11 +96,14 @@ class TestKeyValueComposer_simple(unittest.TestCase):
 
         event.var1[:] = [12.5, ]
         event.var2[:] = [20.3, ]
-        self.assertEqual((((12, ), ), ((20.3, ), )), obj(event))
+        self.assertEqual(
+            (
+                ((12, ), (20.3, )),
+            ), obj(event))
 
         event.var1[:] = [32.5, ] # <- out of range
         event.var2[:] = [20.3, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_1Key_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -111,15 +117,13 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, ]
-
         self.assertEqual(
             (
-                ((12, ), ),
-                (( ), )
+                ((12, ), ( )),
             ), obj(event))
 
         event.var1[:] = [32.5, ] # out of range
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_1Key_emptyVal(self):
         obj = Counter.KeyValueComposer(
@@ -133,15 +137,13 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         obj.begin(event)
 
         event.var1[:] = [12.5, ]
-
         self.assertEqual(
             (
-                ((12, ), ),
-                (( ), )
+                ((12, ), ( )),
             ), obj(event))
 
         event.var1[:] = [32.5, ] # out of range
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_NoneKey_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -156,8 +158,7 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1[:] = [12.8, ]
         self.assertEqual(
             (
-                (( ), ),
-                ((12.8, ), )
+                (( ), (12.8, )),
             ), obj(event))
 
     def test_emptyKey_1Val(self):
@@ -173,8 +174,7 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1[:] = [12.8, ]
         self.assertEqual(
             (
-                (( ), ),
-                ((12.8, ), )
+                (( ), (12.8, )),
             ), obj(event))
 
     def test_NoneKey_NoneVal(self):
@@ -188,7 +188,7 @@ class TestKeyValueComposer_simple(unittest.TestCase):
 
         self.assertEqual(
             (
-                (( ), ), (( ), )
+                (( ), ( )),
             ), obj(event))
 
     def test_2Keys_NoneVal(self):
@@ -206,17 +206,16 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var2[:] = [22.8, ]
         self.assertEqual(
             (
-                ((15, 22), ),
-                (( ), ),
+                ((15, 22), ( )),
             ), obj(event))
 
         event.var1[:] = [45.3, ] # <- out of range
         event.var2[:] = [22.8, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [45.3, ]
         event.var2[:] = [52.8, ] # <- out of range
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_2Keys_1Val(self):
         obj = Counter.KeyValueComposer(
@@ -234,17 +233,20 @@ class TestKeyValueComposer_simple(unittest.TestCase):
         event.var1[:] = [15.2, ]
         event.var2[:] = [22.8, ]
         event.var3[:] = [101.1, ]
-        self.assertEqual((((15, 22), ), ((101.1, ), )), obj(event))
+        self.assertEqual(
+            (
+                ((15, 22), (101.1, )),
+            ), obj(event))
 
         event.var1[:] = [45.2, ] # <- out of range
         event.var2[:] = [22.8, ]
         event.var3[:] = [234.9, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [15.2, ] # <- out of range
         event.var2[:] = [82.8, ] # <- out of range
         event.var3[:] = [34.9, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_simple(unittest.TestCase):
@@ -262,21 +264,19 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         event.var1[:] = [12.5, 20.2, 10.2, 10.8]
         self.assertEqual(
             (
-                ((10, ), ),
-                (( ), )
+                ((10, ), ( )),
             ), obj(event))
 
         event.var1[:] = [12.5, 20.2, 35.2, 10.8] # out of range of the binning
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.5, 20.2] # out of range of the list
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.5, 32.2, 10.2, 10.8] # another element out of range
         self.assertEqual(
             (
-                ((10, ), ),
-                (( ), )
+                ((10, ), ( )),
             ), obj(event))
 
     def test_NoneKey_1Val_valIndices(self):
@@ -291,8 +291,7 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         event.var1[:] = [12.5, 20.2, 10.2, 10.8]
         self.assertEqual(
             (
-                (( ), ),
-                ((10.2, ), )
+                (( ), (10.2, )),
             ), obj(event))
 
     def test_1Key_keyIndices_1Val_valIndices(self):
@@ -310,19 +309,22 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
 
         event.var1[:] = [12.5, 20.2, 10.2, 10.8]
         event.var2[:] = [30.1, 42.5, 19.2, 71.2]
-        self.assertEqual((((10, ), ), ((19.2, ), )), obj(event))
+        self.assertEqual(
+            (
+                ((10, ), (19.2, )),
+            ), obj(event))
 
         event.var1[:] = [12.5, 20.2, 30.2, 10.8] # out of range of the binning
         event.var2[:] = [30.1, 42.5, 19.2, 71.2]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.5, 20.2]
         event.var2[:] = [30.1, 42.5, 19.2, 71.2]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.5, 20.2, 30.2, 10.8]
         event.var2[:] = [30.1, 42.5] # out of range of the list
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_3Key_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -341,19 +343,18 @@ class TestKeyValueComposer_indices_simple(unittest.TestCase):
         event.var3[:] = [111.1, 222.2, 333.3]
         self.assertEqual(
             (
-                ((8, 232, 333), ),
-                (( ), )
+                ((8, 232, 333), ( )),
             ), obj(event))
 
         event.var1[:] = [12.5, 8.2, 6.1]
         event.var2[:] = [ ] # out of range of the list
         event.var3[:] = [111.1, 222.2, 333.3]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.5, 8.2, 6.1]
         event.var2[:] = [421.5] # out of range of binning
         event.var3[:] = [111.1, 222.2, 333.3]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
@@ -372,22 +373,23 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var1[:] = [12.8, 8.6, 6.2]
         self.assertEqual(
             (
-                ((12, ), (8, ), (6, )),
-                (( ), ( ), ( ))
+                ((12, ), ( )),
+                (( 8, ), ( )),
+                (( 6, ), ( )),
             ), obj(event))
 
         event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
         self.assertEqual(
             (
-                ((12, ), (6, )),
-                (( ), ( ))
+                ((12, ), ( )),
+                (( 6, ), ( )),
             ), obj(event))
 
         event.var1[:] = [42.8, 38.6, 56.2] # all elements out of range
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [ ] # list empty
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_1Wildcard(self):
         obj = Counter.KeyValueComposer(
@@ -405,29 +407,30 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var2[:] = [35.2, ]
         self.assertEqual(
             (
-                ((12, 35), (8, 35), (6, 35)),
-                (( ), ( ), ( ))
+                ((12, 35), ( )),
+                (( 8, 35), ( )),
+                (( 6, 35), ( )),
             ), obj(event))
 
         event.var1[:] = [12.8, 38.6, 6.2] # 1 element out of range
         event.var2[:] = [35.2, ]
         self.assertEqual(
             (
-                ((12, 35), (6, 35)),
-                (( ), ( ))
+                ((12, 35), ( )),
+                (( 6, 35), ( )),
             ), obj(event))
 
         event.var1[:] = [ ] # list empty
         event.var2[:] = [35.2, ]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [12.8, 8.6, 6.2]
         event.var2[:] = [ ] # list empty
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
         event.var1[:] = [ ] # list empty
         event.var2[:] = [ ] # list empty
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_2Keys_keyIndices_NoneVal_2Wildcards(self):
         obj = Counter.KeyValueComposer(
@@ -445,16 +448,15 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var2[:] = [15.2, 22.3, 12.8]
         self.assertEqual(
             (
-                (
-                    (12, 15), (12, 22), (12, 12),
-                    (18, 15), (18, 22), (18, 12),
-                    (26, 15), (26, 22), (26, 12),
-                ),
-                (
-                    ( ), ( ), ( ),
-                    ( ), ( ), ( ),
-                    ( ), ( ), ( ),
-                )
+                ((12, 15), ( )),
+                ((12, 22), ( )),
+                ((12, 12), ( )),
+                ((18, 15), ( )),
+                ((18, 22), ( )),
+                ((18, 12), ( )),
+                ((26, 15), ( )),
+                ((26, 22), ( )),
+                ((26, 12), ( )),
             ),
             obj(event)
         )
@@ -463,21 +465,17 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var2[:] = [55.2, 22.3, 12.8]  # 1 element out of range
         self.assertEqual(
             (
-                (
-                    (12, 22), (12, 12),
-                    (26, 22), (26, 12),
-                ),
-                (
-                    ( ), ( ),
-                    ( ), ( ),
-                ),
+                ((12, 22), ( )),
+                ((12, 12), ( )),
+                ((26, 22), ( )),
+                ((26, 12), ( )),
             ),
             obj(event)
         )
 
         event.var1[:] = [ ]  # empty list
         event.var2[:] = [55.2, 22.3, 12.8] # 1 element out of range
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_2Keys_keyIndices_2Val_valIndices_4Wildcards(self):
         obj = Counter.KeyValueComposer(
@@ -501,25 +499,37 @@ class TestKeyValueComposer_indices_wildcard(unittest.TestCase):
         event.var4[:] = [44.4, 55.5]
         self.assertEqual(
             (
-                (
-                    (12, 5), (12, 5), (12, 5), (12, 5), (12, 5), (12, 5),
-                    (12, 2), (12, 2), (12, 2), (12, 2), (12, 2), (12, 2),
-                    (6, 5), (6, 5), (6, 5), (6, 5), (6, 5), (6, 5),
-                    (6, 2), (6, 2), (6, 2), (6, 2), (6, 2), (6, 2)
-                ),
-                (
-                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
-                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
-                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5),
-                    (20.2, 44.4), (20.2, 55.5), (21.9, 44.4), (21.9, 55.5), (22.4, 44.4), (22.4, 55.5)
-                )
+                ((12, 5), (20.2, 44.4)),
+                ((12, 5), (20.2, 55.5)),
+                ((12, 5), (21.9, 44.4)),
+                ((12, 5), (21.9, 55.5)),
+                ((12, 5), (22.4, 44.4)),
+                ((12, 5), (22.4, 55.5)),
+                ((12, 2), (20.2, 44.4)),
+                ((12, 2), (20.2, 55.5)),
+                ((12, 2), (21.9, 44.4)),
+                ((12, 2), (21.9, 55.5)),
+                ((12, 2), (22.4, 44.4)),
+                ((12, 2), (22.4, 55.5)),
+                (( 6, 5), (20.2, 44.4)),
+                (( 6, 5), (20.2, 55.5)),
+                (( 6, 5), (21.9, 44.4)),
+                (( 6, 5), (21.9, 55.5)),
+                (( 6, 5), (22.4, 44.4)),
+                (( 6, 5), (22.4, 55.5)),
+                (( 6, 2), (20.2, 44.4)),
+                (( 6, 2), (20.2, 55.5)),
+                (( 6, 2), (21.9, 44.4)),
+                (( 6, 2), (21.9, 55.5)),
+                (( 6, 2), (22.4, 44.4)),
+                (( 6, 2), (22.4, 55.5)),
             ), obj(event))
 
         event.var1[:] = [12.5, 6.2]
         event.var2[:] = [ 5.1, 60.2, 2.8] # 1 element out of range
         event.var3[:] = [20.2, 21.9, 22.4]
         event.var4[:] = [] # empty list
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
 ##__________________________________________________________________||
 class TestKeyValueComposer_indices_backref(unittest.TestCase):
@@ -546,10 +556,8 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4[:] = [  100,   200,   300,  400]
         self.assertEqual(
             (
-                (
-                    (12, 5, 10), (12, 2, 20),
-                ),
-                ((100, ), (300, ))
+                ((12, 5, 10), (100, )),
+                ((12, 2, 20), (300, ))
             ),
             obj(event)
         )
@@ -558,7 +566,7 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var2[:] = [  5.2,  40.2,  2.4,  4.2, 45.2] # 1 element out of range
         event.var3[:] = [ 85.9,  13.6, 90.1, 81.2, 22.3, 50.1] # 3 elements out of range
         event.var4[:] = [  100,   200,  300,  400]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_4Keys_keyIndices_NoneVal(self):
         obj = Counter.KeyValueComposer(
@@ -580,16 +588,12 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4[:] = [  100,   200]
         self.assertEqual(
             (
-                (
-                    (12, 5, 10, 100), (12, 5, 10, 200),
-                    (12, 2, 20, 100), (12, 2, 20, 200),
-                    (12, 30, 22, 100), (12, 30, 22, 200)
-                ),
-                (
-                    ( ), ( ),
-                    ( ), ( ),
-                    ( ), ( )
-                )
+                ((12,  5, 10, 100), ( )),
+                ((12,  5, 10, 200), ( )),
+                ((12,  2, 20, 100), ( )),
+                ((12,  2, 20, 200), ( )),
+                ((12, 30, 22, 100), ( )),
+                ((12, 30, 22, 200), ( )),
             ),
             obj(event)
         )
@@ -598,7 +602,7 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var2[:] = [  5.2,  40.2,  52.4,   4.2, 60.9] # 1 element out of range
         event.var3[:] = [ 90.8,  13.6,  20.2,  85.7, 22.3, 50.1] # 1 element out of range
         event.var4[:] = [  100,   200]
-        self.assertEqual((( ), ( )), obj(event))
+        self.assertEqual(( ), obj(event))
 
     def test_NoneKeys_4Val_valIndices(self):
         obj = Counter.KeyValueComposer(
@@ -619,16 +623,12 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.var4[:] = [  100,   200]
         self.assertEqual(
             (
-                (
-                    ( ), ( ),
-                    ( ), ( ),
-                    ( ), ( ),
-                ),
-                (
-                    (12.5,  5.2, 10.8, 100), (12.5,  5.2, 10.8, 200),
-                    (12.5,  4.2, 13.6, 100), (12.5,  4.2, 13.6, 200),
-                    (12.5, 30.9, 20.2, 100), (12.5, 30.9, 20.2, 200),
-                )
+                (( ), (12.5,  5.2, 10.8, 100)),
+                (( ), (12.5,  5.2, 10.8, 200)),
+                (( ), (12.5,  4.2, 13.6, 100)),
+                (( ), (12.5,  4.2, 13.6, 200)),
+                (( ), (12.5, 30.9, 20.2, 100)),
+                (( ), (12.5, 30.9, 20.2, 200)),
             ),
             obj(event)
         )
@@ -658,18 +658,10 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
 
         self.assertEqual(
             (
-                (
-                    (1001, 12, 1, 20, ),
-                    (1001, 12, 1, 13, ),
-                    (1001, 10, 0, 20, ),
-                    (1001, 10, 0, 13, ),
-                ),
-                (
-                    (2.5, ),
-                    (1.0, ),
-                    (2.5, ),
-                    (1.0, ),
-                ),
+                ((1001, 12, 1, 20, ), (2.5, )),
+                ((1001, 12, 1, 13, ), (1.0, )),
+                ((1001, 10, 0, 20, ), (2.5, )),
+                ((1001, 10, 0, 13, ), (1.0, )),
             ),
             obj(event)
         )
@@ -680,8 +672,7 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
         event.mu_pt[:]   = [20.0, 11.0, 13.0]
         event.mu_eta[:]  = [2.5,  None, 1.0]
 
-        self.assertEqual(((), ()), obj(event)
-        )
+        self.assertEqual(( ), obj(event))
 
     def test_back_reference_example_twice(self):
         obj = Counter.KeyValueComposer(
@@ -721,18 +712,10 @@ class TestKeyValueComposer_indices_backref(unittest.TestCase):
 
         self.assertEqual(
             (
-                (
-                    (1001, 15, -2, 11,  1, 0.1),
-                    (1001, 15, -2, 13, -2, 0.1),
-                    (1001,  9,  2, 11,  1, 1.2),
-                    (1001,  9,  2, 13, -2, 1.2)
-                ),
-                (
-                    (16.2, 15.2),
-                    (16.2, 16.3),
-                    (10.1, 15.2),
-                    (10.1, 16.3)
-                )
+                ((1001, 15, -2, 11,  1, 0.1), (16.2, 15.2)),
+                ((1001, 15, -2, 13, -2, 0.1), (16.2, 16.3)),
+                ((1001,  9,  2, 11,  1, 1.2), (10.1, 15.2)),
+                ((1001,  9,  2, 13, -2, 1.2), (10.1, 16.3)),
             ),
             obj(event)
         )
