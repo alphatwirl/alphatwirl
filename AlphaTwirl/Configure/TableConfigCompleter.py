@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 from .TableFileNameComposer import TableFileNameComposer
-from ..Counter import Counts, WeightCalculatorOne
+from ..Counter import Count, WeightCalculatorOne
 
 ##__________________________________________________________________||
 class TableConfigCompleter(object):
@@ -22,7 +22,7 @@ class TableConfigCompleter(object):
 
     """
     def __init__(self,
-                 defaultCountsClass = Counts,
+                 defaultCountsClass = Count,
                  defaultWeight = WeightCalculatorOne(),
                  defaultOutDir = '.',
                  createOutFileName = TableFileNameComposer()):
