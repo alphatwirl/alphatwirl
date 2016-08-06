@@ -3,20 +3,20 @@ from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyComposer, countMethod, nextKeyComposer = None,
+    def __init__(self, keyValComposer, countMethod, nextKeyComposer = None,
                  weightCalculator = WeightCalculatorOne()):
-        self.keyComposer = keyComposer
+        self.keyValComposer = keyValComposer
         self.countMethod = countMethod
         self.weightCalculator = weightCalculator
         self.nextKeyComposer = nextKeyComposer
 
     def begin(self, event):
-        self.keyComposer.begin(event)
+        self.keyValComposer.begin(event)
 
     def event(self, event):
-        keys = self.keyComposer(event)
+        keyvals = self.keyValComposer(event)
         weight = self.weightCalculator(event)
-        for key in keys:
+        for key, val in keyvals:
             self.countMethod.count(key, weight)
 
     def end(self):

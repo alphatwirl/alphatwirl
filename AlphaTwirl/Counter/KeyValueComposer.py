@@ -58,28 +58,18 @@ class KeyValueComposer(object):
         return ret
 
     def __call__(self, event):
-        varis = self._array_reader.read()
-        key, val =  self._seprate_into_keys_and_vals(varis)
-        key = self._apply_binnings(self.binnings, key)
-        key, val = self._remove_None(key, val)
-        return key, val
+        arrays = self._array_reader.read()
 
-    def _seprate_into_keys_and_vals(self, varis):
-        key = [v[:len(self.keyAttrNames)] for v in varis]
-        val = [v[len(self.keyAttrNames):] for v in varis]
-        return key, val
+        # separate into keys and vals
+        lenkey = len(self.keyAttrNames)
+        keyvals = tuple((e[:lenkey], e[lenkey:]) for e in arrays)
 
-    def _apply_binnings(self, binnings, keys):
-        if keys is None: return None
-        return tuple(tuple(b(k) for b, k in zip(binnings, kk)) for kk in keys)
+        # apply binnings
+        keyvals = tuple((tuple(b(k) for b, k in zip(self.binnings, kk)), vv) for kk, vv in keyvals)
 
-    def _remove_None(self, key, val):
-        idxs_key = set(i for i, e in enumerate(key) if None not in e)
-        idxs_val = set(i for i, e in enumerate(val) if None not in e)
-        idxs = idxs_key & idxs_val # intersection
-        idxs = sorted(list(idxs))
-        key = tuple(key[i] for i in idxs)
-        val = tuple(val[i] for i in idxs)
-        return key, val
+        # remove None
+        keyvals = tuple(e for e in keyvals if None not in e[0] and None not in e[1])
+
+        return keyvals
 
 ##__________________________________________________________________||
