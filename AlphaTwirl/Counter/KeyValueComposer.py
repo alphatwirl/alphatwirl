@@ -4,7 +4,9 @@ from .BackrefMultipleArrayReader import BackrefMultipleArrayReader
 
 ##__________________________________________________________________||
 class KeyValueComposer(object):
-    """This class composes a key and a value for the event
+    """This class composes keys and values for the event
+
+    (this docstring is under development.)
 
     This class can be used with BEvents.
 
@@ -12,7 +14,6 @@ class KeyValueComposer(object):
 
     This class supports back references.
 
-    (this docstring is under development.)
 
     """
     def __init__(self, keyAttrNames = None, binnings = None, keyIndices = None,
