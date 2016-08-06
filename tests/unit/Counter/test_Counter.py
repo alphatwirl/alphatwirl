@@ -40,16 +40,16 @@ class MockWeightCalculator(object):
 class MockBinning(object): pass
 
 ##__________________________________________________________________||
-class MockKeyComposer(object):
-    def __init__(self, listOfKeys = [ ]):
-        self.listOfKeys = listOfKeys
+class MockKeyValueComposer(object):
+    def __init__(self, keyval_list = [ ]):
+        self.keyval_list = keyval_list
         self._begin = None
 
     def begin(self, event):
         self._begin = event
 
     def __call__(self, event):
-        return self.listOfKeys.pop()
+        return self.keyval_list.pop()
 
 ##__________________________________________________________________||
 class MockNextKeyComposer(object):
@@ -60,15 +60,20 @@ class MockNextKeyComposer(object):
         return self.nextdic[key]
 
 ##__________________________________________________________________||
-class TestMockKeyComposer(unittest.TestCase):
+class TestMockKeyValueComposer(unittest.TestCase):
 
     def test_call(self):
-        keys = [(13, 5), (11, 2), (11, 10), (2, 22)]
-        keycomposer = MockKeyComposer(keys)
-        self.assertEqual((2, 22), keycomposer(MockEvent()))
-        self.assertEqual((11, 10), keycomposer(MockEvent()))
-        self.assertEqual((11, 2), keycomposer(MockEvent()))
-        self.assertEqual((13, 5), keycomposer(MockEvent()))
+        keys = [
+            ((10,  5), (101, 22)),
+            ((11,  4), (102, 33)),
+            ((12,  3), (103, 44)),
+            ((13,  2), (104, 55)),
+        ]
+        keycomposer = MockKeyValueComposer(keys)
+        self.assertEqual(((13,  2), (104, 55)), keycomposer(MockEvent()))
+        self.assertEqual(((12,  3), (103, 44)), keycomposer(MockEvent()))
+        self.assertEqual(((11,  4), (102, 33)), keycomposer(MockEvent()))
+        self.assertEqual(((10,  5), (101, 22)), keycomposer(MockEvent()))
         self.assertRaises(IndexError, keycomposer, MockEvent())
 
 ##__________________________________________________________________||
@@ -76,8 +81,14 @@ class TestCounter(unittest.TestCase):
 
     def test_events(self):
         counts = MockCounts()
-        listOfKeys = [[(11, ), (12, )], [(12, )], [ ], [(14, )], [(11, )]]
-        keycomposer = MockKeyComposer(listOfKeys)
+        keyval_list = [
+            [((11, ), ()), ((12, ), ())],
+            [((12, ), ())],
+            [ ],
+            [((14, ), ())],
+            [((11, ), ())]
+        ]
+        keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
         counter = Counter.Counter(keycomposer, counts, nextKeyComposer, MockWeightCalculator())
@@ -112,8 +123,14 @@ class TestCounter(unittest.TestCase):
 
     def test_default_weight(self):
         counts = MockCounts()
-        listOfKeys = [[(11, ), (12, )], [(12, )], [ ], [(14, )], [(11, )]]
-        keycomposer = MockKeyComposer(listOfKeys)
+        keyval_list = [
+            [((11, ), ()), ((12, ), ())],
+            [((12, ), ())],
+            [ ],
+            [((14, ), ())],
+            [((11, ), ())]
+        ]
+        keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
         counter = Counter.Counter(keycomposer, counts, nextKeyComposer)
@@ -127,10 +144,10 @@ class TestCounter(unittest.TestCase):
 
     def test_copyFrom(self):
         counts = MockCounts()
-        counter = Counter.Counter(MockKeyComposer(), counts, MockWeightCalculator())
+        counter = Counter.Counter(MockKeyValueComposer(), counts, MockWeightCalculator())
 
         src_counts = MockCounts()
-        src_counter = Counter.Counter(MockKeyComposer(), src_counts, MockWeightCalculator())
+        src_counter = Counter.Counter(MockKeyValueComposer(), src_counts, MockWeightCalculator())
         src_counts._counts[:] = [((11, ), 1.0)]
 
         self.assertEqual([ ], counts._counts)
