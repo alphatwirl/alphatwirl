@@ -26,10 +26,10 @@ class TestCount(unittest.TestCase):
         expected  = {1: np.array((4, 6))}
         self.assert_np_dict_frame(expected, obj.results())
 
-        obj.count(2, weight = 3)
+        obj.count(2, weight = 3.2)
         expected  = {
             1: np.array((4, 6)),
-            2: np.array((3, 9)),
+            2: np.array((3.2, 3.2**2)),
         }
         self.assert_np_dict_frame(expected, obj.results())
         # self.assertEqual(expected, obj.results()) # this doesn't work
