@@ -22,19 +22,25 @@ class KeyValueComposer(object):
         val_attr_names = tuple(valAttrNames) if valAttrNames is not None else ()
         val_idxs = tuple(valIndices) if valIndices is not None else (None, )*len(val_attr_names)
 
-        self.binnings = tuple(binnings) if binnings is not None else ()
-
-        if not len(key_attr_names) == len(self.binnings) == len(key_idxs):
+        if not len(key_attr_names) == len(key_idxs):
             raise ValueError(
-                "the three tuples must have the same length: keyAttrNames = {}, binnings = {}, keyIndices = {}".format(
-                    key_attr_names, self.binnings, key_idxs
+                "the two tuples must have the same length: key_attr_names = {}, key_idxs = {}".format(
+                    key_attr_names, key_idxs
                 )
             )
 
         if not len(val_attr_names) == len(val_idxs):
             raise ValueError(
-                "the two tuples must have the same length: valAttrNames = {}, valIndices = {}".format(
+                "the two tuples must have the same length: val_attr_names = {}, val_idxs = {}".format(
                     val_attr_names, val_idxs
+                )
+            )
+
+        self.binnings = tuple(binnings) if binnings is not None else None
+        if self.binnings is not None and not len(key_attr_names) == len(self.binnings):
+            raise ValueError(
+                "the two tuples must have the same length: key_attr_names = {}, self.binnings = {}".format(
+                    key_attr_names, self.binnings
                 )
             )
 
@@ -98,7 +104,8 @@ class KeyValueComposer(object):
 
 
         # apply binnings
-        keyvals = tuple((tuple(b(k) for b, k in zip(self.binnings, kk)), vv) for kk, vv in keyvals)
+        if self.binnings:
+            keyvals = tuple((tuple(b(k) for b, k in zip(self.binnings, kk)), vv) for kk, vv in keyvals)
         # e.g.,
         # keyvals = (
         #     ((1001, 15,   -2, 20, None, 0.1), (16.2, 22.1)),
