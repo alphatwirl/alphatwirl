@@ -12,7 +12,7 @@ class MockCounts(object):
         self._keys = set()
         self._addedkeys = set()
 
-    def count(self, key, weight):
+    def count(self, key, val, weight):
         self._counts.append((key, weight))
         self._keys.add(key)
 
