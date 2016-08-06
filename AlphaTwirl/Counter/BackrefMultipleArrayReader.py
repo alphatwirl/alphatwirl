@@ -26,17 +26,15 @@ class BackrefMultipleArrayReader(object):
         self.idxs_conf = tuple(c if isinstance(c, numbers.Number) else None for c in idxs_conf)
 
         if backref_idxs is None:
-            use_backref = False
+            self.use_backref = False
         else:
-            use_backref = any([e is not None for e in backref_idxs])
+            self.use_backref = any([e is not None for e in backref_idxs])
 
-        if not use_backref:
-            self._read = self._fast_read_without_backref
+        if not self.use_backref:
             self._zipped = zip(self.arrays, self.idxs_conf, self.wildcard_conf)
             return
 
         # use backref
-        self._read = self._read_with_backref
 
         # e.g.
         # self.arrays = [[], [], [], [], [], [], [], []]
@@ -65,7 +63,9 @@ class BackrefMultipleArrayReader(object):
 
 
     def read(self):
-        return self._read()
+        if self.use_backref:
+            return self._read_with_backref()
+        return self._fast_read_without_backref()
 
     def _fast_read_without_backref(self):
 
