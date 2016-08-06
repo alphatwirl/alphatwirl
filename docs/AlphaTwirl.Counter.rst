@@ -4,6 +4,14 @@ AlphaTwirl.Counter package
 Submodules
 ----------
 
+AlphaTwirl.Counter.BackrefMultipleArrayReader module
+----------------------------------------------------
+
+.. automodule:: AlphaTwirl.Counter.BackrefMultipleArrayReader
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.Counter.Counter module
 ---------------------------------
 
@@ -20,18 +28,10 @@ AlphaTwirl.Counter.Counts module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Counter.GenericKeyComposer module
---------------------------------------------
+AlphaTwirl.Counter.KeyValueComposer module
+------------------------------------------
 
-.. automodule:: AlphaTwirl.Counter.GenericKeyComposer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-AlphaTwirl.Counter.GenericKeyComposerB module
----------------------------------------------
-
-.. automodule:: AlphaTwirl.Counter.GenericKeyComposerB
+.. automodule:: AlphaTwirl.Counter.KeyValueComposer
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,6 +48,14 @@ AlphaTwirl.Counter.WeightCalculatorOne module
 ---------------------------------------------
 
 .. automodule:: AlphaTwirl.Counter.WeightCalculatorOne
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.Counter.parse_indices_config module
+----------------------------------------------
+
+.. automodule:: AlphaTwirl.Counter.parse_indices_config
     :members:
     :undoc-members:
     :show-inheritance:
