@@ -1,5 +1,6 @@
 import collections
 import unittest
+import numpy as np
 
 ##__________________________________________________________________||
 hasPandas = False
@@ -20,100 +21,16 @@ class MockReader(object):
     def __init__(self, results):
         self._results = results
 
-    def keynames(self):
-        return ('v1', )
-
-    def valNames(self):
-        return ('n', 'nvar')
-
     def results(self):
         return self._results
 
 ##__________________________________________________________________||
-@unittest.skipUnless(hasPandas, "has no pandas")
-class TestCountsToDataFrame(unittest.TestCase):
-    def setUp(self):
-        self.addTypeEqualityFunc(pandas.core.frame.DataFrame, assertDataFrameEqual)
+class MockResult(object):
+    def __init__(self, results):
+        self._results = results
 
-    def test_call(self):
-
-        counts  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0},
-            (2, ): {'n': 3.0, 'nvar': 9.0},
-            (3, ): {'n': 2.0, 'nvar': 3.0},
-            }
-
-        expected = pandas.DataFrame(
-            {
-                'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
-                }
-            )
-
-        columns = ("v1", )
-        df = countsToDataFrame(counts, columns)
-        self.assertEqual(expected, countsToDataFrame(counts, columns))
-
-    def test_call_ordered_values(self):
-
-        counts  = {
-            (1, ): collections.OrderedDict((('n', 4.0), ('nvar', 6.0))),
-            (2, ): collections.OrderedDict((('n', 3.0), ('nvar', 9.0))),
-            (3, ): collections.OrderedDict((('n', 2.0), ('nvar', 3.0))),
-            }
-
-        expected = pandas.DataFrame(
-            {
-                'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
-                }
-            )
-
-        columns = ("v1", )
-        df = countsToDataFrame(counts, columns)
-        self.assertEqual(expected, df)
-        self.assertEqual(['v1', 'n', 'nvar'], df.columns.values.tolist())
-
-    def test_call_threeValues(self):
-
-        counts  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0, 'skewness': 2.3 },
-            (2, ): {'n': 3.0, 'nvar': 9.0, 'skewness': 5.4 },
-            (3, ): {'n': 2.0, 'nvar': 3.0, 'skewness': 3.6 },
-            }
-
-        expected = pandas.DataFrame(
-            {
-                'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
-                'skewness': [2.3, 5.4, 3.6],
-                }
-            )
-
-        columns = ("v1", )
-        self.assertEqual(expected, countsToDataFrame(counts, columns))
-
-    def test_valNames(self):
-
-        counts  = {
-            (1, ): {'x': 4.0, 'var_x': 6.0},
-            (2, ): {'x': 3.0, 'var_x': 9.0},
-            (3, ): {'x': 2.0, 'var_x': 3.0},
-            }
-
-        expected = pandas.DataFrame(
-            {
-                'v1': [1, 2, 3],
-                'x': [4.0, 3.0, 2.0],
-                'var_x': [6.0, 9.0, 3.0],
-                }
-            )
-
-        columns = ("v1", )
-        self.assertEqual(expected, countsToDataFrame(counts, columns))
+    def results(self):
+        return self._results
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
@@ -123,43 +40,56 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
 
     def test_combine_oneReader(self):
 
-        counts  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0},
-            (2, ): {'n': 3.0, 'nvar': 9.0},
-            (3, ): {'n': 2.0, 'nvar': 3.0},
-            }
-
-        reader = MockReader(counts)
+        reader = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
         datasetReaderPairs = [('data1', reader), ]
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+            ('data1', 1, 4, 6),
+            ('data1', 2, 3, 9),
+            ('data1', 3, 2, 3),
+        ]
 
         expected = pandas.DataFrame(
             {
                 'component': ['data1', 'data1', 'data1'],
                 'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
+                'n': [4, 3, 2],
+                'nvar': [6, 9, 3],
                 }
             )
 
-        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ), valNames = ('n', 'nvar'))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_twoReaders(self):
 
-        counts1  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0},
-            (2, ): {'n': 3.0, 'nvar': 9.0},
-            (3, ): {'n': 2.0, 'nvar': 3.0},
-            }
+        reader1 = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
 
-        reader1 = MockReader(counts1)
-
-        counts2  = {
-            (2, ): {'n': 3.0, 'nvar': 6.0},
-            (4, ): {'n': 2.0, 'nvar': 2.0},
-            }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(
+            MockResult(
+                {
+                    (2, ): np.array((3, 6)),
+                    (4, ): np.array((2, 2)),
+                }
+            )
+        )
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
@@ -167,27 +97,27 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
             {
                 'component': ['data1', 'data1', 'data1', 'data2', 'data2'],
                 'v1': [1, 2, 3, 2, 4],
-                'n': [4.0, 3.0, 2.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0, 6.0, 2.0],
+                'n': [4, 3, 2, 3, 2],
+                'nvar': [6, 9, 3, 6, 2],
                 }
             )
 
-        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ), valNames = ('n', 'nvar'))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_with_empty_counts(self):
 
-        counts1  = {
-            (1, ): {'n': 4.0, 'nvar': 6.0},
-            (2, ): {'n': 3.0, 'nvar': 9.0},
-            (3, ): {'n': 2.0, 'nvar': 3.0},
-            }
+        reader1 = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
 
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(MockResult({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
@@ -195,43 +125,46 @@ class TestCombineIntoPandasDataFrame(unittest.TestCase):
             {
                 'component': ['data1', 'data1', 'data1'],
                 'v1': [1, 2, 3],
-                'n': [4.0, 3.0, 2.0],
-                'nvar': [6.0, 9.0, 3.0],
+                'n': [4, 3, 2],
+                'nvar': [6, 9, 3],
                 }
             )
 
-        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ), valNames = ('n', 'nvar'))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_all_empty_counts(self):
 
-        counts1  = { }
+        reader1 = MockReader(MockResult({}))
 
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(MockResult({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
-        expected = pandas.DataFrame(
-            {
-                'component': [ ],
-                'v1': [ ],
-                'n': [ ],
-                'nvar': [ ],
-                }
-            )
+        # this will make the index Index([], dtype='object')
+        # expected = pandas.DataFrame(
+        #     {
+        #         'component': [ ],
+        #         'v1': [ ],
+        #         'n': [ ],
+        #         'nvar': [ ],
+        #         }
+        #     )
 
-        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
+        # this will make the index Int64Index([], dtype='int64')
+        expected = pandas.DataFrame(
+            [],
+            columns = ('component', 'v1', 'n', 'nvar')
+        )
+
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ), valNames = ('n', 'nvar'))
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_combine_empty_pairs(self):
 
         datasetReaderPairs = [ ]
 
-        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ))
+        combine = CombineIntoPandasDataFrame(keyNames = ('v1', ), valNames = ('n', 'nvar'))
         self.assertEqual(None, combine.combine(datasetReaderPairs))
 
 ##__________________________________________________________________||

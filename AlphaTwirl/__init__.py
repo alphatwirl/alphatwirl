@@ -16,7 +16,7 @@ from mkdir_p import mkdir_p
 from listToAlignedText import listToAlignedText
 
 try:
-    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame, countsToDataFrame
+    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
     from buildBinningFromTbl import buildBinningFromTbl
 except ImportError:
