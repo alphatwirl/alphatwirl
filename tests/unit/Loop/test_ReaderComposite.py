@@ -18,11 +18,11 @@ class MockReader(object):
     def end(self):
         self._ended = True
 
-    def copyFrom(self, src):
+    def copy_from(self, src):
         self._copy = src
 
 ##__________________________________________________________________||
-class MockReader_without_copyFrom(object):
+class MockReader_without_copy_from(object):
 
     def __init__(self):
         self._beganWith = None
@@ -60,7 +60,7 @@ class MockReader_with_return(object):
         return self._ret
 
     def end(self): pass
-    def copyFrom(self, src): pass
+    def copy_from(self, src): pass
 
 ##__________________________________________________________________||
 class MockEvent(object):
@@ -136,14 +136,14 @@ class TestReaderComposite(unittest.TestCase):
         self.assertTrue(reader2._ended)
         self.assertTrue(reader3._ended)
 
-    def test_copyFrom(self):
+    def test_copy_from(self):
         """
         composite1
             |- composite2
             |      |- reader1
             |      |- reader2
             |- reader3
-            |- reader4 (wo copyFrom())
+            |- reader4 (wo copy_from())
             |- reader5
         """
         dest_composite1 = ReaderComposite()
@@ -151,7 +151,7 @@ class TestReaderComposite(unittest.TestCase):
         dest_reader1 = MockReader()
         dest_reader2 = MockReader()
         dest_reader3 = MockReader()
-        dest_reader4 = MockReader_without_copyFrom()
+        dest_reader4 = MockReader_without_copy_from()
         dest_reader5 = MockReader()
         dest_composite1.add(dest_composite2)
         dest_composite2.add(dest_reader1)
@@ -165,7 +165,7 @@ class TestReaderComposite(unittest.TestCase):
         src_reader1 = MockReader()
         src_reader2 = MockReader()
         src_reader3 = MockReader()
-        src_reader4 = MockReader_without_copyFrom()
+        src_reader4 = MockReader_without_copy_from()
         src_reader5 = MockReader()
         src_composite1.add(src_composite2)
         src_composite2.add(src_reader1)
@@ -174,7 +174,7 @@ class TestReaderComposite(unittest.TestCase):
         src_composite1.add(src_reader4)
         src_composite1.add(src_reader5)
 
-        dest_composite1.copyFrom(src_composite1)
+        dest_composite1.copy_from(src_composite1)
 
         self.assertIs(src_reader1, dest_reader1._copy)
         self.assertIs(src_reader2, dest_reader2._copy)

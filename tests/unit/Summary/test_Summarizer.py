@@ -22,7 +22,7 @@ class MockSummary(object):
     def add_key(self, key):
         self._addedkeys.add(key)
 
-    def copyFrom(self, src):
+    def copy_from(self, src):
         self._counts[:] = src._counts[:]
 
     def results(self):
@@ -136,7 +136,7 @@ class TestSummarizer(unittest.TestCase):
         self.assertEqual([((11, ), 1.0)], summary._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
-    def test_copyFrom(self):
+    def test_copy_from(self):
         summary = MockSummary()
         counter = Summary.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
 
@@ -145,7 +145,7 @@ class TestSummarizer(unittest.TestCase):
         src_summary._counts[:] = [((11, ), 1.0)]
 
         self.assertEqual([ ], summary._counts)
-        counter.copyFrom(src_counter)
+        counter.copy_from(src_counter)
         self.assertEqual([((11,), 1.0)], summary._counts)
 
 ##__________________________________________________________________||

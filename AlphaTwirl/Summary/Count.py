@@ -19,7 +19,7 @@ class Count(object):
     def keys(self):
         return self._results.keys()
 
-    def copyFrom(self, src):
+    def copy_from(self, src):
         self._results.clear()
         self._results.update(src._results)
 

@@ -34,7 +34,7 @@ class TestCount(unittest.TestCase):
         self.assert_np_dict_frame(expected, obj.results())
         # self.assertEqual(expected, obj.results()) # this doesn't work
 
-    def test_copyFrom(self):
+    def test_copy_from(self):
         obj = Count()
         src_obj = Count()
 
@@ -45,7 +45,7 @@ class TestCount(unittest.TestCase):
             }
 
         src_obj._results.update(expected)
-        obj.copyFrom(src_obj)
+        obj.copy_from(src_obj)
         self.assertEqual(expected, src_obj.results()) # don't know why this works
         self.assertIsNot(obj._results, src_obj._results)
 

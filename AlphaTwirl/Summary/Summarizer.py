@@ -25,8 +25,8 @@ class Summarizer(object):
             nextKeys = self.nextKeyComposer(key)
             for nextKey in nextKeys: self.summary.add_key(nextKey)
 
-    def copyFrom(self, src):
-        self.summary.copyFrom(src.summary)
+    def copy_from(self, src):
+        self.summary.copy_from(src.summary)
 
     def results(self):
         return self.summary.results()

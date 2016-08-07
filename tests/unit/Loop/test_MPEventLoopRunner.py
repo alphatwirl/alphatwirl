@@ -25,7 +25,7 @@ class MockReader(object):
         self._isSetResultsCalled = False
         self._isCopyFromCalled = False
 
-    def copyFrom(self, src):
+    def copy_from(self, src):
         self._result = src._result
         self._isCopyFromCalled = True
 

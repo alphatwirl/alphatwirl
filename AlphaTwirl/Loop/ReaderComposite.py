@@ -36,9 +36,9 @@ class ReaderComposite(object):
             if not hasattr(reader, 'end'): continue
             reader.end()
 
-    def copyFrom(self, src):
+    def copy_from(self, src):
         for d, s in zip(self.readers, src.readers):
-            if not hasattr(d, 'copyFrom'): continue
-            d.copyFrom(s)
+            if not hasattr(d, 'copy_from'): continue
+            d.copy_from(s)
 
 ##__________________________________________________________________||
