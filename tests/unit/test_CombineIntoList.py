@@ -268,7 +268,6 @@ class TestCombineIntoList(unittest.TestCase):
 
         reader2 = MockReader(MockResult({}))
 
-
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
         expected = [
