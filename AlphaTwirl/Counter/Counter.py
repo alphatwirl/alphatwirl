@@ -25,9 +25,6 @@ class Counter(object):
             nextKeys = self.nextKeyComposer(key)
             for nextKey in nextKeys: self.countMethod.addKey(nextKey)
 
-    def valNames(self):
-        return self.countMethod.valNames()
-
     def copyFrom(self, src):
         self.countMethod.copyFrom(src.countMethod)
 

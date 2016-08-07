@@ -22,9 +22,6 @@ class MockCounts(object):
     def addKey(self, key):
         self._addedkeys.add(key)
 
-    def valNames(self):
-        return ('n', 'nvar')
-
     def copyFrom(self, src):
         self._counts[:] = src._counts[:]
 
