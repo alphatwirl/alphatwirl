@@ -3,10 +3,10 @@ from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
 class Counter(object):
-    def __init__(self, keyValComposer, countMethod, nextKeyComposer = None,
+    def __init__(self, keyValComposer, summary, nextKeyComposer = None,
                  weightCalculator = WeightCalculatorOne()):
         self.keyValComposer = keyValComposer
-        self.summary = countMethod
+        self.summary = summary
         self.weightCalculator = weightCalculator
         self.nextKeyComposer = nextKeyComposer
 

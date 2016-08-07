@@ -65,7 +65,7 @@ def buildCounterAndCollector(tblcfg):
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
     counter = Counter(
         keyValComposer = keyValComposer,
-        countMethod = tblcfg['countsClass'](),
+        summary = tblcfg['countsClass'](),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
