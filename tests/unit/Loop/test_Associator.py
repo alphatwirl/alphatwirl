@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import Associator
+from AlphaTwirl.Loop import Associator
 import unittest
 
 ##__________________________________________________________________||

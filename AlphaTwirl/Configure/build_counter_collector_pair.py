@@ -2,7 +2,7 @@
 from ..Summary import Summarizer, NextKeyComposer, KeyValueComposer
 from ..CombineIntoList import CombineIntoList
 from ..WriteListToFile import WriteListToFile
-from ..EventReader import Collector
+from ..Loop import Collector
 
 ##__________________________________________________________________||
 def build_counter_collector_pair(tblcfg):

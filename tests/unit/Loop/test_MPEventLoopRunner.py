@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import MPEventLoopRunner
+from AlphaTwirl.Loop import MPEventLoopRunner
 import unittest
 import os
 
