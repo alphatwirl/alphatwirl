@@ -29,6 +29,6 @@ class Summarizer(object):
         self.summary.copy_from(src.summary)
 
     def results(self):
-        return self.summary.results()
+        return self.summary
 
 ##__________________________________________________________________||
