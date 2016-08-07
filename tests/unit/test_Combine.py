@@ -1,6 +1,5 @@
 import unittest
 import numpy as np
-import collections
 
 from AlphaTwirl import Combine
 
