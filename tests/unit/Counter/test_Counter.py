@@ -6,7 +6,7 @@ class MockEvent(object):
     pass
 
 ##__________________________________________________________________||
-class MockCounts(object):
+class MockSummary(object):
     def __init__(self):
         self._counts = [ ]
         self._keys = set()
@@ -74,7 +74,7 @@ class TestMockKeyValueComposer(unittest.TestCase):
 class TestCounter(unittest.TestCase):
 
     def test_events(self):
-        counts = MockCounts()
+        summary = MockSummary()
         keyval_list = [
             [((11, ), ()), ((12, ), ())],
             [((12, ), ())],
@@ -85,7 +85,7 @@ class TestCounter(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Counter.Counter(keycomposer, counts, nextKeyComposer, MockWeightCalculator())
+        counter = Counter.Counter(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -93,30 +93,30 @@ class TestCounter(unittest.TestCase):
 
         event = MockEvent()
         counter.event(event)
-        self.assertEqual([((11, ), 1.0)], counts._counts)
+        self.assertEqual([((11, ), 1.0)], summary._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], counts.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], counts.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], counts.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary.results())
 
         counter.end()
-        self.assertEqual(set([(15, ), (13, ), (12, )]), counts._addedkeys)
+        self.assertEqual(set([(15, ), (13, ), (12, )]), summary._addedkeys)
 
     def test_default_weight(self):
-        counts = MockCounts()
+        summary = MockSummary()
         keyval_list = [
             [((11, ), ()), ((12, ), ())],
             [((12, ), ())],
@@ -127,25 +127,25 @@ class TestCounter(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Counter.Counter(keycomposer, counts, nextKeyComposer)
+        counter = Counter.Counter(keycomposer, summary, nextKeyComposer)
 
         self.assertIsInstance(counter.weightCalculator, Counter.WeightCalculatorOne)
 
         event = MockEvent()
         counter.event(event)
-        self.assertEqual([((11, ), 1.0)], counts._counts)
+        self.assertEqual([((11, ), 1.0)], summary._counts)
         self.assertEqual([((11, ), 1.0)], counter.results())
 
     def test_copyFrom(self):
-        counts = MockCounts()
-        counter = Counter.Counter(MockKeyValueComposer(), counts, MockWeightCalculator())
+        summary = MockSummary()
+        counter = Counter.Counter(MockKeyValueComposer(), summary, MockWeightCalculator())
 
-        src_counts = MockCounts()
-        src_counter = Counter.Counter(MockKeyValueComposer(), src_counts, MockWeightCalculator())
-        src_counts._counts[:] = [((11, ), 1.0)]
+        src_summary = MockSummary()
+        src_counter = Counter.Counter(MockKeyValueComposer(), src_summary, MockWeightCalculator())
+        src_summary._counts[:] = [((11, ), 1.0)]
 
-        self.assertEqual([ ], counts._counts)
+        self.assertEqual([ ], summary._counts)
         counter.copyFrom(src_counter)
-        self.assertEqual([((11,), 1.0)], counts._counts)
+        self.assertEqual([((11,), 1.0)], summary._counts)
 
 ##__________________________________________________________________||
