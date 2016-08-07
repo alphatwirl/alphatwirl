@@ -9,6 +9,6 @@ class TestWeightCalculatorOne(unittest.TestCase):
 
     def test_events(self):
         weight = Counter.WeightCalculatorOne()
-        self.assertEqual(1.0, weight(MockEvent))
+        self.assertEqual(1.0, weight(MockEvent()))
 
 ##__________________________________________________________________||
