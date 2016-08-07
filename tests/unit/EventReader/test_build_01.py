@@ -1,4 +1,4 @@
-from AlphaTwirl.Counter import Counts, KeyValueComposer, NextKeyComposer, Counter
+from AlphaTwirl.Counter import Count, KeyValueComposer, NextKeyComposer, Counter
 from AlphaTwirl.Binning import Echo
 from AlphaTwirl.EventReader import Associator
 from AlphaTwirl.EventReader import ReaderComposite
@@ -29,22 +29,22 @@ class TesEventReader_build_01(unittest.TestCase):
         progressReporter1 = MockProgressReporter()
 
         keyComposer4 = KeyValueComposer(('var4', ), (Echo(), ))
-        counts4 = Counts()
+        counts4 = Count()
         reader4 = Counter(keyComposer4, counts4)
         collector4 = Collector(MockResultsCombinationMethod())
 
         keyComposer5 = KeyValueComposer(('var5', ), (Echo(), ))
-        counts5 = Counts()
+        counts5 = Count()
         reader5 = Counter(keyComposer5, counts5)
         collector5 = Collector(MockResultsCombinationMethod())
 
         keyComposer7 = KeyValueComposer(('var7', ), (Echo(), ))
-        counts7 = Counts()
+        counts7 = Count()
         reader7 = Counter(keyComposer7, counts7)
         collector7 = Collector(MockResultsCombinationMethod())
 
         keyComposer8 = KeyValueComposer(('var8', ), (Echo(), ))
-        counts8 = Counts()
+        counts8 = Count()
         reader8 = Counter(keyComposer8, counts8)
         collector8 = Collector(MockResultsCombinationMethod())
 
