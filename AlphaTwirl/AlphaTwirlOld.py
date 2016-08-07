@@ -19,7 +19,7 @@ from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
 from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from .Counter import Counter, Counts, KeyValueComposer, NextKeyComposer
+from .Summary import Summarizer, Count, KeyValueComposer, NextKeyComposer
 from .CombineIntoList import CombineIntoList
 from .WriteListToFile import WriteListToFile
 
@@ -63,16 +63,16 @@ def build_progressMonitor_communicationChannel(quiet, processes):
 def buildCounterAndCollector(tblcfg):
     keyValComposer = KeyValueComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    counter = Counter(
+    summarizer = Summarizer(
         keyValComposer = keyValComposer,
-        countMethod = tblcfg['countsClass'](),
+        summary = tblcfg['countsClass'](),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
-    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'])
+    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'], valNames = ('n', 'nvar'))
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector0 = Collector(resultsCombinationMethod, deliveryMethod)
-    return counter, collector0
+    return summarizer, collector0
 
 ##__________________________________________________________________||
 def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progressMonitor):
@@ -89,7 +89,7 @@ def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progre
               |- counter
     """
 
-    tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Counts, defaultOutDir = outDir)
+    tableConfigCompleter = TableConfigCompleter(defaultCountsClass = Count, defaultOutDir = outDir)
     tableConfigs = [tableConfigCompleter.complete(c) for c in tableConfigs]
     if not force: tableConfigs = [c for c in tableConfigs if c['outFile'] and not os.path.exists(c['outFilePath'])]
     if len(tableConfigs) == 0: return None, None

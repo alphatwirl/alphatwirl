@@ -7,7 +7,7 @@ class ReaderComposite(object):
 
     This class is a composite in the composite pattern.
 
-    Examples of event readers are instances of `Counter` and this
+    Examples of event readers are instances of `Summarizer` and this
     class.
 
     When `event()` is called, it calls `event()` of each reader in the

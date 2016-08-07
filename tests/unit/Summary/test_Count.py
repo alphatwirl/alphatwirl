@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from AlphaTwirl.Counter import Count
+from AlphaTwirl.Summary import Count
 
 ##__________________________________________________________________||
 class TestCount(unittest.TestCase):
@@ -14,22 +14,22 @@ class TestCount(unittest.TestCase):
     def test_count(self):
         obj = Count()
 
-        obj.count(1)
+        obj.add(1)
         expected  = {1: np.array((1, 1))}
         self.assert_np_dict_frame(expected, obj.results())
 
-        obj.count(1)
+        obj.add(1)
         expected  = {1: np.array((2, 2))}
         self.assert_np_dict_frame(expected, obj.results())
 
-        obj.count(1, weight = 2)
+        obj.add(1, weight = 2)
         expected  = {1: np.array((4, 6))}
         self.assert_np_dict_frame(expected, obj.results())
 
-        obj.count(2, weight = 3)
+        obj.add(2, weight = 3.2)
         expected  = {
             1: np.array((4, 6)),
-            2: np.array((3, 9)),
+            2: np.array((3.2, 3.2**2)),
         }
         self.assert_np_dict_frame(expected, obj.results())
         # self.assertEqual(expected, obj.results()) # this doesn't work

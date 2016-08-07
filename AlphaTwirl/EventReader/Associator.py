@@ -9,7 +9,7 @@ class Associator(object):
     An instance of this class is initialized with a reader and a
     collector.
 
-    An example of a reader is an instance of `Counter`.
+    An example of a reader is an instance of `Summarizer`.
 
     An example of a collector is `Collector`.
 

@@ -1,4 +1,4 @@
-from AlphaTwirl.Counter import Counts, KeyValueComposer, NextKeyComposer, Counter
+from AlphaTwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Summarizer
 from AlphaTwirl.Binning import Echo
 from AlphaTwirl.EventReader import Associator
 from AlphaTwirl.EventReader import ReaderComposite
@@ -29,23 +29,23 @@ class TesEventReader_build_01(unittest.TestCase):
         progressReporter1 = MockProgressReporter()
 
         keyComposer4 = KeyValueComposer(('var4', ), (Echo(), ))
-        counts4 = Counts()
-        reader4 = Counter(keyComposer4, counts4)
+        counts4 = Count()
+        reader4 = Summarizer(keyComposer4, counts4)
         collector4 = Collector(MockResultsCombinationMethod())
 
         keyComposer5 = KeyValueComposer(('var5', ), (Echo(), ))
-        counts5 = Counts()
-        reader5 = Counter(keyComposer5, counts5)
+        counts5 = Count()
+        reader5 = Summarizer(keyComposer5, counts5)
         collector5 = Collector(MockResultsCombinationMethod())
 
         keyComposer7 = KeyValueComposer(('var7', ), (Echo(), ))
-        counts7 = Counts()
-        reader7 = Counter(keyComposer7, counts7)
+        counts7 = Count()
+        reader7 = Summarizer(keyComposer7, counts7)
         collector7 = Collector(MockResultsCombinationMethod())
 
         keyComposer8 = KeyValueComposer(('var8', ), (Echo(), ))
-        counts8 = Counts()
-        reader8 = Counter(keyComposer8, counts8)
+        counts8 = Count()
+        reader8 = Summarizer(keyComposer8, counts8)
         collector8 = Collector(MockResultsCombinationMethod())
 
         reader3 = ReaderComposite()
@@ -79,10 +79,10 @@ class TesEventReader_build_01(unittest.TestCase):
 
         self.assertIsInstance(reader1_ds1, ReaderComposite)
         self.assertIsInstance(reader3_ds1, ReaderComposite)
-        self.assertIsInstance(reader4_ds1, Counter)
-        self.assertIsInstance(reader5_ds1, Counter)
-        self.assertIsInstance(reader7_ds1, Counter)
-        self.assertIsInstance(reader8_ds1, Counter)
+        self.assertIsInstance(reader4_ds1, Summarizer)
+        self.assertIsInstance(reader5_ds1, Summarizer)
+        self.assertIsInstance(reader7_ds1, Summarizer)
+        self.assertIsInstance(reader8_ds1, Summarizer)
 
         self.assertIsNot(reader1, reader1_ds1)
         self.assertIsNot(reader3, reader3_ds1)
@@ -99,10 +99,10 @@ class TesEventReader_build_01(unittest.TestCase):
 
         self.assertIsInstance(reader1_ds2, ReaderComposite)
         self.assertIsInstance(reader3_ds2, ReaderComposite)
-        self.assertIsInstance(reader4_ds2, Counter)
-        self.assertIsInstance(reader5_ds2, Counter)
-        self.assertIsInstance(reader7_ds2, Counter)
-        self.assertIsInstance(reader8_ds2, Counter)
+        self.assertIsInstance(reader4_ds2, Summarizer)
+        self.assertIsInstance(reader5_ds2, Summarizer)
+        self.assertIsInstance(reader7_ds2, Summarizer)
+        self.assertIsInstance(reader8_ds2, Summarizer)
 
         self.assertIsNot(reader1, reader1_ds2)
         self.assertIsNot(reader3, reader3_ds2)
