@@ -11,7 +11,7 @@ class TestCount(unittest.TestCase):
         for k in sorted(f1.keys()):
             np.testing.assert_equal(f1[k], f2[k])
 
-    def test_count(self):
+    def test_add(self):
         obj = Count()
 
         obj.add(1)
