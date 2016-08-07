@@ -7,9 +7,6 @@ class MockReader(object):
     def __init__(self, results):
         self._results = results
 
-    def valNames(self):
-        return ('n', 'nvar')
-
     def results(self):
         return self._results
 
