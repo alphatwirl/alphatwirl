@@ -20,7 +20,6 @@ class CombineIntoList(object):
         if len(datasetReaderPairs) == 0: return None
         combine = Combine()
         combined = combine.combine(datasetReaderPairs)
-        reader = datasetReaderPairs[0][1]
         if len(combined) == 0:
             columns = (self.datasetColumnName, ) + tuple(self.keyNames) + tuple(self.valNames)
             return [columns]
