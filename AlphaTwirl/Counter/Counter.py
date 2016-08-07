@@ -17,7 +17,7 @@ class Counter(object):
         keyvals = self.keyValComposer(event)
         weight = self.weightCalculator(event)
         for key, val in keyvals:
-            self.summary.count(key = key, val = val, weight = weight)
+            self.summary.add(key = key, val = val, weight = weight)
 
     def end(self):
         if self.nextKeyComposer is None: return
