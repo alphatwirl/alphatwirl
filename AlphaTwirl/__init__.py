@@ -4,7 +4,7 @@ from AlphaTwirlOld import AlphaTwirlOld
 import Events
 import HeppyResult
 import Binning
-import Counter
+import Summary
 from Combine import Combine
 from CombineIntoList import CombineIntoList, countsToList
 from WriteListToFile import WriteListToFile

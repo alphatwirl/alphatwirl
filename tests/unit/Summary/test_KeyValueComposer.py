@@ -1,4 +1,4 @@
-import AlphaTwirl.Counter as Counter
+import AlphaTwirl.Summary as Summary
 import unittest
 import logging
 import math
@@ -43,7 +43,7 @@ class TestKeyValueComposer(unittest.TestCase):
     def test_init_raise_wrong_key_length(self):
         self.assertRaises(
             ValueError,
-            Counter.KeyValueComposer,
+            Summary.KeyValueComposer,
             keyAttrNames = ('var1', ),
             keyIndices = (0, 1)
             )
@@ -51,7 +51,7 @@ class TestKeyValueComposer(unittest.TestCase):
     def test_init_raise_wrong_val_length(self):
         self.assertRaises(
             ValueError,
-            Counter.KeyValueComposer,
+            Summary.KeyValueComposer,
             valAttrNames = ('var1', ),
             valIndices = (0, 1)
             )
@@ -59,13 +59,13 @@ class TestKeyValueComposer(unittest.TestCase):
     def test_init_raise_wrong_binning_length(self):
         self.assertRaises(
             ValueError,
-            Counter.KeyValueComposer,
+            Summary.KeyValueComposer,
             keyAttrNames = ('var1', ),
             binnings = (MockBinningEcho(), MockBinningEcho()),
             )
 
     def test_collect_arrays(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
 
         event = MockEvent()
         event.var1 = [ ]
@@ -79,7 +79,7 @@ class TestKeyValueComposer(unittest.TestCase):
 
     @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
     def test_logging_nonexistent_var(self):
-        obj = Counter.KeyValueComposer(
+        obj = Summary.KeyValueComposer(
             keyAttrNames = ('var1', ),
             binnings = (MockBinningFloor(max = 30), ),
             valAttrNames = ('var2', ),
@@ -93,7 +93,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual(( ), obj(event))
 
     def test_call_inactive(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.ArrayReader = MockArrayReader
         obj.active = False
 
@@ -101,7 +101,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual((), obj(event))
 
     def test_call_NoneKey_NoneVal(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 0
@@ -119,7 +119,7 @@ class TestKeyValueComposer(unittest.TestCase):
             ), obj(event))
 
     def test_call_1Key_NoneVal(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 1
@@ -140,7 +140,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual((), obj(event))
 
     def test_call_NoneKey_1Val(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 0
@@ -158,7 +158,7 @@ class TestKeyValueComposer(unittest.TestCase):
             ), obj(event))
 
     def test_call_1Key_1Val(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 1
@@ -179,7 +179,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual((), obj(event))
 
     def test_call_2Keys_NoneVal(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 2
@@ -206,7 +206,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual((), obj(event))
 
     def test_call_2Keys_1Val(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 2
@@ -233,7 +233,7 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertEqual((), obj(event))
 
     def test_call_2Keys_1Val_NoneBinnings(self):
-        obj = Counter.KeyValueComposer()
+        obj = Summary.KeyValueComposer()
         obj.active = True
 
         obj._lenkey = 2
@@ -251,7 +251,7 @@ class TestKeyValueComposer(unittest.TestCase):
             ), obj(event))
 
     def test_example_back_reference_twice(self):
-        obj = Counter.KeyValueComposer(
+        obj = Summary.KeyValueComposer(
             keyAttrNames = ('ev', 'jet_pt', 'jet_eta', 'mu_pt', 'mu_eta', 'jet_phi'),
             binnings = (
                 MockBinningFloor(),

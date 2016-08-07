@@ -1,4 +1,4 @@
-from AlphaTwirl.Counter import Count, KeyValueComposer, NextKeyComposer, Summarizer
+from AlphaTwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Summarizer
 from AlphaTwirl.Binning import Echo
 from AlphaTwirl.EventReader import Associator
 from AlphaTwirl.EventReader import ReaderComposite

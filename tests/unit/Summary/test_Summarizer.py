@@ -1,4 +1,4 @@
-import AlphaTwirl.Counter as Counter
+import AlphaTwirl.Summary as Summary
 import unittest
 
 ##__________________________________________________________________||
@@ -71,7 +71,7 @@ class TestMockKeyValueComposer(unittest.TestCase):
         self.assertRaises(IndexError, keycomposer, MockEvent())
 
 ##__________________________________________________________________||
-class TestCounter(unittest.TestCase):
+class TestSummarizer(unittest.TestCase):
 
     def test_events(self):
         summary = MockSummary()
@@ -85,7 +85,7 @@ class TestCounter(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Counter.Summarizer(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
+        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -127,9 +127,9 @@ class TestCounter(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Counter.Summarizer(keycomposer, summary, nextKeyComposer)
+        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer)
 
-        self.assertIsInstance(counter.weightCalculator, Counter.WeightCalculatorOne)
+        self.assertIsInstance(counter.weightCalculator, Summary.WeightCalculatorOne)
 
         event = MockEvent()
         counter.event(event)
@@ -138,10 +138,10 @@ class TestCounter(unittest.TestCase):
 
     def test_copyFrom(self):
         summary = MockSummary()
-        counter = Counter.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
+        counter = Summary.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
 
         src_summary = MockSummary()
-        src_counter = Counter.Summarizer(MockKeyValueComposer(), src_summary, MockWeightCalculator())
+        src_counter = Summary.Summarizer(MockKeyValueComposer(), src_summary, MockWeightCalculator())
         src_summary._counts[:] = [((11, ), 1.0)]
 
         self.assertEqual([ ], summary._counts)

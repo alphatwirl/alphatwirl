@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 from .TableFileNameComposer import TableFileNameComposer
-from ..Counter import Count, WeightCalculatorOne
+from ..Summary import Count, WeightCalculatorOne
 
 ##__________________________________________________________________||
 class TableConfigCompleter(object):

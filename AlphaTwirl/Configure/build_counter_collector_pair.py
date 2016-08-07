@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Counter import Summarizer, NextKeyComposer, KeyValueComposer
+from ..Summary import Summarizer, NextKeyComposer, KeyValueComposer
 from ..CombineIntoList import CombineIntoList
 from ..WriteListToFile import WriteListToFile
 from ..EventReader import Collector
