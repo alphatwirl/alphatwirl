@@ -1,12 +1,56 @@
 import unittest
-import numpy as np
+import itertools
 
 from AlphaTwirl import Combine
 
 ##__________________________________________________________________||
+class MockResult(object):
+    def __init__(self):
+        self._content = [id(self)]
+
+    def __add__(self, other):
+        ret = MockResult()
+        ret._content[:] =  list(itertools.chain(*[self._content, other._content]))
+        return ret
+
+    def __eq__(self, other):
+        return sorted(self._content) == sorted(other._content)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+##__________________________________________________________________||
 class MockReader(object):
-    def __init__(self, results): self._results = results
-    def results(self): return self._results
+    def __init__(self, results = None):
+        self._results = results
+
+    def results(self):
+        return self._results
+
+##__________________________________________________________________||
+class TestMockResult(unittest.TestCase):
+
+    def test_one_reader(self):
+
+        obj1 = MockResult()
+        obj2 = MockResult()
+        obj3 = MockResult()
+
+        self.assertEqual(obj1, obj1)
+        self.assertEqual(obj2, obj2)
+        self.assertEqual(obj3, obj3)
+
+        self.assertNotEqual(obj1, obj2)
+        self.assertNotEqual(obj1, obj3)
+        self.assertNotEqual(obj2, obj3)
+
+        self.assertEqual(obj1 + obj2, obj1 + obj2)
+        self.assertEqual(obj1 + obj2, obj2 + obj1) # independent of the order
+
+        self.assertEqual(obj1 + obj2 + obj3, obj1 + obj2 + obj3)
+
+        self.assertNotEqual(obj1 + obj2, obj1)
+        self.assertNotEqual(obj1 + obj2, obj1 + obj3)
 
 ##__________________________________________________________________||
 class TestCombine(unittest.TestCase):
@@ -18,153 +62,48 @@ class TestCombine(unittest.TestCase):
 
     def test_one_reader(self):
 
-        counts  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-            }
-
-        reader = MockReader(counts)
+        result = MockResult()
+        reader = MockReader(result)
         datasetReaderPairs = [('data1', reader), ]
 
         expected  = {
-            ('data1', 1): np.array((4, 6)),
-            ('data1', 2): np.array((3, 9)),
-            ('data1', 3): np.array((2, 3)),
+            'data1': result
             }
 
         combine = Combine()
-        self.assert_np_dict_frame(expected, combine.combine(datasetReaderPairs))
+        self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_two_readers(self):
 
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-        }
+        result1 = MockResult()
+        reader1 = MockReader(result1)
 
-        reader1 = MockReader(counts1)
-
-        counts2  = {
-            (2, ): np.array((3, 6)),
-            (4, ): np.array((2, 2)),
-        }
-
-        reader2 = MockReader(counts2)
+        result2 = MockResult()
+        reader2 = MockReader(result2)
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
         expected  = {
-            ('data1', 1): np.array((4, 6)),
-            ('data1', 2): np.array((3, 9)),
-            ('data1', 3): np.array((2, 3)),
-            ('data2', 2): np.array((3, 6)),
-            ('data2', 4): np.array((2, 2)),
-        }
+            'data1': result1,
+            'data2': result2
+            }
 
         combine = Combine()
-        self.assert_np_dict_frame(expected, combine.combine(datasetReaderPairs))
+        self.assertEqual(expected, combine.combine(datasetReaderPairs))
 
     def test_two_readers_the_same_dataset(self):
 
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-        }
+        result1 = MockResult()
+        reader1 = MockReader(result1)
 
-        reader1 = MockReader(counts1)
-
-        counts2  = {
-            (2, ): np.array((3, 6)),
-            (4, ): np.array((2, 2)),
-        }
-
-        reader2 = MockReader(counts2)
+        result2 = MockResult()
+        reader2 = MockReader(result2)
 
         datasetReaderPairs = [('data1', reader1), ('data1', reader2)]
 
         expected  = {
-            ('data1', 1): np.array((4,  6)),
-            ('data1', 2): np.array((6, 15)),
-            ('data1', 3): np.array((2,  3)),
-            ('data1', 4): np.array((2,  2)),
-        }
-
-        combine = Combine()
-        self.assert_np_dict_frame(expected, combine.combine(datasetReaderPairs))
-
-    def test_two_readers_not_same_object(self):
-
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-        }
-
-        reader1 = MockReader(counts1)
-
-        counts2  = {
-            (2, ): np.array((3, 6)),
-            (4, ): np.array((2, 2)),
-        }
-
-        reader2 = MockReader(counts2)
-
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
-
-        expected  = {
-            ('data1', 1): np.array((4, 6)),
-            ('data1', 2): np.array((3, 9)),
-            ('data1', 3): np.array((2, 3)),
-            ('data2', 2): np.array((3, 6)),
-            ('data2', 4): np.array((2, 2)),
-        }
-
-        combine = Combine()
-        actual = combine.combine(datasetReaderPairs)
-        self.assert_np_dict_frame(expected, actual)
-        self.assertIsNot(counts1[(1, )], actual[('data1', 1)])
-
-    def test_combine_with_empty_counts(self):
-
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
+            'data1': result1 + result2,
             }
-
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
-
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
-
-        expected  = {
-            ('data1', 1): np.array((4, 6)),
-            ('data1', 2): np.array((3, 9)),
-            ('data1', 3): np.array((2, 3)),
-            }
-
-        combine = Combine()
-        self.assert_np_dict_frame(expected, combine.combine(datasetReaderPairs))
-
-    def test_combine_all_empty_counts(self):
-
-        counts1  = { }
-
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
-
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
-
-        expected = { }
 
         combine = Combine()
         self.assertEqual(expected, combine.combine(datasetReaderPairs))
