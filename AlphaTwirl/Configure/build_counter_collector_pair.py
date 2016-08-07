@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Counter import Counter, NextKeyComposer, KeyValueComposer
+from ..Counter import Summarizer, NextKeyComposer, KeyValueComposer
 from ..CombineIntoList import CombineIntoList
 from ..WriteListToFile import WriteListToFile
 from ..EventReader import Collector
@@ -12,7 +12,7 @@ def build_counter_collector_pair(tblcfg):
         keyIndices = tblcfg['indices']
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    counter = Counter(
+    summarizer = Summarizer(
         keyValComposer = keyValComposer,
         summary = tblcfg['countsClass'](),
         nextKeyComposer = nextKeyComposer,
@@ -21,6 +21,6 @@ def build_counter_collector_pair(tblcfg):
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'], valNames = ('n', 'nvar'))
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return counter, collector
+    return summarizer, collector
 
 ##__________________________________________________________________||

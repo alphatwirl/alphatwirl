@@ -19,7 +19,7 @@ from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
 from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from .Counter import Counter, Count, KeyValueComposer, NextKeyComposer
+from .Counter import Summarizer, Count, KeyValueComposer, NextKeyComposer
 from .CombineIntoList import CombineIntoList
 from .WriteListToFile import WriteListToFile
 
@@ -63,7 +63,7 @@ def build_progressMonitor_communicationChannel(quiet, processes):
 def buildCounterAndCollector(tblcfg):
     keyValComposer = KeyValueComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    counter = Counter(
+    summarizer = Summarizer(
         keyValComposer = keyValComposer,
         summary = tblcfg['countsClass'](),
         nextKeyComposer = nextKeyComposer,
@@ -72,7 +72,7 @@ def buildCounterAndCollector(tblcfg):
     resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['outColumnNames'], valNames = ('n', 'nvar'))
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector0 = Collector(resultsCombinationMethod, deliveryMethod)
-    return counter, collector0
+    return summarizer, collector0
 
 ##__________________________________________________________________||
 def buildReaderAndCollector(preTableReaders, tableConfigs, outDir, force, progressMonitor):
