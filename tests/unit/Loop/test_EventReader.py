@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import EventReader
+from AlphaTwirl.Loop import EventReader
 import unittest
 
 ##__________________________________________________________________||

@@ -1,4 +1,4 @@
-from AlphaTwirl.EventReader import CollectorDelegate
+from AlphaTwirl.Loop import CollectorDelegate
 import unittest
 
 ##__________________________________________________________________||

@@ -8,7 +8,7 @@ import Summary
 from Combine import Combine
 from CombineIntoList import CombineIntoList, countsToList
 from WriteListToFile import WriteListToFile
-import EventReader
+import Loop
 import ProgressBar
 import Aggregate
 import Concurrently

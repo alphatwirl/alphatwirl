@@ -1,8 +1,8 @@
 from AlphaTwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Summarizer
 from AlphaTwirl.Binning import Echo
-from AlphaTwirl.EventReader import Associator
-from AlphaTwirl.EventReader import ReaderComposite
-from AlphaTwirl.EventReader import Collector, CollectorComposite, CollectorDelegate
+from AlphaTwirl.Loop import Associator
+from AlphaTwirl.Loop import ReaderComposite
+from AlphaTwirl.Loop import Collector, CollectorComposite, CollectorDelegate
 import unittest
 
 ##__________________________________________________________________||
