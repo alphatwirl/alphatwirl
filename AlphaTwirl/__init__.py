@@ -6,7 +6,7 @@ import HeppyResult
 import Binning
 import Summary
 from Combine import Combine
-from CombineIntoList import CombineIntoList, countsToList
+from CombineIntoList import CombineIntoList, countsToList, combinedToList
 from WriteListToFile import WriteListToFile
 import Loop
 import ProgressBar
