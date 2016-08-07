@@ -49,14 +49,14 @@ class TestCount(unittest.TestCase):
         self.assertEqual(expected, src_obj.results()) # don't know why this works
         self.assertIsNot(obj._results, src_obj._results)
 
-    def test_addKey(self):
+    def test_add_key(self):
         counts = Count()
-        counts.addKey(1)
+        counts.add_key(1)
         expected  = {1: np.array((0, 0))}
         self.assert_np_dict_frame(expected, counts.results())
 
-        counts.addKey(3)
-        counts.addKey(5)
+        counts.add_key(3)
+        counts.add_key(5)
         expected  = {
             1: np.array((0, 0)),
             3: np.array((0, 0)),

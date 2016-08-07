@@ -19,7 +19,7 @@ class MockSummary(object):
     def keys(self):
         return list(self._keys)
 
-    def addKey(self, key):
+    def add_key(self, key):
         self._addedkeys.add(key)
 
     def copyFrom(self, src):

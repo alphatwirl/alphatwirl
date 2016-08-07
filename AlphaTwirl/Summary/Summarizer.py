@@ -23,7 +23,7 @@ class Summarizer(object):
         if self.nextKeyComposer is None: return
         for key in sorted(self.summary.keys()):
             nextKeys = self.nextKeyComposer(key)
-            for nextKey in nextKeys: self.summary.addKey(nextKey)
+            for nextKey in nextKeys: self.summary.add_key(nextKey)
 
     def copyFrom(self, src):
         self.summary.copyFrom(src.summary)

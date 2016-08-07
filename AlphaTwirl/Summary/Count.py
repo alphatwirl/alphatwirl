@@ -9,10 +9,10 @@ class Count(object):
         self._results = { }
 
     def add(self, key, val = None, weight = 1):
-        self.addKey(key)
+        self.add_key(key)
         self._results[key] = self._results[key] + np.array((weight, weight**2)) # (n, nvar)
 
-    def addKey(self, key):
+    def add_key(self, key):
         if key not in self._results:
             self._results[key] = np.array((0, 0)) # (n, nvar)
 
