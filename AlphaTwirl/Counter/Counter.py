@@ -6,7 +6,7 @@ class Counter(object):
     def __init__(self, keyValComposer, countMethod, nextKeyComposer = None,
                  weightCalculator = WeightCalculatorOne()):
         self.keyValComposer = keyValComposer
-        self.countMethod = countMethod
+        self.summary = countMethod
         self.weightCalculator = weightCalculator
         self.nextKeyComposer = nextKeyComposer
 
@@ -17,18 +17,18 @@ class Counter(object):
         keyvals = self.keyValComposer(event)
         weight = self.weightCalculator(event)
         for key, val in keyvals:
-            self.countMethod.count(key = key, val = val, weight = weight)
+            self.summary.count(key = key, val = val, weight = weight)
 
     def end(self):
         if self.nextKeyComposer is None: return
-        for key in sorted(self.countMethod.keys()):
+        for key in sorted(self.summary.keys()):
             nextKeys = self.nextKeyComposer(key)
-            for nextKey in nextKeys: self.countMethod.addKey(nextKey)
+            for nextKey in nextKeys: self.summary.addKey(nextKey)
 
     def copyFrom(self, src):
-        self.countMethod.copyFrom(src.countMethod)
+        self.summary.copyFrom(src.summary)
 
     def results(self):
-        return self.countMethod.results()
+        return self.summary.results()
 
 ##__________________________________________________________________||
