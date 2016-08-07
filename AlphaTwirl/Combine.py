@@ -5,14 +5,12 @@ class Combine(object):
     def combine(self, datasetReaderPairs):
         combined = { }
         for datasetName, reader in datasetReaderPairs:
-            counts = reader.results()
-            if not counts: continue
-            counts = dict([((datasetName, ) + k, v.copy()) for k, v in counts.iteritems()])
-            for k, v in counts.iteritems():
-                if k not in combined:
-                    combined[k] = v
-                else:
-                    combined[k] += v
+            result = reader.results()
+            if not result: continue
+            if datasetName in combined:
+                combined[datasetName] = combined[datasetName] + result
+            else:
+                combined[datasetName] = result
         return combined
 
 ##__________________________________________________________________||

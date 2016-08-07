@@ -3,8 +3,17 @@
 from Combine import Combine
 
 ##__________________________________________________________________||
-def countsToList(counts, columns):
+def countsToList(counts):
     d = [k + tuple(v) for k, v in counts.iteritems()]
+    d.sort()
+    return d
+
+##__________________________________________________________________||
+def combinedToList(combined, columns):
+    d = [ ]
+    for datasetName, count in combined.iteritems():
+        l = countsToList(count.results())
+        d.extend([(datasetName, ) + e for e in l])
     d.sort()
     d.insert(0, columns)
     return d
@@ -20,10 +29,6 @@ class CombineIntoList(object):
         if len(datasetReaderPairs) == 0: return None
         combine = Combine()
         combined = combine.combine(datasetReaderPairs)
-        reader = datasetReaderPairs[0][1]
-        if len(combined) == 0:
-            columns = (self.datasetColumnName, ) + tuple(self.keyNames) + tuple(self.valNames)
-            return [columns]
-        return countsToList(combined, (self.datasetColumnName, ) + self.keyNames + self.valNames)
+        return combinedToList(combined, (self.datasetColumnName, ) + self.keyNames + self.valNames)
 
 ##__________________________________________________________________||

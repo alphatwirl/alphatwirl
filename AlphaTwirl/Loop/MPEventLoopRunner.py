@@ -105,6 +105,6 @@ class MPEventLoopRunner(object):
 
         for original, returned in zip(self._original_readers, returned_readers):
             if original is returned: continue
-            original.copyFrom(returned)
+            original.copy_from(returned)
 
 ##__________________________________________________________________||

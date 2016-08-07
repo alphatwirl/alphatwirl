@@ -1,4 +1,4 @@
-from AlphaTwirl import countsToList, CombineIntoList
+from AlphaTwirl import countsToList, combinedToList, CombineIntoList
 import unittest
 import numpy as np
 
@@ -7,8 +7,13 @@ class MockReader(object):
     def __init__(self, results):
         self._results = results
 
-    def valNames(self):
-        return ('n', 'nvar')
+    def results(self):
+        return self._results
+
+##__________________________________________________________________||
+class MockResult(object):
+    def __init__(self, results):
+        self._results = results
 
     def results(self):
         return self._results
@@ -25,14 +30,12 @@ class TestCountsToList(unittest.TestCase):
         }
 
         expected = [
-            ('v1', 'n', 'nvar'),
             (1, 4, 6),
             (2, 3, 9),
             (3, 2, 3),
         ]
 
-        columns = ('v1', 'n', 'nvar')
-        self.assertEqual(expected, countsToList(counts, columns))
+        self.assertEqual(expected, countsToList(counts))
 
     def test_call_threeValues(self):
 
@@ -43,27 +46,149 @@ class TestCountsToList(unittest.TestCase):
             }
 
         expected = [
-            ('v1', 'n', 'nvar', 'skewness'),
             (1, 4.0, 6.0, 2.3),
             (2, 3.0, 9.0, 5.4),
             (3, 2.0, 3.0, 3.6)
         ]
 
-        columns = ('v1', 'n', 'nvar', 'skewness')
-        self.assertEqual(expected, countsToList(counts, columns))
+        self.assertEqual(expected, countsToList(counts))
+
+##__________________________________________________________________||
+class TestCombinedToList(unittest.TestCase):
+
+    def test_combine_oneReader(self):
+
+        results = MockResult(
+            {
+                (1, ): np.array((4, 6)),
+                (2, ): np.array((3, 9)),
+                (3, ): np.array((2, 3)),
+            }
+        )
+
+        combined = {
+            'data1': results
+        }
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+            ('data1', 1, 4, 6),
+            ('data1', 2, 3, 9),
+            ('data1', 3, 2, 3),
+        ]
+
+        columns = ('component', 'v1', 'n', 'nvar')
+
+        self.assertEqual(expected, combinedToList(combined, columns))
+
+    def test_combine_twoReaders(self):
+
+        results1 = MockResult(
+            {
+                (1, ): np.array((4, 6)),
+                (2, ): np.array((3, 9)),
+                (3, ): np.array((2, 3)),
+            }
+        )
+
+        results2 = MockResult(
+            {
+                (2, ): np.array((3, 6)),
+                (4, ): np.array((2, 2)),
+            }
+        )
+
+        combined = {
+            'data1': results1,
+            'data2': results2,
+        }
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+            ('data1', 1, 4, 6),
+            ('data1', 2, 3, 9),
+            ('data1', 3, 2, 3),
+            ('data2', 2, 3, 6),
+            ('data2', 4, 2, 2),
+        ]
+
+        columns = ('component', 'v1', 'n', 'nvar')
+
+        self.assertEqual(expected, combinedToList(combined, columns))
+
+    def test_combine_with_empty_counts(self):
+
+        results1 = MockResult(
+            {
+                (1, ): np.array((4, 6)),
+                (2, ): np.array((3, 9)),
+                (3, ): np.array((2, 3)),
+            }
+        )
+
+        results2 = MockResult({})
+
+        combined = {
+            'data1': results1,
+            'data2': results2,
+        }
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+            ('data1', 1, 4, 6),
+            ('data1', 2, 3, 9),
+            ('data1', 3, 2, 3),
+        ]
+
+        columns = ('component', 'v1', 'n', 'nvar')
+
+        self.assertEqual(expected, combinedToList(combined, columns))
+
+    def test_combine_all_empty_counts(self):
+
+        results1 = MockResult({})
+
+        results2 = MockResult({})
+
+        combined = {
+            'data1': results1,
+            'data2': results2,
+        }
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+        ]
+
+        columns = ('component', 'v1', 'n', 'nvar')
+
+        self.assertEqual(expected, combinedToList(combined, columns))
+
+    def test_combine_empty_pairs(self):
+
+        combined = { }
+
+        expected = [
+            ('component', 'v1', 'n', 'nvar'),
+        ]
+
+        columns = ('component', 'v1', 'n', 'nvar')
+
+        self.assertEqual(expected, combinedToList(combined, columns))
 
 ##__________________________________________________________________||
 class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_oneReader(self):
 
-        counts  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-            }
-
-        reader = MockReader(counts)
+        reader = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
         datasetReaderPairs = [('data1', reader), ]
 
         expected = [
@@ -78,20 +203,24 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_twoReaders(self):
 
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-            }
+        reader1 = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
 
-        reader1 = MockReader(counts1)
-
-        counts2  = {
-            (2, ): np.array((3, 6)),
-            (4, ): np.array((2, 2)),
-            }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(
+            MockResult(
+                {
+                    (2, ): np.array((3, 6)),
+                    (4, ): np.array((2, 2)),
+                }
+            )
+        )
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
@@ -109,17 +238,17 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_with_empty_counts(self):
 
-        counts1  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
-            }
+        reader1 = MockReader(
+            MockResult(
+                {
+                    (1, ): np.array((4, 6)),
+                    (2, ): np.array((3, 9)),
+                    (3, ): np.array((2, 3)),
+                }
+            )
+        )
 
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(MockResult({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
@@ -135,13 +264,9 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_all_empty_counts(self):
 
-        counts1  = { }
+        reader1 = MockReader(MockResult({}))
 
-        reader1 = MockReader(counts1)
-
-        counts2  = { }
-
-        reader2 = MockReader(counts2)
+        reader2 = MockReader(MockResult({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 

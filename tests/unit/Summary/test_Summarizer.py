@@ -10,19 +10,19 @@ class MockSummary(object):
     def __init__(self):
         self._counts = [ ]
         self._keys = set()
-        self._addedkeys = set()
+        self._added_keys = set()
 
     def add(self, key, val, weight):
         self._counts.append((key, weight))
         self._keys.add(key)
 
+    def add_key(self, key):
+        self._added_keys.add(key)
+
     def keys(self):
         return list(self._keys)
 
-    def addKey(self, key):
-        self._addedkeys.add(key)
-
-    def copyFrom(self, src):
+    def copy_from(self, src):
         self._counts[:] = src._counts[:]
 
     def results(self):
@@ -94,7 +94,7 @@ class TestSummarizer(unittest.TestCase):
         event = MockEvent()
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual([((11, ), 1.0)], counter.results())
+        self.assertEqual(summary, counter.results())
 
         counter.event(MockEvent())
         self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
@@ -113,7 +113,7 @@ class TestSummarizer(unittest.TestCase):
         self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary.results())
 
         counter.end()
-        self.assertEqual(set([(15, ), (13, ), (12, )]), summary._addedkeys)
+        self.assertEqual(set([(15, ), (13, ), (12, )]), summary._added_keys)
 
     def test_default_weight(self):
         summary = MockSummary()
@@ -134,9 +134,9 @@ class TestSummarizer(unittest.TestCase):
         event = MockEvent()
         counter.event(event)
         self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual([((11, ), 1.0)], counter.results())
+        self.assertEqual(summary, counter.results())
 
-    def test_copyFrom(self):
+    def test_copy_from(self):
         summary = MockSummary()
         counter = Summary.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
 
@@ -145,7 +145,7 @@ class TestSummarizer(unittest.TestCase):
         src_summary._counts[:] = [((11, ), 1.0)]
 
         self.assertEqual([ ], summary._counts)
-        counter.copyFrom(src_counter)
+        counter.copy_from(src_counter)
         self.assertEqual([((11,), 1.0)], summary._counts)
 
 ##__________________________________________________________________||
