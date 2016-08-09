@@ -5,6 +5,9 @@ import unittest
 class MockCount: pass
 
 ##__________________________________________________________________||
+class MockCount2: pass
+
+##__________________________________________________________________||
 class MockWeight: pass
 
 ##__________________________________________________________________||
@@ -37,14 +40,18 @@ class TestTableConfigCompleter(unittest.TestCase):
 
         tblcfg_out = obj.complete(tblcfg_in)
 
-        self.assertEqual(('met_pt', ), tblcfg_out['outColumnNames'])
+        self.assertEqual(('met_pt', ), tblcfg_out['keyAttrNames'])
+        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
         self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIs(MockCount, tblcfg_out['summaryClass'])
-        self.assertTrue(tblcfg_out['outFile'])
+
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
+
+        self.assertIs(MockCount, tblcfg_out['summaryClass'])
+
+        self.assertEqual(('met_pt', ), tblcfg_out['outColumnNames'])
+
+        self.assertTrue(tblcfg_out['outFile'])
         self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])
         self.assertEqual('/tmp/tbl_n_component_met_pt.txt', tblcfg_out['outFilePath'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertEqual(('met_pt', ), tblcfg_out['keyAttrNames'])
 
 ##__________________________________________________________________||
