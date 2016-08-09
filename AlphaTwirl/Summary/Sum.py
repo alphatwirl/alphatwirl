@@ -22,7 +22,7 @@ class Sum(object):
 
     def copy_from(self, src):
         self._results.clear()
-        self._results.update(src._counts)
+        self._results.update(src._results)
 
     def results(self):
         return self._results
