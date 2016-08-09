@@ -43,12 +43,15 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertEqual(('met_pt', ), tblcfg_out['keyAttrNames'])
         self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
         self.assertIsNone(tblcfg_out['keyIndices'])
+        self.assertIsNone(tblcfg_out['valAttrNames'])
+        self.assertIsNone(tblcfg_out['valIndices'])
 
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockCount, tblcfg_out['summaryClass'])
 
         self.assertEqual(('met_pt', ), tblcfg_out['keyOutColumnNames'])
+        self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
 
         self.assertTrue(tblcfg_out['outFile'])
         self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])

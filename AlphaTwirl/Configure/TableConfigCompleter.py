@@ -9,15 +9,18 @@ class TableConfigCompleter(object):
     an example complete config::
 
         tblcfg = {
-            'binnings': (MockBinning(),),
-            'weight': MockWeight(),
-            'outFileName': 'tbl_component_met_pt.txt',
             'keyAttrNames': ('met_pt',),
-            'summaryClass': MockCounts,
-            'outFilePath': '/tmp/tbl_component_met_pt.txt',
-            'outFile': True,
-            'keyOutColumnNames': ('met_pt',),
+            'binnings': (MockBinning(),),
             'keyIndices': None
+            'valAttrNames' : None,
+            'valIndices' : None,
+            'keyOutColumnNames': ('met_pt',),
+            'valOutColumnNames': ('n', 'nvar'),
+            'weight': MockWeight(),
+            'summaryClass': Count,
+            'outFile': True,
+            'outFileName': 'tbl_n_component_met_pt.txt',
+            'outFilePath': '/tmp/tbl_n_component_met_pt.txt',
         }
 
     """
@@ -34,9 +37,22 @@ class TableConfigCompleter(object):
 
     def complete(self, tblcfg):
         ret = tblcfg.copy()
+
+        use_defaultSummaryClass = 'summaryClass' not in ret
+        if use_defaultSummaryClass:
+            ret['summaryClass'] = self.defaultSummaryClass
+
         if 'keyOutColumnNames' not in ret: ret['keyOutColumnNames'] = ret['keyAttrNames']
         if 'keyIndices' not in ret: ret['keyIndices'] = None
-        if 'summaryClass' not in ret: ret['summaryClass'] = self.defaultSummaryClass
+        if 'valAttrNames' not in ret: ret['valAttrNames'] = None
+
+        if 'valOutColumnNames' not in ret:
+            if use_defaultSummaryClass:
+                ret['valOutColumnNames'] = ('n', 'nvar')
+            else:
+                ret['valOutColumnNames'] = None
+
+        if 'valIndices' not in ret: ret['valIndices'] = None
         if 'outFile' not in ret: ret['outFile'] = True
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
         if ret['outFile']:
