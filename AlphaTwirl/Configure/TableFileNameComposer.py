@@ -2,7 +2,8 @@
 
 ##__________________________________________________________________||
 class TableFileNameComposer(object):
-    """Compose a name of a file to store the table from the column names and indices.
+    """Compose a name of a file to store the table from the column names
+       and indices.
 
 
     For example, if column names are 'var1', 'var2', and 'var3' and
@@ -10,7 +11,14 @@ class TableFileNameComposer(object):
     'tbl_component_var1_1_var2_var3_2.txt'
 
     """
-    def __call__(self, columnNames, indices, prefix = 'tbl_n_component', suffix = '.txt'):
+    def __init__(self, default_prefix = 'tbl_n_component', default_suffix = '.txt'):
+        self.default_prefix = default_prefix
+        self.default_suffix = default_suffix
+
+    def __call__(self, columnNames, indices, prefix = None, suffix = None):
+        prefix = self.default_prefix if prefix is None else prefix
+        suffix = self.default_suffix if suffix is None else suffix
+
         # for example, if columnNames = ('var1', 'var2', 'var3') and indices = (1, None, 2),
         # l will be ['var1', '1', 'var2', 'var3', '2']
         if indices is not None:
