@@ -9,7 +9,9 @@ def build_counter_collector_pair(tblcfg):
     keyValComposer = KeyValueComposer(
         keyAttrNames = tblcfg['keyAttrNames'],
         binnings = tblcfg['binnings'],
-        keyIndices = tblcfg['keyIndices']
+        keyIndices = tblcfg['keyIndices'],
+        valAttrNames = tblcfg['valAttrNames'],
+        valIndices = tblcfg['valIndices']
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
     summarizer = Summarizer(
