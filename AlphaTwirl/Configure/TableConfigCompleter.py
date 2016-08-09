@@ -16,7 +16,7 @@ class TableConfigCompleter(object):
             'summaryClass': MockCounts,
             'outFilePath': '/tmp/tbl_component_met_pt.txt',
             'outFile': True,
-            'outColumnNames': ('met_pt',),
+            'keyOutColumnNames': ('met_pt',),
             'keyIndices': None
         }
 
@@ -34,13 +34,13 @@ class TableConfigCompleter(object):
 
     def complete(self, tblcfg):
         ret = tblcfg.copy()
-        if 'outColumnNames' not in ret: ret['outColumnNames'] = ret['keyAttrNames']
+        if 'keyOutColumnNames' not in ret: ret['keyOutColumnNames'] = ret['keyAttrNames']
         if 'keyIndices' not in ret: ret['keyIndices'] = None
         if 'summaryClass' not in ret: ret['summaryClass'] = self.defaultSummaryClass
         if 'outFile' not in ret: ret['outFile'] = True
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
         if ret['outFile']:
-            if 'outFileName' not in ret: ret['outFileName'] = self.createOutFileName(ret['outColumnNames'], ret['keyIndices'])
+            if 'outFileName' not in ret: ret['outFileName'] = self.createOutFileName(ret['keyOutColumnNames'], ret['keyIndices'])
             if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
             return ret
 

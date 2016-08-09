@@ -48,7 +48,7 @@ class TestTableConfigCompleter(unittest.TestCase):
 
         self.assertIs(MockCount, tblcfg_out['summaryClass'])
 
-        self.assertEqual(('met_pt', ), tblcfg_out['outColumnNames'])
+        self.assertEqual(('met_pt', ), tblcfg_out['keyOutColumnNames'])
 
         self.assertTrue(tblcfg_out['outFile'])
         self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])
