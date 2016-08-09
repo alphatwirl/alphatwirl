@@ -2,7 +2,7 @@ from AlphaTwirl.Configure import TableConfigCompleter
 import unittest
 
 ##__________________________________________________________________||
-class MockCounts: pass
+class MockCount: pass
 
 ##__________________________________________________________________||
 class MockWeight: pass
@@ -14,32 +14,37 @@ class MockBinning: pass
 class TestTableConfigCompleter(unittest.TestCase):
 
     def test_copy(self):
-        completer = TableConfigCompleter(
-            defaultCountsClass = MockCounts,
+        obj = TableConfigCompleter(
+            defaultSummaryClass = MockCount,
             defaultWeight = MockWeight(),
             defaultOutDir = '/tmp'
         )
-        tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))
-        tblcfg_out = completer.complete(tblcfg_in)
+        tblcfg_in = dict(keyAttrNames = ('met_pt', ), binnings = (MockBinning(), ))
+        tblcfg_out = obj.complete(tblcfg_in)
         self.assertIsNot(tblcfg_in, tblcfg_out)
 
     def test_minimum_input(self):
-        completer = TableConfigCompleter(
-            defaultCountsClass = MockCounts,
+        tblcfg_in = dict(
+            keyAttrNames = ('met_pt', ),
+            binnings = (MockBinning(), )
+        )
+
+        obj = TableConfigCompleter(
+            defaultSummaryClass = MockCount,
             defaultWeight = MockWeight(),
             defaultOutDir = '/tmp'
         )
 
-        tblcfg_in = dict(branchNames = ('met_pt', ), binnings = (MockBinning(), ))
-        tblcfg_out = completer.complete(tblcfg_in)
+        tblcfg_out = obj.complete(tblcfg_in)
+
         self.assertEqual(('met_pt', ), tblcfg_out['outColumnNames'])
-        self.assertIsNone(tblcfg_out['indices'])
-        self.assertIs(MockCounts, tblcfg_out['countsClass'])
+        self.assertIsNone(tblcfg_out['keyIndices'])
+        self.assertIs(MockCount, tblcfg_out['summaryClass'])
         self.assertTrue(tblcfg_out['outFile'])
-        self.assertIs(completer.defaultWeight, tblcfg_out['weight'])
+        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
         self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])
         self.assertEqual('/tmp/tbl_n_component_met_pt.txt', tblcfg_out['outFilePath'])
         self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertEqual(('met_pt', ), tblcfg_out['branchNames'])
+        self.assertEqual(('met_pt', ), tblcfg_out['keyAttrNames'])
 
 ##__________________________________________________________________||

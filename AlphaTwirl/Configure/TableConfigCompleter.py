@@ -12,35 +12,35 @@ class TableConfigCompleter(object):
             'binnings': (MockBinning(),),
             'weight': MockWeight(),
             'outFileName': 'tbl_component_met_pt.txt',
-            'branchNames': ('met_pt',),
-            'countsClass': MockCounts,
+            'keyAttrNames': ('met_pt',),
+            'summaryClass': MockCounts,
             'outFilePath': '/tmp/tbl_component_met_pt.txt',
             'outFile': True,
             'outColumnNames': ('met_pt',),
-            'indices': None
+            'keyIndices': None
         }
 
     """
     def __init__(self,
-                 defaultCountsClass = Count,
+                 defaultSummaryClass = Count,
                  defaultWeight = WeightCalculatorOne(),
                  defaultOutDir = '.',
                  createOutFileName = TableFileNameComposer()):
 
-        self.defaultCountsClass = defaultCountsClass
+        self.defaultSummaryClass = defaultSummaryClass
         self.defaultWeight = defaultWeight
         self.defaultOutDir = defaultOutDir
         self.createOutFileName = createOutFileName
 
     def complete(self, tblcfg):
         ret = tblcfg.copy()
-        if 'outColumnNames' not in ret: ret['outColumnNames'] = ret['branchNames']
-        if 'indices' not in ret: ret['indices'] = None
-        if 'countsClass' not in ret: ret['countsClass'] = self.defaultCountsClass
+        if 'outColumnNames' not in ret: ret['outColumnNames'] = ret['keyAttrNames']
+        if 'keyIndices' not in ret: ret['keyIndices'] = None
+        if 'summaryClass' not in ret: ret['summaryClass'] = self.defaultSummaryClass
         if 'outFile' not in ret: ret['outFile'] = True
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
         if ret['outFile']:
-            if 'outFileName' not in ret: ret['outFileName'] = self.createOutFileName(ret['outColumnNames'], ret['indices'])
+            if 'outFileName' not in ret: ret['outFileName'] = self.createOutFileName(ret['outColumnNames'], ret['keyIndices'])
             if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
             return ret
 
