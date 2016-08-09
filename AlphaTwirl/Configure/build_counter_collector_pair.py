@@ -7,14 +7,14 @@ from ..Loop import Collector
 ##__________________________________________________________________||
 def build_counter_collector_pair(tblcfg):
     keyValComposer = KeyValueComposer(
-        keyAttrNames = tblcfg['branchNames'],
+        keyAttrNames = tblcfg['keyAttrNames'],
         binnings = tblcfg['binnings'],
-        keyIndices = tblcfg['indices']
+        keyIndices = tblcfg['keyIndices']
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
     summarizer = Summarizer(
         keyValComposer = keyValComposer,
-        summary = tblcfg['countsClass'](),
+        summary = tblcfg['summaryClass'](),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
