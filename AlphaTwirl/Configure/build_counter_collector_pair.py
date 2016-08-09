@@ -18,7 +18,10 @@ def build_counter_collector_pair(tblcfg):
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
-    resultsCombinationMethod = CombineIntoList(keyNames = tblcfg['keyOutColumnNames'], valNames = ('n', 'nvar'))
+    resultsCombinationMethod = CombineIntoList(
+        keyNames = tblcfg['keyOutColumnNames'],
+        valNames = tblcfg['valOutColumnNames']
+    )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
     return summarizer, collector
