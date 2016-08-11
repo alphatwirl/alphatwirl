@@ -16,6 +16,7 @@ class TblComponentConfig(object):
     def read(self, component):
 
         cfg = component.config()
+        if cfg is None: return
         if not all([k in cfg for k in self._keys]): return
 
         vals =  [cfg[k] for k in self._keys]
