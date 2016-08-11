@@ -3,11 +3,14 @@
 ##__________________________________________________________________||
 import os
 import ast
+import logging
 
 ##__________________________________________________________________||
 class ReadComponentConfig(object):
     def __call__(self, path):
-        if not os.path.isfile(path): return None
+        if not os.path.isfile(path):
+            logging.warning('cannot open {}'.format(path))
+            return None
         file = open(path)
         return self._readImp(file)
 
