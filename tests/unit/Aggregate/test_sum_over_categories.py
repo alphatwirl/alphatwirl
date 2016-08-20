@@ -5,7 +5,7 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
-    from AlphaTwirl.Aggregate import sumOverCategories
+    from AlphaTwirl.Aggregate import sum_over_categories
     hasPandas = True
 except ImportError:
     class PD:
@@ -85,28 +85,28 @@ tbl_1 = pd.read_table(cStringIO.StringIO(
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
-class Test_sumOverCategories(unittest.TestCase):
+class Test_sum_over_categories(unittest.TestCase):
 
     def setUp(self):
         self.addTypeEqualityFunc(pd.core.frame.DataFrame, assertDataFrameEqual)
 
     def test_one_category(self):
         expect = tbl_1_A_B
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
     def test_multiple_categories(self):
         expect = tbl_1_B
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ('A', 'C'), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ('A', 'C'), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
     def test_all_categories(self):
         expect = tbl_1
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ('A', 'B', 'C'), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ('A', 'B', 'C'), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
@@ -114,46 +114,46 @@ class Test_sumOverCategories(unittest.TestCase):
     def test_all_categories_with_variable_name_index(self):
         expect = tbl_1.rename(columns = {'nvar': 'index'})
         tbl = tbl_1_A_B_C.rename(columns = {'nvar': 'index'})
-        actual = sumOverCategories(tbl, categories = ('A', 'B', 'C'), variables = ('n', 'index'))
+        actual = sum_over_categories(tbl, categories = ('A', 'B', 'C'), variables = ('n', 'index'))
         self.assertIsNot(tbl, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
     def test_no_categories(self):
         expect = tbl_1_A_B_C
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ( ), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ( ), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
         expect = tbl_1_A_B_C
-        actual = sumOverCategories(tbl_1_A_B_C, categories = None, variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = None, variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
     def test_all_the_way(self):
         expect = tbl_1_A_B
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B_C, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
         expect = tbl_1_A
-        actual = sumOverCategories(tbl_1_A_B, categories = ('B', ), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A_B, categories = ('B', ), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A_B, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
         expect = tbl_1
-        actual = sumOverCategories(tbl_1_A, categories = ('A', ), variables = ('n', 'nvar'))
+        actual = sum_over_categories(tbl_1_A, categories = ('A', ), variables = ('n', 'nvar'))
         self.assertIsNot(tbl_1_A, actual)
         self.assertIsNot(expect, actual)
         self.assertEqual(expect, actual)
 
     def test_nonexistent_variables(self):
         expect = tbl_1_A_B
-        actual = sumOverCategories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar', 'xxx'))
+        actual = sum_over_categories(tbl_1_A_B_C, categories = ('C', ), variables = ('n', 'nvar', 'xxx'))
         self.assertEqual(expect, actual)
 
 

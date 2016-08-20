@@ -3,6 +3,14 @@ import pandas as pd
 
 ##__________________________________________________________________||
 def sumOverCategories(tbl, categories, variables):
+    import logging
+    logging.warning('the function "{}" is renamed "{}"'.format(
+        "sumOverCategories", "sum_over_categories")
+    )
+    return sum_over_categories(tbl, categories, variables)
+
+##__________________________________________________________________||
+def sum_over_categories(tbl, categories, variables):
 
     if categories is None: categories = ()
 
@@ -181,17 +189,17 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     tbl_xsec = tbl_xsec[['phasespace', 'xsec']].drop_duplicates()
 
     tbl = pd.merge(tbl_process, tbl_yield)
-    tbl = sumOverCategories(tbl, categories = ('component', ), variables = ('n', 'nvar'))
+    tbl = sum_over_categories(tbl, categories = ('component', ), variables = ('n', 'nvar'))
 
     if use_nevt_sumw:
         tbl_nevt = tbl_nevt.drop('nevt', axis = 1)
         tbl_nevt = pd.merge(tbl_process, tbl_nevt)
-        tbl_nevt = sumOverCategories(tbl_nevt, categories = ('component', ), variables = ('nevt_sumw', ))
+        tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt_sumw', ))
         tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
     else:
         tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
         tbl_nevt = pd.merge(tbl_process, tbl_nevt)
-        tbl_nevt = sumOverCategories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
+        tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
         tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
 
     tbl = pd.merge(tbl, tbl_nevt)
@@ -206,7 +214,7 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     del tbl['n']
     del tbl['nvar']
 
-    ret = sumOverCategories(tbl, categories = ('phasespace', ), variables = ('xsec', 'xsecvar'))
+    ret = sum_over_categories(tbl, categories = ('phasespace', ), variables = ('xsec', 'xsecvar'))
 
     ret = keep_dtype(ret, tbl_process, columns = ['process'])
     ret = keep_dtype(ret, tbl_yield)
@@ -271,7 +279,7 @@ def stack_counts_categories(tbl, variables, category, order = None,
         toStack.append(o)
         d = tbl[tbl[category].isin(toStack)].copy()
         d[category] = o
-        d = sumOverCategories(d, categories = None, variables = variables)
+        d = sum_over_categories(d, categories = None, variables = variables)
         d['stack'] = stack
         stack += 1
         if isFirst:
