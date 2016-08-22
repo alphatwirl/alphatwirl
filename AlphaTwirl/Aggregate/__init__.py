@@ -4,5 +4,7 @@ try:
     from functions import stack_counts_categories
     from functions import sumOverCategories
     from functions import sum_over_categories
+    from functions import keep_dtype
+
 except ImportError:
     pass
