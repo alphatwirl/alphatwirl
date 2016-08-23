@@ -28,7 +28,37 @@ class TestTableConfigCompleter(unittest.TestCase):
         tblcfg_out = obj.complete(tblcfg_in)
         self.assertIsNot(tblcfg_in, tblcfg_out)
 
-    def test_minimum_input(self):
+    def test_empty_input(self):
+        tblcfg_in = dict(
+        )
+
+        obj = TableConfigCompleter(
+            defaultSummaryClass = MockDefaultSummary,
+            defaultWeight = MockWeight(),
+            defaultOutDir = 'tmp'
+        )
+
+        tblcfg_out = obj.complete(tblcfg_in)
+
+        self.assertEqual(( ), tblcfg_out['keyAttrNames'])
+        self.assertEqual(None, tblcfg_out['binnings'])
+        self.assertIsNone(tblcfg_out['keyIndices'])
+        self.assertIsNone(tblcfg_out['valAttrNames'])
+        self.assertIsNone(tblcfg_out['valIndices'])
+
+        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
+
+        self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
+        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
+
+        self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
+        self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
+
+        self.assertTrue(tblcfg_out['outFile'])
+        self.assertEqual('tbl_n_component.txt', tblcfg_out['outFileName'])
+        self.assertEqual(os.path.join('tmp', 'tbl_n_component.txt'), tblcfg_out['outFilePath'])
+
+    def test_simple_input(self):
         tblcfg_in = dict(
             keyAttrNames = ('met_pt', ),
             binnings = (MockBinning(), )

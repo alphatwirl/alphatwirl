@@ -39,6 +39,9 @@ class TableConfigCompleter(object):
     def complete(self, tblcfg):
         ret = tblcfg.copy()
 
+        if 'keyAttrNames' not in ret: ret['keyAttrNames'] = ( )
+        if 'binnings' not in ret: ret['binnings'] = None
+
         use_defaultSummaryClass = 'summaryClass' not in ret
         if use_defaultSummaryClass:
             ret['summaryClass'] = self.defaultSummaryClass
