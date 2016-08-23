@@ -16,7 +16,7 @@ def build_counter_collector_pair(tblcfg):
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
     summarizer = Summarizer(
         keyValComposer = keyValComposer,
-        summary = tblcfg['summaryClass'](),
+        summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
