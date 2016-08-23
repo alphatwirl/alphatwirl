@@ -4,8 +4,12 @@ from Combine import Combine
 
 ##__________________________________________________________________||
 def countsToList(counts):
-    d = [k + tuple(v) for k, v in counts.iteritems()]
-    d.sort()
+    try:
+        d = [k + tuple(v) for k, v in counts.iteritems()]
+        d.sort()
+    except AttributeError:
+        # assume counts is already a list
+        d = counts
     return d
 
 ##__________________________________________________________________||
