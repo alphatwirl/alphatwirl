@@ -10,7 +10,7 @@ d1 <-  read.table('tbl_process.txt', header = TRUE)
 d1$component <- factor(d1$component, levels = unique(d1$component))
 d1$phasespace <- factor(d1$phasespace, levels = unique(d1$phasespace))
 
-d2 <-  read.table('tbl_component_met.txt', header = TRUE)
+d2 <-  read.table('tbl_n_component.met.txt', header = TRUE)
 d3 <-  read.table('tbl_nevt.txt', header = TRUE)
 d4 <-  read.table('tbl_xsec.txt', header = TRUE)
 

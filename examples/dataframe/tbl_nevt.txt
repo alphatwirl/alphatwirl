@@ -1,19 +1,31 @@
-             component     nevt
-      QCD_HT_1000ToInf  1130720
- QCD_HT_1000ToInf_ext1   333733
-       QCD_HT_100To250  4123612
-       QCD_HT_250To500  2004219
-  QCD_HT_250To500_ext1   663953
-      QCD_HT_500To1000  3214312
- QCD_HT_500To1000_ext1   849033
-                T_tWch   986100
-             TBar_tWch   971800
-     TBarToLeptons_sch   250000
-     TBarToLeptons_tch  1999800
-                TTJets 25446993
-        TToLeptons_sch   500000
-        TToLeptons_tch  3991000
- WJetsToLNu_HT100to200  5262265
- WJetsToLNu_HT200to400  4936077
- WJetsToLNu_HT400to600  4640594
- WJetsToLNu_HT600toInf  4581841
+                             component     nevt nevt_sumw
+            QCD_HT100to200_madgraphMLM 82073090  82073090
+            QCD_HT200to300_madgraphMLM 18523829  18523829
+            QCD_HT300to500_madgraphMLM 16830696  16830696
+            QCD_HT500to700_madgraphMLM 19199088  19199088
+           QCD_HT700to1000_madgraphMLM 15579176  15579176
+          QCD_HT1000to1500_madgraphMLM  4980387   4980387
+          QCD_HT1500to2000_madgraphMLM  3846616   3846616
+           QCD_HT2000toInf_madgraphMLM  1960245   1960245
+             TTJets_DiLept_madgraphMLM 24623997  24623997
+         TTJets_HT600to800_madgraphMLM 13839454  13839454
+        TTJets_HT800to1200_madgraphMLM 10460101  10460101
+       TTJets_HT1200to2500_madgraphMLM  2455324   2455324
+        TTJets_HT2500toInf_madgraphMLM   524408    524408
+    TTJets_SingleLeptFromT_madgraphMLM  9468936   9468936
+ TTJets_SingleLeptFromTbar_madgraphMLM 11947951  11947951
+                    TTJets_madgraphMLM 10259872  10259872
+     WJetsToLNu_HT100to200_madgraphMLM 10231928  10231928
+     WJetsToLNu_HT200to400_madgraphMLM  4963240   4963240
+     WJetsToLNu_HT400to600_madgraphMLM  1963464   1963464
+     WJetsToLNu_HT600to800_madgraphMLM  3722395   3722395
+    WJetsToLNu_HT800to1200_madgraphMLM  1540477   1540477
+   WJetsToLNu_HT1200to2500_madgraphMLM   246737    246737
+    WJetsToLNu_HT2500toInf_madgraphMLM   253561    253561
+       ZJetsToNuNu_HT100to200_madgraph  5010869   5010869
+       ZJetsToNuNu_HT200to400_madgraph  5099631   5099631
+       ZJetsToNuNu_HT400to600_madgraph  1020309   1020309
+       ZJetsToNuNu_HT600to800_madgraph  5712221   5712221
+      ZJetsToNuNu_HT800to1200_madgraph  1944423   1944423
+     ZJetsToNuNu_HT1200to2500_madgraph   369514    369514
+      ZJetsToNuNu_HT2500toInf_madgraph   405752    405752

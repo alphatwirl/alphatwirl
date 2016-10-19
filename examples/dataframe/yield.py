@@ -4,7 +4,7 @@ import pandas as pd
 
 ##__________________________________________________________________||
 d1 = pd.read_table('tbl_process.txt', delim_whitespace = True)
-d2 = pd.read_table('tbl_component_met.txt', delim_whitespace = True)
+d2 = pd.read_table('tbl_n_component.met.txt', delim_whitespace = True)
 d3 = pd.read_table('tbl_nevt.txt', delim_whitespace = True)
 d4 = pd.read_table('tbl_xsec.txt', delim_whitespace = True)
 
