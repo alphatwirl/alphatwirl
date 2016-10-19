@@ -1,48 +1,81 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
-from AlphaTwirl.Counter import Counts
-from AlphaTwirl.Binning import RoundLog, Echo
-from AlphaTwirl.HeppyResult import TblXsec, TblCounter
-import AlphaTwirl
 import os
+import argparse
 
+
+import AlphaTwirl
+import AlphaTwirl.HeppyResult as HeppyResult
+HeppyResult.componentHasTheseFiles[:] = ['roctree']
 
 ##__________________________________________________________________||
-alphaTwirl = AlphaTwirl.AlphaTwirl()
+parser = argparse.ArgumentParser()
+parser.add_argument('-o', '--outDir', default = os.path.join('tbl', 'out'))
+parser.add_argument('-n', '--nevents', default = -1, type = int, help = 'maximum number of events to process for each component')
+parser.add_argument('--max-events-per-process', default = -1, type = int, help = 'maximum number of events per process')
 
-parser = alphaTwirl.ArgumentParser()
+configurer = AlphaTwirl.AlphaTwirlConfigurerFromArgs()
+configurer.add_arguments(parser)
+
 args = parser.parse_args()
 
-##__________________________________________________________________||
-alphaTwirl.addComponentReader(TblXsec(os.path.join(args.outDir, 'tbl_xsec.txt')))
+cfg = configurer.configure(args)
+alphaTwirl = AlphaTwirl.AlphaTwirl(config = cfg)
 
-tblNevt = TblCounter(
-    outPath = os.path.join(args.outDir, 'tbl_nevt.txt'),
-    columnNames = ('nevt', ),
+##__________________________________________________________________||
+analyzerName = 'roctree'
+fileName = 'tree.root'
+treeName = 'tree'
+
+##__________________________________________________________________||
+tbl_xsec_path = os.path.join(args.outDir, 'tbl_xsec.txt')
+tblXsec = HeppyResult.TblComponentConfig(
+    outPath = tbl_xsec_path,
+    columnNames = ('xsec', ),
+    keys = ('xSection', ),
+)
+alphaTwirl.addComponentReader(tblXsec)
+
+tbl_nevt_path = os.path.join(args.outDir, 'tbl_nevt.txt')
+tblNevt = HeppyResult.TblCounter(
+    outPath = tbl_nevt_path,
+    columnNames = ('nevt', 'nevt_sumw'),
     analyzerName = 'skimAnalyzerCount',
     fileName = 'SkimReport.txt',
-    levels = ('All Events', )
-    )
+    levels = ('All Events', 'Sum Weights')
+)
 alphaTwirl.addComponentReader(tblNevt)
 
 ##__________________________________________________________________||
+from AlphaTwirl.Binning import RoundLog
 tblcfg = [
-    dict(outFileName = 'tbl_component_met.txt',
-         branchNames = ('met_pt', ),
-         outColumnNames = ('met', ),
-         binnings = (RoundLog(0.1, 0), ),
+    dict(
+        keyAttrNames = ('met_pt', ),
+        binnings = (RoundLog(0.1, 10), ),
+        keyOutColumnNames = ('met', ),
      )
 ]
 
-alphaTwirl.addTreeReader(
-    analyzerName = 'treeProducerSusyAlphaT',
-    fileName = 'tree.root',
-    treeName = 'tree',
-    tableConfigs = tblcfg,
-    eventSelection = None,
+tableConfigCompleter = AlphaTwirl.Configure.TableConfigCompleter(
+    defaultSummaryClass = AlphaTwirl.Summary.Count,
+    defaultOutDir = args.outDir,
+    createOutFileName = AlphaTwirl.Configure.TableFileNameComposer2()
 )
+tblcfg = [tableConfigCompleter.complete(c) for c in tblcfg]
+
+reader_collector_pair = [AlphaTwirl.Configure.build_counter_collector_pair(c) for c in tblcfg]
+reader = AlphaTwirl.Loop.ReaderComposite()
+collector = AlphaTwirl.Loop.CollectorComposite(alphaTwirl.progressMonitor.createReporter())
+for r, c in reader_collector_pair:
+    reader.add(r)
+    collector.add(c)
+eventLoopRunner = AlphaTwirl.Loop.MPEventLoopRunner(alphaTwirl.communicationChannel)
+eventBuilder = AlphaTwirl.HeppyResult.BEventBuilder(analyzerName, fileName, treeName, args.nevents)
+eventReader = AlphaTwirl.Loop.EventReader(eventBuilder, eventLoopRunner, reader, collector, args.max_events_per_process)
+alphaTwirl.addComponentReader(eventReader)
 
 alphaTwirl.run()
+alphaTwirl.end()
 
 ##__________________________________________________________________||
 import pandas as pd
@@ -58,6 +91,5 @@ f = open(os.path.join(args.outDir, 'tbl_xsec.txt'), 'w')
 d.to_string(f, index = False)
 f.write("\n")
 f.close()
-
 
 ##__________________________________________________________________||
