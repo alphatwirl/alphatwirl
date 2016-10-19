@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
 import ROOT
-import sys
-from optparse import OptionParser
+import argparse
 
 import AlphaTwirl
 
@@ -10,22 +9,22 @@ import AlphaTwirl
 ROOT.gROOT.SetBatch(1)
 
 ##__________________________________________________________________||
-parser = OptionParser()
-parser.add_option('-i', '--inputPath', default = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14/201525_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root', action = 'store', type = 'string')
-parser.add_option("-n", "--nevents", default = -1, action = "store", type = 'long', help = "maximum number of events to process")
-parser.add_option("-t", "--treeName", default = 'tree', action = "store", type = 'string', help = "the name of the tree")
-(options, args) = parser.parse_args(sys.argv)
+default_input = '/afs/cern.ch/work/s/sakuma/public/cms/c150130_RA1_data/80X/MC/20160811_B01/ROC_MC_SM/TTJets_HT800to1200_madgraphMLM/roctree/tree.root'
 
 ##__________________________________________________________________||
-file = ROOT.TFile.Open(options.inputPath)
-tree = file.Get(options.treeName)
-events = AlphaTwirl.Events.Events(tree, options.nevents)
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--input', default = default_input, help = 'path to the input file')
+parser.add_argument("-n", "--nevents", default = -1, type = int, help = "maximum number of events to process")
+parser.add_argument("-t", "--tree", default = 'tree', help = "the name of the tree")
+args = parser.parse_args()
+
+##__________________________________________________________________||
+file = ROOT.TFile.Open(args.input)
+tree = file.Get(args.tree)
+events = AlphaTwirl.Events.BEvents(tree, args.nevents)
 
 for event in events:
-    run = event.run
-    lumi = event.lumi
-    eventId = event.evt
-    print '%6d %10d %9d' % (run, lumi, eventId),
+    print '{:>6} {:>10} {:>9}'.format(event.run[0], event.lumi[0], event.evt[0]),
     print
 
 ##__________________________________________________________________||

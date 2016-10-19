@@ -2,8 +2,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import ROOT
 import os
-import sys
-from optparse import OptionParser
+import argparse
 
 import AlphaTwirl
 
@@ -11,27 +10,28 @@ import AlphaTwirl
 ROOT.gROOT.SetBatch(1)
 
 ##__________________________________________________________________||
-parser = OptionParser()
-parser.add_option('-i', '--inputDir', default = '/afs/cern.ch/work/a/aelwood/public/alphaT/cmgtools/PHYS14//201525_SingleMu', action = 'store', type = 'string', help = "the Heppy out dir")
-parser.add_option("-n", "--nevents", default = -1, action = "store", type = 'long', help = "maximum number of events to process")
-parser.add_option('-a', '--analyzerName', default = 'treeProducerSusyAlphaT', action = 'store', type = 'string', help = "the name of the Heppy analyzer that contains the root file")
-parser.add_option('-r', '--rootFileName', default = 'tree.root', action = 'store', type = 'string', help = "the name of the root file that contains the tree")
-parser.add_option("-t", "--treeName", default = 'tree', action = "store", type = 'string', help = "the name of the tree")
-(options, args) = parser.parse_args(sys.argv)
+default_input = '/afs/cern.ch/work/s/sakuma/public/cms/c150130_RA1_data/80X/MC/20160811_B01/ROC_MC_SM'
 
 ##__________________________________________________________________||
-heppyResult = AlphaTwirl.HeppyResult.HeppyResult(options.inputDir)
+parser = argparse.ArgumentParser()
+parser.add_argument('-i', '--input-dir', default = default_input, help = "the Heppy out dir")
+parser.add_argument("-n", "--nevents", default = -1, type = int, help = "maximum number of events to process")
+parser.add_argument('-a', '--analyzer-name', default = 'roctree', help = "the name of the Heppy analyzer that contains the root file")
+parser.add_argument('-r', '--rootfile-name', default = 'tree.root', help = "the name of the root file that contains the tree")
+parser.add_argument("-t", "--tree-name", default = 'tree', help = "the name of the tree")
+args = parser.parse_args()
+
+##__________________________________________________________________||
+heppyResult = AlphaTwirl.HeppyResult.HeppyResult(args.input_dir)
 for component in heppyResult.components():
-    analyzer = getattr(component, options.analyzerName)
-    inputPath = os.path.join(analyzer.path, options.rootFileName)
-    file = ROOT.TFile.Open(inputPath)
-    tree = file.Get(options.treeName)
-    events = AlphaTwirl.Events.Events(tree, options.nevents)
+    analyzer = getattr(component, args.analyzer_name)
+    input_path = os.path.join(analyzer.path, args.rootfile_name)
+    file = ROOT.TFile.Open(input_path)
+    tree = file.Get(args.tree_name)
+    events = AlphaTwirl.Events.BEvents(tree, args.nevents)
     for event in events:
-        run = event.run
-        lumi = event.lumi
-        eventId = event.evt
-        print '%35s %6d %10d %9d' % (component.name, run, lumi, eventId),
+        print '{:>35}'.format(component.name),
+        print '{:>6} {:>10} {:>9}'.format(event.run[0], event.lumi[0], event.evt[0]),
         print
 
 ##__________________________________________________________________||
