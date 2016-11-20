@@ -19,7 +19,10 @@ class Worker(multiprocessing.Process):
                 self.task_queue.task_done()
                 break
             taskNo, task = message
-            result = task(self.progressReporter)
+            try:
+                result = task(progressReporter = self.progressReporter)
+            except TypeError:
+                result = task()
             self.task_queue.task_done()
             self.result_queue.put((taskNo, result))
 

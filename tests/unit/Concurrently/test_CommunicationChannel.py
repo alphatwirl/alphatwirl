@@ -30,6 +30,16 @@ class MockProgressMonitor(object):
     def last(self): pass
 
 ##__________________________________________________________________||
+class MockTaskWithoutProgressReporter(object):
+    def __init__(self, result, time):
+        self.result = result
+        self.time = time
+
+    def __call__(self):
+        time.sleep(self.time)
+        return self.result
+
+##__________________________________________________________________||
 class TestCommunicationChannel(unittest.TestCase):
 
     def test_init(self):
@@ -184,6 +194,23 @@ class TestCommunicationChannel(unittest.TestCase):
         returnedResults = communicationChannel.receive()
         self.assertIsInstance(returnedResults[0].progressReporter, MockProgressReporter)
         self.assertIsInstance(returnedResults[1].progressReporter, MockProgressReporter)
+
+        communicationChannel.end()
+
+    def test_task_without_ProgressReporterno(self):
+        communicationChannel = CommunicationChannel()
+        communicationChannel.begin()
+
+        result1 = MockResult('task1')
+        task1 = MockTask(result1, 0.003)
+        communicationChannel.put(task1)
+
+        result2 = MockResult('task2')
+        task2 = MockTaskWithoutProgressReporter(result2, 0.001)
+        communicationChannel.put(task2)
+
+        actual = [r.data for r in communicationChannel.receive()]
+        self.assertEqual(set(['task1', 'task2']), set(actual))
 
         communicationChannel.end()
 
