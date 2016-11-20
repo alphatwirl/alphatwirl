@@ -51,23 +51,29 @@ class CommunicationChannel(object):
     ``progressReporter``, which is created by the ``progressMonitor``.
 
     Now, you are ready to send a task. A task is a function or any
-    object which is callable and picklable and which takes the only
-    argument ``progressReporter``. A value that a task returns is the
-    result of the task and must be picklable. For example, an instance
-    of ``EventLoop`` can be a task. You can send a task with the
-    method ``put``::
+    object which is callable and picklable. A task can take any number
+    of arguments. If a task takes a named argument
+    ``progressReporter``, the worker will give the
+    ``progressReporter`` to the task. A value that a task returns is
+    the result of the task and must be picklable. For example, an
+    instance of ``EventLoop`` can be a task. You can send a task with
+    the method ``put``::
 
-        channel.put(task1)
+        channel.put(task1, 10, 20, A = 30)
+
+    Here, 10, 20, A = 30 are the arguments to the task.
 
     This class sends the task to a worker. The worker which receives
-    the task will call the task with the ``progressReporter``.
-
+    the task will first try to call the task with the
+    ``progressReporter`` in addition to the arguments. If the task
+    doesn't take the ``progressReporter``, it calls only with the
+    arguments.
 
     You can send multiple tasks::
 
         channel.put(task2)
-        channel.put(task3)
-        channel.put(task4)
+        channel.put(task3, 100, 200)
+        channel.put(task4, A = 'abc')
         channel.put(task5)
 
     They will be executed by workers.
