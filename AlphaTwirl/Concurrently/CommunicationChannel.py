@@ -5,7 +5,7 @@ from operator import itemgetter
 
 ##__________________________________________________________________||
 class Worker(multiprocessing.Process):
-    def __init__(self, task_queue, result_queue, progressReporter, lock):
+    def __init__(self, task_queue, result_queue, lock, progressReporter):
         multiprocessing.Process.__init__(self)
         self.task_queue = task_queue
         self.result_queue = result_queue
