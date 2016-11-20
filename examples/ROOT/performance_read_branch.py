@@ -8,7 +8,7 @@ import array
 import ROOT
 
 ##__________________________________________________________________||
-inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/c150130_01_PHYS14/20150331_SingleMu/TTJets/treeProducerSusyAlphaT/tree.root'
+inputPath = '/Users/sakuma/work/cms/c150130_RA1_data/80X/MC/20160708_B01_MCMiniAODv2_SM/AtLogic_MCMiniAODv2_SM/TTJets_HT2500toInf_madgraphMLM/treeProducerSusyAlphaT/tree.root'
 treeName = 'tree'
 
 ##__________________________________________________________________||
