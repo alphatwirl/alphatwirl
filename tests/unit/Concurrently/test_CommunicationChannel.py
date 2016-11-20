@@ -9,7 +9,7 @@ class MockResult(object):
         self.data = data
 
 ##__________________________________________________________________||
-class MockTask(object):
+class MockTaskWithProgressReporter(object):
     def __init__(self, result, time):
         self.result = result
         self.time = time
@@ -30,7 +30,7 @@ class MockProgressMonitor(object):
     def last(self): pass
 
 ##__________________________________________________________________||
-class MockTaskWithoutProgressReporter(object):
+class MockTask(object):
     def __init__(self, result, time):
         self.result = result
         self.time = time
@@ -179,11 +179,11 @@ class TestCommunicationChannel(unittest.TestCase):
         communicationChannel.begin()
 
         result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.003)
+        task1 = MockTaskWithProgressReporter(result1, 0.003)
         communicationChannel.put(task1)
 
         result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
+        task2 = MockTaskWithProgressReporter(result2, 0.001)
         communicationChannel.put(task2)
 
         # the results in the main process don't have a ProgressReporter
@@ -197,6 +197,9 @@ class TestCommunicationChannel(unittest.TestCase):
 
         communicationChannel.end()
 
+##__________________________________________________________________||
+class TestCommunicationChannel_task_arguments(unittest.TestCase):
+
     def test_task_without_ProgressReporterno(self):
         communicationChannel = CommunicationChannel()
         communicationChannel.begin()
@@ -206,13 +209,12 @@ class TestCommunicationChannel(unittest.TestCase):
         communicationChannel.put(task1)
 
         result2 = MockResult('task2')
-        task2 = MockTaskWithoutProgressReporter(result2, 0.001)
+        task2 = MockTask(result2, 0.001)
         communicationChannel.put(task2)
 
         actual = [r.data for r in communicationChannel.receive()]
         self.assertEqual(set(['task1', 'task2']), set(actual))
 
         communicationChannel.end()
-
 
 ##__________________________________________________________________||
