@@ -121,7 +121,12 @@ class CommunicationChannel(object):
     def begin(self):
         if self.nCurrentProcesses >= self.nMaxProcesses: return
         for i in xrange(self.nCurrentProcesses, self.nMaxProcesses):
-            worker = Worker(self.task_queue, self.result_queue, self.progressMonitor.createReporter(), self.lock)
+            worker = Worker(
+                task_queue = self.task_queue,
+                result_queue = self.result_queue,
+                progressReporter = self.progressMonitor.createReporter(),
+                lock = self.lock
+            )
             worker.start()
             self.nCurrentProcesses += 1
 
