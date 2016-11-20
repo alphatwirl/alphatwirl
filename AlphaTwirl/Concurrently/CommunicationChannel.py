@@ -18,11 +18,11 @@ class Worker(multiprocessing.Process):
             if message is None:
                 self.task_queue.task_done()
                 break
-            taskNo, task = message
+            taskNo, task, args, kwargs = message
             try:
-                result = task(progressReporter = self.progressReporter)
+                result = task(progressReporter = self.progressReporter, *args, **kwargs)
             except TypeError:
-                result = task()
+                result = task(*args, **kwargs)
             self.task_queue.task_done()
             self.result_queue.put((taskNo, result))
 
@@ -130,8 +130,8 @@ class CommunicationChannel(object):
             worker.start()
             self.nCurrentProcesses += 1
 
-    def put(self, task):
-        self.task_queue.put((self.taskNo, task))
+    def put(self, task, *args, **kwargs):
+        self.task_queue.put((self.taskNo, task, args, kwargs))
         self.taskNo += 1
         self.nRunningTasks += 1
 
