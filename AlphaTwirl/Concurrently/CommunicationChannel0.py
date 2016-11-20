@@ -23,8 +23,12 @@ class CommunicationChannel0(object):
     def begin(self):
         self.progressReporter = self.progressMonitor.createReporter()
 
-    def put(self, task):
-        self.results.append(task(self.progressReporter))
+    def put(self, task, *args, **kwargs):
+        try:
+            result = task(progressReporter = self.progressReporter, *args, **kwargs)
+        except TypeError:
+            result = task(*args, **kwargs)
+        self.results.append(result)
 
     def receive(self):
         ret = self.results[:]
