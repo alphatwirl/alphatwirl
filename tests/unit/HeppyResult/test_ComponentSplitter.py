@@ -56,6 +56,15 @@ class TestComponentSplitter(unittest.TestCase):
     def tearDown(self):
         self.moduleComponentSplitter.ROOT = self.orgROOT
 
+    def test_init_raise(self):
+
+        self.assertRaises(ValueError, ComponentSplitter,
+                          analyzerName = 'treeProducerSusyAlphaT',
+                          fileName = 'tree.root',
+                          treeName = 'tree',
+                          maxEventsPerRun = 0
+        )
+
     def test_split_one_chunk(self):
         obj = ComponentSplitter(
             analyzerName = 'treeProducerSusyAlphaT',
