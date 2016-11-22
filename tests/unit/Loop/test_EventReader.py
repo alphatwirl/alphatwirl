@@ -164,11 +164,4 @@ class TestEventReader(unittest.TestCase):
         self.assertTrue(eventLoopRunner.ended)
         self.assertTrue(collector.collected)
 
-    def test_create_start_nEvents_list(self):
-        obj = EventReader(MockEventBuilder(), MockEventLoopRunner(), MockReader(), MockCollector())
-        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], obj._create_start_nEvents_list(40, 10))
-        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10), (40, 1)], obj._create_start_nEvents_list(41, 10))
-        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 40))
-        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 50))
-
 ##__________________________________________________________________||
