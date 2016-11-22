@@ -2,56 +2,36 @@
 from .EventLoop import EventLoop
 from .Associator import Associator
 
-import math
-
 ##__________________________________________________________________||
 class EventReader(object):
-    def __init__(self, eventBuilder, eventLoopRunner, reader, collector, maxEventsPerRun = -1):
+    """This class manages objects involved in reading data sets.
 
-        if maxEventsPerRun == 0:
-            raise ValueError("maxEventsPerRun cannot be 0")
+    On receiving a data set, this class splits it into chunks. Then,
+    for each chunk, it creates a reader associated with the collector,
+    creates an event loop, and send it to the event loop runner.
+
+    """
+    def __init__(self, eventBuilder, eventLoopRunner, reader, collector, datasetSplitter):
 
         self.eventBuilder = eventBuilder
         self.eventLoopRunner = eventLoopRunner
         self.associator = Associator(reader, collector)
         self.collector = collector
-        self.maxEventsPerRun = maxEventsPerRun
+        self.splitter = datasetSplitter
         self.EventLoop = EventLoop
 
     def begin(self):
         self.eventLoopRunner.begin()
 
     def read(self, dataset):
-        if self.maxEventsPerRun < 0:
-            self._run_one_eventLoop_for_the_dataset(dataset)
-        else:
-            self._split_the_dataset_run_multiple_eventLoops(dataset)
+        chunks = self.splitter.split(dataset)
+        for chunk in chunks:
+            reader = self.associator.make(dataset.name)
+            eventLoop = self.EventLoop(self.eventBuilder, chunk, reader)
+            self.eventLoopRunner.run(eventLoop)
 
     def end(self):
         self.eventLoopRunner.end()
         return self.collector.collect()
-
-    def _run_one_eventLoop_for_the_dataset(self, dataset):
-        reader = self.associator.make(dataset.name)
-        eventLoop = self.EventLoop(self.eventBuilder, dataset, reader)
-        self.eventLoopRunner.run(eventLoop)
-
-    def _split_the_dataset_run_multiple_eventLoops(self, dataset):
-        nTotal = self.eventBuilder.getNumberOfEventsInDataset(dataset)
-        nPerRun = self.maxEventsPerRun
-        for start, nEvents in self._create_start_nEvents_list(nTotal, nPerRun):
-            reader = self.associator.make(dataset.name)
-            eventLoop = self.EventLoop(
-                self.eventBuilder, dataset, reader,
-                start = start, nEvents = nEvents
-            )
-            self.eventLoopRunner.run(eventLoop)
-
-    def _create_start_nEvents_list(self, nTotal, nPerRun):
-        nLoops = nTotal/nPerRun
-        ret = [(i*nPerRun, nPerRun) for i in range(nLoops)]
-        if nTotal % nPerRun > 0:
-            ret.append((nLoops*nPerRun, nTotal % nPerRun))
-        return ret
 
 ##__________________________________________________________________||
