@@ -4,6 +4,7 @@ from HeppyResult import HeppyResult, defaultExcludeList, componentHasTheseFiles
 from Component import Component
 from ReadComponentConfig import ReadComponentConfig
 from Chunk import Chunk
+from Component2EventBuilders import Component2EventBuilders
 from ReadVersionInfo import ReadVersionInfo
 from Analyzer import Analyzer
 from ReadCounter import ReadCounter
