@@ -6,28 +6,31 @@ from .Associator import Associator
 class EventReader(object):
     """This class manages objects involved in reading data sets.
 
-    On receiving a data set, this class splits it into chunks. Then,
-    for each chunk, it creates a reader associated with the collector,
-    creates an event loop, and send it to the event loop runner.
+    On receiving a data set, this class calls the function
+    split_into_build_events(), which splits the data set into chunks,
+    creates the function build_events() for each chunk, and returns a
+    list of the functions. Then, for each build_events(), This class
+    creates a reader associated with the collector, creates an event
+    loop, and send it to the event loop runner.
 
     """
-    def __init__(self, eventBuilder, eventLoopRunner, reader, collector, datasetSplitter):
+    def __init__(self, eventLoopRunner, reader, collector,
+                 split_into_build_events):
 
-        self.eventBuilder = eventBuilder
         self.eventLoopRunner = eventLoopRunner
         self.associator = Associator(reader, collector)
         self.collector = collector
-        self.splitter = datasetSplitter
+        self.split_into_build_events = split_into_build_events
         self.EventLoop = EventLoop
 
     def begin(self):
         self.eventLoopRunner.begin()
 
     def read(self, dataset):
-        chunks = self.splitter.split(dataset)
-        for chunk in chunks:
+        build_events_list = self.split_into_build_events(dataset)
+        for build_events in build_events_list:
             reader = self.associator.make(dataset.name)
-            eventLoop = self.EventLoop(self.eventBuilder, chunk, reader)
+            eventLoop = self.EventLoop(build_events, reader)
             self.eventLoopRunner.run(eventLoop)
 
     def end(self):

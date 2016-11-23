@@ -30,12 +30,8 @@ class MockCollector(object):
 class MockDataset(object): pass
 
 ##__________________________________________________________________||
-class MockChunk(object): pass
-
-##__________________________________________________________________||
-class MockDatasetSplitter(object):
-    def split(self, dataset):
-        return dataset.chunks
+def mock_split_into_build_events(dataset):
+    return dataset.build_events
 
 ##__________________________________________________________________||
 class MockEventLoopRunner(object):
@@ -55,21 +51,18 @@ class MockEventLoopRunner(object):
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
-    def __init__(self, eventBuilder, chunk, reader):
-        self.eventBuilder = eventBuilder
-        self.chunk = chunk
+    def __init__(self, build_events, reader):
+        self.build_events = build_events
         self.reader = reader
 
 ##__________________________________________________________________||
 class TestEventReader(unittest.TestCase):
 
     def test_standard(self):
-        eventBuilder = MockEventBuilder()
         eventLoopRunner = MockEventLoopRunner()
         reader = MockReader()
         collector = MockCollector(MockCollectorReturn())
-        datasetSplitter = MockDatasetSplitter()
-        obj = EventReader(eventBuilder, eventLoopRunner, reader, collector, datasetSplitter)
+        obj = EventReader(eventLoopRunner, reader, collector, mock_split_into_build_events)
         obj.EventLoop = MockEventLoop
 
         # begin
@@ -80,18 +73,17 @@ class TestEventReader(unittest.TestCase):
         # read
         dataset1 = MockDataset()
         dataset1.name = "dataset1"
-        chunk1 = MockChunk()
-        chunk2 = MockChunk()
-        chunk3 = MockChunk()
-        dataset1.chunks = [chunk1, chunk2, chunk3]
+        build_events1 = MockEventBuilder()
+        build_events2 = MockEventBuilder()
+        build_events3 = MockEventBuilder()
+        dataset1.build_events = [build_events1, build_events2, build_events3]
         obj.read(dataset1)
 
         self.assertEqual(3, len(eventLoopRunner.eventLoops))
 
         eventLoop1 =  eventLoopRunner.eventLoops[0]
         self.assertIsInstance(eventLoop1, MockEventLoop)
-        self.assertIs(eventBuilder, eventLoop1.eventBuilder)
-        self.assertIs(chunk1, eventLoop1.chunk)
+        self.assertIs(build_events1, eventLoop1.build_events)
         self.assertIsInstance(eventLoop1.reader, MockReader)
 
         self.assertEqual("dataset1", collector.pairs[0][0])
@@ -99,8 +91,7 @@ class TestEventReader(unittest.TestCase):
 
         eventLoop2 =  eventLoopRunner.eventLoops[1]
         self.assertIsInstance(eventLoop2, MockEventLoop)
-        self.assertIs(eventBuilder, eventLoop2.eventBuilder)
-        self.assertIs(chunk2, eventLoop2.chunk)
+        self.assertIs(build_events2, eventLoop2.build_events)
         self.assertIsInstance(eventLoop2.reader, MockReader)
 
         self.assertEqual("dataset1", collector.pairs[1][0])
@@ -108,8 +99,7 @@ class TestEventReader(unittest.TestCase):
 
         eventLoop3 =  eventLoopRunner.eventLoops[2]
         self.assertIsInstance(eventLoop3, MockEventLoop)
-        self.assertIs(eventBuilder, eventLoop3.eventBuilder)
-        self.assertIs(chunk3, eventLoop3.chunk)
+        self.assertIs(build_events3, eventLoop3.build_events)
         self.assertIsInstance(eventLoop3.reader, MockReader)
 
         self.assertEqual("dataset1", collector.pairs[2][0])
