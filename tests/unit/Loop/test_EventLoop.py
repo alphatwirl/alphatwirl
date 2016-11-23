@@ -9,12 +9,8 @@ class MockEventBuilder(object):
     def __init__(self, events):
         self.events = events
 
-    def build(self, chunk):
-        self.chunk = chunk
+    def __call__(self):
         return self.events
-
-##__________________________________________________________________||
-class MockChunk(object): pass
 
 ##__________________________________________________________________||
 class MockReader(object):
@@ -37,14 +33,15 @@ class TestEventLoop(unittest.TestCase):
 
     def test_call(self):
 
-        events = [MockEvent(), MockEvent(), MockEvent()]
-        eventBuilder = MockEventBuilder(events)
-
-        chunk = MockChunk()
+        event1 = MockEvent()
+        event2 = MockEvent()
+        event3 = MockEvent()
+        events = [event1, event2, event3]
+        build_events = MockEventBuilder(events)
 
         reader = MockReader()
 
-        obj = EventLoop(eventBuilder, chunk, reader)
+        obj = EventLoop(build_events, reader)
 
         self.assertIsNone(reader.beginCalled)
         self.assertFalse(reader.endCalled)
@@ -52,7 +49,7 @@ class TestEventLoop(unittest.TestCase):
 
         self.assertEqual(reader, obj())
 
-        self.assertEqual(chunk, eventBuilder.chunk)
+        self.assertEqual([event1, event2, event3], reader.events)
 
         self.assertIs(events, reader.beginCalled)
         self.assertIsNot(events, reader.events)

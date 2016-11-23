@@ -6,9 +6,8 @@ import uuid
 class EventLoop(object):
     """An event loop
     """
-    def __init__(self, eventBuilder, chunk, reader):
-        self.eventBuilder = eventBuilder
-        self.chunk = chunk
+    def __init__(self, build_events, reader):
+        self.build_events = build_events
         self.reader = reader
         self.progressReportWriter = EventLoopProgressReportWriter()
 
@@ -16,7 +15,7 @@ class EventLoop(object):
         self.taskid = uuid.uuid4()
 
     def __call__(self, progressReporter = None):
-        events = self.eventBuilder.build(self.chunk)
+        events = self.build_events()
         self._reportProgress(progressReporter, events)
         self.reader.begin(events)
         for event in events:
@@ -27,7 +26,7 @@ class EventLoop(object):
 
     def _reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = self.progressReportWriter.write(self.taskid, self.chunk, event)
+        report = self.progressReportWriter.write(self.taskid, event.chunk, event)
         progressReporter.report(report)
 
 ##__________________________________________________________________||
