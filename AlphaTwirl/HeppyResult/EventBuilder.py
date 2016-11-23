@@ -4,13 +4,15 @@ from ..Events import Events
 
 ##__________________________________________________________________||
 class EventBuilder(object):
+    def __init__(self, chunk):
+        self.chunk = chunk
 
-    def build(self, chunk):
-        file = ROOT.TFile.Open(chunk.inputPath)
-        tree = file.Get(chunk.treeName)
-        ret = Events(tree, chunk.maxEvents, chunk.start)
-        ret.chunk = chunk
-        ret.component = chunk.component
-        return ret
+    def __call__(self):
+        file = ROOT.TFile.Open(self.chunk.inputPath)
+        tree = file.Get(self.chunk.treeName)
+        events = Events(tree, self.chunk.maxEvents, self.chunk.start)
+        events.chunk = self.chunk
+        events.component = self.chunk.component
+        return events
 
 ##__________________________________________________________________||
