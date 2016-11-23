@@ -66,7 +66,6 @@ class TestBEventBuilder(unittest.TestCase):
         self.moduleBEventBuilder.BEvents = self.orgEvents
 
     def test_build(self):
-        obj = BEventBuilder()
 
         component = MockComponent()
 
@@ -78,7 +77,10 @@ class TestBEventBuilder(unittest.TestCase):
             component = component,
             name = 'TTJets'
         )
-        events = obj.build(chunk)
+
+        obj = BEventBuilder(chunk)
+
+        events = obj()
 
         self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleBEventBuilder.ROOT.TFile.path)
         self.assertIsInstance(events, MockEvents)
