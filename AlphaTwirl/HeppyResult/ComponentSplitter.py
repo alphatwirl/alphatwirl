@@ -42,15 +42,15 @@ class ComponentSplitter(object):
         return [chunk]
 
     def _split_the_component_into_multiple_chunks(self, component):
-        inputPath = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
-        nTotal = self._get_number_of_events_in_component(component)
-        nTotal =  minimum_positive_value([self.maxEvents, nTotal])
+        file_nevents_list = self._file_nevents_list(component)
+        file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
+
         chunks = [ ]
-        for start, nEvents in start_length_pairs_for_split_lists(ntotal = nTotal, max_per_list = self.maxEventsPerRun):
+        for file, start, length in file_start_length_list:
             chunk = Chunk(
-                inputPath = inputPath,
+                inputPath = file,
                 treeName = self.treeName,
-                maxEvents = nEvents,
+                maxEvents = length,
                 start = start,
                 component = component, # for scribblers
                 name = component.name # for the progress report writer
@@ -58,9 +58,14 @@ class ComponentSplitter(object):
             chunks.append(chunk)
         return chunks
 
-    def _get_number_of_events_in_component(self, component):
-        inputPath = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
-        file = ROOT.TFile.Open(inputPath)
+    def _file_nevents_list(self, component):
+        input_path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
+        nTotal = self._nevents_in_file(input_path)
+        return [(input_path, nTotal)]
+
+    def _nevents_in_file(self, path):
+        file = ROOT.TFile.Open(path)
         tree = file.Get(self.treeName)
         return tree.GetEntries()
+
 ##__________________________________________________________________||
