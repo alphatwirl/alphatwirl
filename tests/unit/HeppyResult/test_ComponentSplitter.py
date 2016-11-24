@@ -127,29 +127,4 @@ class TestComponentSplitter(unittest.TestCase):
 
         self.assertEqual(expected, obj.split(component))
 
-    def test_create_start_nEvents_list(self):
-        obj = ComponentSplitter(None, None, None)
-        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], obj._create_start_nEvents_list(40, 10))
-        self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10), (40, 1)], obj._create_start_nEvents_list(41, 10))
-        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 40))
-        self.assertEqual([(0, 40)], obj._create_start_nEvents_list(40, 50))
-
-    def test_minimum_positive_value(self):
-        obj = ComponentSplitter(None, None, None)
-
-        # empty
-        self.assertEqual(-1, obj._minimum_positive_value([]))
-
-        # all negative
-        self.assertEqual(-1, obj._minimum_positive_value([-1, -2, - 3]))
-
-        # all positive
-        self.assertEqual(10, obj._minimum_positive_value([10, 20, 30]))
-
-        # zero or positive
-        self.assertEqual(0, obj._minimum_positive_value([10, 20, 0, 30]))
-
-        # general
-        self.assertEqual(10, obj._minimum_positive_value([10, 20, 30, -2, -3]))
-
 ##__________________________________________________________________||

@@ -6,6 +6,7 @@ import collections
 import ROOT
 
 from .Chunk import Chunk
+from .splitfuncs import *
 
 ##__________________________________________________________________||
 class ComponentSplitter(object):
@@ -43,9 +44,9 @@ class ComponentSplitter(object):
     def _split_the_component_into_multiple_chunks(self, component):
         inputPath = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
         nTotal = self._get_number_of_events_in_component(component)
-        nTotal =  self._minimum_positive_value([self.maxEvents, nTotal])
+        nTotal =  minimum_positive_value([self.maxEvents, nTotal])
         chunks = [ ]
-        for start, nEvents in self._create_start_nEvents_list(nTotal, self.maxEventsPerRun):
+        for start, nEvents in start_length_pairs_for_split_lists(ntotal = nTotal, max_per_list = self.maxEventsPerRun):
             chunk = Chunk(
                 inputPath = inputPath,
                 treeName = self.treeName,
@@ -62,16 +63,4 @@ class ComponentSplitter(object):
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self.treeName)
         return tree.GetEntries()
-
-    def _create_start_nEvents_list(self, nTotal, nPerRun):
-        nLoops = nTotal/nPerRun
-        ret = [(i*nPerRun, nPerRun) for i in range(nLoops)]
-        if nTotal % nPerRun > 0:
-            ret.append((nLoops*nPerRun, nTotal % nPerRun))
-        return ret
-
-    def _minimum_positive_value(self, vals):
-        vals = [v for v in vals if v >= 0]
-        if not vals: return -1
-        return min(vals)
 ##__________________________________________________________________||
