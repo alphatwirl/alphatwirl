@@ -25,26 +25,7 @@ class ComponentSplitter(object):
         self.maxEventsPerRun = maxEventsPerRun
 
     def split(self, component):
-        if self.maxEventsPerRun < 0:
-            return self._one_chunk_for_the_component(component)
-        return self._split_the_component_into_multiple_chunks(component)
-
-    def _one_chunk_for_the_component(self, component):
-        inputPath = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
-        chunk = Chunk(
-            inputPath = inputPath,
-            treeName = self.treeName,
-            maxEvents = self.maxEvents,
-            start = 0,
-            component = component, # for scribblers
-            name = component.name # for the progress report writer
-        )
-        return [chunk]
-
-    def _split_the_component_into_multiple_chunks(self, component):
-        file_nevents_list = self._file_nevents_list(component)
-        file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
-
+        file_start_length_list = self._file_start_length_list(component)
         chunks = [ ]
         for file, start, length in file_start_length_list:
             chunk = Chunk(
@@ -57,6 +38,16 @@ class ComponentSplitter(object):
             )
             chunks.append(chunk)
         return chunks
+
+    def _file_start_length_list(self, component):
+
+        if self.maxEventsPerRun < 0:
+            inputPath = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
+            return [(inputPath, 0, -1)]
+
+        file_nevents_list = self._file_nevents_list(component)
+        file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
+        return file_start_length_list
 
     def _file_nevents_list(self, component):
         input_path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
