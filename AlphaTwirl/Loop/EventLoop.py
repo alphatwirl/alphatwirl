@@ -26,7 +26,7 @@ class EventLoop(object):
 
     def _reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = self.progressReportWriter.write(self.taskid, event.chunk, event)
+        report = self.progressReportWriter.write(self.taskid, event.config, event)
         progressReporter.report(report)
 
 ##__________________________________________________________________||

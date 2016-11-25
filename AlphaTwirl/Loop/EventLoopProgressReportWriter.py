@@ -6,9 +6,9 @@ class EventLoopProgressReportWriter(object):
     """A progress report writer of an event loop
 
     """
-    def write(self, taskid, chunk, event):
+    def write(self, taskid, config, event):
         return ProgressReport(
-            name = chunk.name,
+            name = config.name,
             done = event.iEvent + 1,
             total = event.nEvents,
             taskid = taskid

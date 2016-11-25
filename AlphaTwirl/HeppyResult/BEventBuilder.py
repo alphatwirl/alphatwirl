@@ -4,15 +4,15 @@ from ..Events import BEvents
 
 ##__________________________________________________________________||
 class BEventBuilder(object):
-    def __init__(self, chunk):
-        self.chunk = chunk
+    def __init__(self, config):
+        self.config = config
 
     def __call__(self):
-        file = ROOT.TFile.Open(self.chunk.inputPath)
-        tree = file.Get(self.chunk.treeName)
-        events = BEvents(tree, self.chunk.maxEvents, self.chunk.start)
-        events.chunk = self.chunk
-        events.component = self.chunk.component
+        file = ROOT.TFile.Open(self.config.inputPath)
+        tree = file.Get(self.config.treeName)
+        events = BEvents(tree, self.config.maxEvents, self.config.start)
+        events.config = self.config
+        events.component = self.config.component
         return events
 
 ##__________________________________________________________________||
