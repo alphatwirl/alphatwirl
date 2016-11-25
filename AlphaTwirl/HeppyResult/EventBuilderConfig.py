@@ -4,6 +4,9 @@
 import collections
 
 ##__________________________________________________________________||
-Chunk = collections.namedtuple('Chunk', 'inputPath treeName maxEvents start component name')
+EventBuilderConfig = collections.namedtuple(
+    'EventBuilderConfig',
+    'inputPath treeName maxEvents start component name'
+)
 
 ##__________________________________________________________________||

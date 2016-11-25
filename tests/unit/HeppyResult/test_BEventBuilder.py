@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-from AlphaTwirl.HeppyResult import Chunk
+from AlphaTwirl.HeppyResult import EventBuilderConfig
 
 ##__________________________________________________________________||
 hasROOT = False
@@ -69,7 +69,7 @@ class TestBEventBuilder(unittest.TestCase):
 
         component = MockComponent()
 
-        chunk = Chunk(
+        config = EventBuilderConfig(
             inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
             treeName = 'tree',
             maxEvents = 123,
@@ -78,7 +78,7 @@ class TestBEventBuilder(unittest.TestCase):
             name = 'TTJets'
         )
 
-        obj = BEventBuilder(chunk)
+        obj = BEventBuilder(config)
 
         events = obj()
 
