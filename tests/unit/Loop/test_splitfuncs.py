@@ -1,8 +1,8 @@
 import sys
 import unittest
 
-from AlphaTwirl.HeppyResult.splitfuncs import *
-from AlphaTwirl.HeppyResult.splitfuncs import _apply_max_total
+from AlphaTwirl.Loop.splitfuncs import *
+from AlphaTwirl.Loop.splitfuncs import _apply_max_total
 
 ##__________________________________________________________________||
 class TestSplitfuncs(unittest.TestCase):
