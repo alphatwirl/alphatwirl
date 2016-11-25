@@ -3,8 +3,7 @@ from ComponentReaderComposite import ComponentReaderComposite
 from HeppyResult import HeppyResult, defaultExcludeList, componentHasTheseFiles
 from Component import Component
 from ReadComponentConfig import ReadComponentConfig
-from Chunk import Chunk
-from Component2EventBuilders import Component2EventBuilders
+from EventBuilderConfig import EventBuilderConfig
 from ReadVersionInfo import ReadVersionInfo
 from Analyzer import Analyzer
 from ReadCounter import ReadCounter
@@ -21,7 +20,7 @@ except ImportError:
     pass
 
 if hasROOT:
-    from ComponentSplitter import ComponentSplitter
+    from EventBuilderConfigMaker import EventBuilderConfigMaker
     from EventBuilder import EventBuilder
     from BEventBuilder import BEventBuilder
     from TblBranch import TblBranch
