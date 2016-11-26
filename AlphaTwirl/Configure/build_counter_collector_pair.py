@@ -22,7 +22,8 @@ def build_counter_collector_pair(tblcfg):
     )
     resultsCombinationMethod = CombineIntoList(
         keyNames = tblcfg['keyOutColumnNames'],
-        valNames = tblcfg['valOutColumnNames']
+        valNames = tblcfg['valOutColumnNames'],
+        sort = tblcfg['sort']
     )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
