@@ -19,6 +19,7 @@ class TableConfigCompleter(object):
             'weight': MockWeight(),
             'summaryClass': Count,
             'summaryClassArgs': { },
+            'sort': True,
             'outFile': True,
             'outFileName': 'tbl_n_component_met_pt.txt',
             'outFilePath': '/tmp/tbl_n_component_met_pt.txt',
@@ -61,6 +62,7 @@ class TableConfigCompleter(object):
         if 'valIndices' not in ret: ret['valIndices'] = None
         if 'outFile' not in ret: ret['outFile'] = True
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
+        if 'sort' not in ret: ret['sort'] = True
         if ret['outFile']:
             if 'outFileName' not in ret:
                 if use_defaultSummaryClass:

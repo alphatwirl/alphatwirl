@@ -54,6 +54,8 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
 
+        self.assertEqual(True, tblcfg_out['sort'])
+
         self.assertTrue(tblcfg_out['outFile'])
         self.assertEqual('tbl_n_component.txt', tblcfg_out['outFileName'])
         self.assertEqual(os.path.join('tmp', 'tbl_n_component.txt'), tblcfg_out['outFilePath'])
