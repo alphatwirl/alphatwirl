@@ -6,7 +6,7 @@ class MockEvent(object):
     pass
 
 ##__________________________________________________________________||
-class MockSummary(object):
+class MockSummarizer(object):
     def __init__(self):
         self._counts = [ ]
         self._keys = set()
@@ -74,7 +74,7 @@ class TestMockKeyValueComposer(unittest.TestCase):
 class TestReader(unittest.TestCase):
 
     def test_events(self):
-        summary = MockSummary()
+        summarizer = MockSummarizer()
         keyval_list = [
             [((11, ), ()), ((12, ), ())],
             [((12, ), ())],
@@ -85,7 +85,7 @@ class TestReader(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Reader(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
+        counter = Summary.Reader(keycomposer, summarizer, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -93,30 +93,30 @@ class TestReader(unittest.TestCase):
 
         event = MockEvent()
         counter.event(event)
-        self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual(summary, counter.results())
+        self.assertEqual([((11, ), 1.0)], summarizer._counts)
+        self.assertEqual(summarizer, counter.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summarizer._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summarizer.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summarizer._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summarizer.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summarizer._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summarizer.results())
 
         counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary.results())
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summarizer._counts)
+        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summarizer.results())
 
         counter.end()
-        self.assertEqual(set([(15, ), (13, ), (12, )]), summary._added_keys)
+        self.assertEqual(set([(15, ), (13, ), (12, )]), summarizer._added_keys)
 
     def test_default_weight(self):
-        summary = MockSummary()
+        summarizer = MockSummarizer()
         keyval_list = [
             [((11, ), ()), ((12, ), ())],
             [((12, ), ())],
@@ -127,25 +127,25 @@ class TestReader(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Reader(keycomposer, summary, nextKeyComposer)
+        counter = Summary.Reader(keycomposer, summarizer, nextKeyComposer)
 
         self.assertIsInstance(counter.weightCalculator, Summary.WeightCalculatorOne)
 
         event = MockEvent()
         counter.event(event)
-        self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual(summary, counter.results())
+        self.assertEqual([((11, ), 1.0)], summarizer._counts)
+        self.assertEqual(summarizer, counter.results())
 
     def test_copy_from(self):
-        summary = MockSummary()
-        counter = Summary.Reader(MockKeyValueComposer(), summary, MockWeightCalculator())
+        summarizer = MockSummarizer()
+        counter = Summary.Reader(MockKeyValueComposer(), summarizer, MockWeightCalculator())
 
-        src_summary = MockSummary()
-        src_counter = Summary.Reader(MockKeyValueComposer(), src_summary, MockWeightCalculator())
-        src_summary._counts[:] = [((11, ), 1.0)]
+        src_summarizer = MockSummarizer()
+        src_counter = Summary.Reader(MockKeyValueComposer(), src_summarizer, MockWeightCalculator())
+        src_summarizer._counts[:] = [((11, ), 1.0)]
 
-        self.assertEqual([ ], summary._counts)
+        self.assertEqual([ ], summarizer._counts)
         counter.copy_from(src_counter)
-        self.assertEqual([((11,), 1.0)], summary._counts)
+        self.assertEqual([((11,), 1.0)], summarizer._counts)
 
 ##__________________________________________________________________||
