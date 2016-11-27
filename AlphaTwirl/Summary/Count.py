@@ -29,15 +29,16 @@ class CountImp(object):
 class Count(object):
     def __init__(self):
         self._results = { }
+        self.Summary = CountImp
         self.initial_contents = (0, 0)
 
     def add(self, key, val = None, weight = 1):
         self.add_key(key)
-        self._results[key] = self._results[key] + CountImp(val, weight)
+        self._results[key] = self._results[key] + self.Summary(val, weight)
 
     def add_key(self, key):
         if key not in self._results:
-            self._results[key] = CountImp(contents = self.initial_contents)
+            self._results[key] = self.Summary(contents = self.initial_contents)
 
     def keys(self):
         return self._results.keys()
