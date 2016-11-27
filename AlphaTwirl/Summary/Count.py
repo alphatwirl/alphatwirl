@@ -25,4 +25,7 @@ class Count(object):
         contents = self.contents + other.contents
         return self.__class__(contents = contents)
 
+    def __repr__(self):
+        return '{}(contents = {})'.format(self.__class__, self.contents)
+
 ##__________________________________________________________________||
