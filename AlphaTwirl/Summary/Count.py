@@ -54,7 +54,7 @@ class Count(object):
         return {k: v.summary for k, v in self._results.iteritems()}
 
     def __add__(self, other):
-        ret = Count()
+        ret = self.__class__()
         results = {k: v.copy() for k, v in self._results.iteritems()}
         if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
             self._add_results_inplace(results, other._results)
