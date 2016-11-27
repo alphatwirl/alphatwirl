@@ -4,12 +4,14 @@ from Combine import Combine
 
 ##__________________________________________________________________||
 def countsToList(counts, sort = True):
-    try:
+    try: # for Scan
+        d = [ ]
+        for k, summary in counts.iteritems():
+            for v in summary.contents:
+                d.append(k + tuple(v))
+    except TypeError: # for Count, etc, need to be unified
         d = [k + tuple(v.contents) for k, v in counts.iteritems()]
-        if sort: d.sort()
-    except AttributeError:
-        # assume counts is already a list
-        d = counts
+    if sort: d.sort()
     return d
 
 ##__________________________________________________________________||

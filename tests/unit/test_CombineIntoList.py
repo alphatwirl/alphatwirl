@@ -58,22 +58,6 @@ class TestCountsToList(unittest.TestCase):
 
         self.assertEqual(expected, countsToList(counts))
 
-    def test_call_list(self):
-
-        counts  = [
-            (1, 4, 6, 2.3),
-            (2, 3, 9, 5.4),
-            (3, 2, 3, 3.6),
-            ]
-
-        expected = [
-            (1, 4.0, 6.0, 2.3),
-            (2, 3.0, 9.0, 5.4),
-            (3, 2.0, 3.0, 3.6)
-        ]
-
-        self.assertEqual(expected, countsToList(counts))
-
 ##__________________________________________________________________||
 class TestCombinedToList(unittest.TestCase):
 
