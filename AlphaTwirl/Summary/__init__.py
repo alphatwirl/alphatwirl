@@ -1,3 +1,4 @@
+from Reader import Reader
 from Summarizer import Summarizer
 from WeightCalculatorOne import WeightCalculatorOne
 from KeyValueComposer import KeyValueComposer

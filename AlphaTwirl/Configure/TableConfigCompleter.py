@@ -19,6 +19,7 @@ class TableConfigCompleter(object):
             'weight': MockWeight(),
             'summaryClass': Count,
             'summaryClassArgs': { },
+            'summaryInitialContents' : [0]*len(valOutColumnNames),
             'sort': True,
             'outFile': True,
             'outFileName': 'tbl_n_component_met_pt.txt',
@@ -47,6 +48,7 @@ class TableConfigCompleter(object):
         if use_defaultSummaryClass:
             ret['summaryClass'] = self.defaultSummaryClass
 
+
         if 'summaryClassArgs' not in ret: ret['summaryClassArgs'] = { }
 
         if 'keyOutColumnNames' not in ret: ret['keyOutColumnNames'] = ret['keyAttrNames']
@@ -58,6 +60,9 @@ class TableConfigCompleter(object):
                 ret['valOutColumnNames'] = ('n', 'nvar')
             else:
                 ret['valOutColumnNames'] = ret['valAttrNames'] if ret['valAttrNames'] is not None else ()
+
+        if 'summaryInitialContents' not in ret:
+            ret['summaryInitialContents'] = [0]*len(ret['valOutColumnNames'])
 
         if 'valIndices' not in ret: ret['valIndices'] = None
         if 'outFile' not in ret: ret['outFile'] = True

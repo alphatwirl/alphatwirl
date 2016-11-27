@@ -5,12 +5,12 @@ class Combine(object):
     def combine(self, datasetReaderPairs):
         combined = { }
         for datasetName, reader in datasetReaderPairs:
-            result = reader.results()
-            if not result: continue
+            summarizer = reader.results()
+            if not summarizer: continue
             if datasetName in combined:
-                combined[datasetName] = combined[datasetName] + result
+                combined[datasetName] = combined[datasetName] + summarizer
             else:
-                combined[datasetName] = result
+                combined[datasetName] = summarizer
         return combined
 
 ##__________________________________________________________________||

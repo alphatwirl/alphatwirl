@@ -1,6 +1,8 @@
-from AlphaTwirl import countsToList, combinedToList, CombineIntoList
 import unittest
+import collections
 import numpy as np
+
+from AlphaTwirl import countsToList, combinedToList, CombineIntoList
 
 ##__________________________________________________________________||
 class MockReader(object):
@@ -19,14 +21,17 @@ class MockResult(object):
         return self._results
 
 ##__________________________________________________________________||
+MockCount = collections.namedtuple('MockCount', 'contents')
+
+##__________________________________________________________________||
 class TestCountsToList(unittest.TestCase):
 
     def test_call(self):
 
         counts  = {
-            (1, ): np.array((4, 6)),
-            (2, ): np.array((3, 9)),
-            (3, ): np.array((2, 3)),
+            (1, ): MockCount(contents = np.array((4, 6))),
+            (2, ): MockCount(contents = np.array((3, 9))),
+            (3, ): MockCount(contents = np.array((2, 3))),
         }
 
         expected = [
@@ -40,26 +45,10 @@ class TestCountsToList(unittest.TestCase):
     def test_call_threeValues(self):
 
         counts  = {
-            (1, ): np.array((4, 6, 2.3)),
-            (2, ): np.array((3, 9, 5.4)),
-            (3, ): np.array((2, 3, 3.6)),
+            (1, ): MockCount(contents = np.array((4, 6, 2.3))),
+            (2, ): MockCount(contents = np.array((3, 9, 5.4))),
+            (3, ): MockCount(contents = np.array((2, 3, 3.6))),
             }
-
-        expected = [
-            (1, 4.0, 6.0, 2.3),
-            (2, 3.0, 9.0, 5.4),
-            (3, 2.0, 3.0, 3.6)
-        ]
-
-        self.assertEqual(expected, countsToList(counts))
-
-    def test_call_list(self):
-
-        counts  = [
-            (1, 4, 6, 2.3),
-            (2, 3, 9, 5.4),
-            (3, 2, 3, 3.6),
-            ]
 
         expected = [
             (1, 4.0, 6.0, 2.3),
@@ -76,9 +65,9 @@ class TestCombinedToList(unittest.TestCase):
 
         results = MockResult(
             {
-                (1, ): np.array((4, 6)),
-                (2, ): np.array((3, 9)),
-                (3, ): np.array((2, 3)),
+                (1, ): MockCount(contents = np.array((4, 6))),
+                (2, ): MockCount(contents = np.array((3, 9))),
+                (3, ): MockCount(contents = np.array((2, 3))),
             }
         )
 
@@ -101,16 +90,16 @@ class TestCombinedToList(unittest.TestCase):
 
         results1 = MockResult(
             {
-                (1, ): np.array((4, 6)),
-                (2, ): np.array((3, 9)),
-                (3, ): np.array((2, 3)),
+                (1, ): MockCount(contents = np.array((4, 6))),
+                (2, ): MockCount(contents = np.array((3, 9))),
+                (3, ): MockCount(contents = np.array((2, 3))),
             }
         )
 
         results2 = MockResult(
             {
-                (2, ): np.array((3, 6)),
-                (4, ): np.array((2, 2)),
+                (2, ): MockCount(contents = np.array((3, 6))),
+                (4, ): MockCount(contents = np.array((2, 2))),
             }
         )
 
@@ -136,9 +125,9 @@ class TestCombinedToList(unittest.TestCase):
 
         results1 = MockResult(
             {
-                (1, ): np.array((4, 6)),
-                (2, ): np.array((3, 9)),
-                (3, ): np.array((2, 3)),
+                (1, ): MockCount(contents = np.array((4, 6))),
+                (2, ): MockCount(contents = np.array((3, 9))),
+                (3, ): MockCount(contents = np.array((2, 3))),
             }
         )
 
@@ -199,9 +188,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader = MockReader(
             MockResult(
                 {
-                    (1, ): np.array((4, 6)),
-                    (2, ): np.array((3, 9)),
-                    (3, ): np.array((2, 3)),
+                    (1, ): MockCount(contents = np.array((4, 6))),
+                    (2, ): MockCount(contents = np.array((3, 9))),
+                    (3, ): MockCount(contents = np.array((2, 3))),
                 }
             )
         )
@@ -222,9 +211,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader1 = MockReader(
             MockResult(
                 {
-                    (1, ): np.array((4, 6)),
-                    (2, ): np.array((3, 9)),
-                    (3, ): np.array((2, 3)),
+                    (1, ): MockCount(contents = np.array((4, 6))),
+                    (2, ): MockCount(contents = np.array((3, 9))),
+                    (3, ): MockCount(contents = np.array((2, 3))),
                 }
             )
         )
@@ -232,8 +221,8 @@ class TestCombineIntoList(unittest.TestCase):
         reader2 = MockReader(
             MockResult(
                 {
-                    (2, ): np.array((3, 6)),
-                    (4, ): np.array((2, 2)),
+                    (2, ): MockCount(contents = np.array((3, 6))),
+                    (4, ): MockCount(contents = np.array((2, 2))),
                 }
             )
         )
@@ -257,9 +246,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader1 = MockReader(
             MockResult(
                 {
-                    (1, ): np.array((4, 6)),
-                    (2, ): np.array((3, 9)),
-                    (3, ): np.array((2, 3)),
+                    (1, ): MockCount(contents = np.array((4, 6))),
+                    (2, ): MockCount(contents = np.array((3, 9))),
+                    (3, ): MockCount(contents = np.array((2, 3))),
                 }
             )
         )

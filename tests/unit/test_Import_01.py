@@ -55,7 +55,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.Concurrently.CommunicationChannel))
         self.assertTrue(inspect.isclass(AlphaTwirl.Combine))
         self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoList))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Summarizer))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Reader))
         self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Count))
         self.assertTrue(inspect.isclass(AlphaTwirl.Summary.NextKeyComposer))
         self.assertTrue(inspect.isclass(AlphaTwirl.Loop.Collector))
