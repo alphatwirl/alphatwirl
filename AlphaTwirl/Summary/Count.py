@@ -4,17 +4,43 @@
 import numpy as np
 
 ##__________________________________________________________________||
+class CountImp(object):
+    """
+    Args:
+        val : an empty tuple for a count. None not to be counted
+        weight (float) : The weight
+    """
+
+    def __init__(self, val = None, weight = 1):
+
+        if val is None:
+            self.summary = np.array((0, 0))
+            return
+
+        self.summary = np.array((weight, weight**2))
+
+    def copy(self):
+        ret = self.__class__()
+        ret.summary = self.summary.copy()
+        return ret
+
+    def __add__(self, other):
+        ret = self.copy()
+        ret.summary = ret.summary + other.summary
+        return ret
+
+##__________________________________________________________________||
 class Count(object):
     def __init__(self):
         self._results = { }
 
     def add(self, key, val = None, weight = 1):
         self.add_key(key)
-        self._results[key] = self._results[key] + np.array((weight, weight**2)) # (n, nvar)
+        self._results[key] = self._results[key] + CountImp(val, weight)
 
     def add_key(self, key):
         if key not in self._results:
-            self._results[key] = np.array((0, 0)) # (n, nvar)
+            self._results[key] = CountImp()
 
     def keys(self):
         return self._results.keys()
@@ -24,7 +50,8 @@ class Count(object):
         self._results.update(src._results)
 
     def results(self):
-        return self._results
+        ## return self._results
+        return {k: v.summary for k, v in self._results.iteritems()}
 
     def __add__(self, other):
         ret = Count()
