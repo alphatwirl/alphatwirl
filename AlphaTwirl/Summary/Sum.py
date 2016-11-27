@@ -2,7 +2,9 @@
 
 ##__________________________________________________________________||
 import numpy as np
+import copy
 
+##__________________________________________________________________||
 class SumImp(object):
 
     def __init__(self, val = None, weight = 1, contents = None):
