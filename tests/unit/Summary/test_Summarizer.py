@@ -97,6 +97,8 @@ class TestSummarizer(unittest.TestCase):
         self.assertIsNot(src_obj._results, obj._results)
         self.assertEqual(obj.Summary, src_obj.Summary)
         self.assertEqual(obj.initial_contents, src_obj.initial_contents)
+        self.assertIsNot(src_obj._results['A'], obj._results['A'])
+        self.assertIsNot(src_obj._results['B'], obj._results['B'])
 
 ##__________________________________________________________________||
 class TestSummarizer_operator(unittest.TestCase):

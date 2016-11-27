@@ -22,6 +22,7 @@ class Summarizer(object):
         return self._results.keys()
 
     def copy_from(self, src):
+        src = copy.deepcopy(src)
         self._results.clear()
         self._results.update(src._results)
         self.Summary = src.Summary
@@ -32,7 +33,7 @@ class Summarizer(object):
 
     def __add__(self, other):
         ret = self.__class__(self.Summary, self.initial_contents)
-        results = {k: copy.deepcopy(v) for k, v in self._results.iteritems()}
+        results = copy.deepcopy(self._results)
         if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
             self._add_results_inplace(results, other._results)
         ret._results.clear()
