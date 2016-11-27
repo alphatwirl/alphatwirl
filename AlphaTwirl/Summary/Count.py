@@ -9,24 +9,24 @@ class CountImp(object):
     Args:
         val : Unused, typically an empty tuple unless contents are given
         weight (float) : The weight
-        contents : Specified contents unless None.
+        contents : Specified contents unless None
     """
 
     def __init__(self, val = None, weight = 1, contents = None):
 
         if contents is not None:
-            self.summary = np.array(contents)
+            self.contents = np.array(contents)
             return
 
-        self.summary = np.array((weight, weight**2))
+        self.contents = np.array((weight, weight**2))
 
     def copy(self):
-        ret = self.__class__(contents = self.summary)
+        ret = self.__class__(contents = self.contents)
         return ret
 
     def __add__(self, other):
         ret = self.copy()
-        ret.summary = ret.summary + other.summary
+        ret.contents = ret.contents + other.contents
         return ret
 
 ##__________________________________________________________________||
@@ -52,7 +52,7 @@ class Count(object):
 
     def results(self):
         ## return self._results
-        return {k: v.summary for k, v in self._results.iteritems()}
+        return {k: v.contents for k, v in self._results.iteritems()}
 
     def __add__(self, other):
         ret = self.__class__()
