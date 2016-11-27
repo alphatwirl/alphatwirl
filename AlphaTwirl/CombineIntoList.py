@@ -5,7 +5,7 @@ from Combine import Combine
 ##__________________________________________________________________||
 def countsToList(counts, sort = True):
     try:
-        d = [k + tuple(v) for k, v in counts.iteritems()]
+        d = [k + tuple(v.contents) for k, v in counts.iteritems()]
         if sort: d.sort()
     except AttributeError:
         # assume counts is already a list
@@ -15,8 +15,8 @@ def countsToList(counts, sort = True):
 ##__________________________________________________________________||
 def combinedToList(combined, columns, sort = True):
     d = [ ]
-    for datasetName, count in combined.iteritems():
-        l = countsToList(count.results(), sort)
+    for datasetName, summarizer in combined.iteritems():
+        l = countsToList(summarizer.results(), sort)
         d.extend([(datasetName, ) + e for e in l])
     if sort: d.sort()
     d.insert(0, columns)
