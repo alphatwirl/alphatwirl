@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Summary import Summarizer, NextKeyComposer, KeyValueComposer
+from ..Summary import Reader, NextKeyComposer, KeyValueComposer
 from ..CombineIntoList import CombineIntoList
 from ..WriteListToFile import WriteListToFile
 from ..Loop import Collector
@@ -14,7 +14,7 @@ def build_counter_collector_pair(tblcfg):
         valIndices = tblcfg['valIndices']
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    summarizer = Summarizer(
+    summarizer = Reader(
         keyValComposer = keyValComposer,
         summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
         nextKeyComposer = nextKeyComposer,

@@ -19,7 +19,7 @@ from .Concurrently import CommunicationChannel0
 from .ProgressBar import ProgressBar
 from .ProgressBar import ProgressPrint
 from .ProgressBar import ProgressMonitor, BProgressMonitor, NullProgressMonitor
-from .Summary import Summarizer, Count, KeyValueComposer, NextKeyComposer
+from .Summary import Reader, Count, KeyValueComposer, NextKeyComposer
 from .CombineIntoList import CombineIntoList
 from .WriteListToFile import WriteListToFile
 
@@ -63,7 +63,7 @@ def build_progressMonitor_communicationChannel(quiet, processes):
 def buildCounterAndCollector(tblcfg):
     keyValComposer = KeyValueComposer(tblcfg['branchNames'], tblcfg['binnings'], tblcfg['indices'])
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    summarizer = Summarizer(
+    summarizer = Reader(
         keyValComposer = keyValComposer,
         summary = tblcfg['countsClass'](),
         nextKeyComposer = nextKeyComposer,

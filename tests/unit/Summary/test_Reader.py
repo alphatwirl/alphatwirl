@@ -71,7 +71,7 @@ class TestMockKeyValueComposer(unittest.TestCase):
         self.assertRaises(IndexError, keycomposer, MockEvent())
 
 ##__________________________________________________________________||
-class TestSummarizer(unittest.TestCase):
+class TestReader(unittest.TestCase):
 
     def test_events(self):
         summary = MockSummary()
@@ -85,7 +85,7 @@ class TestSummarizer(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
+        counter = Summary.Reader(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
 
         event = MockEvent()
         counter.begin(event)
@@ -127,7 +127,7 @@ class TestSummarizer(unittest.TestCase):
         keycomposer = MockKeyValueComposer(keyval_list)
         nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer)
+        counter = Summary.Reader(keycomposer, summary, nextKeyComposer)
 
         self.assertIsInstance(counter.weightCalculator, Summary.WeightCalculatorOne)
 
@@ -138,10 +138,10 @@ class TestSummarizer(unittest.TestCase):
 
     def test_copy_from(self):
         summary = MockSummary()
-        counter = Summary.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
+        counter = Summary.Reader(MockKeyValueComposer(), summary, MockWeightCalculator())
 
         src_summary = MockSummary()
-        src_counter = Summary.Summarizer(MockKeyValueComposer(), src_summary, MockWeightCalculator())
+        src_counter = Summary.Reader(MockKeyValueComposer(), src_summary, MockWeightCalculator())
         src_summary._counts[:] = [((11, ), 1.0)]
 
         self.assertEqual([ ], summary._counts)

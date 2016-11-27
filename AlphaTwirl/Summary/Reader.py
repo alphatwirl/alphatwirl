@@ -2,7 +2,7 @@
 from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
-class Summarizer(object):
+class Reader(object):
     def __init__(self, keyValComposer, summary, nextKeyComposer = None,
                  weightCalculator = WeightCalculatorOne()):
         self.keyValComposer = keyValComposer

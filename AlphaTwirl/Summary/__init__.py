@@ -1,4 +1,4 @@
-from Summarizer import Summarizer
+from Reader import Reader
 from WeightCalculatorOne import WeightCalculatorOne
 from KeyValueComposer import KeyValueComposer
 from parse_indices_config import parse_indices_config
