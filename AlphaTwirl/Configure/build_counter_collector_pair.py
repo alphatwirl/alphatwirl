@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Summary import Reader, NextKeyComposer, KeyValueComposer
+from ..Summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
 from ..CombineIntoList import CombineIntoList
 from ..WriteListToFile import WriteListToFile
 from ..Loop import Collector
@@ -14,9 +14,14 @@ def build_counter_collector_pair(tblcfg):
         valIndices = tblcfg['valIndices']
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
-    summarizer = Reader(
+    summarizer = Summarizer(
+        Summary = tblcfg['summaryClass'],
+        initial_contents = tblcfg['summaryInitialContents']
+    )
+    reader = Reader(
         keyValComposer = keyValComposer,
-        summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
+        summarizer = summarizer,
+        ## summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )
@@ -27,6 +32,6 @@ def build_counter_collector_pair(tblcfg):
     )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return summarizer, collector
+    return reader, collector
 
 ##__________________________________________________________________||
