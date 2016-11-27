@@ -2,6 +2,7 @@
 
 ##__________________________________________________________________||
 import numpy as np
+import copy
 
 ##__________________________________________________________________||
 class CountImp(object):
@@ -20,14 +21,9 @@ class CountImp(object):
 
         self.contents = np.array((weight, weight**2))
 
-    def copy(self):
-        ret = self.__class__(contents = self.contents)
-        return ret
-
     def __add__(self, other):
-        ret = self.copy()
-        ret.contents = ret.contents + other.contents
-        return ret
+        contents = self.contents + other.contents
+        return self.__class__(contents = contents)
 
 ##__________________________________________________________________||
 class Count(object):
@@ -56,7 +52,7 @@ class Count(object):
 
     def __add__(self, other):
         ret = self.__class__()
-        results = {k: v.copy() for k, v in self._results.iteritems()}
+        results = {k: copy.deepcopy(v) for k, v in self._results.iteritems()}
         if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
             self._add_results_inplace(results, other._results)
         ret._results.clear()
@@ -74,7 +70,7 @@ class Count(object):
         # res1 += res2, modify res1
         for k, v in res2.iteritems():
             if k not in self._results:
-                res1[k] = v.copy()
+                res1[k] = copy.deepcopy(v)
             else:
                 res1[k] = self._results[k] + v
 
