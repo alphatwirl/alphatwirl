@@ -7,21 +7,21 @@ import numpy as np
 class CountImp(object):
     """
     Args:
-        val : an empty tuple for a count. None not to be counted
+        val : Unused, typically an empty tuple unless contents are given
         weight (float) : The weight
+        contents : Specified contents unless None.
     """
 
-    def __init__(self, val = None, weight = 1):
+    def __init__(self, val = None, weight = 1, contents = None):
 
-        if val is None:
-            self.summary = np.array((0, 0))
+        if contents is not None:
+            self.summary = np.array(contents)
             return
 
         self.summary = np.array((weight, weight**2))
 
     def copy(self):
-        ret = self.__class__()
-        ret.summary = self.summary.copy()
+        ret = self.__class__(contents = self.summary)
         return ret
 
     def __add__(self, other):
@@ -33,6 +33,7 @@ class CountImp(object):
 class Count(object):
     def __init__(self):
         self._results = { }
+        self.initial_contents = (0, 0)
 
     def add(self, key, val = None, weight = 1):
         self.add_key(key)
@@ -40,7 +41,7 @@ class Count(object):
 
     def add_key(self, key):
         if key not in self._results:
-            self._results[key] = CountImp()
+            self._results[key] = CountImp(contents = self.initial_contents)
 
     def keys(self):
         return self._results.keys()
