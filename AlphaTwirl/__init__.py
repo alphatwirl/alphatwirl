@@ -17,6 +17,5 @@ from listToAlignedText import listToAlignedText
 try:
     from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
-    from buildBinningFromTbl import buildBinningFromTbl
 except ImportError:
     pass

@@ -29,8 +29,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isfunction(AlphaTwirl.Aggregate.stack_counts_categories))
         self.assertTrue(inspect.isfunction(AlphaTwirl.Aggregate.sumOverCategories))
 
-        self.assertTrue(inspect.isfunction(AlphaTwirl.buildBinningFromTbl))
-
         self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoPandasDataFrame))
         self.assertTrue(inspect.isclass(AlphaTwirl.WritePandasDataFrameToFile))
 
