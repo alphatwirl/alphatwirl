@@ -45,7 +45,6 @@ class TestImport_01(unittest.TestCase):
 
     def test_classes(self):
         self.assertTrue(inspect.isclass(AlphaTwirl.Loop.Collector))
-        self.assertTrue(inspect.isclass(AlphaTwirl.AlphaTwirl))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Binning))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Echo))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Round))
