@@ -14,8 +14,13 @@ import Concurrently
 from mkdir_p import mkdir_p
 from listToAlignedText import listToAlignedText
 
+hasPandas = False
 try:
-    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
-    from WritePandasDataFrameToFile import WritePandasDataFrameToFile
+    import pandas
+    hasPandas = True
 except ImportError:
     pass
+
+if hasPandas:
+    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
+    from WritePandasDataFrameToFile import WritePandasDataFrameToFile
