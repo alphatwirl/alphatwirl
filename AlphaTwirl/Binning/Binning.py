@@ -47,6 +47,12 @@ class Binning(object):
 
         self._valid = valid
 
+    def __repr__(self):
+        return '{}(boundaries = {!r}, underflow_bin = {!r}), overflow_bin = {!r}), valid = {!r})'.format(
+            self.__class__.__name__,
+            self.boundaries, self.underflow_bin, self.overflow_bin, self._valid
+        )
+
     def __call__(self, val):
         if not self._valid(val): return None
         if val < self.lows[0]: return self.underflow_bin

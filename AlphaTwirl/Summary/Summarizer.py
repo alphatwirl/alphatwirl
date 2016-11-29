@@ -10,6 +10,14 @@ class Summarizer(object):
         self.Summary = Summary
         self.initial_contents = initial_contents
 
+    def __repr__(self):
+        return '{}({!r}, {!r}, {!r})'.format(
+            self.__class__.__name__,
+            self._results,
+            self.Summary,
+            self.initial_contents
+        )
+
     def add(self, key, val = None, weight = 1):
         self.add_key(key)
         self._results[key] = self._results[key] + self.Summary(val, weight)

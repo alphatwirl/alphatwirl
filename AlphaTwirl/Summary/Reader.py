@@ -10,6 +10,15 @@ class Reader(object):
         self.weightCalculator = weightCalculator
         self.nextKeyComposer = nextKeyComposer
 
+    def __repr__(self):
+        return '{}(keyValComposer = {!r}, summarizer = {!r}, weightCalculator = {!r}, nextKeyComposer = {!r})'.format(
+            self.__class__.__name__,
+            self.keyValComposer,
+            self.summarizer,
+            self.weightCalculator,
+            self.nextKeyComposer
+        )
+
     def begin(self, event):
         self.keyValComposer.begin(event)
 
