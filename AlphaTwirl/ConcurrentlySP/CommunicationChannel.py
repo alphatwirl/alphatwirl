@@ -18,6 +18,22 @@ TaskPackage = collections.namedtuple(
 )
 
 ##__________________________________________________________________||
+class TaskDirectory(object):
+    def __init__(self, path):
+
+        # create a task directory
+        prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
+        # e.g., 'tpd_20161129_122841_'
+
+        self.taskdir = tempfile.mkdtemp(prefix = prefix, dir = path)
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF'
+
+        # copy run.py to the task dir
+        thisdir = os.path.dirname(__file__)
+        src = os.path.join(thisdir, 'run.py')
+        shutil.copy(src, self.taskdir)
+
+##__________________________________________________________________||
 class CommunicationChannel(object):
     """An implementation of concurrency with subprocess.
 
@@ -32,16 +48,9 @@ class CommunicationChannel(object):
     def begin(self):
         self.progressReporter = self.progressMonitor.createReporter()
 
-        # create a temporary dir
         mkdir_p(self.tmpdir)
-        tmpdir_prefix = 'ccsp_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
-        self.taskdir = tempfile.mkdtemp(prefix = tmpdir_prefix, dir = self.tmpdir)
-        # e.g., '_ccsp_temp/ccsp_20161129_122841_HnpcmF'
 
-        # copy run.py to the task dir
-        thisdir = os.path.dirname(__file__)
-        src = os.path.join(thisdir, 'run.py')
-        shutil.copy(src, self.taskdir)
+        self.taskDirectory = TaskDirectory(path = self.tmpdir)
 
         self.task_idx = -1 # so it starts from 0
 
@@ -49,7 +58,7 @@ class CommunicationChannel(object):
         self.task_idx += 1
         package = TaskPackage(self.task_idx, task, self.progressReporter, args, kwargs)
         basename = 'task_{:05d}.p'.format(self.task_idx)
-        path = os.path.join(self.taskdir, basename)
+        path = os.path.join(self.taskDirectory.taskdir, basename)
         f = open(path, 'wb')
         pickle.dump(package, f)
         proc = self._run(self.task_idx)
@@ -57,9 +66,9 @@ class CommunicationChannel(object):
         self.running_procs.append(proc)
 
     def _run(self, task_idx):
-        run_script = os.path.join(self.taskdir, 'run.py')
+        run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
         basename = 'task_{:05d}.p'.format(task_idx)
-        path = os.path.join(self.taskdir, basename)
+        path = os.path.join(self.taskDirectory.taskdir, basename)
         args = [run_script, path]
         proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         return proc
@@ -73,7 +82,7 @@ class CommunicationChannel(object):
         while self.running_task_idxs:
             task_idx = self.running_task_idxs.popleft()
             dirname = 'task_{:05d}'.format(task_idx)
-            path = os.path.join(self.taskdir, 'results', dirname, 'result.p')
+            path = os.path.join(self.taskDirectory.taskdir, 'results', dirname, 'result.p')
             f = open(path, 'rb')
             result = pickle.load(f)
             task_idx_result_pairs.append((task_idx, result))
@@ -84,7 +93,7 @@ class CommunicationChannel(object):
         return results
 
     def end(self):
-        del self.taskdir
+        del self.taskDirectory.taskdir
         del self.task_idx
 
 ##__________________________________________________________________||
