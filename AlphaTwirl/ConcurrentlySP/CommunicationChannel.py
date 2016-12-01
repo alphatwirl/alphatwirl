@@ -19,7 +19,9 @@ TaskPackage = collections.namedtuple(
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
+    """An implementation of concurrency with subprocess.
 
+    """
     def __init__(self, progressMonitor = None, tmpdir = '_ccsp_temp'):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.results = [ ]
