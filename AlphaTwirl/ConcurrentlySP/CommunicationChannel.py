@@ -76,7 +76,8 @@ class TaskRunner(object):
         run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
         package_path = self.taskDirectory.package_path(task_idx)
         args = [run_script, package_path]
-        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        ## proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        proc = subprocess.Popen(args)
         self.running_procs.append(proc)
 
     def wait(self):
@@ -126,6 +127,7 @@ class CommunicationChannel(object):
         return results
 
     def end(self):
+        self.taskRunner.wait()
         del self.task_idx
 
 ##__________________________________________________________________||
