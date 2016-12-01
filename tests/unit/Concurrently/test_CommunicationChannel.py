@@ -33,9 +33,9 @@ class TestCommunicationChannel(unittest.TestCase):
         nprocesses = 8
         communicationChannel = CommunicationChannel(nprocesses = nprocesses)
         communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
+        self.assertEqual(nprocesses, communicationChannel.n_workers)
         communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
+        self.assertEqual(nprocesses, communicationChannel.n_workers)
         communicationChannel.end()
 
     def test_put(self):

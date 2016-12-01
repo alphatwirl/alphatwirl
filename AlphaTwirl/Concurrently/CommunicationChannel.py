@@ -93,19 +93,23 @@ class CommunicationChannel(object):
         if nprocesses <= 0:
             raise ValueError("nprocesses must be at least one: " + str(nprocesses) + " is given")
 
-
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.nMaxProcesses = nprocesses
-        self.nCurrentProcesses = 0
+        self.n_max_workers = nprocesses
+        self.n_workers = 0
         self.task_queue = multiprocessing.JoinableQueue()
         self.result_queue = multiprocessing.Queue()
         self.lock = multiprocessing.Lock()
-        self.nRunningTasks = 0
-        self.taskNo = 0
+        self.n_ongoing_tasks = 0
+        self.task_idx = -1 # so it starts from 0
 
     def begin(self):
-        if self.nCurrentProcesses >= self.nMaxProcesses: return
-        for i in xrange(self.nCurrentProcesses, self.nMaxProcesses):
+
+        if self.n_workers >= self.n_max_workers:
+            # workers already created
+            return
+
+        # start workers
+        for i in xrange(self.n_workers, self.n_max_workers):
             worker = Worker(
                 task_queue = self.task_queue,
                 result_queue = self.result_queue,
@@ -113,31 +117,31 @@ class CommunicationChannel(object):
                 lock = self.lock
             )
             worker.start()
-            self.nCurrentProcesses += 1
+            self.n_workers += 1
 
     def put(self, task, *args, **kwargs):
-        self.task_queue.put((self.taskNo, task, args, kwargs))
-        self.taskNo += 1
-        self.nRunningTasks += 1
+        self.task_idx += 1
+        self.task_queue.put((self.task_idx, task, args, kwargs))
+        self.n_ongoing_tasks += 1
 
     def receive(self):
-        messages = [ ] # a list of (taskNo, result)
-        while self.nRunningTasks >= 1:
+        messages = [ ] # a list of (task_idx, result)
+        while self.n_ongoing_tasks >= 1:
             if self.result_queue.empty(): continue
             message = self.result_queue.get()
             messages.append(message)
-            self.nRunningTasks -= 1
+            self.n_ongoing_tasks -= 1
 
-        # sort in the order of taskNo
+        # sort in the order of task_idx
         messages = sorted(messages, key = itemgetter(0))
 
-        results = [result for taskNo, result in messages]
+        results = [result for task_idx, result in messages]
         return results
 
     def end(self):
-        for i in xrange(self.nCurrentProcesses):
+        for i in xrange(self.n_workers):
             self.task_queue.put(None) # end workers
         self.task_queue.join()
-        self.nCurrentProcesses = 0
+        self.n_workers = 0
 
 ##__________________________________________________________________||

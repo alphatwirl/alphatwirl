@@ -16,12 +16,12 @@ class Worker(multiprocessing.Process):
             if message is None:
                 self.task_queue.task_done()
                 break
-            taskNo, task, args, kwargs = message
+            task_idx, task, args, kwargs = message
             try:
                 result = task(progressReporter = self.progressReporter, *args, **kwargs)
             except TypeError:
                 result = task(*args, **kwargs)
             self.task_queue.task_done()
-            self.result_queue.put((taskNo, result))
+            self.result_queue.put((task_idx, result))
 
 ##__________________________________________________________________||
