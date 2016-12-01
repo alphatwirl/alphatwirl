@@ -33,9 +33,13 @@ class TaskDirectory(object):
         src = os.path.join(thisdir, 'run.py')
         shutil.copy(src, self.taskdir)
 
+        self.package_path_dict = { }
+
     def put(self, package):
 
-        basename = 'task_{:05d}.p'.format(package.index)
+        task_idx = package.index
+
+        basename = 'task_{:05d}.p'.format(task_idx)
         # e.g., 'task_00009.p'
 
         package_path = os.path.join(self.taskdir, basename)
@@ -43,6 +47,11 @@ class TaskDirectory(object):
 
         f = open(package_path, 'wb')
         pickle.dump(package, f)
+
+        self.package_path_dict[task_idx] = package_path
+
+    def package_path(self, task_idx):
+        return self.package_path_dict[task_idx]
 
     def get(self, task_idx):
 
@@ -58,6 +67,25 @@ class TaskDirectory(object):
         return result
 
 ##__________________________________________________________________||
+class TaskRunner(object):
+    def __init__(self, taskDirectory):
+        self.taskDirectory = taskDirectory
+        self.running_procs = collections.deque()
+
+    def run(self, task_idx):
+        run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
+        package_path = self.taskDirectory.package_path(task_idx)
+        args = [run_script, package_path]
+        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
+        self.running_procs.append(proc)
+
+    def wait(self):
+        while self.running_procs:
+            proc = self.running_procs.popleft()
+            proc.communicate()
+
+
+##__________________________________________________________________||
 class CommunicationChannel(object):
     """An implementation of concurrency with subprocess.
 
@@ -66,14 +94,13 @@ class CommunicationChannel(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
         self.running_task_idxs = collections.deque()
-        self.running_procs = collections.deque()
+        mkdir_p(self.tmpdir)
 
     def begin(self):
         self.progressReporter = self.progressMonitor.createReporter()
 
-        mkdir_p(self.tmpdir)
-
         self.taskDirectory = TaskDirectory(path = self.tmpdir)
+        self.taskRunner = TaskRunner(taskDirectory = self.taskDirectory)
 
         self.task_idx = -1 # so it starts from 0
 
@@ -81,22 +108,11 @@ class CommunicationChannel(object):
         self.task_idx += 1
         package = TaskPackage(self.task_idx, task, self.progressReporter, args, kwargs)
         self.taskDirectory.put(package)
-        proc = self._run(self.task_idx)
+        self.taskRunner.run(self.task_idx)
         self.running_task_idxs.append(self.task_idx)
-        self.running_procs.append(proc)
-
-    def _run(self, task_idx):
-        run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
-        basename = 'task_{:05d}.p'.format(task_idx)
-        path = os.path.join(self.taskDirectory.taskdir, basename)
-        args = [run_script, path]
-        proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-        return proc
 
     def receive(self):
-        while self.running_procs:
-            proc = self.running_procs.popleft()
-            proc.communicate()
+        self.taskRunner.wait()
 
         task_idx_result_pairs = [ ]
         while self.running_task_idxs:
@@ -110,7 +126,6 @@ class CommunicationChannel(object):
         return results
 
     def end(self):
-        del self.taskDirectory.taskdir
         del self.task_idx
 
 ##__________________________________________________________________||
