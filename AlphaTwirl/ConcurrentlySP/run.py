@@ -17,32 +17,23 @@ sys.path.insert(1, './bdphi-scripts/bdphiROC')
 ##__________________________________________________________________||
 def main():
 
-    for path in args.paths:
+    for package_path in args.paths:
 
-        # e.g., path = 'c/d/task_00003.p'
+        # e.g., package_path = 'c/d/task_00003.p'
 
-        taskdir = os.path.dirname(os.path.abspath(path))
-        # e.g., '/a/b/c/d'
+        result = run(package_path)
 
-        result_topdir = os.path.join(taskdir, 'results')
-        # e.g., '/a/b/c/d/results'
-        mkdir_p(result_topdir)
+        result_path = compose_result_path(package_path)
+        # e.g., '/a/b/c/d/results/task_00003/result.p'
 
-        f = open(path, 'rb')
-        package = pickle.load(f)
+        store_result(result, result_path)
 
-        basename = 'task_{:05d}'.format(package.index)
-        # e.g., 'task_00003.p'
-
-        resultdir = os.path.join(result_topdir, basename)
-        # e.g., '/a/b/c/d/results/task_00003.p'
-        mkdir_p(resultdir)
-
-        result = run_task(package.task, package.progressReporter, package.args, package.kwargs)
-        result_path = os.path.join(resultdir, 'result.p')
-        f = open(result_path, 'wb')
-        pickle.dump(result, f)
-
+##__________________________________________________________________||
+def run(package_path):
+    f = open(package_path, 'rb')
+    package = pickle.load(f)
+    result = run_task(package.task, package.progressReporter, package.args, package.kwargs)
+    return result
 
 ##__________________________________________________________________||
 def run_task(task, progressReporter, args, kwargs):
@@ -51,6 +42,37 @@ def run_task(task, progressReporter, args, kwargs):
     except TypeError:
         result = task(*args, **kwargs)
     return result
+
+##__________________________________________________________________||
+def compose_result_path(package_path):
+
+    # e.g., package_path = 'c/d/task_00003.p'
+
+    taskdir = os.path.dirname(os.path.abspath(package_path))
+    # e.g., '/a/b/c/d'
+
+    result_topdir = os.path.join(taskdir, 'results')
+    # e.g., '/a/b/c/d/results'
+
+    package_basename =  os.path.basename(package_path)
+    # e.g., 'task_00003.p'
+
+    resultdir_basename = os.path.splitext(package_basename)[0]
+    # e.g., 'task_00003'
+
+    resultdir = os.path.join(result_topdir, resultdir_basename)
+    # e.g., '/a/b/c/d/results/task_00003'
+
+    result_path = os.path.join(resultdir, 'result.p')
+    # e.g., '/a/b/c/d/results/task_00003/result.p'
+
+    return result_path
+
+##__________________________________________________________________||
+def store_result(result, result_path):
+    mkdir_p(os.path.dirname(result_path))
+    f = open(result_path, 'wb')
+    pickle.dump(result, f)
 
 ##__________________________________________________________________||
 def mkdir_p(path):
