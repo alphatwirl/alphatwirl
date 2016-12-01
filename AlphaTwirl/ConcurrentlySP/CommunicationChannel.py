@@ -33,6 +33,30 @@ class TaskDirectory(object):
         src = os.path.join(thisdir, 'run.py')
         shutil.copy(src, self.taskdir)
 
+    def put(self, package):
+
+        basename = 'task_{:05d}.p'.format(package.index)
+        # e.g., 'task_00009.p'
+
+        package_path = os.path.join(self.taskdir, basename)
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
+
+        f = open(package_path, 'wb')
+        pickle.dump(package, f)
+
+    def get(self, task_idx):
+
+        dirname = 'task_{:05d}'.format(task_idx)
+        # e.g., 'task_00009'
+
+        result_path = os.path.join(self.taskdir, 'results', dirname, 'result.p')
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p'
+
+        f = open(result_path, 'rb')
+        result = pickle.load(f)
+
+        return result
+
 ##__________________________________________________________________||
 class CommunicationChannel(object):
     """An implementation of concurrency with subprocess.
@@ -40,7 +64,6 @@ class CommunicationChannel(object):
     """
     def __init__(self, progressMonitor = None, tmpdir = '_ccsp_temp'):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.results = [ ]
         self.tmpdir = tmpdir
         self.running_task_idxs = collections.deque()
         self.running_procs = collections.deque()
@@ -57,10 +80,7 @@ class CommunicationChannel(object):
     def put(self, task, *args, **kwargs):
         self.task_idx += 1
         package = TaskPackage(self.task_idx, task, self.progressReporter, args, kwargs)
-        basename = 'task_{:05d}.p'.format(self.task_idx)
-        path = os.path.join(self.taskDirectory.taskdir, basename)
-        f = open(path, 'wb')
-        pickle.dump(package, f)
+        self.taskDirectory.put(package)
         proc = self._run(self.task_idx)
         self.running_task_idxs.append(self.task_idx)
         self.running_procs.append(proc)
@@ -81,10 +101,7 @@ class CommunicationChannel(object):
         task_idx_result_pairs = [ ]
         while self.running_task_idxs:
             task_idx = self.running_task_idxs.popleft()
-            dirname = 'task_{:05d}'.format(task_idx)
-            path = os.path.join(self.taskDirectory.taskdir, 'results', dirname, 'result.p')
-            f = open(path, 'rb')
-            result = pickle.load(f)
+            result = self.taskDirectory.get(task_idx)
             task_idx_result_pairs.append((task_idx, result))
 
         task_idx_result_pairs = sorted(task_idx_result_pairs, key = itemgetter(0))
