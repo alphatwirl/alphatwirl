@@ -56,6 +56,20 @@ class TaskDirectory(object):
     def package_path(self, task_idx):
         return self.package_path_dict[task_idx]
 
+    def receive(self):
+
+        task_idx_result_pairs = [ ]
+        while self.running_task_idxs:
+            task_idx = self.running_task_idxs.popleft()
+            result = self.get(task_idx)
+            task_idx_result_pairs.append((task_idx, result))
+
+        task_idx_result_pairs = sorted(task_idx_result_pairs, key = itemgetter(0))
+
+        results = [result for idx, result in task_idx_result_pairs]
+
+        return results
+
     def get(self, task_idx):
 
         dirname = 'task_{:05d}'.format(task_idx)
@@ -104,14 +118,19 @@ class CommunicationChannel(object):
         mkdir_p(self.tmpdir)
 
     def begin(self):
-        self.progressReporter = self.progressMonitor.createReporter()
 
         self.taskDirectory = TaskDirectory(path = self.tmpdir)
         self.taskRunner = TaskRunner(taskDirectory = self.taskDirectory)
 
     def put(self, task, *args, **kwargs):
         self.taskDirectory.task_idx += 1
-        package = TaskPackage(self.taskDirectory.task_idx, task, self.progressReporter, args, kwargs)
+        package = TaskPackage(
+            index = self.taskDirectory.task_idx,
+            task = task,
+            progressReporter = self.progressMonitor.createReporter(),
+            args = args,
+            kwargs =  kwargs
+        )
         self.taskDirectory.put(package)
         self.taskRunner.run(self.taskDirectory.task_idx)
         self.taskDirectory.running_task_idxs.append(self.taskDirectory.task_idx)
@@ -119,15 +138,7 @@ class CommunicationChannel(object):
     def receive(self):
         self.taskRunner.wait()
 
-        task_idx_result_pairs = [ ]
-        while self.taskDirectory.running_task_idxs:
-            task_idx = self.taskDirectory.running_task_idxs.popleft()
-            result = self.taskDirectory.get(task_idx)
-            task_idx_result_pairs.append((task_idx, result))
-
-        task_idx_result_pairs = sorted(task_idx_result_pairs, key = itemgetter(0))
-
-        results = [result for idx, result in task_idx_result_pairs]
+        results = self.taskDirectory.receive()
         return results
 
     def end(self):
