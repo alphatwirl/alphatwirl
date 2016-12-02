@@ -14,7 +14,7 @@ from ..mkdir_p import mkdir_p
 ##__________________________________________________________________||
 TaskPackage = collections.namedtuple(
     'TaskPackage',
-    'index task progressReporter args kwargs'
+    'task progressReporter args kwargs'
 )
 
 ##__________________________________________________________________||
@@ -40,9 +40,9 @@ class TaskDirectory(object):
 
     def put(self, package):
 
-        task_idx = package.index
+        self.task_idx += 1
 
-        basename = 'task_{:05d}.p'.format(task_idx)
+        basename = 'task_{:05d}.p'.format(self.task_idx)
         # e.g., 'task_00009.p'
 
         package_path = os.path.join(self.taskdir, basename)
@@ -51,11 +51,11 @@ class TaskDirectory(object):
         f = open(package_path, 'wb')
         pickle.dump(package, f)
 
-        self.package_path_dict[task_idx] = package_path
+        self.package_path_dict[self.task_idx] = package_path
 
-        self.running_task_idxs.append(task_idx)
+        self.running_task_idxs.append(self.task_idx)
 
-        return task_idx
+        return self.task_idx
 
     def package_path(self, task_idx):
         return self.package_path_dict[task_idx]
@@ -127,9 +127,7 @@ class CommunicationChannel(object):
         pass
 
     def put(self, task, *args, **kwargs):
-        self.taskDirectory.task_idx += 1
         package = TaskPackage(
-            index = self.taskDirectory.task_idx,
             task = task,
             progressReporter = self.progressMonitor.createReporter(),
             args = args,
