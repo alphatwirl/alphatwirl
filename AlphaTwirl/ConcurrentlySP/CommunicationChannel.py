@@ -21,68 +21,66 @@ TaskPackage = collections.namedtuple(
 class TaskDirectory(object):
     def __init__(self, dispatcher, path):
 
-        # create a task directory
+        self.dispatcher = dispatcher
+
+        self.taskdir = self._prepare_workdir(path)
+
+        self.task_idx = -1 # so it starts from 0
+        self.dispatched_task_idxs = collections.deque()
+
+    def _prepare_workdir(self, path):
+
         prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
         # e.g., 'tpd_20161129_122841_'
 
-        self.taskdir = tempfile.mkdtemp(prefix = prefix, dir = path)
+        workdir = tempfile.mkdtemp(prefix = prefix, dir = path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF'
 
         # copy run.py to the task dir
         thisdir = os.path.dirname(__file__)
         src = os.path.join(thisdir, 'run.py')
-        shutil.copy(src, self.taskdir)
+        shutil.copy(src, workdir)
 
-        self.task_idx = -1 # so it starts from 0
-        self.running_task_idxs = collections.deque()
-
-        self.package_path_dict = { }
-
-        self.dispatcher = dispatcher
+        return workdir
 
     def put(self, package):
 
         self.task_idx += 1
+        package_path = self._save_package_in_workdir(self.task_idx, package, self.taskdir)
 
-        basename = 'task_{:05d}.p'.format(self.task_idx)
+        self.dispatched_task_idxs.append(self.task_idx)
+
+        self.dispatcher.run(self.taskdir, package_path)
+
+    def _save_package_in_workdir(self, task_idx, package, workdir):
+        basename = 'task_{:05d}.p'.format(task_idx)
         # e.g., 'task_00009.p'
 
-        package_path = os.path.join(self.taskdir, basename)
+        package_path = os.path.join(workdir, basename)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
 
         f = open(package_path, 'wb')
         pickle.dump(package, f)
 
-        self.package_path_dict[self.task_idx] = package_path
-
-        self.running_task_idxs.append(self.task_idx)
-
-        self.dispatcher.run(self.taskdir, package_path)
-
-    def package_path(self, task_idx):
-        return self.package_path_dict[task_idx]
+        return package_path
 
     def receive(self):
         self.dispatcher.wait()
 
-        task_idx_result_pairs = [ ]
-        while self.running_task_idxs:
-            task_idx = self.running_task_idxs.popleft()
-            result = self.get(task_idx)
-            task_idx_result_pairs.append((task_idx, result))
-
-        task_idx_result_pairs = sorted(task_idx_result_pairs, key = itemgetter(0))
-
-        results = [result for idx, result in task_idx_result_pairs]
+        results = [ ]
+        while self.dispatched_task_idxs:
+            task_idx = self.dispatched_task_idxs.popleft()
+            result = self._collect_result(task_idx, self.taskdir)
+            results.append(result)
 
         return results
 
-    def get(self, task_idx):
+    def _collect_result(self, task_idx, workdir):
 
         dirname = 'task_{:05d}'.format(task_idx)
         # e.g., 'task_00009'
 
-        result_path = os.path.join(self.taskdir, 'results', dirname, 'result.p')
+        result_path = os.path.join(workdir, 'results', dirname, 'result.p')
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p'
 
         f = open(result_path, 'rb')
@@ -96,15 +94,11 @@ class TaskDirectory(object):
 ##__________________________________________________________________||
 class TaskRunner(object):
     def __init__(self):
-        ## self.taskDirectory = taskDirectory
         self.running_procs = collections.deque()
 
     def run(self, taskdir, package_path):
-        # run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
-        # package_path = self.taskDirectory.package_path(task_idx)
         run_script = os.path.join(taskdir, 'run.py')
         args = [run_script, package_path]
-        ## proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         proc = subprocess.Popen(args)
         self.running_procs.append(proc)
 
