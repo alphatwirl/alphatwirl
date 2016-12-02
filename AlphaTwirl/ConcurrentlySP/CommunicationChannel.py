@@ -34,6 +34,8 @@ class TaskDirectory(object):
         shutil.copy(src, self.taskdir)
 
         self.task_idx = -1 # so it starts from 0
+        self.running_task_idxs = collections.deque()
+
         self.package_path_dict = { }
 
     def put(self, package):
@@ -99,7 +101,6 @@ class CommunicationChannel(object):
     def __init__(self, progressMonitor = None, tmpdir = '_ccsp_temp'):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
-        self.running_task_idxs = collections.deque()
         mkdir_p(self.tmpdir)
 
     def begin(self):
@@ -113,14 +114,14 @@ class CommunicationChannel(object):
         package = TaskPackage(self.taskDirectory.task_idx, task, self.progressReporter, args, kwargs)
         self.taskDirectory.put(package)
         self.taskRunner.run(self.taskDirectory.task_idx)
-        self.running_task_idxs.append(self.taskDirectory.task_idx)
+        self.taskDirectory.running_task_idxs.append(self.taskDirectory.task_idx)
 
     def receive(self):
         self.taskRunner.wait()
 
         task_idx_result_pairs = [ ]
-        while self.running_task_idxs:
-            task_idx = self.running_task_idxs.popleft()
+        while self.taskDirectory.running_task_idxs:
+            task_idx = self.taskDirectory.running_task_idxs.popleft()
             result = self.taskDirectory.get(task_idx)
             task_idx_result_pairs.append((task_idx, result))
 
