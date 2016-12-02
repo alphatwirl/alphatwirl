@@ -19,7 +19,7 @@ TaskPackage = collections.namedtuple(
 
 ##__________________________________________________________________||
 class TaskDirectory(object):
-    def __init__(self, path):
+    def __init__(self, dispatcher, path):
 
         # create a task directory
         prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
@@ -38,6 +38,8 @@ class TaskDirectory(object):
 
         self.package_path_dict = { }
 
+        self.dispatcher = dispatcher
+
     def put(self, package):
 
         self.task_idx += 1
@@ -55,7 +57,7 @@ class TaskDirectory(object):
 
         self.running_task_idxs.append(self.task_idx)
 
-        return self.task_idx
+        self.dispatcher.run(self.taskdir, package_path)
 
     def package_path(self, task_idx):
         return self.package_path_dict[task_idx]
@@ -89,13 +91,14 @@ class TaskDirectory(object):
 
 ##__________________________________________________________________||
 class TaskRunner(object):
-    def __init__(self, taskDirectory):
-        self.taskDirectory = taskDirectory
+    def __init__(self):
+        ## self.taskDirectory = taskDirectory
         self.running_procs = collections.deque()
 
-    def run(self, task_idx):
-        run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
-        package_path = self.taskDirectory.package_path(task_idx)
+    def run(self, taskdir, package_path):
+        # run_script = os.path.join(self.taskDirectory.taskdir, 'run.py')
+        # package_path = self.taskDirectory.package_path(task_idx)
+        run_script = os.path.join(taskdir, 'run.py')
         args = [run_script, package_path]
         ## proc = subprocess.Popen(args, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
         proc = subprocess.Popen(args)
@@ -120,8 +123,11 @@ class CommunicationChannel(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
-        self.taskDirectory = TaskDirectory(path = self.tmpdir)
-        self.taskRunner = TaskRunner(taskDirectory = self.taskDirectory)
+        self.taskRunner = TaskRunner()
+        self.taskDirectory = TaskDirectory(
+            dispatcher = self.taskRunner,
+            path = self.tmpdir
+        )
 
     def begin(self):
         pass
@@ -133,8 +139,8 @@ class CommunicationChannel(object):
             args = args,
             kwargs =  kwargs
         )
-        task_idx = self.taskDirectory.put(package)
-        self.taskRunner.run(task_idx)
+        self.taskDirectory.put(package)
+        ## self.taskRunner.run(task_idx)
 
     def receive(self):
         self.taskRunner.wait()
