@@ -33,6 +33,7 @@ class TaskDirectory(object):
         src = os.path.join(thisdir, 'run.py')
         shutil.copy(src, self.taskdir)
 
+        self.task_idx = -1 # so it starts from 0
         self.package_path_dict = { }
 
     def put(self, package):
@@ -107,14 +108,12 @@ class CommunicationChannel(object):
         self.taskDirectory = TaskDirectory(path = self.tmpdir)
         self.taskRunner = TaskRunner(taskDirectory = self.taskDirectory)
 
-        self.task_idx = -1 # so it starts from 0
-
     def put(self, task, *args, **kwargs):
-        self.task_idx += 1
-        package = TaskPackage(self.task_idx, task, self.progressReporter, args, kwargs)
+        self.taskDirectory.task_idx += 1
+        package = TaskPackage(self.taskDirectory.task_idx, task, self.progressReporter, args, kwargs)
         self.taskDirectory.put(package)
-        self.taskRunner.run(self.task_idx)
-        self.running_task_idxs.append(self.task_idx)
+        self.taskRunner.run(self.taskDirectory.task_idx)
+        self.running_task_idxs.append(self.taskDirectory.task_idx)
 
     def receive(self):
         self.taskRunner.wait()
@@ -132,6 +131,5 @@ class CommunicationChannel(object):
 
     def end(self):
         self.taskRunner.terminate()
-        del self.task_idx
 
 ##__________________________________________________________________||
