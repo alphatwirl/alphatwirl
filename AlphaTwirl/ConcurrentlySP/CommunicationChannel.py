@@ -63,6 +63,7 @@ class TaskDirectory(object):
         return self.package_path_dict[task_idx]
 
     def receive(self):
+        self.dispatcher.wait()
 
         task_idx_result_pairs = [ ]
         while self.running_task_idxs:
@@ -88,6 +89,9 @@ class TaskDirectory(object):
         result = pickle.load(f)
 
         return result
+
+    def close(self):
+        self.dispatcher.terminate()
 
 ##__________________________________________________________________||
 class TaskRunner(object):
@@ -123,9 +127,8 @@ class CommunicationChannel(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
-        self.taskRunner = TaskRunner()
         self.taskDirectory = TaskDirectory(
-            dispatcher = self.taskRunner,
+            dispatcher = TaskRunner(),
             path = self.tmpdir
         )
 
@@ -140,15 +143,12 @@ class CommunicationChannel(object):
             kwargs =  kwargs
         )
         self.taskDirectory.put(package)
-        ## self.taskRunner.run(task_idx)
 
     def receive(self):
-        self.taskRunner.wait()
-
         results = self.taskDirectory.receive()
         return results
 
     def end(self):
-        self.taskRunner.terminate()
+        self.taskDirectory.close()
 
 ##__________________________________________________________________||
