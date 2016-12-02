@@ -53,6 +53,10 @@ class TaskDirectory(object):
 
         self.package_path_dict[task_idx] = package_path
 
+        self.running_task_idxs.append(task_idx)
+
+        return task_idx
+
     def package_path(self, task_idx):
         return self.package_path_dict[task_idx]
 
@@ -131,9 +135,8 @@ class CommunicationChannel(object):
             args = args,
             kwargs =  kwargs
         )
-        self.taskDirectory.put(package)
-        self.taskRunner.run(self.taskDirectory.task_idx)
-        self.taskDirectory.running_task_idxs.append(self.taskDirectory.task_idx)
+        task_idx = self.taskDirectory.put(package)
+        self.taskRunner.run(task_idx)
 
     def receive(self):
         self.taskRunner.wait()
