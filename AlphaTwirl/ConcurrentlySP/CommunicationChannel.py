@@ -116,11 +116,11 @@ class CommunicationChannel(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
-
-    def begin(self):
-
         self.taskDirectory = TaskDirectory(path = self.tmpdir)
         self.taskRunner = TaskRunner(taskDirectory = self.taskDirectory)
+
+    def begin(self):
+        pass
 
     def put(self, task, *args, **kwargs):
         self.taskDirectory.task_idx += 1
