@@ -85,6 +85,10 @@ class TaskRunner(object):
             proc = self.running_procs.popleft()
             proc.communicate()
 
+    def terminate(self):
+        while self.running_procs:
+            proc = self.running_procs.popleft()
+            proc.terminate()
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
@@ -127,7 +131,7 @@ class CommunicationChannel(object):
         return results
 
     def end(self):
-        self.taskRunner.wait()
+        self.taskRunner.terminate()
         del self.task_idx
 
 ##__________________________________________________________________||
