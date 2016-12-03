@@ -32,7 +32,7 @@ class TestTaskDispatcher(unittest.TestCase):
         f.close()
         os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
 
-    def test_run_wait(self):
+    def test_run_wait_terminate(self):
         self._copy_run_script_to_taskdir(run_py, self.tmpdir)
         obj = TaskDispatcher(pipe = True)
         obj.run(taskdir = self.tmpdir, package_path = '0.20')
@@ -45,6 +45,23 @@ class TestTaskDispatcher(unittest.TestCase):
         ]
         actual = obj.wait()
         self.assertEqual(expected, actual)
+        obj.terminate()
+
+    def test_run_terminate(self):
+        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
+        obj = TaskDispatcher(pipe = True)
+        obj.run(taskdir = self.tmpdir, package_path = '0.20')
+        obj.run(taskdir = self.tmpdir, package_path = '0.02')
+        obj.run(taskdir = self.tmpdir, package_path = '0.15')
+        obj.terminate()
+
+    def test_wait_terminate(self):
+        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
+        obj = TaskDispatcher(pipe = True)
+        expected = [ ]
+        actual = obj.wait()
+        self.assertEqual(expected, actual)
+        obj.terminate()
 
 ##__________________________________________________________________||
 
