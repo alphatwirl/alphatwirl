@@ -1,2 +1,3 @@
 from CommunicationChannel import CommunicationChannel
+from TaskPackageDropbox import TaskPackageDropbox
 from SubprocessRunner import SubprocessRunner
