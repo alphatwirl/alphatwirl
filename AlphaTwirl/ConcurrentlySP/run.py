@@ -19,6 +19,11 @@ def main():
 
     for package_path in args.paths:
 
+        # e.g., package_path = 'task_00003.p',
+        # a relative to the directory in which this file is stored
+
+        thisdir = os.path.dirname(__file__)
+        package_path = os.path.join(thisdir, package_path)
         # e.g., package_path = 'c/d/task_00003.p'
 
         result = run(package_path)
