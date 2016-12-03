@@ -7,12 +7,7 @@ from ..mkdir_p import mkdir_p
 
 from .TaskPackageDropbox import TaskPackageDropbox
 from .SubprocessRunner import SubprocessRunner
-
-##__________________________________________________________________||
-TaskPackage = collections.namedtuple(
-    'TaskPackage',
-    'task progressReporter args kwargs'
-)
+from .TaskPackage import TaskPackage
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
