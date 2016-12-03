@@ -48,13 +48,13 @@ class TaskPackageDropbox(object):
         return workdir
 
     def _save_package_in_workdir(self, task_idx, package, workdir):
-        basename = 'task_{:05d}.p'.format(task_idx)
-        # e.g., 'task_00009.p'
+        package_path = 'task_{:05d}.p'.format(task_idx)
+        # relative to workdir, e.g., 'task_00009.p'
 
-        package_path = os.path.join(workdir, basename)
+        package_fullpath = os.path.join(workdir, package_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
 
-        f = open(package_path, 'wb')
+        f = open(package_fullpath, 'wb')
         pickle.dump(package, f)
 
         return package_path
