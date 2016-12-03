@@ -11,8 +11,7 @@ class SubprocessRunner(object):
 
     def run(self, taskdir, package_path):
         run_script = os.path.join(taskdir, 'run.py')
-        package_fullpath = os.path.join(taskdir, package_path)
-        args = [run_script, package_fullpath]
+        args = [run_script, package_path]
         proc = subprocess.Popen(
             args,
             stdout = subprocess.PIPE if self.pipe else None,
