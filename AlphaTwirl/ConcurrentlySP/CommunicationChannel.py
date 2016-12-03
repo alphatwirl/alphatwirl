@@ -21,7 +21,10 @@ TaskPackage = collections.namedtuple(
 class TaskPackageDropbox(object):
     def __init__(self, dispatcher, path):
         self.dispatcher = dispatcher
-        self.workdir = self._prepare_workdir(path)
+        self.path = path
+
+    def open(self):
+        self.workdir = self._prepare_workdir(self.path)
         self.taskindices = [ ]
         self.last_taskindex = -1 # so it starts from 0
 
@@ -118,7 +121,7 @@ class CommunicationChannel(object):
         )
 
     def begin(self):
-        pass
+        self.dropbox.open()
 
     def put(self, task, *args, **kwargs):
         package = TaskPackage(
