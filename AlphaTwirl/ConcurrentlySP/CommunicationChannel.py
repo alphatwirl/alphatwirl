@@ -86,7 +86,7 @@ class TaskPackageDropbox(object):
 
 
 ##__________________________________________________________________||
-class TaskRunner(object):
+class TaskDispatcher(object):
     def __init__(self):
         self.running_procs = collections.deque()
 
@@ -116,7 +116,7 @@ class CommunicationChannel(object):
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
         self.dropbox = TaskPackageDropbox(
-            dispatcher = TaskRunner(),
+            dispatcher = TaskDispatcher(),
             path = self.tmpdir
         )
 
