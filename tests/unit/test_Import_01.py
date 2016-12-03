@@ -80,7 +80,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReport))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReporter))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.NullProgressMonitor))
-        self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.MPProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.BProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReportPickup))
         self.assertTrue(inspect.isclass(AlphaTwirl.WriteListToFile))
