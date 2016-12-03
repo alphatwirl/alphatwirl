@@ -20,7 +20,9 @@ class TaskDispatcher(object):
         self.running_procs.append(proc)
 
     def wait(self):
-        ret = [ ] # [(stdout, stderr), ] a list of pairs of stdout and stderr
+        ret = [ ] # a list of pairs of stdout and stderr,
+                  # e.g., [(stdout, stderr), (stdout, stderr)]
+
         while self.running_procs:
             proc = self.running_procs.popleft()
             ret.append(proc.communicate())
