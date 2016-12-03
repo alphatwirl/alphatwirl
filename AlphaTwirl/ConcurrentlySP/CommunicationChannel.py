@@ -20,13 +20,26 @@ TaskPackage = collections.namedtuple(
 ##__________________________________________________________________||
 class TaskDirectory(object):
     def __init__(self, dispatcher, path):
-
         self.dispatcher = dispatcher
+        self.workdir = self._prepare_workdir(path)
+        self.taskindices = [ ]
+        self.last_taskindex = -1 # so it starts from 0
 
-        self.taskdir = self._prepare_workdir(path)
+    def put(self, package):
+        self.last_taskindex += 1
+        taskindex = self.last_taskindex
+        package_path = self._save_package_in_workdir(taskindex, package, self.workdir)
+        self.taskindices.append(taskindex)
+        self.dispatcher.run(self.workdir, package_path)
 
-        self.task_idx = -1 # so it starts from 0
-        self.dispatched_task_idxs = collections.deque()
+    def receive(self):
+        self.dispatcher.wait()
+        results = [self._collect_result(i, self.workdir) for i in self.taskindices]
+        self.taskindices[:] = [ ]
+        return results
+
+    def close(self):
+        self.dispatcher.terminate()
 
     def _prepare_workdir(self, path):
 
@@ -43,15 +56,6 @@ class TaskDirectory(object):
 
         return workdir
 
-    def put(self, package):
-
-        self.task_idx += 1
-        package_path = self._save_package_in_workdir(self.task_idx, package, self.taskdir)
-
-        self.dispatched_task_idxs.append(self.task_idx)
-
-        self.dispatcher.run(self.taskdir, package_path)
-
     def _save_package_in_workdir(self, task_idx, package, workdir):
         basename = 'task_{:05d}.p'.format(task_idx)
         # e.g., 'task_00009.p'
@@ -63,17 +67,6 @@ class TaskDirectory(object):
         pickle.dump(package, f)
 
         return package_path
-
-    def receive(self):
-        self.dispatcher.wait()
-
-        results = [ ]
-        while self.dispatched_task_idxs:
-            task_idx = self.dispatched_task_idxs.popleft()
-            result = self._collect_result(task_idx, self.taskdir)
-            results.append(result)
-
-        return results
 
     def _collect_result(self, task_idx, workdir):
 
@@ -88,8 +81,6 @@ class TaskDirectory(object):
 
         return result
 
-    def close(self):
-        self.dispatcher.terminate()
 
 ##__________________________________________________________________||
 class TaskRunner(object):
