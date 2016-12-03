@@ -4,7 +4,7 @@ import subprocess
 import collections
 
 ##__________________________________________________________________||
-class TaskDispatcher(object):
+class SubprocessRunner(object):
     def __init__(self, pipe = False):
         self.running_procs = collections.deque()
         self.pipe = pipe

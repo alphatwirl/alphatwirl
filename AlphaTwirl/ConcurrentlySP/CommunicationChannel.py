@@ -6,7 +6,7 @@ from ..ProgressBar import NullProgressMonitor
 from ..mkdir_p import mkdir_p
 
 from .TaskPackageDropbox import TaskPackageDropbox
-from .TaskDispatcher import TaskDispatcher
+from .SubprocessRunner import SubprocessRunner
 
 ##__________________________________________________________________||
 TaskPackage = collections.namedtuple(
@@ -24,7 +24,7 @@ class CommunicationChannel(object):
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
         self.dropbox = TaskPackageDropbox(
-            dispatcher = TaskDispatcher(),
+            dispatcher = SubprocessRunner(),
             path = self.tmpdir
         )
 

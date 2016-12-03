@@ -1,2 +1,2 @@
 from CommunicationChannel import CommunicationChannel
-from TaskDispatcher import TaskDispatcher
+from SubprocessRunner import SubprocessRunner

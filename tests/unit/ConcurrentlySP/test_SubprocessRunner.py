@@ -4,7 +4,7 @@ import stat
 import tempfile
 import shutil
 
-from AlphaTwirl.ConcurrentlySP import TaskDispatcher
+from AlphaTwirl.ConcurrentlySP import SubprocessRunner
 
 ##__________________________________________________________________||
 run_py = """
@@ -17,7 +17,7 @@ print ' '.join(sys.argv)
 run_py = run_py.lstrip()
 
 ##__________________________________________________________________||
-class TestTaskDispatcher(unittest.TestCase):
+class TestSubprocessRunner(unittest.TestCase):
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
@@ -34,7 +34,7 @@ class TestTaskDispatcher(unittest.TestCase):
 
     def test_run_wait_terminate(self):
         self._copy_run_script_to_taskdir(run_py, self.tmpdir)
-        obj = TaskDispatcher(pipe = True)
+        obj = SubprocessRunner(pipe = True)
         obj.run(taskdir = self.tmpdir, package_path = '0.20')
         obj.run(taskdir = self.tmpdir, package_path = '0.02')
         obj.run(taskdir = self.tmpdir, package_path = '0.15')
@@ -49,7 +49,7 @@ class TestTaskDispatcher(unittest.TestCase):
 
     def test_run_terminate(self):
         self._copy_run_script_to_taskdir(run_py, self.tmpdir)
-        obj = TaskDispatcher(pipe = True)
+        obj = SubprocessRunner(pipe = True)
         obj.run(taskdir = self.tmpdir, package_path = '0.20')
         obj.run(taskdir = self.tmpdir, package_path = '0.02')
         obj.run(taskdir = self.tmpdir, package_path = '0.15')
@@ -57,7 +57,7 @@ class TestTaskDispatcher(unittest.TestCase):
 
     def test_wait_terminate(self):
         self._copy_run_script_to_taskdir(run_py, self.tmpdir)
-        obj = TaskDispatcher(pipe = True)
+        obj = SubprocessRunner(pipe = True)
         expected = [ ]
         actual = obj.wait()
         self.assertEqual(expected, actual)
