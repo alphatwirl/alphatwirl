@@ -18,7 +18,7 @@ TaskPackage = collections.namedtuple(
 )
 
 ##__________________________________________________________________||
-class TaskDirectory(object):
+class TaskPackageDropbox(object):
     def __init__(self, dispatcher, path):
         self.dispatcher = dispatcher
         self.workdir = self._prepare_workdir(path)
@@ -112,7 +112,7 @@ class CommunicationChannel(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.tmpdir = tmpdir
         mkdir_p(self.tmpdir)
-        self.taskDirectory = TaskDirectory(
+        self.dropbox = TaskPackageDropbox(
             dispatcher = TaskRunner(),
             path = self.tmpdir
         )
@@ -127,13 +127,13 @@ class CommunicationChannel(object):
             args = args,
             kwargs =  kwargs
         )
-        self.taskDirectory.put(package)
+        self.dropbox.put(package)
 
     def receive(self):
-        results = self.taskDirectory.receive()
+        results = self.dropbox.receive()
         return results
 
     def end(self):
-        self.taskDirectory.close()
+        self.dropbox.close()
 
 ##__________________________________________________________________||
