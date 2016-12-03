@@ -29,14 +29,14 @@ class TestCommunicationChannel(unittest.TestCase):
         communicationChannel.begin()
         communicationChannel.end()
 
-    def test_begin_twice(self):
-        nprocesses = 8
-        communicationChannel = CommunicationChannel(nprocesses = nprocesses)
-        communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.n_workers)
-        communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.n_workers)
-        communicationChannel.end()
+    # def test_begin_twice(self):
+    #     nprocesses = 8
+    #     communicationChannel = CommunicationChannel(nprocesses = nprocesses)
+    #     communicationChannel.begin()
+    #     self.assertEqual(nprocesses, communicationChannel.n_workers)
+    #     communicationChannel.begin()
+    #     self.assertEqual(nprocesses, communicationChannel.n_workers)
+    #     communicationChannel.end()
 
     def test_put(self):
         communicationChannel = CommunicationChannel()
