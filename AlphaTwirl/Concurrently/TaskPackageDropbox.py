@@ -9,14 +9,15 @@ import tarfile
 
 ##__________________________________________________________________||
 class TaskPackageDropbox(object):
-    def __init__(self, dispatcher, path, tar_alphatwirl = True):
+    def __init__(self, dispatcher, path, put_alphatwirl = True, user_modules = ()):
         self.dispatcher = dispatcher
         self.path = path
-        self.tar_alphatwirl = tar_alphatwirl
+        self.put_alphatwirl = put_alphatwirl
+        self.user_modules = user_modules
 
     def open(self):
         self.workdir = self._prepare_workdir(self.path)
-        if self.tar_alphatwirl: self._copy_alphatwirl(self.workdir)
+        self._copy_python_modules(self.workdir, self.put_alphatwirl, self.user_modules)
         self.taskindices = [ ]
         self.last_taskindex = -1 # so it starts from 0
 
@@ -51,7 +52,14 @@ class TaskPackageDropbox(object):
 
         return workdir
 
-    def _copy_alphatwirl(self, workdir):
+    def _copy_python_modules(self, workdir, put_alphatwirl, user_modules):
+
+        modules = list(user_modules)
+        if put_alphatwirl: modules.append('AlphaTwirl')
+
+        if not modules: return
+
+        tar = tarfile.open(os.path.join(workdir, 'python_modules.tar.gz'), 'w:gz')
 
         def tar_filter(tarinfo):
             exclude_extensions = ('.pyc', )
@@ -60,9 +68,11 @@ class TaskPackageDropbox(object):
             if os.path.basename(tarinfo.name) in exclude_names: return None
             return tarinfo
 
-        alphatwirl_path = imp.find_module('AlphaTwirl')[1]
-        tar = tarfile.open(os.path.join(workdir, 'AlphaTwirl.tar.gz'), 'w:gz')
-        tar.add(alphatwirl_path, arcname = 'AlphaTwirl', filter = tar_filter)
+        for module in modules:
+            imp_tuple = imp.find_module(module)
+            path = imp_tuple[1]
+            arcname = os.path.join('python_modules', module + imp_tuple[2][0])
+            tar.add(path, arcname = arcname, filter = tar_filter)
         tar.close()
 
     def _save_package_in_workdir(self, task_idx, package, workdir):
