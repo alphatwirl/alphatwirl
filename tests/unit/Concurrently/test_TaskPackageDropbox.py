@@ -5,7 +5,7 @@ import shutil
 import collections
 import pickle
 
-from AlphaTwirl.ConcurrentlySP import TaskPackageDropbox
+from AlphaTwirl.Concurrently import TaskPackageDropbox
 from AlphaTwirl.mkdir_p import mkdir_p
 
 ##__________________________________________________________________||
