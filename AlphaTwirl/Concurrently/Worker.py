@@ -17,11 +17,15 @@ class Worker(multiprocessing.Process):
                 self.task_queue.task_done()
                 break
             task_idx, package = message
-            try:
-                result = package.task(progressReporter = self.progressReporter, *package.args, **package.kwargs)
-            except TypeError:
-                result = package.task(*package.args, **package.kwargs)
+            result = self._run_task(package)
             self.task_queue.task_done()
             self.result_queue.put((task_idx, result))
+
+    def _run_task(self, package):
+        try:
+            result = package.task(progressReporter = self.progressReporter, *package.args, **package.kwargs)
+        except TypeError:
+            result = package.task(*package.args, **package.kwargs)
+        return result
 
 ##__________________________________________________________________||
