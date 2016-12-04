@@ -4,6 +4,7 @@ import os, sys
 import errno
 import argparse
 import pickle
+import tarfile
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
@@ -11,11 +12,9 @@ parser.add_argument('paths', nargs = argparse.REMAINDER, help = 'paths to task p
 args = parser.parse_args()
 
 ##__________________________________________________________________||
-sys.path.insert(1, './bdphi-scripts')
-sys.path.insert(1, './bdphi-scripts/bdphiROC')
-
-##__________________________________________________________________||
 def main():
+
+    setup()
 
     for package_path in args.paths:
 
@@ -32,6 +31,19 @@ def main():
         # e.g., '/a/b/c/d/results/task_00003/result.p'
 
         store_result(result, result_path)
+
+##__________________________________________________________________||
+def setup():
+    dirname = 'python_modules'
+    tarname = dirname + '.tar.gz'
+    if os.path.exists(tarname) and not os.path.exists(dirname):
+        tar = tarfile.open(tarname)
+        tar.extractall()
+        tar.close()
+
+    if not os.path.exists(dirname): return
+
+    sys.path.insert(0, dirname)
 
 ##__________________________________________________________________||
 def run(package_path):
