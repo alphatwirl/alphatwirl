@@ -4,7 +4,7 @@ import stat
 import tempfile
 import shutil
 
-from AlphaTwirl.ConcurrentlySP import SubprocessRunner
+from AlphaTwirl.Concurrently import SubprocessRunner
 
 ##__________________________________________________________________||
 run_py = """
