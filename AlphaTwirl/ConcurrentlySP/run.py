@@ -37,15 +37,7 @@ def main():
 def run(package_path):
     f = open(package_path, 'rb')
     package = pickle.load(f)
-    result = run_task(package.task, package.progressReporter, package.args, package.kwargs)
-    return result
-
-##__________________________________________________________________||
-def run_task(task, progressReporter, args, kwargs):
-    try:
-        result = task(progressReporter = progressReporter, *args, **kwargs)
-    except TypeError:
-        result = task(*args, **kwargs)
+    result = package.task(*package.args, **package.kwargs)
     return result
 
 ##__________________________________________________________________||
