@@ -39,9 +39,9 @@ class TestSubprocessRunner(unittest.TestCase):
         obj.run(taskdir = self.tmpdir, package_path = '0.02')
         obj.run(taskdir = self.tmpdir, package_path = '0.15')
         expected = [
-            ('{}/run.py 0.20\n'.format(self.tmpdir), ''),
-            ('{}/run.py 0.02\n'.format(self.tmpdir), ''),
-            ('{}/run.py 0.15\n'.format(self.tmpdir), ''),
+            ('./run.py 0.20\n', ''),
+            ('./run.py 0.02\n', ''),
+            ('./run.py 0.15\n', ''),
         ]
         actual = obj.wait()
         self.assertEqual(expected, actual)

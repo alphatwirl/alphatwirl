@@ -10,12 +10,18 @@ class SubprocessRunner(object):
         self.pipe = pipe
 
     def run(self, taskdir, package_path):
-        run_script = os.path.join(taskdir, 'run.py')
+
+        # run_script = os.path.join(taskdir, 'run.py') # This doesn't work.
+                                                       # It contradicts with the document https://docs.python.org/2/library/subprocess.html
+                                                       # The program's path needs to be relative to cwd
+        run_script = os.path.join('.', 'run.py') # This works
+
         args = [run_script, package_path]
         proc = subprocess.Popen(
             args,
             stdout = subprocess.PIPE if self.pipe else None,
             stderr = subprocess.PIPE if self.pipe else None,
+            cwd = taskdir
         )
         self.running_procs.append(proc)
 
