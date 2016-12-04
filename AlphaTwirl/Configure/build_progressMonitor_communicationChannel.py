@@ -19,7 +19,8 @@ def build_progressMonitor_communicationChannel(quiet, processes):
         communicationChannel = Concurrently.CommunicationChannel0(progressMonitor)
     else:
         progressMonitor = ProgressBar.NullProgressMonitor() if quiet else ProgressBar.BProgressMonitor(presentation = progressBar)
-        communicationChannel = Concurrently.CommunicationChannel(processes, progressMonitor)
+        dropbox = Concurrently.TaskPackageDropbox(processes, progressMonitor)
+        communicationChannel = Concurrently.CommunicationChannel(dropbox = dropbox)
 
     return progressMonitor, communicationChannel
 
