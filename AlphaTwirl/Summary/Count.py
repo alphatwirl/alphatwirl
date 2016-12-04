@@ -25,6 +25,6 @@ class Count(object):
         return self.__class__(contents = contents)
 
     def __repr__(self):
-        return '{}(contents = {})'.format(self.__class__, self.contents)
+        return '{}(contents = {!r})'.format(self.__class__.__name__, self.contents)
 
 ##__________________________________________________________________||

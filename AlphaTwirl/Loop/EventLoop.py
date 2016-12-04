@@ -14,6 +14,14 @@ class EventLoop(object):
         # assign a random unique id to be used by progress bar
         self.taskid = uuid.uuid4()
 
+    def __repr__(self):
+        return '{}(build_events = {!r}, reader = {!r}, progressReportWriter = {!r})'.format(
+            self.__class__.__name__,
+            self.build_events,
+            self.reader,
+            self.progressReportWriter
+        )
+
     def __call__(self, progressReporter = None):
         events = self.build_events()
         self._reportProgress(progressReporter, events)

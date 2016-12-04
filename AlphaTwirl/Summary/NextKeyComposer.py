@@ -5,6 +5,12 @@ class NextKeyComposer(object):
     def __init__(self, binnings):
         self._binnings = binnings
 
+    def __repr__(self):
+        return '{}({!r})'.format(
+            self.__class__.__name__,
+            self._binnings
+        )
+
     def __call__(self, key):
         """returns a list of the next keys
 

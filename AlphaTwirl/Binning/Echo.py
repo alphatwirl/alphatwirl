@@ -12,6 +12,13 @@ class Echo(object):
         self._nextFunc = nextFunc
         self._valid = valid
 
+    def __repr__(self):
+        return '{}(nextFunc = {!r}, valid = {!r})'.format(
+            self.__class__.__name__,
+            self._nextFunc,
+            self._valid
+        )
+
     def __call__(self, val):
         if not self._valid(val): return None
         return val

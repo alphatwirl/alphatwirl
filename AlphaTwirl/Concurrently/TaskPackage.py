@@ -1,10 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import collections
 
 ##__________________________________________________________________||
-class WeightCalculatorOne(object):
-    def __call__(self, event):
-        return 1
+TaskPackage = collections.namedtuple('TaskPackage', 'task args kwargs')
 
-    def __repr__(self):
-        return '{}()'.format(self.__class__.__name__)
 ##__________________________________________________________________||

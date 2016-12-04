@@ -12,11 +12,18 @@ class Round(object):
             raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
 
         self.width = width
+        self.aBoundary = aBoundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
         if aBoundary is None: aBoundary = self.halfWidth
         self.boundaries = [aBoundary - width, aBoundary, aBoundary + width]
         self.lowedge = (retvalue == 'lowedge')
         self.valid = valid
+
+    def __repr__(self):
+        return '{}(width = {!r}, aBoundary = {!r}, valid = {!r})'.format(
+            self.__class__.__name__,
+            self.width, self.aBoundary, self.valid
+        )
 
     def __call__(self, val):
         if not self.valid(val): return None
