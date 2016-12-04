@@ -1,7 +1,6 @@
 import Aggregate
 import Binning
 import Concurrently
-import ConcurrentlySP
 import Configure
 import Events
 import HeppyResult
