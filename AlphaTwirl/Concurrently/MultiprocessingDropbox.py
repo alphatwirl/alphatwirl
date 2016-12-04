@@ -8,7 +8,7 @@ from .TaskPackage import TaskPackage
 from .Worker import Worker
 
 ##__________________________________________________________________||
-class TaskPackageDropbox(object):
+class MultiprocessingDropbox(object):
     def __init__(self, nprocesses = 16, progressMonitor = None):
 
         if nprocesses <= 0:

@@ -3,7 +3,7 @@ import unittest
 import time
 import os
 
-from AlphaTwirl.Concurrently import TaskPackageDropbox
+from AlphaTwirl.Concurrently import MultiprocessingDropbox
 from AlphaTwirl.Concurrently import TaskPackage
 
 ##__________________________________________________________________||
@@ -22,24 +22,24 @@ class MockResult(object):
         self.data = data
 
 ##__________________________________________________________________||
-class TestTaskPackageDropbox(unittest.TestCase):
+class TestMultiprocessingDropbox(unittest.TestCase):
 
     def test_init_raise(self):
-        self.assertRaises(ValueError, TaskPackageDropbox, nprocesses = 0)
+        self.assertRaises(ValueError, MultiprocessingDropbox, nprocesses = 0)
 
     def test_open_close(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
         obj.close()
 
     def test_open_open_close(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
         obj.open() # don't create workers again
         obj.close()
 
     def test_put(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         result1 = MockResult('task1')
@@ -55,7 +55,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         obj.close()
 
     def test_put_receive(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         result1 = MockResult('task1')
@@ -77,7 +77,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         # results of tasks are sorted in the order in which the tasks
         # are put.
 
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         result1 = MockResult('task1')
@@ -101,7 +101,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         obj.close()
 
     def test_put_receive_repeat(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         result1 = MockResult('task1')
@@ -133,7 +133,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         obj.close()
 
     def test_begin_put_recive_end_repeat(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         result = MockResult('task1')
@@ -158,7 +158,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
 
 
     def test_receive_without_put(self):
-        obj = TaskPackageDropbox()
+        obj = MultiprocessingDropbox()
         obj.open()
 
         self.assertEqual([ ], obj.receive())
@@ -187,11 +187,11 @@ class MockProgressMonitor(object):
     def last(self): pass
 
 ##__________________________________________________________________||
-class TestTaskPackageDropbox_ProgressMonitor(unittest.TestCase):
+class TestMultiprocessingDropbox_ProgressMonitor(unittest.TestCase):
 
     def test_ProgressMonitor(self):
         progressMonitor = MockProgressMonitor()
-        obj = TaskPackageDropbox(nprocesses = 3, progressMonitor = progressMonitor)
+        obj = MultiprocessingDropbox(nprocesses = 3, progressMonitor = progressMonitor)
         obj.open()
 
         result1 = MockResult('task1')
@@ -243,11 +243,11 @@ class MockTaskWithArgumentsAndProgressReporter(object):
         return self.result
 
 ##__________________________________________________________________||
-class TestTaskPackageDropbox_task_arguments(unittest.TestCase):
+class TestMultiprocessingDropbox_task_arguments(unittest.TestCase):
 
     def test_task_without_ProgressReporterno(self):
         progressMonitor = MockProgressMonitor()
-        obj = TaskPackageDropbox(nprocesses = 3, progressMonitor = progressMonitor)
+        obj = MultiprocessingDropbox(nprocesses = 3, progressMonitor = progressMonitor)
         obj.open()
 
         result1 = MockResult('task1')

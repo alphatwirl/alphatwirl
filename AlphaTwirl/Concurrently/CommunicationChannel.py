@@ -4,8 +4,6 @@ import logging
 from ..ProgressBar import NullProgressMonitor
 from .TaskPackage import TaskPackage
 
-from. TaskPackageDropbox import TaskPackageDropbox
-
 ##__________________________________________________________________||
 class CommunicationChannel(object):
     """A communication channel with workers in other processes.
