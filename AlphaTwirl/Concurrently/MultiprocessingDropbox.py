@@ -43,7 +43,7 @@ class MultiprocessingDropbox(object):
 
     def put(self, package):
         self.task_idx += 1
-        self.task_queue.put((self.task_idx, package.task, package.args, package.kwargs))
+        self.task_queue.put((self.task_idx, package))
         self.n_ongoing_tasks += 1
 
     def receive(self):
