@@ -91,13 +91,8 @@ class CommunicationChannel(object):
 
     """
 
-    def __init__(self, nprocesses = 16, progressMonitor = None):
-        progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.progressMonitor = progressMonitor
-        self.dropbox = TaskPackageDropbox(
-            nprocesses = nprocesses,
-            progressMonitor = progressMonitor
-        )
+    def __init__(self, dropbox):
+        self.dropbox = dropbox
         self.isopen = False
 
     def begin(self):
