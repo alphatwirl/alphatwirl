@@ -17,7 +17,7 @@ class WorkingArea(object):
 
     def __init__(self, dir):
         self.dirpath = self._prepare_dir(dir)
-        self.last_taskindex = -1 # so it starts from 0
+        self.last_package_index = -1 # so it starts from 0
 
     def _prepare_dir(self, path):
 
@@ -56,10 +56,10 @@ class WorkingArea(object):
 
     def put_package(self, package):
 
-        self.last_taskindex += 1
-        task_idx = self.last_taskindex
+        self.last_package_index += 1
+        package_index = self.last_package_index
 
-        package_path = 'task_{:05d}.p'.format(task_idx)
+        package_path = 'task_{:05d}.p'.format(package_index)
         # relative to dirpath, e.g., 'task_00009.p'
 
         package_fullpath = os.path.join(self.dirpath, package_path)
@@ -68,11 +68,11 @@ class WorkingArea(object):
         f = open(package_fullpath, 'wb')
         pickle.dump(package, f)
 
-        return task_idx, package_path
+        return package_index, package_path
 
-    def collect_result(self, task_idx):
+    def collect_result(self, package_index):
 
-        dirname = 'task_{:05d}'.format(task_idx)
+        dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
         result_path = os.path.join(self.dirpath, 'results', dirname, 'result.p')
@@ -95,17 +95,17 @@ class TaskPackageDropbox(object):
     def open(self):
         self.workingArea = WorkingArea(self.path)
         self.workingArea.put_python_modules(self.python_modules)
-        self.taskindices = [ ]
+        self.package_indices = [ ]
 
     def put(self, package):
-        taskindex, package_path = self.workingArea.put_package(package)
-        self.taskindices.append(taskindex)
+        package_index, package_path = self.workingArea.put_package(package)
+        self.package_indices.append(package_index)
         self.dispatcher.run(self.workingArea.dirpath, package_path)
 
     def receive(self):
         self.dispatcher.wait()
-        results = [self.workingArea.collect_result(i) for i in self.taskindices]
-        self.taskindices[:] = [ ]
+        results = [self.workingArea.collect_result(i) for i in self.package_indices]
+        self.package_indices[:] = [ ]
         return results
 
     def close(self):
