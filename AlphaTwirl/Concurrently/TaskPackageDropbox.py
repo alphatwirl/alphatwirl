@@ -23,7 +23,7 @@ class TaskPackageDropbox(object):
     def put(self, package):
         package_index, package_path = self.workingArea.put_package(package)
         self.package_indices.append(package_index)
-        self.dispatcher.run(self.workingArea.dirpath, package_path)
+        self.dispatcher.run(self.workingArea.path, package_path)
 
     def receive(self):
         self.dispatcher.wait()

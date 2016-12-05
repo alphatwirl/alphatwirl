@@ -16,7 +16,7 @@ class WorkingArea(object):
     """
 
     def __init__(self, dir):
-        self.dirpath = self._prepare_dir(dir)
+        self.path = self._prepare_dir(dir)
         self.last_package_index = -1 # so it starts from 0
 
     def _prepare_dir(self, path):
@@ -38,7 +38,7 @@ class WorkingArea(object):
 
         if not modules: return
 
-        tar = tarfile.open(os.path.join(self.dirpath, 'python_modules.tar.gz'), 'w:gz')
+        tar = tarfile.open(os.path.join(self.path, 'python_modules.tar.gz'), 'w:gz')
 
         def tar_filter(tarinfo):
             exclude_extensions = ('.pyc', )
@@ -62,11 +62,12 @@ class WorkingArea(object):
         package_path = 'task_{:05d}.p'.format(package_index)
         # relative to dirpath, e.g., 'task_00009.p'
 
-        package_fullpath = os.path.join(self.dirpath, package_path)
+        package_fullpath = os.path.join(self.path, package_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
 
         f = open(package_fullpath, 'wb')
         pickle.dump(package, f)
+        f.close()
 
         return package_index, package_path
 
@@ -75,7 +76,7 @@ class WorkingArea(object):
         dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
-        result_path = os.path.join(self.dirpath, 'results', dirname, 'result.p')
+        result_path = os.path.join(self.path, 'results', dirname, 'result.p')
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p'
 
         f = open(result_path, 'rb')
