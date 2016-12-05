@@ -19,20 +19,20 @@ class WorkingArea(object):
         self.path = self._prepare_dir(dir)
         self.last_package_index = -1 # so it starts from 0
 
-    def _prepare_dir(self, path):
+    def _prepare_dir(self, dir):
 
         prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
         # e.g., 'tpd_20161129_122841_'
 
-        dirpath = tempfile.mkdtemp(prefix = prefix, dir = path)
+        path = tempfile.mkdtemp(prefix = prefix, dir = dir)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF'
 
         # copy run.py to the task dir
         thisdir = os.path.dirname(__file__)
         src = os.path.join(thisdir, 'run.py')
-        shutil.copy(src, dirpath)
+        shutil.copy(src, path)
 
-        return dirpath
+        return path
 
     def put_python_modules(self, modules):
 
@@ -60,7 +60,7 @@ class WorkingArea(object):
         package_index = self.last_package_index
 
         package_path = 'task_{:05d}.p'.format(package_index)
-        # relative to dirpath, e.g., 'task_00009.p'
+        # relative to self.path, e.g., 'task_00009.p'
 
         package_fullpath = os.path.join(self.path, package_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
