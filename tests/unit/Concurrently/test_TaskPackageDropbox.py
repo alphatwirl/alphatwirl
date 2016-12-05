@@ -1,44 +1,47 @@
 import unittest
-import os
-import tempfile
-import shutil
 import collections
-import pickle
 
 from AlphaTwirl.Concurrently import TaskPackageDropbox
 from AlphaTwirl.mkdir_p import mkdir_p
 
 ##__________________________________________________________________||
-MockPackage = collections.namedtuple('MockPackage', 'name')
-MockResult = collections.namedtuple('MockResult', 'package')
+MockPackage = collections.namedtuple('MockPackage', 'idx name path')
+MockResult = collections.namedtuple('MockResult', 'name')
+
+##__________________________________________________________________||
+class MockWorkingArea(object):
+    def __init__(self, path):
+        self.path = path
+        self.nopened = 0
+        self.nclosed = 0
+        self.packages = [ ]
+        self.results = { }
+
+    def open(self):
+        self.nopened += 1
+
+    def close(self):
+        self.nclosed += 1
+
+    def put_package(self, package):
+        self.packages.append(package)
+        return package.idx, package.path
+
+    def collect_result(self, idx):
+        return self.results[idx]
 
 ##__________________________________________________________________||
 class MockDispatcher(object):
     def __init__(self):
         self.runargs = [ ]
         self.nterminated = 0
+        self.nwaited = 0
 
     def run(self, taskdir, package_path):
         self.runargs.append([taskdir, package_path])
 
     def wait(self):
-        for taskdir, package_path in self.runargs:
-
-            # retrieve package
-            f = open(os.path.join(taskdir, package_path), 'rb')
-            package = pickle.load(f)
-
-            # create result
-            result = MockResult(package = package)
-
-            # store result
-            resultdir = os.path.join(taskdir, 'results', os.path.splitext(package_path)[0])
-            resultpath = os.path.join(resultdir, 'result.p')
-            mkdir_p(os.path.dirname(resultpath))
-            f = open(resultpath, 'wb')
-            pickle.dump(result, f)
-
-        self.runargs[:] = [ ]
+        self.nwaited += 1
 
     def terminate(self):
         self.nterminated += 1
@@ -46,26 +49,29 @@ class MockDispatcher(object):
 ##__________________________________________________________________||
 class TestTaskPackageDropbox(unittest.TestCase):
 
-    def setUp(self):
-        self.tmpdir = tempfile.mkdtemp()
-
-    def tearDown(self):
-        shutil.rmtree(self.tmpdir)
-
     def test_open_close(self):
+        workingArea = MockWorkingArea(path = '/A/B')
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(dispatcher = dispatcher, path = self.tmpdir)
+        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+
+        self.assertEqual(0, workingArea.nopened)
+        self.assertEqual(0, workingArea.nclosed)
+        self.assertEqual(0, dispatcher.nterminated)
 
         obj.open()
+        self.assertEqual(1, workingArea.nopened)
+        self.assertEqual(0, workingArea.nclosed)
         self.assertEqual(0, dispatcher.nterminated)
 
         obj.close()
+        self.assertEqual(1, workingArea.nopened)
+        self.assertEqual(1, workingArea.nclosed)
         self.assertEqual(1, dispatcher.nterminated)
 
     def test_open_put_receive_close(self):
-
+        workingArea = MockWorkingArea(path = '/A/B')
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(dispatcher = dispatcher, path = self.tmpdir)
+        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
 
         #
         # open
@@ -75,43 +81,32 @@ class TestTaskPackageDropbox(unittest.TestCase):
         #
         # put
         #
-        package1 = MockPackage('package1')
+        package0 = MockPackage(idx = 0, name = 'package0', path = 'c/d/0')
+        obj.put(package0)
+
+        package1 = MockPackage(idx = 1, name = 'package1', path = 'c/d/1')
         obj.put(package1)
 
-        package2 = MockPackage('package2')
-        obj.put(package2)
-
+        self.assertEqual([package0, package1], workingArea.packages)
         self.assertEqual(2, len(dispatcher.runargs))
-
-        # package1
-        taskdir, package_path = dispatcher.runargs[0]
-        self.assertEqual(self.tmpdir, os.path.dirname(taskdir))
-        self.assertTrue(os.path.isfile(os.path.join(taskdir, 'run.py')))
-        package_fullpath = os.path.join(taskdir, package_path)
-        self.assertTrue(os.path.isfile(package_fullpath))
-        f = open(package_fullpath, 'rb')
-        self.assertEqual(package1, pickle.load(f))
-
-        # package2
-        taskdir, package_path = dispatcher.runargs[1]
-        self.assertEqual(self.tmpdir, os.path.dirname(taskdir))
-        self.assertTrue(os.path.isfile(os.path.join(taskdir, 'run.py')))
-        package_fullpath = os.path.join(taskdir, package_path)
-        self.assertTrue(os.path.isfile(package_fullpath))
-        f = open(package_fullpath, 'rb')
-        self.assertEqual(package2, pickle.load(f))
+        self.assertEqual(['/A/B', 'c/d/0'], dispatcher.runargs[0])
+        self.assertEqual(['/A/B', 'c/d/1'], dispatcher.runargs[1])
 
         #
         # receive
         #
-        expected = [MockResult(package1), MockResult(package2)]
-        self.assertEqual(expected, obj.receive())
+        result0 = MockResult(name = 'result0')
+        result1 = MockResult(name = 'result1')
+        workingArea.results.update({0: result0, 1: result1})
+        self.assertEqual(0, dispatcher.nwaited)
+        self.assertEqual([result0, result1], obj.receive())
+        self.assertEqual(1, dispatcher.nwaited)
 
         #
         # close
         #
+        self.assertEqual(0, dispatcher.nterminated)
         obj.close()
         self.assertEqual(1, dispatcher.nterminated)
 
 ##__________________________________________________________________||
-

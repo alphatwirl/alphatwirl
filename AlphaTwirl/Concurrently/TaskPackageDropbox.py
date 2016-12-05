@@ -9,15 +9,12 @@ class TaskPackageDropbox(object):
     that execute the tasks.
 
     """
-    def __init__(self, dispatcher, path, put_alphatwirl = True, user_modules = ()):
+    def __init__(self, workingArea, dispatcher):
+        self.workingArea = workingArea
         self.dispatcher = dispatcher
-        self.path = path
-        self.python_modules = list(user_modules)
-        if put_alphatwirl: self.python_modules.append('AlphaTwirl')
 
     def open(self):
-        self.workingArea = WorkingArea(self.path)
-        self.workingArea.put_python_modules(self.python_modules)
+        self.workingArea.open()
         self.package_indices = [ ]
 
     def put(self, package):
@@ -33,5 +30,6 @@ class TaskPackageDropbox(object):
 
     def close(self):
         self.dispatcher.terminate()
+        self.workingArea.close()
 
 ##__________________________________________________________________||
