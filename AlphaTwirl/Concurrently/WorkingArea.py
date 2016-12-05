@@ -15,44 +15,22 @@ class WorkingArea(object):
 
     """
 
-    def __init__(self, dir):
-        self.path = self._prepare_dir(dir)
+    def __init__(self, dir, python_modules):
+        self.topdir = dir
+        self.python_modules = python_modules
+        self.path = None
+        self.last_package_index = None
+
+    def __repr__(self):
+        return '{}(topdir = {!r}, python_modules = {!r}, path = {!r}, last_package_index = {!r})'.format(
+            self.__class__.__name__,
+            self.topdir, self.python_modules, self.path, self.last_package_index
+        )
+
+    def open(self):
+        self.path = self._prepare_dir(self.topdir)
+        self._put_python_modules(self.python_modules)
         self.last_package_index = -1 # so it starts from 0
-
-    def _prepare_dir(self, dir):
-
-        prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
-        # e.g., 'tpd_20161129_122841_'
-
-        path = tempfile.mkdtemp(prefix = prefix, dir = dir)
-        # e.g., '{path}/tpd_20161129_122841_HnpcmF'
-
-        # copy run.py to the task dir
-        thisdir = os.path.dirname(__file__)
-        src = os.path.join(thisdir, 'run.py')
-        shutil.copy(src, path)
-
-        return path
-
-    def put_python_modules(self, modules):
-
-        if not modules: return
-
-        tar = tarfile.open(os.path.join(self.path, 'python_modules.tar.gz'), 'w:gz')
-
-        def tar_filter(tarinfo):
-            exclude_extensions = ('.pyc', )
-            exclude_names = ('.git', )
-            if os.path.splitext(tarinfo.name)[1] in exclude_extensions: return None
-            if os.path.basename(tarinfo.name) in exclude_names: return None
-            return tarinfo
-
-        for module in modules:
-            imp_tuple = imp.find_module(module)
-            path = imp_tuple[1]
-            arcname = os.path.join('python_modules', module + imp_tuple[2][0])
-            tar.add(path, arcname = arcname, filter = tar_filter)
-        tar.close()
 
     def put_package(self, package):
 
@@ -84,5 +62,43 @@ class WorkingArea(object):
 
         return result
 
+    def close(self):
+        self.path = None
+        self.last_package_index = None
+
+    def _prepare_dir(self, dir):
+
+        prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
+        # e.g., 'tpd_20161129_122841_'
+
+        path = tempfile.mkdtemp(prefix = prefix, dir = dir)
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF'
+
+        # copy run.py to the task dir
+        thisdir = os.path.dirname(__file__)
+        src = os.path.join(thisdir, 'run.py')
+        shutil.copy(src, path)
+
+        return path
+
+    def _put_python_modules(self, modules):
+
+        if not modules: return
+
+        tar = tarfile.open(os.path.join(self.path, 'python_modules.tar.gz'), 'w:gz')
+
+        def tar_filter(tarinfo):
+            exclude_extensions = ('.pyc', )
+            exclude_names = ('.git', )
+            if os.path.splitext(tarinfo.name)[1] in exclude_extensions: return None
+            if os.path.basename(tarinfo.name) in exclude_names: return None
+            return tarinfo
+
+        for module in modules:
+            imp_tuple = imp.find_module(module)
+            path = imp_tuple[1]
+            arcname = os.path.join('python_modules', module + imp_tuple[2][0])
+            tar.add(path, arcname = arcname, filter = tar_filter)
+        tar.close()
 
 ##__________________________________________________________________||

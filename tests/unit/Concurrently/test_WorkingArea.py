@@ -21,18 +21,21 @@ class TestWorkingArea(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
-    def test_init(self):
-        obj = WorkingArea(dir = self.tmpdir)
+    def test_open(self):
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        self.assertIsNone(obj.path)
+        self.assertIsNone(obj.last_package_index)
+
+        obj.open()
+        self.assertIsNotNone(obj.path)
+        self.assertEqual(-1, obj.last_package_index)
         self.assertTrue(os.path.isdir(obj.path))
         self.assertTrue(os.path.isfile(os.path.join(obj.path, 'run.py')))
-
-    def test_put_python_modules(self):
-        obj = WorkingArea(dir = self.tmpdir)
-        obj.put_python_modules(modules = ('AlphaTwirl', ))
         self.assertTrue(os.path.isfile(os.path.join(obj.path, 'python_modules.tar.gz')))
 
     def test_put_package(self):
-        obj = WorkingArea(dir = self.tmpdir)
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        obj.open()
 
         package1 = MockPackage(name = 'package1')
         package_index, package_path = obj.put_package(package1)
@@ -42,7 +45,8 @@ class TestWorkingArea(unittest.TestCase):
         self.assertEqual(package1, pickle.load(f))
 
     def test_collect_result(self):
-        obj = WorkingArea(dir = self.tmpdir)
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        obj.open()
 
         result = MockResult(name = 'result1')
 
