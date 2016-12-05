@@ -4,3 +4,4 @@ from TaskPackage import TaskPackage
 from TaskPackageDropbox import TaskPackageDropbox
 from MultiprocessingDropbox import MultiprocessingDropbox
 from SubprocessRunner import SubprocessRunner
+from WorkingArea import WorkingArea
