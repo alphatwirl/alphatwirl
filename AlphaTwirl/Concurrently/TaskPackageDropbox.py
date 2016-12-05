@@ -3,6 +3,12 @@ from .WorkingArea import WorkingArea
 
 ##__________________________________________________________________||
 class TaskPackageDropbox(object):
+    """A drop box for task packages.
+
+    It puts task packages in a working area and dispatches runners
+    that execute the tasks.
+
+    """
     def __init__(self, dispatcher, path, put_alphatwirl = True, user_modules = ()):
         self.dispatcher = dispatcher
         self.path = path
