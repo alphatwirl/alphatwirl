@@ -8,7 +8,7 @@ import imp
 import tarfile
 
 ##__________________________________________________________________||
-class Storage(object):
+class WorkingArea(object):
     """
         Args:
         dir (str): a path to a directory in which a new directory will be created
@@ -34,7 +34,7 @@ class Storage(object):
 
         return dirpath
 
-    def store_python_modules(self, modules):
+    def put_python_modules(self, modules):
 
         if not modules: return
 
@@ -54,7 +54,7 @@ class Storage(object):
             tar.add(path, arcname = arcname, filter = tar_filter)
         tar.close()
 
-    def store_package(self, package):
+    def put_package(self, package):
 
         self.last_taskindex += 1
         task_idx = self.last_taskindex
@@ -93,18 +93,18 @@ class TaskPackageDropbox(object):
         if put_alphatwirl: self.python_modules.append('AlphaTwirl')
 
     def open(self):
-        self.storage = Storage(self.path)
-        self.storage.store_python_modules(self.python_modules)
+        self.workingArea = WorkingArea(self.path)
+        self.workingArea.put_python_modules(self.python_modules)
         self.taskindices = [ ]
 
     def put(self, package):
-        taskindex, package_path = self.storage.store_package(package)
+        taskindex, package_path = self.workingArea.put_package(package)
         self.taskindices.append(taskindex)
-        self.dispatcher.run(self.storage.dirpath, package_path)
+        self.dispatcher.run(self.workingArea.dirpath, package_path)
 
     def receive(self):
         self.dispatcher.wait()
-        results = [self.storage.collect_result(i) for i in self.taskindices]
+        results = [self.workingArea.collect_result(i) for i in self.taskindices]
         self.taskindices[:] = [ ]
         return results
 
