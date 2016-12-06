@@ -11,11 +11,22 @@ args = parser.parse_args()
 
 
 ##__________________________________________________________________||
-sys.path.insert(1, './bdphi-scripts')
-sys.path.insert(1, './bdphi-scripts/bdphiROC')
+pickle_path = os.path.abspath(args.pickle)
 
 ##__________________________________________________________________||
-f = open(args.pickle, 'rb')
+os.chdir(os.path.dirname(pickle_path))
+
+##__________________________________________________________________||
+dirname = 'python_modules'
+tarname = dirname + '.tar.gz'
+if os.path.exists(tarname) and not os.path.exists(dirname):
+    tar = tarfile.open(tarname)
+    tar.extractall()
+    tar.close()
+sys.path.insert(0, dirname)
+
+##__________________________________________________________________||
+f = open(os.path.basename(pickle_path), 'rb')
 package = pickle.load(f)
 
 print package
