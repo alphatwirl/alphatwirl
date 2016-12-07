@@ -98,6 +98,34 @@ class TestReader(unittest.TestCase):
         obj.event(event)
         self.assertEqual([ ], summarizer.add_called_with)
 
+    def test_event_nevents(self):
+        keyvalcomposer = MockKeyValueComposer()
+        summarizer = MockSummarizer()
+        weightCalculator = MockWeightCalculator()
+        obj = Summary.Reader(
+            keyvalcomposer, summarizer,
+            weightCalculator = weightCalculator,
+            nevents = 2 # read only first 2 events
+        )
+
+        # two key-val pairs
+        key1 = MockKey('key1')
+        val1 = MockVal('val1')
+
+        event1 = MockEvent(event = 'event1', keys = (key1,), vals = (val1, ))
+        event2 = MockEvent(event = 'event2', keys = (key1,), vals = (val1, ))
+        event3 = MockEvent(event = 'event3', keys = (key1,), vals = (val1, ))
+
+        obj.event(event1)
+        obj.event(event2)
+        obj.event(event3)
+        self.assertEqual(
+            [
+                (key1, val1, MockWeight(event1)),
+                (key1, val1, MockWeight(event2)),
+            ], summarizer.add_called_with)
+
+
     def test_end(self):
         key1 = MockKey('key1')
         key11 = MockKey('key11')
