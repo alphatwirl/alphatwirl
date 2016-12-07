@@ -148,8 +148,8 @@ def try_executing_until_succeed(procargs):
         if success: break
 
         #
-        logger.warning('the command failed: {}'.format(command_display))
         if stderr: logger.warning(stderr.strip())
+        logger.warning('the command failed: {}. will try again in {} seconds'.format(command_display, sleep))
 
         #
         time.sleep(sleep)
