@@ -47,7 +47,8 @@ class HTCondorJobSubmitter(object):
         """
         self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
 
-        self.clusterids = [ ]
+        self.clusterids_outstanding = [ ]
+        self.clusterids_finished = [ ]
 
     def run(self, taskdir, package_path):
 
@@ -88,32 +89,48 @@ class HTCondorJobSubmitter(object):
         regex = re.compile("submitted to cluster (\d*)", re.MULTILINE)
         clusterid = regex.search(stdout).groups()[0]
 
-        self.clusterids.append(clusterid)
+        self.clusterids_outstanding.append(clusterid)
 
         os.chdir(cwd)
 
     def wait(self):
 
+        change_job_priority(self.clusterids_outstanding, 10)
+
         sleep = 5
 
         while True:
-            clusterid_status_list = query_status_for(self.clusterids)
-            if not clusterid_status_list: break
-            statuses = [e[1] for e in clusterid_status_list]
+            clusterid_status_list = query_status_for(self.clusterids_outstanding)
 
+            if clusterid_status_list:
+                clusterids, statuses = zip(*clusterid_status_list)
+            else:
+                clusterids, statuses = (), ()
+
+            self.clusterids_finished.extend([i for i in self.clusterids_outstanding if i not in clusterids])
+            self.clusterids_outstanding[:] = clusterids
+
+            # logging
             counter = collections.Counter(statuses)
-            print ', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()])
+            messages = [ ]
+            if counter:
+                messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
+            if self.clusterids_finished:
+                messages.append('Finished {}'.format(len(self.clusterids_finished)))
+            logger = logging.getLogger(__name__)
+            logger.info(', '.join(messages))
+
+            if not self.clusterids_outstanding: break
 
             time.sleep(sleep)
 
     def terminate(self):
         n_at_a_time = 500
-        ids_split = [self.clusterids[i:(i + n_at_a_time)] for i in range(0, len(self.clusterids), n_at_a_time)]
+        ids_split = [self.clusterids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterids_outstanding), n_at_a_time)]
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
             stdout = try_executing_until_succeed(procargs)
-            print stdout
 
 ##__________________________________________________________________||
 def try_executing_until_succeed(procargs):
@@ -127,7 +144,7 @@ def try_executing_until_succeed(procargs):
         ellipsis = '...(({} letters))...'
         nfirst = 50
         nlast = 50
-        command_display = '{}'.format(repr(' '.join(procargs)))
+        command_display = '{} {}'.format(procargs[0], ' '.join([repr(a) for a in procargs[1:]]))
         if len(command_display) > nfirst + len(ellipsis) + nlast:
             command_display = '{}...(({} letters))...{}'.format(
                 command_display[:nfirst],
@@ -177,6 +194,17 @@ def query_status_for(ids):
     # e.g., [['688244', 1], ['688245', 1], ['688246', 2]]
 
     return ret
+
+##__________________________________________________________________||
+def change_job_priority(ids, priority = 10):
+
+    # http://research.cs.wisc.edu/htcondor/manual/v7.8/2_6Managing_Job.html#sec:job-prio
+
+    n_at_a_time = 500
+    ids_split = [ids[i:(i + n_at_a_time)] for i in range(0, len(ids), n_at_a_time)]
+    for ids_sub in ids_split:
+        procargs = ['condor_prio', '-p', str(priority)] + ids_sub
+        try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
 def sample_ids(n = -1):
