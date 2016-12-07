@@ -6,7 +6,7 @@ class NextKeyComposer(object):
         self._binnings = binnings
 
     def __repr__(self):
-        return '{}({!r})'.format(
+        return '{}(binnings = {!r})'.format(
             self.__class__.__name__,
             self._binnings
         )
