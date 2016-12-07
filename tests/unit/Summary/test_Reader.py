@@ -108,7 +108,6 @@ class TestReader(unittest.TestCase):
             nevents = 2 # read only first 2 events
         )
 
-        # two key-val pairs
         key1 = MockKey('key1')
         val1 = MockVal('val1')
 
