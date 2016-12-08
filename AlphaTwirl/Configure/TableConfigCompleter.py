@@ -64,6 +64,7 @@ class TableConfigCompleter(object):
         if 'outFile' not in ret: ret['outFile'] = True
         if 'weight' not in ret: ret['weight'] = self.defaultWeight
         if 'sort' not in ret: ret['sort'] = True
+        if 'nevents' not in ret: ret['nevents'] = None
         if ret['outFile']:
             if 'outFileName' not in ret:
                 if use_defaultSummaryClass:

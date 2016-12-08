@@ -22,7 +22,8 @@ def build_counter_collector_pair(tblcfg):
         keyValComposer = keyValComposer,
         summarizer = summarizer,
         nextKeyComposer = nextKeyComposer,
-        weightCalculator = tblcfg['weight']
+        weightCalculator = tblcfg['weight'],
+        nevents = tblcfg['nevents']
     )
     resultsCombinationMethod = CombineIntoList(
         keyNames = tblcfg['keyOutColumnNames'],
