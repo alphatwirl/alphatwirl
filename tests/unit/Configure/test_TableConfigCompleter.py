@@ -18,7 +18,10 @@ class MockBinning: pass
 ##__________________________________________________________________||
 class TestTableConfigCompleter(unittest.TestCase):
 
-    def test_copy(self):
+    def setUp(self):
+        self.maxDiff = None
+
+    def test_copy_not_the_same_object(self):
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
             defaultWeight = MockWeight(),
@@ -29,296 +32,351 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIsNot(tblcfg_in, tblcfg_out)
 
     def test_empty_input(self):
-        tblcfg_in = dict(
-        )
-
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        expected = dict(
+            keyAttrNames = (),
+            keyIndices = None,
+            binnings = None,
+            keyOutColumnNames = (),
+            valAttrNames = None,
+            valIndices = None,
+            summaryClass = MockDefaultSummary,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('n', 'nvar'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_n_component.txt',
+            outFilePath = 'tmp/tbl_n_component.txt',
+        )
 
-        self.assertEqual(( ), tblcfg_out['keyAttrNames'])
-        self.assertEqual(None, tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIsNone(tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
+        tblcfg = dict()
+        actual = obj.complete(tblcfg)
 
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
-
-        self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
-
-        self.assertEqual(True, tblcfg_out['sort'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_n_component.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_n_component.txt'), tblcfg_out['outFilePath'])
+        self.assertEqual(actual, expected)
 
     def test_simple_input(self):
-        tblcfg_in = dict(
-            keyAttrNames = ('met_pt', ),
-            binnings = (MockBinning(), )
-        )
 
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
 
-        self.assertEqual(('met_pt', ), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIsNone(tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
+        expected = dict(
+            keyAttrNames = ('met_pt',),
+            keyIndices = None,
+            binnings = (binning1, ),
+            keyOutColumnNames = ('met_pt',),
+            valAttrNames = None,
+            valIndices = None,
+            summaryClass = MockDefaultSummary,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('n', 'nvar'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_n_component_met_pt.txt',
+            outFilePath = 'tmp/tbl_n_component_met_pt.txt',
+        )
 
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
+        tblcfg = dict(
+            keyAttrNames = ('met_pt', ),
+            binnings = (binning1, )
+        )
 
-        self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
+        actual = obj.complete(tblcfg)
 
-        self.assertEqual(('met_pt', ), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
+        self.assertEqual(actual, expected)
 
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_n_component_met_pt.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_n_component_met_pt.txt'), tblcfg_out['outFilePath'])
 
     def test_default_summary_class_empty_key(self):
-        tblcfg_in = dict(
+
+        defaultWeight = MockWeight()
+        obj = TableConfigCompleter(
+            defaultSummaryClass = MockDefaultSummary,
+            defaultWeight = defaultWeight,
+            defaultOutDir = 'tmp'
+        )
+
+        expected = dict(
+            keyAttrNames = (),
+            keyIndices = None,
+            binnings = (),
+            keyOutColumnNames = (),
+            valAttrNames = None,
+            valIndices = None,
+            summaryClass = MockDefaultSummary,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('n', 'nvar'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_n_component.txt',
+            outFilePath = 'tmp/tbl_n_component.txt',
+        )
+
+        tblcfg = dict(
             keyAttrNames = ( ),
             binnings = ( )
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_empty_key_empty_val(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        expected = dict(
+            keyAttrNames = (),
+            keyIndices = None,
+            binnings = (),
+            keyOutColumnNames = (),
+            valAttrNames = None,
+            valIndices = None,
+            summaryClass = MockSummary2,
+            summaryInitialContents = [],
+            valOutColumnNames = (),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.txt',
+        )
 
-        self.assertEqual(( ), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIsNone(tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
-
-        self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_n_component.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_n_component.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_empty_key_empty_val(self):
-        tblcfg_in = dict(
+        tblcfg = dict(
             keyAttrNames = ( ),
             binnings = ( ),
             summaryClass = MockSummary2,
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_2_keys_empty_vals(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
+        binning2 = MockBinning()
 
-        self.assertEqual(( ), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIsNone(tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(( ), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_2_keys_empty_vals(self):
-        tblcfg_in = dict(
+        expected = dict(
             keyAttrNames = ('key1', 'key2'),
-            binnings = (MockBinning(), MockBinning()),
+            keyIndices = None,
+            binnings = (binning1, binning2),
+            keyOutColumnNames = ('key1', 'key2'),
+            valAttrNames = None,
+            valIndices = None,
+            summaryClass = MockSummary2,
+            summaryInitialContents = [],
+            valOutColumnNames = (),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2_key1_key2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2_key1_key2.txt',
+        )
+
+        tblcfg = dict(
+            keyAttrNames = ('key1', 'key2'),
+            binnings = (binning1, binning2),
             summaryClass = MockSummary2,
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_2_keys_2_vals(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
+        binning2 = MockBinning()
 
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertIsNone(tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(( ), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2_key1_key2.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2_key1_key2.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_2_keys_2_vals(self):
-        tblcfg_in = dict(
+        expected = dict(
             keyAttrNames = ('key1', 'key2'),
-            binnings = (MockBinning(), MockBinning()),
+            keyIndices = None,
+            binnings = (binning1, binning2),
+            keyOutColumnNames = ('key1', 'key2'),
+            valAttrNames = ('val1', 'val2'),
+            valIndices = None,
+            summaryClass = MockSummary2,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('val1', 'val2'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2_key1_key2_val1_val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_val1_val2.txt',
+        )
+
+        tblcfg = dict(
+            keyAttrNames = ('key1', 'key2'),
+            binnings = (binning1, binning2),
             valAttrNames = ('val1', 'val2'),
             summaryClass = MockSummary2,
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_2_keys_2_vals_key_indices(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
+        binning2 = MockBinning()
 
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2_key1_key2_val1_val2.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2_key1_key2_val1_val2.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_2_keys_2_vals_key_indices(self):
-        tblcfg_in = dict(
+        expected = dict(
             keyAttrNames = ('key1', 'key2'),
-            binnings = (MockBinning(), MockBinning()),
+            keyIndices = (None, 1),
+            binnings = (binning1, binning2),
+            keyOutColumnNames = ('key1', 'key2'),
+            valAttrNames = ('val1', 'val2'),
+            valIndices = None,
+            summaryClass = MockSummary2,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('val1', 'val2'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2_key1_key2_1_val1_val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_1_val1_val2.txt',
+        )
+
+        tblcfg = dict(
+            keyAttrNames = ('key1', 'key2'),
+            binnings = (binning1, binning2),
             keyIndices = (None, 1),
             valAttrNames = ('val1', 'val2'),
             summaryClass = MockSummary2,
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_2_keys_2_vals_val_indices(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
+        binning2 = MockBinning()
 
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertEqual((None, 1), tblcfg_out['keyIndices'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valAttrNames'])
-        self.assertIsNone(tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2_key1_key2_1_val1_val2.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2_key1_key2_1_val1_val2.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_2_keys_2_vals_val_indices(self):
-        tblcfg_in = dict(
+        expected = dict(
             keyAttrNames = ('key1', 'key2'),
-            binnings = (MockBinning(), MockBinning()),
+            keyIndices = None,
+            binnings = (binning1, binning2),
+            keyOutColumnNames = ('key1', 'key2'),
+            valAttrNames = ('val1', 'val2'),
+            valIndices = (2, None),
+            summaryClass = MockSummary2,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('val1', 'val2'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2_key1_key2_val1_2_val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_val1_2_val2.txt',
+        )
+
+        tblcfg = dict(
+            keyAttrNames = ('key1', 'key2'),
+            binnings = (binning1, binning2),
             valAttrNames = ('val1', 'val2'),
             summaryClass = MockSummary2,
             valIndices = (2, None),
         )
 
+        actual = obj.complete(tblcfg)
+
+        self.assertEqual(actual, expected)
+
+
+    def test_specify_summary_class_2_keys_2_vals_key_indices_val_indices(self):
+
+        defaultWeight = MockWeight()
         obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = defaultWeight,
             defaultOutDir = 'tmp'
         )
 
-        tblcfg_out = obj.complete(tblcfg_in)
+        binning1 = MockBinning()
+        binning2 = MockBinning()
 
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertIsNone(tblcfg_out['keyIndices'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valAttrNames'])
-        self.assertEqual((2, None), tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2_key1_key2_val1_2_val2.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2_key1_key2_val1_2_val2.txt'), tblcfg_out['outFilePath'])
-
-    def test_specify_summary_class_2_keys_2_vals_key_indices_val_indices(self):
-        tblcfg_in = dict(
+        expected = dict(
             keyAttrNames = ('key1', 'key2'),
-            binnings = (MockBinning(), MockBinning()),
+            keyIndices = (None, 1),
+            binnings = (binning1, binning2),
+            keyOutColumnNames = ('key1', 'key2'),
+            valAttrNames = ('val1', 'val2'),
+            valIndices = (2, 3),
+            summaryClass = MockSummary2,
+            summaryInitialContents = [0, 0],
+            valOutColumnNames = ('val1', 'val2'),
+            weight = defaultWeight,
+            sort = True,
+            outFile = True,
+            outFileName = 'tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt',
+            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt',
+        )
+
+        tblcfg = dict(
+            keyAttrNames = ('key1', 'key2'),
+            binnings = (binning1, binning2),
             keyIndices = (None, 1),
             valAttrNames = ('val1', 'val2'),
             summaryClass = MockSummary2,
             valIndices = (2, 3),
         )
 
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
-            defaultOutDir = 'tmp'
-        )
+        actual = obj.complete(tblcfg)
 
-        tblcfg_out = obj.complete(tblcfg_in)
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyAttrNames'])
-        self.assertEqual(tblcfg_in['binnings'], tblcfg_out['binnings'])
-        self.assertEqual((None, 1), tblcfg_out['keyIndices'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valAttrNames'])
-        self.assertEqual((2, 3), tblcfg_out['valIndices'])
-
-        self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
-
-        self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-
-        self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
-        self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
-
-        self.assertTrue(tblcfg_out['outFile'])
-        self.assertEqual('tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt', tblcfg_out['outFileName'])
-        self.assertEqual(os.path.join('tmp', 'tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt'), tblcfg_out['outFilePath'])
+        self.assertEqual(actual, expected)
 
 ##__________________________________________________________________||
