@@ -21,7 +21,6 @@ def build_counter_collector_pair(tblcfg):
     reader = Reader(
         keyValComposer = keyValComposer,
         summarizer = summarizer,
-        ## summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
         nextKeyComposer = nextKeyComposer,
         weightCalculator = tblcfg['weight']
     )

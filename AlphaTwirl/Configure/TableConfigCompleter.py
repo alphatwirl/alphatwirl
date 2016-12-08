@@ -18,7 +18,6 @@ class TableConfigCompleter(object):
             'valOutColumnNames': ('n', 'nvar'),
             'weight': MockWeight(),
             'summaryClass': Count,
-            'summaryClassArgs': { },
             'summaryInitialContents' : [0]*len(valOutColumnNames),
             'sort': True,
             'outFile': True,
@@ -47,9 +46,6 @@ class TableConfigCompleter(object):
         use_defaultSummaryClass = 'summaryClass' not in ret
         if use_defaultSummaryClass:
             ret['summaryClass'] = self.defaultSummaryClass
-
-
-        if 'summaryClassArgs' not in ret: ret['summaryClassArgs'] = { }
 
         if 'keyOutColumnNames' not in ret: ret['keyOutColumnNames'] = ret['keyAttrNames']
         if 'keyIndices' not in ret: ret['keyIndices'] = None

@@ -49,7 +49,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
@@ -83,7 +82,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('met_pt', ), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
@@ -115,7 +113,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockDefaultSummary, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('n', 'nvar'), tblcfg_out['valOutColumnNames'])
@@ -148,7 +145,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(( ), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(( ), tblcfg_out['valOutColumnNames'])
@@ -181,7 +177,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(( ), tblcfg_out['valOutColumnNames'])
@@ -215,7 +210,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
@@ -250,7 +244,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
@@ -285,7 +278,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
@@ -321,7 +313,6 @@ class TestTableConfigCompleter(unittest.TestCase):
         self.assertIs(obj.defaultWeight, tblcfg_out['weight'])
 
         self.assertIs(MockSummary2, tblcfg_out['summaryClass'])
-        self.assertEqual({ }, tblcfg_out['summaryClassArgs'])
 
         self.assertEqual(('key1', 'key2'), tblcfg_out['keyOutColumnNames'])
         self.assertEqual(('val1', 'val2'), tblcfg_out['valOutColumnNames'])
