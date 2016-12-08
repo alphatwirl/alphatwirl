@@ -15,12 +15,13 @@ class Reader(object):
         self.ievent = 0
 
     def __repr__(self):
-        return '{}(keyValComposer = {!r}, summarizer = {!r}, weightCalculator = {!r}, nextKeyComposer = {!r})'.format(
+        return '{}(keyValComposer = {!r}, summarizer = {!r}, weightCalculator = {!r}, nextKeyComposer = {!r}), nevents = {!r})'.format(
             self.__class__.__name__,
             self.keyValComposer,
             self.summarizer,
             self.weightCalculator,
-            self.nextKeyComposer
+            self.nextKeyComposer,
+            self.nevents
         )
 
     def begin(self, event):
