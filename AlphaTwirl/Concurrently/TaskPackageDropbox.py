@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import logging
+
 from .WorkingArea import WorkingArea
 
 ##__________________________________________________________________||
@@ -23,7 +25,14 @@ class TaskPackageDropbox(object):
         self.dispatcher.run(self.workingArea.path, package_path)
 
     def receive(self):
-        self.dispatcher.wait()
+        print 'waiting'
+        try:
+            self.dispatcher.wait()
+        except KeyboardInterrupt:
+            logger = logging.getLogger(__name__)
+            logger.warning('received KeyboardInterrupt')
+            self.dispatcher.terminate()
+
         results = [self.workingArea.collect_result(i) for i in self.package_indices]
         self.package_indices[:] = [ ]
         return results
