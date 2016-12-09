@@ -25,7 +25,6 @@ class TaskPackageDropbox(object):
         self.dispatcher.run(self.workingArea.path, package_path)
 
     def receive(self):
-        print 'waiting'
         try:
             self.dispatcher.wait()
         except KeyboardInterrupt:
