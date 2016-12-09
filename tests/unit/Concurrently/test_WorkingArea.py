@@ -6,7 +6,7 @@ import collections
 import pickle
 
 from AlphaTwirl.Concurrently import WorkingArea
-from AlphaTwirl.mkdir_p import mkdir_p
+from AlphaTwirl import mkdir_p
 
 ##__________________________________________________________________||
 MockPackage = collections.namedtuple('MockPackage', 'name')

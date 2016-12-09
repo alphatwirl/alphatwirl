@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..mkdir_p import mkdir_p
+from ..misc import mkdir_p
 import os
 
 ##__________________________________________________________________||

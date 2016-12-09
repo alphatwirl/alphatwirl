@@ -2,7 +2,7 @@ import unittest
 import collections
 
 from AlphaTwirl.Concurrently import TaskPackageDropbox
-from AlphaTwirl.mkdir_p import mkdir_p
+from AlphaTwirl import mkdir_p
 
 ##__________________________________________________________________||
 MockPackage = collections.namedtuple('MockPackage', 'idx name path')
