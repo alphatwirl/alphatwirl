@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..Summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
-from ..CombineIntoList import CombineIntoList
-from ..WriteListToFile import WriteListToFile
+from ..Collector import CombineIntoList
+from ..Collector import WriteListToFile
 from ..Loop import Collector
 
 ##__________________________________________________________________||

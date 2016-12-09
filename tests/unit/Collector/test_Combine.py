@@ -1,7 +1,7 @@
 import unittest
 import itertools
 
-from AlphaTwirl import Combine
+from AlphaTwirl.Collector import Combine
 
 ##__________________________________________________________________||
 class MockResult(object):

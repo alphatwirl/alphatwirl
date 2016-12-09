@@ -1,20 +1,17 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from .mkdir_p import mkdir_p
+from ..mkdir_p import mkdir_p
+from ..listToAlignedText import listToAlignedText
 import os
 
 ##__________________________________________________________________||
-class WritePandasDataFrameToFile(object):
+class WriteListToFile(object):
     def __init__(self, outPath):
         self._outPath = outPath
 
     def deliver(self, results):
         if results is None: return
         f = self._open(self._outPath)
-        if len(results.index) == 0:
-            f.write(" ".join([i for i in results.columns]) + "\n")
-        else:
-            results.to_string(f, index = False)
-            f.write("\n")
+        f.write(listToAlignedText(results))
         self._close(f)
 
     def _open(self, path):

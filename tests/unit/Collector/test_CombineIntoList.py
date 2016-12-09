@@ -2,7 +2,7 @@ import unittest
 import collections
 import numpy as np
 
-from AlphaTwirl import countsToList, combinedToList, CombineIntoList
+from AlphaTwirl.Collector import countsToList, combinedToList, CombineIntoList
 
 ##__________________________________________________________________||
 class MockReader(object):

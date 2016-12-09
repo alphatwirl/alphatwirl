@@ -5,7 +5,7 @@ import cStringIO
 hasPandas = False
 try:
     import pandas
-    from AlphaTwirl import WritePandasDataFrameToFile
+    from AlphaTwirl.Collector import WritePandasDataFrameToFile
     hasPandas = True
 except ImportError:
     pass
