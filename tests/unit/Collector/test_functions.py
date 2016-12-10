@@ -133,4 +133,24 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
 
+    def test_the_order(self):
+
+        summarizer1 = MockSummarizer()
+        summarizer2 = MockSummarizer()
+        summarizer3 = MockSummarizer()
+
+        dataset_summarizer_pairs = [
+            ('data2', summarizer1),
+            ('data1', summarizer2),
+            ('data2', summarizer3),
+        ]
+
+        expected  = [
+            ('data2', summarizer1 + summarizer3),
+            ('data1', summarizer2),
+        ]
+
+        actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
+        self.assertEqual(expected, actual)
+
 ##__________________________________________________________________||
