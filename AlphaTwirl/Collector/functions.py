@@ -9,6 +9,6 @@ def add_summarizers_for_the_same_dataset(dataset_summarizer_pairs):
             ret[dataset] = ret[dataset] + summarizer
         else:
             ret[dataset] = summarizer
-    return ret
+    return ret.items()
 
 ##__________________________________________________________________||

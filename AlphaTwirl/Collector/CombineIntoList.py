@@ -17,7 +17,7 @@ def countsToList(counts, sort = True):
 ##__________________________________________________________________||
 def combinedToList(combined, columns, sort = True):
     d = [ ]
-    for datasetName, summarizer in combined.iteritems():
+    for datasetName, summarizer in combined:
         l = countsToList(summarizer.results(), sort)
         d.extend([(datasetName, ) + e for e in l])
     if sort: d.sort()
@@ -34,7 +34,7 @@ class CombineIntoList(object):
 
     def combine(self, datasetReaderPairs):
         if len(datasetReaderPairs) == 0: return None
-        dataset_summarizer_pairs = [[d, r.results()] for d, r in datasetReaderPairs]
+        dataset_summarizer_pairs = [(d, r.results()) for d, r in datasetReaderPairs]
         combined = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         return combinedToList(combined, (self.datasetColumnName, ) + self.keyNames + self.valNames, self.sort)
 

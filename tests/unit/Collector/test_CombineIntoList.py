@@ -71,9 +71,9 @@ class TestCombinedToList(unittest.TestCase):
             }
         )
 
-        combined = {
-            'data1': results
-        }
+        combined = [
+            ('data1', results)
+        ]
 
         expected = [
             ('component', 'v1', 'n', 'nvar'),
@@ -103,10 +103,10 @@ class TestCombinedToList(unittest.TestCase):
             }
         )
 
-        combined = {
-            'data1': results1,
-            'data2': results2,
-        }
+        combined = [
+            ('data1', results1),
+            ('data2', results2),
+        ]
 
         expected = [
             ('component', 'v1', 'n', 'nvar'),
@@ -133,10 +133,10 @@ class TestCombinedToList(unittest.TestCase):
 
         results2 = MockResult({})
 
-        combined = {
-            'data1': results1,
-            'data2': results2,
-        }
+        combined = [
+            ('data1', results1),
+            ('data2', results2),
+        ]
 
         expected = [
             ('component', 'v1', 'n', 'nvar'),
@@ -155,10 +155,10 @@ class TestCombinedToList(unittest.TestCase):
 
         results2 = MockResult({})
 
-        combined = {
-            'data1': results1,
-            'data2': results2,
-        }
+        combined = [
+            ('data1', results1),
+            ('data2', results2),
+        ]
 
         expected = [
             ('component', 'v1', 'n', 'nvar'),
@@ -170,7 +170,7 @@ class TestCombinedToList(unittest.TestCase):
 
     def test_combine_empty_pairs(self):
 
-        combined = { }
+        combined = [ ]
 
         expected = [
             ('component', 'v1', 'n', 'nvar'),

@@ -51,7 +51,7 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
 
         dataset_summarizer_pairs = [ ]
 
-        expected = { }
+        expected = [ ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
@@ -62,7 +62,7 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
             ('data1',  [ ]) # empty list
         ]
 
-        expected = { }
+        expected = [ ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
@@ -73,7 +73,7 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
             ('data1',  None) #
         ]
 
-        expected = { }
+        expected = [ ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
@@ -86,9 +86,9 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
             ('data1', summarizer)
         ]
 
-        expected  = {
-            'data1': summarizer
-            }
+        expected  = [
+            ('data1', summarizer)
+        ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
@@ -104,10 +104,10 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
 
         ]
 
-        expected  = {
-            'data1': summarizer1,
-            'data2': summarizer2
-            }
+        expected  = [
+            ('data1', summarizer1),
+            ('data2', summarizer2)
+            ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
@@ -125,10 +125,10 @@ class Test_add_summarizers_for_the_same_dataset(unittest.TestCase):
 
         ]
 
-        expected  = {
-            'data1': summarizer1 + summarizer3,
-            'data2': summarizer2,
-            }
+        expected  = [
+            ('data1', summarizer1 + summarizer3),
+            ('data2', summarizer2),
+        ]
 
         actual = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         self.assertEqual(expected, actual)
