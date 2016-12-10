@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-from Combine import Combine
+from functions import *
 
 ##__________________________________________________________________||
 def countsToList(counts, sort = True):
@@ -34,8 +34,8 @@ class CombineIntoList(object):
 
     def combine(self, datasetReaderPairs):
         if len(datasetReaderPairs) == 0: return None
-        combine = Combine()
-        combined = combine.combine(datasetReaderPairs)
+        dataset_summarizer_pairs = [[d, r.results()] for d, r in datasetReaderPairs]
+        combined = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         return combinedToList(combined, (self.datasetColumnName, ) + self.keyNames + self.valNames, self.sort)
 
 ##__________________________________________________________________||
