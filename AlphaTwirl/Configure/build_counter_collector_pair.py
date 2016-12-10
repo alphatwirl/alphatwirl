@@ -15,8 +15,7 @@ def build_counter_collector_pair(tblcfg):
     )
     nextKeyComposer = NextKeyComposer(tblcfg['binnings']) if tblcfg['binnings'] is not None else None
     summarizer = Summarizer(
-        Summary = tblcfg['summaryClass'],
-        initial_contents = tblcfg['summaryInitialContents']
+        Summary = tblcfg['summaryClass']
     )
     reader = Reader(
         keyValComposer = keyValComposer,
