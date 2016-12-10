@@ -5,17 +5,15 @@ import copy
 
 ##__________________________________________________________________||
 class Summarizer(object):
-    def __init__(self, Summary, initial_contents = None):
+    def __init__(self, Summary):
         self._results = { }
         self.Summary = Summary
-        self.initial_contents = initial_contents
 
     def __repr__(self):
-        return '{}({!r}, {!r}, {!r})'.format(
+        return '{}(Summary = {!r}, results = {!r})'.format(
             self.__class__.__name__,
-            self._results,
             self.Summary,
-            self.initial_contents
+            self._results,
         )
 
     def add(self, key, val = None, weight = 1):
@@ -23,8 +21,7 @@ class Summarizer(object):
         self._results[key] = self._results[key] + self.Summary(val, weight)
 
     def add_key(self, key):
-        if key not in self._results:
-            self._results[key] = self.Summary(contents = self.initial_contents)
+        self._results.setdefault(key, self.Summary())
 
     def keys(self):
         return self._results.keys()
@@ -34,13 +31,12 @@ class Summarizer(object):
         self._results.clear()
         self._results.update(src._results)
         self.Summary = src.Summary
-        self.initial_contents = src.initial_contents
 
     def results(self):
         return self._results
 
     def __add__(self, other):
-        ret = self.__class__(self.Summary, self.initial_contents)
+        ret = self.__class__(self.Summary)
         results = copy.deepcopy(self._results)
         if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
             self._add_results_inplace(results, other._results)
