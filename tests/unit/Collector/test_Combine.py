@@ -4,12 +4,12 @@ import itertools
 from AlphaTwirl.Collector import Combine
 
 ##__________________________________________________________________||
-class MockResult(object):
+class MockSummarizer(object):
     def __init__(self):
         self._content = [id(self)]
 
     def __add__(self, other):
-        ret = MockResult()
+        ret = MockSummarizer()
         ret._content[:] =  list(itertools.chain(*[self._content, other._content]))
         return ret
 
@@ -28,13 +28,13 @@ class MockReader(object):
         return self._results
 
 ##__________________________________________________________________||
-class TestMockResult(unittest.TestCase):
+class TestMockSummarizer(unittest.TestCase):
 
     def test_one_reader(self):
 
-        obj1 = MockResult()
-        obj2 = MockResult()
-        obj3 = MockResult()
+        obj1 = MockSummarizer()
+        obj2 = MockSummarizer()
+        obj3 = MockSummarizer()
 
         self.assertEqual(obj1, obj1)
         self.assertEqual(obj2, obj2)
@@ -62,12 +62,12 @@ class TestCombine(unittest.TestCase):
 
     def test_one_reader(self):
 
-        result = MockResult()
-        reader = MockReader(result)
+        summarizer = MockSummarizer()
+        reader = MockReader(summarizer)
         datasetReaderPairs = [('data1', reader), ]
 
         expected  = {
-            'data1': result
+            'data1': summarizer
             }
 
         combine = Combine()
@@ -75,17 +75,17 @@ class TestCombine(unittest.TestCase):
 
     def test_two_readers(self):
 
-        result1 = MockResult()
-        reader1 = MockReader(result1)
+        summarizer1 = MockSummarizer()
+        reader1 = MockReader(summarizer1)
 
-        result2 = MockResult()
-        reader2 = MockReader(result2)
+        summarizer2 = MockSummarizer()
+        reader2 = MockReader(summarizer2)
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
         expected  = {
-            'data1': result1,
-            'data2': result2
+            'data1': summarizer1,
+            'data2': summarizer2
             }
 
         combine = Combine()
@@ -93,16 +93,16 @@ class TestCombine(unittest.TestCase):
 
     def test_two_readers_the_same_dataset(self):
 
-        result1 = MockResult()
-        reader1 = MockReader(result1)
+        summarizer1 = MockSummarizer()
+        reader1 = MockReader(summarizer1)
 
-        result2 = MockResult()
-        reader2 = MockReader(result2)
+        summarizer2 = MockSummarizer()
+        reader2 = MockReader(summarizer2)
 
         datasetReaderPairs = [('data1', reader1), ('data1', reader2)]
 
         expected  = {
-            'data1': result1 + result2,
+            'data1': summarizer1 + summarizer2,
             }
 
         combine = Combine()
