@@ -2,7 +2,7 @@ import unittest
 import collections
 import numpy as np
 
-from AlphaTwirl.Collector import countsToList, combinedToList, CombineIntoList
+from AlphaTwirl.Collector import combinedToList, CombineIntoList
 
 ##__________________________________________________________________||
 class MockReader(object):
@@ -22,41 +22,6 @@ class MockResult(object):
 
 ##__________________________________________________________________||
 MockCount = collections.namedtuple('MockCount', 'contents')
-
-##__________________________________________________________________||
-class TestCountsToList(unittest.TestCase):
-
-    def test_call(self):
-
-        counts  = {
-            (1, ): MockCount(contents = np.array((4, 6))),
-            (2, ): MockCount(contents = np.array((3, 9))),
-            (3, ): MockCount(contents = np.array((2, 3))),
-        }
-
-        expected = [
-            (1, 4, 6),
-            (2, 3, 9),
-            (3, 2, 3),
-        ]
-
-        self.assertEqual(expected, countsToList(counts))
-
-    def test_call_threeValues(self):
-
-        counts  = {
-            (1, ): MockCount(contents = np.array((4, 6, 2.3))),
-            (2, ): MockCount(contents = np.array((3, 9, 5.4))),
-            (3, ): MockCount(contents = np.array((2, 3, 3.6))),
-            }
-
-        expected = [
-            (1, 4.0, 6.0, 2.3),
-            (2, 3.0, 9.0, 5.4),
-            (3, 2.0, 3.0, 3.6)
-        ]
-
-        self.assertEqual(expected, countsToList(counts))
 
 ##__________________________________________________________________||
 class TestCombinedToList(unittest.TestCase):

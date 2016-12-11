@@ -4,18 +4,6 @@ import collections
 from functions import *
 
 ##__________________________________________________________________||
-def countsToList(counts, sort = True):
-    try: # for Scan
-        d = [ ]
-        for k, summary in counts.iteritems():
-            for v in summary.contents:
-                d.append(k + tuple(v))
-    except TypeError: # for Count, etc, need to be unified
-        d = [k + tuple(v.contents) for k, v in counts.iteritems()]
-    if sort: d.sort()
-    return d
-
-##__________________________________________________________________||
 def combinedToList(combined, columns, sort = True):
     d = [ ]
     for datasetName, summarizer in combined:
