@@ -24,6 +24,7 @@ def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan'), sort = True)
 
     for k, vs in dict_.iteritems():
         d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+
     if sort: d.sort()
 
     return d
