@@ -1,5 +1,6 @@
 import unittest
 import collections
+import copy
 import numpy as np
 
 from AlphaTwirl.Collector import CombineIntoList
@@ -12,6 +13,12 @@ class MockReader(object):
     def results(self):
         return self.summarizer
 
+    def __repr__(self):
+        return '{}(summarizer = {!r})'.format(
+            self.__class__.__name__,
+            self.summarizer
+        )
+
 ##__________________________________________________________________||
 class MockSummarizer(object):
     def __init__(self, results):
@@ -20,116 +27,185 @@ class MockSummarizer(object):
     def results(self):
         return self._results
 
+    def __repr__(self):
+        return '{}({!r})'.format(
+            self.__class__.__name__,
+            self._results
+        )
+
+    def __add__(self, other):
+        res = copy.deepcopy(self._results)
+        for k, v in other._results.iteritems():
+            if k not in res:
+                res[k] = copy.deepcopy(v)
+            else:
+                res[k].contents[0] = res[k].contents[0] + v.contents[0]
+        return self.__class__(res)
+
 ##__________________________________________________________________||
 MockSummary = collections.namedtuple('MockSummary', 'contents')
 
 ##__________________________________________________________________||
 class TestCombineIntoList(unittest.TestCase):
 
-    def test_combine_oneReader(self):
-
-        reader = MockReader(
-            MockSummarizer(
-                {
-                    (1, ): MockSummary(contents = [np.array((4, 6))]),
-                    (2, ): MockSummary(contents = [np.array((3, 9))]),
-                    (3, ): MockSummary(contents = [np.array((2, 3))]),
-                }
-            )
+    def test_repr(self):
+        obj = CombineIntoList(
+            keyNames = ('htbin', 'njetbin'),
+            valNames = ('n', 'nvar'),
+            sort = True,
+            datasetColumnName = 'dataset'
         )
-        datasetReaderPairs = [('data1', reader), ]
+        repr(obj)
 
-        expected = [
-            ('component', 'v1', 'n', 'nvar'),
-            ('data1', 1, 4, 6),
-            ('data1', 2, 3, 9),
-            ('data1', 3, 2, 3),
-        ]
+    def test_example(self):
 
-        combine = CombineIntoList(keyNames = ('v1', ), valNames = ('n', 'nvar'))
-        self.assertEqual(expected, combine.combine(datasetReaderPairs))
-
-    def test_combine_twoReaders(self):
+        obj = CombineIntoList(
+            keyNames = ('htbin', 'njetbin'),
+            valNames = ('n', 'nvar'),
+            sort = True,
+            datasetColumnName = 'dataset'
+        )
 
         reader1 = MockReader(
             MockSummarizer(
-                {
-                    (1, ): MockSummary(contents = [np.array((4, 6))]),
-                    (2, ): MockSummary(contents = [np.array((3, 9))]),
-                    (3, ): MockSummary(contents = [np.array((2, 3))]),
-                }
+                collections.OrderedDict([
+                    ((200, 2), MockSummary(contents = [np.array((120, 240))])),
+                    ((300, 2), MockSummary(contents = [np.array((310, 620))])),
+                ])
             )
         )
 
         reader2 = MockReader(
             MockSummarizer(
-                {
-                    (2, ): MockSummary(contents = [np.array((3, 6))]),
-                    (4, ): MockSummary(contents = [np.array((2, 2))]),
-                }
+                collections.OrderedDict([
+                    ((300, 2), MockSummary(contents = [np.array((180, 360))])),
+                    ((300, 3), MockSummary(contents = [np.array((210, 420))])),
+                ])
             )
         )
 
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
+        reader3 = MockReader(
+            MockSummarizer(
+                collections.OrderedDict([
+                    ((300, 2), MockSummary(contents = [np.array((20, 40))])),
+                    ((300, 3), MockSummary(contents = [np.array((15, 30))])),
+                ])
+            )
+        )
 
-        expected = [
-            ('component', 'v1', 'n', 'nvar'),
-            ('data1', 1, 4, 6),
-            ('data1', 2, 3, 9),
-            ('data1', 3, 2, 3),
-            ('data2', 2, 3, 6),
-            ('data2', 4, 2, 2),
+        reader4 = MockReader(
+            MockSummarizer(
+                collections.OrderedDict([])
+            )
+        )
+
+        datasetReaderPairs = [
+            ('QCD', reader1),
+            ('QCD', reader2),
+            ('TTJets', reader3),
+            ('WJets', reader4),
         ]
 
-        combine = CombineIntoList(keyNames = ('v1', ), valNames = ('n', 'nvar'))
-        self.assertEqual(expected, combine.combine(datasetReaderPairs))
+        expected = [
+            ('dataset', 'htbin', 'njetbin', 'n', 'nvar'),
+            ('QCD', 200, 2, 120, 240),
+            ('QCD', 300, 2, 490, 980),
+            ('QCD', 300, 3, 210, 420),
+            ('TTJets', 300, 2, 20, 40),
+            ('TTJets', 300, 3, 15, 30)
+        ]
 
-    def test_combine_with_empty_counts(self):
+        actual = obj.combine(datasetReaderPairs)
+
+        self.assertEqual(expected, actual)
+
+    def test_combine_oneReader(self):
+
+        obj = CombineIntoList(
+            keyNames = ('htbin', 'njetbin'),
+            valNames = ('n', 'nvar'),
+            sort = True,
+            datasetColumnName = 'dataset'
+        )
 
         reader1 = MockReader(
             MockSummarizer(
-                {
-                    (1, ): MockSummary(contents = [np.array((4, 6))]),
-                    (2, ): MockSummary(contents = [np.array((3, 9))]),
-                    (3, ): MockSummary(contents = [np.array((2, 3))]),
-                }
+                collections.OrderedDict([
+                    ((200, 2), MockSummary(contents = [np.array((120, 240))])),
+                    ((300, 2), MockSummary(contents = [np.array((310, 620))])),
+                ])
             )
         )
 
-        reader2 = MockReader(MockSummarizer({}))
-
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
-
-        expected = [
-            ('component', 'v1', 'n', 'nvar'),
-            ('data1', 1, 4, 6),
-            ('data1', 2, 3, 9),
-            ('data1', 3, 2, 3),
+        datasetReaderPairs = [
+            ('QCD', reader1),
         ]
 
-        combine = CombineIntoList(keyNames = ('v1', ), valNames = ('n', 'nvar'))
-        self.assertEqual(expected, combine.combine(datasetReaderPairs))
-
-    def test_combine_all_empty_counts(self):
-
-        reader1 = MockReader(MockSummarizer({}))
-
-        reader2 = MockReader(MockSummarizer({}))
-
-        datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
-
         expected = [
-            ('component', 'v1', 'n', 'nvar'),
+            ('dataset', 'htbin', 'njetbin', 'n', 'nvar'),
+            ('QCD', 200, 2, 120, 240),
+            ('QCD', 300, 2, 310, 620),
         ]
 
-        combine = CombineIntoList(keyNames = ('v1', ), valNames = ('n', 'nvar'))
-        self.assertEqual(expected, combine.combine(datasetReaderPairs))
+        actual = obj.combine(datasetReaderPairs)
+
+        self.assertEqual(expected, actual)
+
+    def test_combine_all_empty_contents(self):
+
+        obj = CombineIntoList(
+            keyNames = ('htbin', 'njetbin'),
+            valNames = ('n', 'nvar'),
+            sort = True,
+            datasetColumnName = 'dataset'
+        )
+
+        reader1 = MockReader(
+            MockSummarizer(
+                collections.OrderedDict([])
+            )
+        )
+
+        reader2 = MockReader(
+            MockSummarizer(
+                collections.OrderedDict([])
+            )
+        )
+        reader3 = MockReader(
+            MockSummarizer(
+                collections.OrderedDict([])
+            )
+        )
+
+        datasetReaderPairs = [
+            ('QCD', reader1),
+            ('QCD', reader2),
+            ('TTJets', reader3),
+        ]
+
+        expected = [
+            ('dataset', 'htbin', 'njetbin', 'n', 'nvar'),
+        ]
+
+        actual = obj.combine(datasetReaderPairs)
+
+        self.assertEqual(expected, actual)
 
     def test_combine_empty_pairs(self):
 
+        obj = CombineIntoList(
+            keyNames = ('htbin', 'njetbin'),
+            valNames = ('n', 'nvar'),
+            sort = True,
+            datasetColumnName = 'dataset'
+        )
+
         datasetReaderPairs = [ ]
 
-        combine = CombineIntoList(keyNames = ('v1', ), valNames = ('n', 'nvar'))
-        self.assertEqual(None, combine.combine(datasetReaderPairs))
+        expected = None
+
+        actual = obj.combine(datasetReaderPairs)
+
+        self.assertEqual(expected, actual)
 
 ##__________________________________________________________________||
