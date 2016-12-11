@@ -5,11 +5,11 @@ from functions import *
 
 ##__________________________________________________________________||
 class CombineIntoList(object):
-    def __init__(self, keyNames, valNames, sort = True):
-        self.datasetColumnName = 'component'
+    def __init__(self, keyNames, valNames, sort = True, datasetColumnName = 'component'):
         self.keyNames = keyNames
         self.valNames = valNames
         self.sort = sort
+        self.datasetColumnName = datasetColumnName
 
     def combine(self, datasetReaderPairs):
 
