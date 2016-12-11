@@ -6,6 +6,14 @@ from AlphaTwirl.Collector import CombineIntoList
 
 ##__________________________________________________________________||
 class MockReader(object):
+    def __init__(self, summarizer):
+        self.summarizer = summarizer
+
+    def results(self):
+        return self.summarizer
+
+##__________________________________________________________________||
+class MockSummarizer(object):
     def __init__(self, results):
         self._results = results
 
@@ -13,15 +21,7 @@ class MockReader(object):
         return self._results
 
 ##__________________________________________________________________||
-class MockResult(object):
-    def __init__(self, results):
-        self._results = results
-
-    def results(self):
-        return self._results
-
-##__________________________________________________________________||
-MockCount = collections.namedtuple('MockCount', 'contents')
+MockSummary = collections.namedtuple('MockSummary', 'contents')
 
 ##__________________________________________________________________||
 class TestCombineIntoList(unittest.TestCase):
@@ -29,11 +29,11 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_oneReader(self):
 
         reader = MockReader(
-            MockResult(
+            MockSummarizer(
                 {
-                    (1, ): MockCount(contents = [np.array((4, 6))]),
-                    (2, ): MockCount(contents = [np.array((3, 9))]),
-                    (3, ): MockCount(contents = [np.array((2, 3))]),
+                    (1, ): MockSummary(contents = [np.array((4, 6))]),
+                    (2, ): MockSummary(contents = [np.array((3, 9))]),
+                    (3, ): MockSummary(contents = [np.array((2, 3))]),
                 }
             )
         )
@@ -52,20 +52,20 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_twoReaders(self):
 
         reader1 = MockReader(
-            MockResult(
+            MockSummarizer(
                 {
-                    (1, ): MockCount(contents = [np.array((4, 6))]),
-                    (2, ): MockCount(contents = [np.array((3, 9))]),
-                    (3, ): MockCount(contents = [np.array((2, 3))]),
+                    (1, ): MockSummary(contents = [np.array((4, 6))]),
+                    (2, ): MockSummary(contents = [np.array((3, 9))]),
+                    (3, ): MockSummary(contents = [np.array((2, 3))]),
                 }
             )
         )
 
         reader2 = MockReader(
-            MockResult(
+            MockSummarizer(
                 {
-                    (2, ): MockCount(contents = [np.array((3, 6))]),
-                    (4, ): MockCount(contents = [np.array((2, 2))]),
+                    (2, ): MockSummary(contents = [np.array((3, 6))]),
+                    (4, ): MockSummary(contents = [np.array((2, 2))]),
                 }
             )
         )
@@ -87,16 +87,16 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_with_empty_counts(self):
 
         reader1 = MockReader(
-            MockResult(
+            MockSummarizer(
                 {
-                    (1, ): MockCount(contents = [np.array((4, 6))]),
-                    (2, ): MockCount(contents = [np.array((3, 9))]),
-                    (3, ): MockCount(contents = [np.array((2, 3))]),
+                    (1, ): MockSummary(contents = [np.array((4, 6))]),
+                    (2, ): MockSummary(contents = [np.array((3, 9))]),
+                    (3, ): MockSummary(contents = [np.array((2, 3))]),
                 }
             )
         )
 
-        reader2 = MockReader(MockResult({}))
+        reader2 = MockReader(MockSummarizer({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
@@ -112,9 +112,9 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_all_empty_counts(self):
 
-        reader1 = MockReader(MockResult({}))
+        reader1 = MockReader(MockSummarizer({}))
 
-        reader2 = MockReader(MockResult({}))
+        reader2 = MockReader(MockSummarizer({}))
 
         datasetReaderPairs = [('data1', reader1), ('data2', reader2)]
 
