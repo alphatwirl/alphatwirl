@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
+import collections
 from functions import *
 
 ##__________________________________________________________________||
@@ -18,7 +19,8 @@ def countsToList(counts, sort = True):
 def combinedToList(combined, columns, sort = True):
     d = [ ]
     for datasetName, summarizer in combined:
-        l = countsToList(summarizer.results(), sort)
+        key_vals_dict = collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
+        l = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0, sort = sort)
         d.extend([(datasetName, ) + e for e in l])
     if sort: d.sort()
     d.insert(0, columns)
