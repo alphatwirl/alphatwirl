@@ -11,38 +11,45 @@ class CombineIntoList(object):
         self.sort = sort
         self.datasetColumnName = datasetColumnName
 
+    def __repr__(self):
+        return '{}(keyNames = {!r}, valNames = {!r}, sort = {!r}, datasetColumnName = {!r})'.format(
+            self.__class__.__name__,
+            self.keyNames,
+            self.valNames,
+            self.sort,
+            self.datasetColumnName
+        )
+
     def combine(self, datasetReaderPairs):
 
         if len(datasetReaderPairs) == 0: return None
 
         # e.g.,
         # datasetReaderPairs = [
-        #     ('dataset1', reader),
-        #     ('dataset1', reader),
-        #     ('dataset2', reader),
-        #     ('dataset2', reader),
-        #     ('dataset3', reader),
-        #     ('dataset3', reader)
+        #     ('QCD',    reader1),
+        #     ('QCD',    reader2),
+        #     ('TTJets', reader3),
+        #     ('WJets',  reader4),
         # ]
+
 
         dataset_summarizer_pairs = [(d, r.results()) for d, r in datasetReaderPairs]
         # e.g.,
         # dataset_summarizer_pairs = [
-        #     ('dataset1', summarizer),
-        #     ('dataset1', summarizer),
-        #     ('dataset2', summarizer),
-        #     ('dataset2', summarizer),
-        #     ('dataset3', summarizer),
-        #     ('dataset3', summarizer)
+        #     ('QCD',    summarizer1),
+        #     ('QCD',    summarizer2),
+        #     ('TTJets', summarizer3),
+        #     ('WJets',  summarizer4),
         # ]
 
         dataset_summarizer_pairs = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
         # e.g.,
         # dataset_summarizer_pairs = [
-        #     ('dataset1', summarizer),
-        #     ('dataset2', summarizer),
-        #     ('dataset3', summarizer)
+        #     ('QCD',    summarizer1 + summarizer2),
+        #     ('TTJets', summarizer3),
+        #     ('WJets',  summarizer4),
         # ]
+        # note: summarizers can be added
 
         dataset_key_vals_dict_pairs = [ ]
         for dataset, summarizer in dataset_summarizer_pairs:
@@ -50,11 +57,17 @@ class CombineIntoList(object):
             dataset_key_vals_dict_pairs.append((dataset, key_vals_dict))
         # e.g.,
         # dataset_key_vals_dict_pairs = [
-        #     ('dataset1', {key1: [val11, val12], key2: [ ], key3: [val31]}),
-        #     ('dataset2', {key1: [val11], key2: [val21, val22], key3: [val31]}),
-        #     ('dataset3', {key1: [val11, val12, val123], key2: [val2]}),
+        #     ('QCD', OrderedDict([
+        #         ((200, 2), [array([120, 240])]),
+        #         ((300, 2), [array([490, 980])]),
+        #         ((300, 3), [array([210, 420])])
+        #     ])),
+        #     ('TTJets', OrderedDict([
+        #         ((300, 2), [array([20, 40])]),
+        #         ((300, 3), [array([15, 30])])
+        #     ])),
+        #     ('WJets', OrderedDict())
         # ]
-        # key and val are general tuples
 
         dataset_tuple_list_pairs = [ ]
         for dataset, key_vals_dict in dataset_key_vals_dict_pairs:
@@ -62,23 +75,44 @@ class CombineIntoList(object):
             dataset_tuple_list_pairs.append((dataset, tuple_list))
         # e.g.,
         # dataset_tuple_list_pairs = [
-        #     ('dataset1', [ ]),
-        #     ('dataset2', [ ]),
-        #     ('dataset3', [ ]),
+        #     ('QCD', [
+        #         (200, 2, 120, 240),
+        #         (300, 2, 490, 980),
+        #         (300, 3, 210, 420)
+        #     ]),
+        #     ('TTJets', [
+        #         (300, 2, 20, 40),
+        #         (300, 3, 15, 30)
+        #     ]),
+        #     ('WJets', [])
         # ]
 
         ret = [ ]
         for dataset, tuple_list in dataset_tuple_list_pairs:
             ret.extend([(dataset, ) + e for e in tuple_list])
+        # e.g.,
+        # [
+        #     ('QCD',    200, 2, 120, 240),
+        #     ('QCD',    300, 2, 490, 980),
+        #     ('QCD',    300, 3, 210, 420),
+        #     ('TTJets', 300, 2,  20,  40),
+        #     ('TTJets', 300, 3,  15,  30)
+        # ]
 
         if self.sort: ret.sort()
-
-        ## import pprint
-        ## pprint.pprint(ret)
 
         header = (self.datasetColumnName, ) + self.keyNames + self.valNames
 
         ret.insert(0, header)
+        # e.g.,
+        # [
+        #     ('dataset', 'htbin', 'njetbin', 'n', 'nvar'),
+        #     ('QCD',         200,         2, 120,    240),
+        #     ('QCD',         300,         2, 490,    980),
+        #     ('QCD',         300,         3, 210,    420),
+        #     ('TTJets',      300,         2,  20,     40),
+        #     ('TTJets',      300,         3,  15,     30)
+        # ]
 
         return ret
 
