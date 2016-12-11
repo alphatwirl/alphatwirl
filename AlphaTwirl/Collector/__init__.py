@@ -1,4 +1,3 @@
-from Combine import Combine
 from CombineIntoList import CombineIntoList, countsToList, combinedToList
 from WriteListToFile import WriteListToFile
 

@@ -2,7 +2,6 @@
 
 import pandas
 
-from Combine import Combine
 from CombineIntoList import combinedToList
 
 ##__________________________________________________________________||

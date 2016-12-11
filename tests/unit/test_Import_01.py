@@ -50,7 +50,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Round))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.RoundLog))
         self.assertTrue(inspect.isclass(AlphaTwirl.Concurrently.CommunicationChannel))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Collector.Combine))
         self.assertTrue(inspect.isclass(AlphaTwirl.Collector.CombineIntoList))
         self.assertTrue(inspect.isclass(AlphaTwirl.Collector.WriteListToFile))
         self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Reader))
