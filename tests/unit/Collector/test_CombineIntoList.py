@@ -65,9 +65,9 @@ class TestCombinedToList(unittest.TestCase):
 
         results = MockResult(
             {
-                (1, ): MockCount(contents = np.array((4, 6))),
-                (2, ): MockCount(contents = np.array((3, 9))),
-                (3, ): MockCount(contents = np.array((2, 3))),
+                (1, ): MockCount(contents = [np.array((4, 6))]),
+                (2, ): MockCount(contents = [np.array((3, 9))]),
+                (3, ): MockCount(contents = [np.array((2, 3))]),
             }
         )
 
@@ -90,16 +90,16 @@ class TestCombinedToList(unittest.TestCase):
 
         results1 = MockResult(
             {
-                (1, ): MockCount(contents = np.array((4, 6))),
-                (2, ): MockCount(contents = np.array((3, 9))),
-                (3, ): MockCount(contents = np.array((2, 3))),
+                (1, ): MockCount(contents = [np.array((4, 6))]),
+                (2, ): MockCount(contents = [np.array((3, 9))]),
+                (3, ): MockCount(contents = [np.array((2, 3))]),
             }
         )
 
         results2 = MockResult(
             {
-                (2, ): MockCount(contents = np.array((3, 6))),
-                (4, ): MockCount(contents = np.array((2, 2))),
+                (2, ): MockCount(contents = [np.array((3, 6))]),
+                (4, ): MockCount(contents = [np.array((2, 2))]),
             }
         )
 
@@ -125,9 +125,9 @@ class TestCombinedToList(unittest.TestCase):
 
         results1 = MockResult(
             {
-                (1, ): MockCount(contents = np.array((4, 6))),
-                (2, ): MockCount(contents = np.array((3, 9))),
-                (3, ): MockCount(contents = np.array((2, 3))),
+                (1, ): MockCount(contents = [np.array((4, 6))]),
+                (2, ): MockCount(contents = [np.array((3, 9))]),
+                (3, ): MockCount(contents = [np.array((2, 3))]),
             }
         )
 
@@ -188,9 +188,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader = MockReader(
             MockResult(
                 {
-                    (1, ): MockCount(contents = np.array((4, 6))),
-                    (2, ): MockCount(contents = np.array((3, 9))),
-                    (3, ): MockCount(contents = np.array((2, 3))),
+                    (1, ): MockCount(contents = [np.array((4, 6))]),
+                    (2, ): MockCount(contents = [np.array((3, 9))]),
+                    (3, ): MockCount(contents = [np.array((2, 3))]),
                 }
             )
         )
@@ -211,9 +211,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader1 = MockReader(
             MockResult(
                 {
-                    (1, ): MockCount(contents = np.array((4, 6))),
-                    (2, ): MockCount(contents = np.array((3, 9))),
-                    (3, ): MockCount(contents = np.array((2, 3))),
+                    (1, ): MockCount(contents = [np.array((4, 6))]),
+                    (2, ): MockCount(contents = [np.array((3, 9))]),
+                    (3, ): MockCount(contents = [np.array((2, 3))]),
                 }
             )
         )
@@ -221,8 +221,8 @@ class TestCombineIntoList(unittest.TestCase):
         reader2 = MockReader(
             MockResult(
                 {
-                    (2, ): MockCount(contents = np.array((3, 6))),
-                    (4, ): MockCount(contents = np.array((2, 2))),
+                    (2, ): MockCount(contents = [np.array((3, 6))]),
+                    (4, ): MockCount(contents = [np.array((2, 2))]),
                 }
             )
         )
@@ -246,9 +246,9 @@ class TestCombineIntoList(unittest.TestCase):
         reader1 = MockReader(
             MockResult(
                 {
-                    (1, ): MockCount(contents = np.array((4, 6))),
-                    (2, ): MockCount(contents = np.array((3, 9))),
-                    (3, ): MockCount(contents = np.array((2, 3))),
+                    (1, ): MockCount(contents = [np.array((4, 6))]),
+                    (2, ): MockCount(contents = [np.array((3, 9))]),
+                    (3, ): MockCount(contents = [np.array((2, 3))]),
                 }
             )
         )
