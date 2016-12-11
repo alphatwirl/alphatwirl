@@ -1,12 +1,13 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
+import collections
 import copy
 
 ##__________________________________________________________________||
 class Summarizer(object):
     def __init__(self, Summary):
-        self._results = { }
+        self._results = collections.OrderedDict()
         self.Summary = Summary
 
     def __repr__(self):
