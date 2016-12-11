@@ -2,8 +2,6 @@
 
 import pandas
 
-from CombineIntoList import combinedToList
-
 ##__________________________________________________________________||
 def combinedToDataFrame(combined, columns):
     l = combinedToList(combined, columns)

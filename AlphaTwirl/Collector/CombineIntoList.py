@@ -4,29 +4,6 @@ import collections
 from functions import *
 
 ##__________________________________________________________________||
-def combinedToList(dataset_summarizer_pairs, columns, sort = True):
-
-    dataset_key_vals_dict_pairs = [ ]
-    for dataset, summarizer in dataset_summarizer_pairs:
-        key_vals_dict = collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
-        dataset_key_vals_dict_pairs.append((dataset, key_vals_dict))
-
-    dataset_tuple_list_pairs = [ ]
-    for dataset, key_vals_dict in dataset_key_vals_dict_pairs:
-        tuple_list = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0, sort = sort)
-        dataset_tuple_list_pairs.append((dataset, tuple_list))
-
-    d = [ ]
-    for dataset, tuple_list in dataset_tuple_list_pairs:
-        d.extend([(dataset, ) + e for e in tuple_list])
-
-    if sort: d.sort()
-
-    d.insert(0, columns)
-
-    return d
-
-##__________________________________________________________________||
 class CombineIntoList(object):
     def __init__(self, keyNames, valNames, sort = True):
         self.datasetColumnName = 'component'

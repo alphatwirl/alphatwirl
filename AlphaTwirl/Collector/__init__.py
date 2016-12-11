@@ -1,4 +1,4 @@
-from CombineIntoList import CombineIntoList, combinedToList
+from CombineIntoList import CombineIntoList
 from WriteListToFile import WriteListToFile
 
 ##__________________________________________________________________||
