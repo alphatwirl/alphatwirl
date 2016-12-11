@@ -24,6 +24,15 @@ class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
         actual = convert_key_vals_dict_to_tuple_list(counts)
         self.assertEqual(expected, actual)
 
+    def test_empty(self):
+
+        counts  = { }
+
+        expected = [ ]
+
+        actual = convert_key_vals_dict_to_tuple_list(counts)
+        self.assertEqual(expected, actual)
+
     def test_sort_off(self):
 
         counts = collections.OrderedDict([
