@@ -58,6 +58,13 @@ class MockEventLoop(object):
 ##__________________________________________________________________||
 class TestEventReader(unittest.TestCase):
 
+    def test_repr(self):
+        eventLoopRunner = MockEventLoopRunner()
+        reader = MockReader()
+        collector = MockCollector(MockCollectorReturn())
+        obj = EventReader(eventLoopRunner, reader, collector, mock_split_into_build_events)
+        repr(obj)
+
     def test_standard(self):
         eventLoopRunner = MockEventLoopRunner()
         reader = MockReader()

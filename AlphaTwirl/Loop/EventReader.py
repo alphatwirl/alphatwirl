@@ -19,9 +19,19 @@ class EventReader(object):
 
         self.eventLoopRunner = eventLoopRunner
         self.associator = Associator(reader, collector)
+        self.reader = reader
         self.collector = collector
         self.split_into_build_events = split_into_build_events
         self.EventLoop = EventLoop
+
+    def __repr__(self):
+        return '{}(eventLoopRunner = {!r}, reader = {!r}, collector = {!r}, split_into_build_events = {!r})'.format(
+            self.__class__.__name__,
+            self.eventLoopRunner,
+            self.reader,
+            self.collector,
+            self.split_into_build_events
+        )
 
     def begin(self):
         self.eventLoopRunner.begin()
