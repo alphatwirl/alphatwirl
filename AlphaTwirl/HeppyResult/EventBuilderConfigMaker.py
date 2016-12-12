@@ -29,7 +29,7 @@ class EventBuilderConfigMaker(object):
         input_path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
         return [input_path]
 
-    def file_nevents_list_for(self, dataset):
+    def file_nevents_list_for(self, dataset, maxEvents = -1):
         component = dataset
         input_path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
         ntotal = self.nevents_in_file(input_path)
