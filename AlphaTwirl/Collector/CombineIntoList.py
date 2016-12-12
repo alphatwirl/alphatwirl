@@ -99,8 +99,6 @@ class CombineIntoList(object):
         #     ('TTJets', 300, 3,  15,  30)
         # ]
 
-        if self.sort: ret.sort()
-
         header = (self.datasetColumnName, ) + self.keyNames + self.valNames
 
         ret.insert(0, header)
