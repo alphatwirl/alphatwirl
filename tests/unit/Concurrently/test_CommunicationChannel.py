@@ -45,6 +45,11 @@ class MockProgressMonitor(object):
 ##__________________________________________________________________||
 class TestCommunicationChannel(unittest.TestCase):
 
+    def test_repr(self):
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
+        repr(obj)
+
     def test_begin_end(self):
         dropbox = MockDropbox()
         obj = CommunicationChannel(dropbox = dropbox)

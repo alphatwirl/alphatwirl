@@ -93,6 +93,13 @@ class CommunicationChannel(object):
         self.dropbox = dropbox
         self.isopen = False
 
+    def __repr__(self):
+        return '{}(dropbox = {!r}, isopen = {!r}'.format(
+            self.__class__.__name__,
+            self.dropbox,
+            self.isopen
+        )
+
     def begin(self):
         if self.isopen: return
         self.dropbox.open()
