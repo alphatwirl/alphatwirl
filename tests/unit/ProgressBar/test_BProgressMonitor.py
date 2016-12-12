@@ -13,6 +13,11 @@ class MockReport(object): pass
 ##__________________________________________________________________||
 class TestBProgressMonitor(unittest.TestCase):
 
+    def test_repr(self):
+        presentation = MockPresentation()
+        monitor = BProgressMonitor(presentation)
+        repr(monitor)
+
     def test_begin_end(self):
         presentation = MockPresentation()
         monitor = BProgressMonitor(presentation)
