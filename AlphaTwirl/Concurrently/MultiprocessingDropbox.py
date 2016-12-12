@@ -24,6 +24,16 @@ class MultiprocessingDropbox(object):
         self.n_ongoing_tasks = 0
         self.task_idx = -1 # so it starts from 0
 
+    def __repr__(self):
+        return '{}(progressMonitor = {!r}, n_max_workers = {!r}, n_workers = {!r}, n_ongoing_tasks = {!r}, task_idx = {!r})'.format(
+            self.__class__.__name__,
+            self.progressMonitor,
+            self.n_max_workers,
+            self.n_workers,
+            self.n_ongoing_tasks,
+            self.task_idx
+        )
+
     def open(self):
 
         if self.n_workers >= self.n_max_workers:

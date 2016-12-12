@@ -24,6 +24,10 @@ class MockResult(object):
 ##__________________________________________________________________||
 class TestMultiprocessingDropbox(unittest.TestCase):
 
+    def test_repr(self):
+        obj = MultiprocessingDropbox()
+        repr(obj)
+
     def test_init_raise(self):
         self.assertRaises(ValueError, MultiprocessingDropbox, nprocesses = 0)
 
