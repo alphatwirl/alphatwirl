@@ -10,6 +10,11 @@ class ProgressBar(object):
         self.interval = 0.1 # [second]
         self._readTime()
 
+    def __repr__(self):
+        return '{}()'.format(
+            self.__class__.__name__
+        )
+
     def nreports(self):
         return len(self.reports)
 
