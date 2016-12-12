@@ -19,8 +19,15 @@ class MockEventBuilderConfigMaker(object):
     def file_list_in(self, dataset):
         return dataset.files
 
-    def file_nevents_list_for(self, dataset):
-        return zip(dataset.files, dataset.nevents)
+    def file_nevents_list_for(self, dataset, maxEvents):
+        totalEvents = 0
+        ret = [ ]
+        for f, n in zip(dataset.files, dataset.nevents):
+            if 0 <= maxEvents <= totalEvents:
+                return ret
+            ret.append((f, n))
+            totalEvents += n
+        return ret
 
     def create_config_for(self, dataset, file_, start, length):
         return MockEventBuilderConfig(dataset, file_, start, length)

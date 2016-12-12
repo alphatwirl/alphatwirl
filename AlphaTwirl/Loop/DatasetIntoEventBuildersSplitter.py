@@ -43,7 +43,7 @@ class DatasetIntoEventBuildersSplitter(object):
             files = self.eventBuilderConfigMaker.file_list_in(dataset)
             return [(file_, 0, -1) for file_ in files]
 
-        file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(dataset)
+        file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(dataset, self.maxEvents)
         file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
         return file_start_length_list
 ##__________________________________________________________________||
