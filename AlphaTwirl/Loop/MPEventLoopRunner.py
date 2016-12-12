@@ -55,6 +55,12 @@ class MPEventLoopRunner(object):
         self.communicationChannel = communicationChannel
         self._original_readers = [ ]
 
+    def __repr__(self):
+        return '{}(communicationChannel = {!r}'.format(
+            self.__class__.__name__,
+            self.communicationChannel
+        )
+
     def begin(self):
         """does nothing.
 

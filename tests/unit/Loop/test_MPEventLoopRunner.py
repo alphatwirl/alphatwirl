@@ -37,6 +37,11 @@ class MockEventLoop(object):
 ##__________________________________________________________________||
 class TestMPEventLoopRunner(unittest.TestCase):
 
+    def test_repr(self):
+        communicationChannel = MockCommunicationChannel()
+        runner = MPEventLoopRunner(communicationChannel)
+        repr(runner)
+
     def test_begin_end(self):
         communicationChannel = MockCommunicationChannel()
         runner = MPEventLoopRunner(communicationChannel)
