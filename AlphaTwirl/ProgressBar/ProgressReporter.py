@@ -39,6 +39,13 @@ class ProgressReporter(object):
         self.interval = 0.1 # [second]
         self._readTime()
 
+    def __repr__(self):
+        return '{}(queue = {!r}, interval = {!r}'.format(
+            self.__class__.__name__,
+            self.queue,
+            self.interval
+        )
+
     def report(self, report):
         """send ``report`` to a progress monitor
 

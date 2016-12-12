@@ -16,6 +16,11 @@ class MockQueue(object):
 ##__________________________________________________________________||
 class TestProgressReporter(unittest.TestCase):
 
+    def test_repr(self):
+        queue = MockQueue()
+        obj = ProgressReporter(queue)
+        repr(obj)
+
     def test_report(self):
         queue = MockQueue()
         reporter = ProgressReporter(queue)
