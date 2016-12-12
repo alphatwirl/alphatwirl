@@ -28,6 +28,17 @@ class MockEventBuilderConfigMaker(object):
 ##__________________________________________________________________||
 class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
 
+    def test_repr(self):
+
+        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
+
+        obj = DatasetIntoEventBuildersSplitter(
+            MockEventBuilder,
+            eventBuilderConfigMaker,
+            )
+
+        repr(obj)
+
     def test_init_raise(self):
 
         eventBuilderConfigMaker = MockEventBuilderConfigMaker()

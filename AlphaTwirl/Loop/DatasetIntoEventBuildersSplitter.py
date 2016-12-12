@@ -15,6 +15,15 @@ class DatasetIntoEventBuildersSplitter(object):
         self.maxEvents = maxEvents
         self.maxEventsPerRun = maxEventsPerRun
 
+    def __repr__(self):
+        return '{}(EventBuilder = {!r}, eventBuilderConfigMaker = {!r}, maxEvents = {!r}, maxEventsPerRun = {!r}'.format(
+            self.__class__.__name__,
+            self.EventBuilder,
+            self.eventBuilderConfigMaker,
+            self.maxEvents,
+            self.maxEventsPerRun
+        )
+
     def __call__(self, dataset):
         configs = self._split_into_configs(dataset)
         eventBuilders = [self.EventBuilder(c) for c in configs]
