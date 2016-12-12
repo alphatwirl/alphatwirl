@@ -13,6 +13,10 @@ def mockClose(file): pass
 ##__________________________________________________________________||
 class TestWriteListToFile(unittest.TestCase):
 
+    def test_repr(self):
+        obj = WriteListToFile("tbl.txt")
+        repr(obj)
+
     def test_deliver(self):
         delivery = WriteListToFile("tbl.txt")
 
