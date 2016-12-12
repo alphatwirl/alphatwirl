@@ -97,11 +97,12 @@ class MPEventLoopRunner(object):
 
         if len(self._original_readers) != len(returned_readers):
             import logging
-            logging.warning("'" + self.__class__.__name__
-                            + "': the same number of the readers were not received: "
-                            + str(len(self._original_readers)) + " readers put, "
-                            + str(len(returned_readers)) + " readers received"
-                        )
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                'the same number of the readers were not received: {} readers put, {} readers received'.format(
+                    len(self._original_readers),
+                    len(returned_readers)
+                ))
 
         for original, returned in zip(self._original_readers, returned_readers):
             if original is returned: continue
