@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-from .splitfuncs import *
+from .splitfuncs import create_file_start_length_list
 
 ##__________________________________________________________________||
 class DatasetIntoEventBuildersSplitter(object):
