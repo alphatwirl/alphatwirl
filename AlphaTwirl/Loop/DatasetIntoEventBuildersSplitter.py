@@ -20,12 +20,13 @@ class DatasetIntoEventBuildersSplitter(object):
         self.create_file_start_length_list = create_file_start_length_list
 
     def __repr__(self):
-        return '{}(EventBuilder = {!r}, eventBuilderConfigMaker = {!r}, maxEvents = {!r}, maxEventsPerRun = {!r}'.format(
+        return '{}(EventBuilder = {!r}, eventBuilderConfigMaker = {!r}, maxEvents = {!r}, maxEventsPerRun = {!r}, maxFiles = {!r})'.format(
             self.__class__.__name__,
             self.EventBuilder,
             self.eventBuilderConfigMaker,
             self.maxEvents,
-            self.maxEventsPerRun
+            self.maxEventsPerRun,
+            self.maxFiles
         )
 
     def __call__(self, dataset):
