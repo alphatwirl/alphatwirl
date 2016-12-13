@@ -100,6 +100,21 @@ class TestEventBuilderConfigMaker(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_file_list_in_maxFiles(self):
+        obj = EventBuilderConfigMaker(
+            analyzerName = 'treeProducerSusyAlphaT',
+            fileName = 'tree.root',
+            treeName = 'tree'
+        )
+
+        component = MockComponent()
+
+        expected = [ ]
+
+        actual = obj.file_list_in(component, maxFiles = 0)
+
+        self.assertEqual(expected, actual)
+
     def test_file_nevents_list_for(self):
         obj = EventBuilderConfigMaker(
             analyzerName = 'treeProducerSusyAlphaT',
@@ -113,6 +128,23 @@ class TestEventBuilderConfigMaker(unittest.TestCase):
 
         actual = obj.file_nevents_list_for(component)
 
+        self.assertEqual(expected, actual)
+
+    def test_file_nevents_list_for_maxFiles(self):
+        obj = EventBuilderConfigMaker(
+            analyzerName = 'treeProducerSusyAlphaT',
+            fileName = 'tree.root',
+            treeName = 'tree'
+        )
+
+        component = MockComponent()
+
+        expected = [('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', 2500)]
+        actual = obj.file_nevents_list_for(component, maxFiles = 1)
+        self.assertEqual(expected, actual)
+
+        expected = [ ]
+        actual = obj.file_nevents_list_for(component, maxFiles = 0)
         self.assertEqual(expected, actual)
 
 ##__________________________________________________________________||
