@@ -7,7 +7,7 @@ def create_file_start_length_list(file_nevents_list, max_per_run = -1, max_total
 
     ret = [ ]
     for file, nevents in file_nevents_list:
-        start_length_pairs = start_length_pairs_for_split_lists(nevents, max_per_run)
+        start_length_pairs = _start_length_pairs_for_split_lists(nevents, max_per_run)
         for start, length in start_length_pairs:
             ret.append((file, start, length))
     return ret
@@ -26,7 +26,7 @@ def _apply_max_total(file_nevents_list, max_total = -1):
     return ret
 
 ##__________________________________________________________________||
-def start_length_pairs_for_split_lists(ntotal, max_per_list):
+def _start_length_pairs_for_split_lists(ntotal, max_per_list):
     # e.g., ntotal =  35, max_per_list = 10
 
     if max_per_list < 0: return [(0, ntotal)]
@@ -50,7 +50,7 @@ def start_length_pairs_for_split_lists(ntotal, max_per_list):
     return ret
 
 ##__________________________________________________________________||
-def minimum_positive_value(vals):
+def _minimum_positive_value(vals):
     # returns -1 if all negative or empty
     vals = [v for v in vals if v >= 0]
     if not vals: return -1
