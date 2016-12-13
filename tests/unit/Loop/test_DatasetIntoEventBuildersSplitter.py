@@ -64,7 +64,7 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
             eventBuilderConfigMaker,
-            )
+            ) # don't give optional arguments
 
         dataset = MockDataset(
             files = ['A.root', 'B.root'],
@@ -75,16 +75,16 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 0,
-                    length = -1
+                    start = 0,   #
+                    length = -1  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 0,
-                    length = -1
+                    start = 0,   #
+                    length = -1  #
                 )
             ),
         ]
@@ -98,7 +98,7 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
             eventBuilderConfigMaker,
-            maxEvents = 160,
+            maxEvents = 160,  #
             )
 
         dataset = MockDataset(
@@ -110,16 +110,16 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 0,
-                    length = 100
+                    start = 0,    #
+                    length = 100  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 0,
-                    length = 60
+                    start = 0,    #
+                    length = 60   #
                 )
             ),
         ]
@@ -133,14 +133,14 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
             eventBuilderConfigMaker,
-            maxEvents = 0,
+            maxEvents = 0, #
             )
 
         dataset = MockDataset(
             files = ['A.root', 'B.root'],
             nevents = [100, 200]
         )
-        expected = [ ]
+        expected = [ ] # empty
 
         actual = obj(dataset)
         self.assertEqual(expected, actual)
@@ -152,7 +152,7 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
             eventBuilderConfigMaker,
-            maxEventsPerRun = 40,
+            maxEventsPerRun = 40, #
             )
 
         dataset = MockDataset(
@@ -164,40 +164,40 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 0,
-                    length = 40
+                    start = 0,   #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 40,
-                    length = 40
+                    start = 40,  #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 80,
-                    length = 20
+                    start = 80,  #
+                    length = 20  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 0,
-                    length = 40
+                    start = 0,   #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 40,
-                    length = 10
+                    start = 40,  #
+                    length = 10  #
                 )
             ),
         ]
@@ -211,8 +211,8 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
             eventBuilderConfigMaker,
-            maxEvents = 160,
-            maxEventsPerRun = 40,
+            maxEvents = 160,      #
+            maxEventsPerRun = 40, #
             )
 
         dataset = MockDataset(
@@ -224,40 +224,40 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 0,
-                    length = 40
+                    start = 0,   #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 40,
-                    length = 40
+                    start = 40,  #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'A.root',
-                    start = 80,
-                    length = 20
+                    start = 80,  #
+                    length = 20  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 0,
-                    length = 40
+                    start = 0,   #
+                    length = 40  #
                 )
             ),
             MockEventBuilder(
                 config = MockEventBuilderConfig(
                     dataset = dataset,
                     file_ = 'B.root',
-                    start = 40,
-                    length = 20
+                    start = 40,  #
+                    length = 20  #
                 )
             ),
         ]
