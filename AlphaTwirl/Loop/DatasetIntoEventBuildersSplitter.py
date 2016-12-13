@@ -17,6 +17,7 @@ class DatasetIntoEventBuildersSplitter(object):
         self.maxEvents = maxEvents
         self.maxEventsPerRun = maxEventsPerRun
         self.maxFiles = maxFiles
+        self.create_file_start_length_list = create_file_start_length_list
 
     def __repr__(self):
         return '{}(EventBuilder = {!r}, eventBuilderConfigMaker = {!r}, maxEvents = {!r}, maxEventsPerRun = {!r}'.format(
@@ -44,7 +45,7 @@ class DatasetIntoEventBuildersSplitter(object):
             maxEvents = self.maxEvents,
             maxFiles = self.maxFiles
         )
-        file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
+        file_start_length_list = self.create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
         return file_start_length_list
 
     def _create_configs(self, dataset, file_start_length_list):
