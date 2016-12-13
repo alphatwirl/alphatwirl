@@ -5,7 +5,9 @@ from .splitfuncs import *
 ##__________________________________________________________________||
 class DatasetIntoEventBuildersSplitter(object):
 
-    def __init__(self, EventBuilder, eventBuilderConfigMaker, maxEvents = -1, maxEventsPerRun = -1):
+    def __init__(self, EventBuilder, eventBuilderConfigMaker,
+                 maxEvents = -1, maxEventsPerRun = -1, maxFiles = -1
+    ):
 
         if maxEventsPerRun == 0:
             raise ValueError("maxEventsPerRun cannot be 0")
@@ -14,6 +16,7 @@ class DatasetIntoEventBuildersSplitter(object):
         self.eventBuilderConfigMaker = eventBuilderConfigMaker
         self.maxEvents = maxEvents
         self.maxEventsPerRun = maxEventsPerRun
+        self.maxFiles = maxFiles
 
     def __repr__(self):
         return '{}(EventBuilder = {!r}, eventBuilderConfigMaker = {!r}, maxEvents = {!r}, maxEventsPerRun = {!r}'.format(
@@ -33,10 +36,14 @@ class DatasetIntoEventBuildersSplitter(object):
     def _file_start_length_list(self, dataset):
 
         if self.maxEventsPerRun < 0 and self.maxEvents < 0:
-            files = self.eventBuilderConfigMaker.file_list_in(dataset)
+            files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles = self.maxFiles)
             return [(file_, 0, -1) for file_ in files]
 
-        file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(dataset, self.maxEvents)
+        file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(
+            dataset,
+            maxEvents = self.maxEvents,
+            maxFiles = self.maxFiles
+        )
         file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
         return file_start_length_list
 
