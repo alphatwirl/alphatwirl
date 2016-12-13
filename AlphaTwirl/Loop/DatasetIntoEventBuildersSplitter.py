@@ -25,17 +25,10 @@ class DatasetIntoEventBuildersSplitter(object):
         )
 
     def __call__(self, dataset):
-        configs = self._split_into_configs(dataset)
+        file_start_length_list = self._file_start_length_list(dataset)
+        configs = self._create_configs(dataset, file_start_length_list)
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
-
-    def _split_into_configs(self, dataset):
-        file_start_length_list = self._file_start_length_list(dataset)
-        configs = [ ]
-        for file_, start, length in file_start_length_list:
-            config = self.eventBuilderConfigMaker.create_config_for(dataset, file_, start, length)
-            configs.append(config)
-        return configs
 
     def _file_start_length_list(self, dataset):
 
@@ -46,4 +39,11 @@ class DatasetIntoEventBuildersSplitter(object):
         file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(dataset, self.maxEvents)
         file_start_length_list = create_file_start_length_list(file_nevents_list, self.maxEventsPerRun, self.maxEvents)
         return file_start_length_list
+
+    def _create_configs(self, dataset, file_start_length_list):
+        configs = [ ]
+        for file_, start, length in file_start_length_list:
+            config = self.eventBuilderConfigMaker.create_config_for(dataset, file_, start, length)
+            configs.append(config)
+        return configs
 ##__________________________________________________________________||
