@@ -12,347 +12,117 @@ MockEventBuilderConfig = collections.namedtuple(
     'dataset file_ start length'
 )
 
-MockDataset = collections.namedtuple('MockDataset', 'files nevents')
+##__________________________________________________________________||
+class MockDataset(object): pass
+
+##__________________________________________________________________||
+class MockSplitFunc(object):
+    def __init__(self):
+        self.args_call = [ ]
+        self.ret = None
+
+    def __call__(self, file_nevents_list, max_per_run = -1, max_total = -1):
+        self.args_call.append((file_nevents_list, max_per_run, max_total))
+        return self.ret
 
 ##__________________________________________________________________||
 class MockEventBuilderConfigMaker(object):
+    def __init__(self):
+        self.args_file_list_in = [ ]
+        self.args_file_nevents_list_for = [ ]
+        self.args_create_config_for = [ ]
+        self.ret_file_list_in = None
+        self.ret_file_nevents_list_for = None
+        self.ret_create_config_for = None
+
     def file_list_in(self, dataset, maxFiles):
-        if maxFiles < 0:
-            return dataset.files
-        return dataset.files[:min(maxFiles, len(dataset.files))]
+        self.args_file_list_in.append((dataset, maxFiles))
+        return self.ret_file_list_in
 
     def file_nevents_list_for(self, dataset, maxEvents, maxFiles):
-        files = self.file_list_in(dataset, maxFiles = maxFiles)
-        totalEvents = 0
-        ret = [ ]
-        for f, n in zip(files, dataset.nevents):
-            if 0 <= maxEvents <= totalEvents:
-                return ret
-            ret.append((f, n))
-            totalEvents += n
-        return ret
+        self.args_file_nevents_list_for.append((dataset, maxEvents, maxFiles))
+        return  self.ret_file_nevents_list_for
 
     def create_config_for(self, dataset, file_, start, length):
+        self.args_create_config_for.append((dataset, file_, start, length))
         return MockEventBuilderConfig(dataset, file_, start, length)
 
 ##__________________________________________________________________||
 class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
 
-    def test_repr(self):
+    def setUp(self):
+        self.configMaker = MockEventBuilderConfigMaker()
+        self.configMaker.ret_file_list_in = ['A.root', 'B.root']
+        self.configMaker.ret_file_nevents_list_for = [('A.root', 100), ('B.root', 200)]
 
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
+        self.obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
-            eventBuilderConfigMaker,
+            self.configMaker,
             )
 
-        repr(obj)
+        self.split_func = MockSplitFunc()
+        self.split_func.ret = [('A.root', 0, 40), ('A.root', 40, 40), ('A.root', 80, 20), ('B.root', 0, 10)]
+        self.obj.create_file_start_length_list = self.split_func
+
+    def test_repr(self):
+        repr(self.obj)
 
     def test_init_raise(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
+        configMaker = MockEventBuilderConfigMaker()
         self.assertRaises(ValueError,
                           DatasetIntoEventBuildersSplitter,
                           MockEventBuilder,
-                          eventBuilderConfigMaker,
+                          configMaker,
                           maxEventsPerRun = 0
         )
 
-    def test_call_default(self):
+    def test_file_start_length_list_fast_path(self):
+        dataset = MockDataset()
+        maxEvents = -1        # < 0
+        maxEventsPerRun = -1  # < 0
+        maxFiles = 5
+        expected = [('A.root', 0, -1), ('B.root', 0, -1)]
+        actual = self.obj._file_start_length_list(dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun, maxFiles = maxFiles)
+        self.assertEqual([(dataset, 5)], self.configMaker.args_file_list_in)
+        self.assertEqual([ ], self.configMaker.args_file_nevents_list_for)
+        self.assertEqual([ ], self.configMaker.args_create_config_for)
+        self.assertEqual([ ], self.split_func.args_call)
+        self.assertEqual(expected, actual)
 
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
+    def test_file_start_length_list_long_path(self):
+        dataset = MockDataset()
+        maxEvents = 110        # >= 0
+        maxEventsPerRun = 40   # >= 0
+        maxFiles = 5
+        expected = [('A.root', 0, 40), ('A.root', 40, 40), ('A.root', 80, 20), ('B.root', 0, 10)]
+        actual = self.obj._file_start_length_list(dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun, maxFiles = maxFiles)
+        self.assertEqual([ ], self.configMaker.args_file_list_in)
+        self.assertEqual([(dataset, 110, 5)], self.configMaker.args_file_nevents_list_for)
+        self.assertEqual([ ], self.configMaker.args_create_config_for)
+        self.assertEqual([([('A.root', 100), ('B.root', 200)], 40, 110)], self.split_func.args_call)
 
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            ) # don't give optional arguments
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 200]
-        )
+    def test_create_configs(self):
+        dataset = MockDataset()
+        file_start_length_list = [('A.root', 0, 40), ('A.root', 40, 40), ('B.root', 0, 10)]
         expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,   #
-                    length = -1  #
-                )
+            MockEventBuilderConfig(
+                dataset = dataset,
+                file_='A.root', start = 0, length = 40
             ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 0,   #
-                    length = -1  #
-                )
+            MockEventBuilderConfig(
+                dataset = dataset,
+                file_='A.root', start = 40, length = 40
             ),
-        ]
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
-
-    def test_call_maxEvents(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxEvents = 160,  #
+            MockEventBuilderConfig(
+                dataset = dataset,
+                file_='B.root', start=0, length=10
             )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 200]
-        )
-        expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,    #
-                    length = 100  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 0,    #
-                    length = 60   #
-                )
-            ),
         ]
-        actual = obj(dataset)
+        actual = self.obj._create_configs(dataset, file_start_length_list)
         self.assertEqual(expected, actual)
 
-    def test_call_zero_maxEvents(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxEvents = 0, #
-            )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 200]
-        )
-        expected = [ ] # empty
-
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
-
-    def test_call_maxEventsPerRun(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxEventsPerRun = 40, #
-            )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 50]
-        )
-        expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,   #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 40,  #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 80,  #
-                    length = 20  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 0,   #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 40,  #
-                    length = 10  #
-                )
-            ),
-        ]
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
-
-    def test_call_maxEvents_maxEventsPerRun(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxEvents = 160,      #
-            maxEventsPerRun = 40, #
-            )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 200]
-        )
-        expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,   #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 40,  #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 80,  #
-                    length = 20  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 0,   #
-                    length = 40  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 40,  #
-                    length = 20  #
-                )
-            ),
-        ]
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
-
-    def test_call_maxFiles(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxFiles = 1,  #
-            )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root'],
-            nevents = [100, 200]
-        )
-        expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,    #
-                    length = -1  #
-                )
-            ),
-        ]
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
-
-    def test_call_maxEvents_maxEventsPerRun_maxFiles(self):
-
-        eventBuilderConfigMaker = MockEventBuilderConfigMaker()
-
-        obj = DatasetIntoEventBuildersSplitter(
-            MockEventBuilder,
-            eventBuilderConfigMaker,
-            maxEvents = 340,      #
-            maxEventsPerRun = 80, #
-            maxFiles = 2, #
-            )
-
-        dataset = MockDataset(
-            files = ['A.root', 'B.root', 'C.root'],
-            nevents = [100, 200, 150]
-        )
-        expected = [
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 0,   #
-                    length = 80  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'A.root',
-                    start = 80,  #
-                    length = 20  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 0,   #
-                    length = 80  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 80,  #
-                    length = 80  #
-                )
-            ),
-            MockEventBuilder(
-                config = MockEventBuilderConfig(
-                    dataset = dataset,
-                    file_ = 'B.root',
-                    start = 160,  #
-                    length = 40  #
-                )
-            ),
-        ]
-        actual = obj(dataset)
-        self.assertEqual(expected, actual)
+    def test_call(self):
+        dataset = MockDataset()
+        self.obj(dataset)
 
 ##__________________________________________________________________||
