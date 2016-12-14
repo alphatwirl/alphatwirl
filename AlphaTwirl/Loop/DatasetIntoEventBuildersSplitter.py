@@ -30,7 +30,12 @@ class DatasetIntoEventBuildersSplitter(object):
         )
 
     def __call__(self, dataset):
-        file_start_length_list = self._file_start_length_list(dataset, self.maxEvents, self.maxEventsPerRun, self.maxFiles)
+        file_start_length_list = self._file_start_length_list(
+            dataset,
+            maxEvents = self.maxEvents,
+            maxEventsPerRun = self.maxEventsPerRun,
+            maxFiles = self.maxFiles
+        )
         configs = self._create_configs(dataset, file_start_length_list)
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
