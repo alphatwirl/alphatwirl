@@ -32,6 +32,9 @@ class TestRoundLog(unittest.TestCase):
         obj = RoundLog()
         self.assertEqual(0, obj(0))
 
+        self.assertEqual(0, obj.next(0)) # next to 0 is 0 unless 0 is the
+                                         # underflow bin
+
     def test_call_negative(self):
         obj = RoundLog()
         self.assertIsNone(obj(-1))
@@ -58,6 +61,9 @@ class TestRoundLog(unittest.TestCase):
         self.assertAlmostEqual(   10, obj(  10))
         self.assertEqual( 0, obj(   9))
 
+        self.assertEqual( obj(10), obj.next( 0)) # the next to the underflow
+                                                 # bin is the bin for the min
+
     def test_max(self):
         obj = RoundLog(0.1, 100, max = 1000)
         self.assertEqual(  100, obj(  100))
@@ -70,4 +76,6 @@ class TestRoundLog(unittest.TestCase):
         self.assertEqual( 1000, obj( 1000))
         self.assertEqual( 1000, obj( 5000))
 
+        self.assertEqual( 1000, obj.next(1000)) # the next to the overflow bin
+                                                # is the overflow bin
 ##__________________________________________________________________||

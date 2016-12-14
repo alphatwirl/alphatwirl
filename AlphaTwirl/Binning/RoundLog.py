@@ -57,6 +57,21 @@ class RoundLog(object):
         return 10**self._round(val)
 
     def next(self, bin):
+
+        bin = self.__call__(bin)
+
+        if bin is None:
+            return None
+
+        if bin == self.underflow_bin:
+            return self.__call__(self.min)
+
+        if bin == 0:
+            return 0
+
+        if bin == self.overflow_bin:
+            return self.overflow_bin
+
         bin = math.log10(bin)
         return 10**self._round.next(bin)
 

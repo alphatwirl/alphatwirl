@@ -72,14 +72,32 @@ class Round(object):
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
+
+        bin = self.__call__(bin)
+
+        if bin is None:
+            return None
+
+        if bin == self.underflow_bin:
+            return self.__call__(self.min)
+
+        if bin == self.overflow_bin:
+            return self.overflow_bin
+
         self._updateBoundaries(bin)
         self._updateBoundaries(bin + self.width)
+
         nbin = self.boundaries[0]
+
         for b in self.boundaries[1:]:
             if b <= bin: nbin = b
             else: break
+
         ret = self.boundaries[self.boundaries.index(nbin) + 1]
-        if not self.lowedge: ret += self.halfWidth
+
+        if not self.lowedge:
+            ret += self.halfWidth
+
         return ret
 
 ##__________________________________________________________________||

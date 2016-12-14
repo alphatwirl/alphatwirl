@@ -146,6 +146,9 @@ class TestRound(unittest.TestCase):
         self.assertEqual(   30, obj(  30))
         self.assertEqual(    0, obj(  29))
 
+        self.assertEqual( obj(30), obj.next( 0)) # the next to the underflow
+                                                 # bin is the bin for the min
+
     def test_max(self):
         obj = Round(10, 100, max = 150)
         self.assertEqual(  100, obj( 100))
@@ -157,5 +160,8 @@ class TestRound(unittest.TestCase):
         self.assertEqual(  100, obj( 100))
         self.assertEqual(  150, obj( 150))
         self.assertEqual(  150, obj( 500))
+
+        self.assertEqual( 150, obj.next(150)) # the next to the overflow
+                                              # bin is the overflow bin
 
 ##__________________________________________________________________||
