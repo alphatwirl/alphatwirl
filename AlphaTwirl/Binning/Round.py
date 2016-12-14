@@ -5,7 +5,11 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None, retvalue = 'lowedge', valid = returnTrue):
+    def __init__(self, width = 1, aBoundary = None,
+                 min = None, underflow_bin = None,
+                 max = None, overflow_bin = None,
+                 valid = returnTrue, retvalue = 'lowedge'
+    ):
 
         supportedRetvalues = ('center', 'lowedge')
         if retvalue not in supportedRetvalues:
@@ -17,22 +21,47 @@ class Round(object):
         if aBoundary is None: aBoundary = self.halfWidth
         self.boundaries = [aBoundary - width, aBoundary, aBoundary + width]
         self.lowedge = (retvalue == 'lowedge')
+        self.min = min
+        self.underflow_bin = underflow_bin
+        self.max = max
+        self.overflow_bin = overflow_bin
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aBoundary = {!r}, valid = {!r})'.format(
+        return '{}(width = {!r}, aBoundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
             self.__class__.__name__,
-            self.width, self.aBoundary, self.valid
+            self.width,
+            self.aBoundary,
+            self.min,
+            self.underflow_bin,
+            self.max,
+            self.overflow_bin,
+            self.valid
         )
 
     def __call__(self, val):
-        if not self.valid(val): return None
+
+        if not self.valid(val):
+            return None
+
+        if self.min is not None:
+            if not self.min <= val:
+                return self.underflow_bin
+
+        if self.max is not None:
+            if not val < self.max:
+                return self.overflow_bin
+
         self._updateBoundaries(val)
         bin = self.boundaries[0]
+
         for b in self.boundaries[1:]:
             if b <= val: bin = b
             else: break
-        if not self.lowedge: bin += self.halfWidth
+
+        if not self.lowedge:
+            bin += self.halfWidth
+
         return bin
 
     def _updateBoundaries(self, val):
