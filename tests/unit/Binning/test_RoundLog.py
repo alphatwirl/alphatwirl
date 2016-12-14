@@ -30,7 +30,7 @@ class TestRoundLog(unittest.TestCase):
 
     def test_call_zero(self):
         obj = RoundLog()
-        self.assertIsNone(obj(0))
+        self.assertEqual(0, obj(0))
 
     def test_call_negative(self):
         obj = RoundLog()
@@ -45,5 +45,29 @@ class TestRoundLog(unittest.TestCase):
     def test_onBoundary(self):
         obj = RoundLog(0.1, 100)
         self.assertEqual( 100, obj( 100))
+
+    def test_min(self):
+        obj = RoundLog(0.1, 100, min = 10)
+        self.assertEqual(  100, obj( 100))
+        self.assertAlmostEqual(   10, obj(  10))
+        self.assertEqual( None, obj(   9))
+
+    def test_min_underflow_bin(self):
+        obj = RoundLog(0.1, 100, min = 10, underflow_bin = 0)
+        self.assertEqual(  100, obj( 100))
+        self.assertAlmostEqual(   10, obj(  10))
+        self.assertEqual( 0, obj(   9))
+
+    def test_max(self):
+        obj = RoundLog(0.1, 100, max = 1000)
+        self.assertEqual(  100, obj(  100))
+        self.assertEqual( None, obj( 1000))
+        self.assertEqual( None, obj( 5000))
+
+    def test_max_overflow_bin(self):
+        obj = RoundLog(0.1, 100, max = 1000, overflow_bin = 1000)
+        self.assertEqual(  100, obj(  100))
+        self.assertEqual( 1000, obj( 1000))
+        self.assertEqual( 1000, obj( 5000))
 
 ##__________________________________________________________________||
