@@ -1,5 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
+import math
+import logging
+
 ##__________________________________________________________________||
 def returnTrue(x): return True
 
@@ -51,6 +54,11 @@ class Round(object):
         if self.max is not None:
             if not val < self.max:
                 return self.overflow_bin
+
+        if math.isinf(val):
+            logger = logging.getLogger(__name__)
+            logger.warning('val = {}. will return {}'.format(val, None))
+            return None
 
         self._updateBoundaries(val)
         bin = self.boundaries[0]

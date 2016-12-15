@@ -54,7 +54,12 @@ class RoundLog(object):
                 return self.overflow_bin
 
         val = math.log10(val)
-        return 10**self._round(val)
+        val = self._round(val)
+
+        if val is None:
+            return None
+
+        return 10**val
 
     def next(self, bin):
 

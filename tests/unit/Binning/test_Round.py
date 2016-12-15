@@ -164,4 +164,10 @@ class TestRound(unittest.TestCase):
         self.assertEqual( 150, obj.next(150)) # the next to the overflow
                                               # bin is the overflow bin
 
+    def test_inf(self):
+        obj = Round(10, 100)
+        self.assertIsNone(obj(float('inf')))
+        self.assertIsNone(obj(float('-inf')))
+        self.assertIsNone(obj.next(float('inf')))
+        self.assertIsNone(obj.next(float('-inf')))
 ##__________________________________________________________________||

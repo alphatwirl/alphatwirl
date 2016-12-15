@@ -78,4 +78,11 @@ class TestRoundLog(unittest.TestCase):
 
         self.assertEqual( 1000, obj.next(1000)) # the next to the overflow bin
                                                 # is the overflow bin
+
+    def test_inf(self):
+        obj = RoundLog(0.1, 100)
+        self.assertIsNone(obj(float('inf')))
+        self.assertIsNone(obj(float('-inf')))
+        self.assertIsNone(obj.next(float('inf')))
+        self.assertIsNone(obj.next(float('-inf')))
 ##__________________________________________________________________||
