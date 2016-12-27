@@ -5,6 +5,7 @@ import datetime
 import tempfile
 import imp
 import tarfile
+import gzip
 
 try:
    import cPickle as pickle
@@ -41,14 +42,14 @@ class WorkingArea(object):
         self.last_package_index += 1
         package_index = self.last_package_index
 
-        package_path = 'task_{:05d}.p'.format(package_index)
+        package_path = 'task_{:05d}.p.gz'.format(package_index)
         # relative to self.path, e.g., 'task_00009.p'
 
         package_fullpath = os.path.join(self.path, package_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
 
-        f = open(package_fullpath, 'wb')
-        pickle.dump(package, f)
+        f = gzip.open(package_fullpath, 'wb')
+        pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
         f.close()
 
         return package_index, package_path
@@ -58,10 +59,10 @@ class WorkingArea(object):
         dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
-        result_path = os.path.join(self.path, 'results', dirname, 'result.p')
-        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p'
+        result_path = os.path.join(self.path, 'results', dirname, 'result.p.gz')
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
-        f = open(result_path, 'rb')
+        f = gzip.open(result_path, 'rb')
         result = pickle.load(f)
 
         return result

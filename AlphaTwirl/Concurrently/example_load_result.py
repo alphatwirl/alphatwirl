@@ -3,6 +3,7 @@
 import os, sys
 import argparse
 import tarfile
+import gzip
 
 try:
    import cPickle as pickle
@@ -31,7 +32,7 @@ if os.path.exists(tarname) and not os.path.exists(dirname):
 sys.path.insert(0, dirname)
 
 ##__________________________________________________________________||
-f = open(pickle_path, 'rb')
+f = gzip.open(pickle_path, 'rb')
 package = pickle.load(f)
 
 print package

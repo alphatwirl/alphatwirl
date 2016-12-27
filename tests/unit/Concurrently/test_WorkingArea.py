@@ -3,6 +3,7 @@ import os
 import tempfile
 import shutil
 import collections
+import gzip
 
 try:
    import cPickle as pickle
@@ -45,7 +46,7 @@ class TestWorkingArea(unittest.TestCase):
         package_index, package_path = obj.put_package(package1)
         package_fullpath = os.path.join(obj.path, package_path)
         self.assertTrue(os.path.isfile(package_fullpath))
-        f = open(package_fullpath, 'rb')
+        f = gzip.open(package_fullpath, 'rb')
         self.assertEqual(package1, pickle.load(f))
 
     def test_collect_result(self):
@@ -58,8 +59,8 @@ class TestWorkingArea(unittest.TestCase):
         dirname = 'task_{:05d}'.format(package_index)
         result_dir = os.path.join(obj.path, 'results', dirname)
         mkdir_p(result_dir)
-        result_path = os.path.join(result_dir, 'result.p')
-        f = open(result_path, 'wb')
+        result_path = os.path.join(result_dir, 'result.p.gz')
+        f = gzip.open(result_path, 'wb')
         pickle.dump(result, f)
         f.close()
 
