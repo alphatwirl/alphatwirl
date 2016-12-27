@@ -3,8 +3,12 @@
 import os, sys
 import errno
 import argparse
-import pickle
 import tarfile
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()

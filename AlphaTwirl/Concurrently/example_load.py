@@ -2,7 +2,11 @@
 # Tai Sakuma <sakuma@fnal.gov>
 import os, sys
 import argparse
-import pickle
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()

@@ -3,7 +3,11 @@ import os
 import tempfile
 import shutil
 import collections
-import pickle
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 from AlphaTwirl.Concurrently import WorkingArea
 from AlphaTwirl import mkdir_p

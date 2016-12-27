@@ -1,11 +1,15 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import shutil
-import pickle
 import datetime
 import tempfile
 import imp
 import tarfile
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 ##__________________________________________________________________||
 class WorkingArea(object):
