@@ -12,6 +12,13 @@ class TestQuoteString(unittest.TestCase):
         actual = quote_string(text)
         self.assertEqual(expected, actual)
 
+    def test_empty(self):
+
+        text = ''
+        expected = '""'
+        actual = quote_string(text)
+        self.assertEqual(expected, actual)
+
     def test_space(self):
 
         text = 'AA A' # space in text

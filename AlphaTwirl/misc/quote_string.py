@@ -5,6 +5,8 @@ import re
 ##__________________________________________________________________||
 def quote_string(text):
 
+    if not text: return '""'
+
     to_quote = False
 
     if re.search(r'"', text):
