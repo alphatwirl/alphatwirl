@@ -27,6 +27,28 @@ class TestListToAlignedText(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
+    def test_quote(self):
+
+        src = [
+            ('component', 'v1', 'v2'),
+            ('data1',      100, ''),
+            ('data1',        2, 'abc def'),
+            ('data1',     3124, '"AAA"'),
+            ('data2',      333, ' abc "de fg" hij '),
+            ('data2',       11, 'xyz'),
+        ]
+
+        actual = listToAlignedText(src)
+
+        expected = r""" component   v1                    v2
+     data1  100                    ""
+     data1    2             "abc def"
+     data1 3124             "\"AAA\""
+     data2  333 " abc \"de fg\" hij "
+     data2   11                   xyz
+"""
+        self.assertEqual(expected, actual)
+
     def test_formatDict(self):
 
         src = [

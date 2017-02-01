@@ -1,5 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
+from .quote_string import quote_string
+
 ##__________________________________________________________________||
 def listToAlignedText(src, formatDict = None):
 
@@ -27,6 +29,8 @@ def listToAlignedText(src, formatDict = None):
 
         transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
         transposed = [[str(e) for e in r] for r in transposed]
+
+        transposed = [[quote_string(e) for e in r] for r in transposed]
 
         columnWidths = [max([len(e) for e in r]) for r in transposed]
         # e.g., columnWidths = [9, 2, 4, 1]

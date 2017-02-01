@@ -44,8 +44,6 @@ class TblCounterLong(object):
 
         for level, var in counter.items():
             if not self.levels is None and not level in self.levels: continue
-            # quote if space is in a level, e.g., "Sum Weights"
-            if ' ' in level: level =  '"' + level + '"'
             self._rows.append([component.name, level, var['count']])
 
     def end(self):
