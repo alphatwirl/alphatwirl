@@ -50,8 +50,7 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_repr(self):
         obj = CombineIntoList(
-            keyNames = ('htbin', 'njetbin'),
-            valNames = ('n', 'nvar'),
+            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             sort = True,
             datasetColumnName = 'dataset'
         )
@@ -60,8 +59,7 @@ class TestCombineIntoList(unittest.TestCase):
     def test_example(self):
 
         obj = CombineIntoList(
-            keyNames = ('htbin', 'njetbin'),
-            valNames = ('n', 'nvar'),
+            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             sort = True,
             datasetColumnName = 'dataset'
         )
@@ -122,8 +120,7 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_oneReader(self):
 
         obj = CombineIntoList(
-            keyNames = ('htbin', 'njetbin'),
-            valNames = ('n', 'nvar'),
+            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             sort = True,
             datasetColumnName = 'dataset'
         )
@@ -154,8 +151,7 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_all_empty_contents(self):
 
         obj = CombineIntoList(
-            keyNames = ('htbin', 'njetbin'),
-            valNames = ('n', 'nvar'),
+            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             sort = True,
             datasetColumnName = 'dataset'
         )
@@ -194,8 +190,7 @@ class TestCombineIntoList(unittest.TestCase):
     def test_combine_empty_pairs(self):
 
         obj = CombineIntoList(
-            keyNames = ('htbin', 'njetbin'),
-            valNames = ('n', 'nvar'),
+            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             sort = True,
             datasetColumnName = 'dataset'
         )

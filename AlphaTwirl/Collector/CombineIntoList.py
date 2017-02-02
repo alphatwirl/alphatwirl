@@ -5,17 +5,15 @@ from functions import *
 
 ##__________________________________________________________________||
 class CombineIntoList(object):
-    def __init__(self, keyNames, valNames, sort = True, datasetColumnName = 'component'):
-        self.keyNames = keyNames
-        self.valNames = valNames
+    def __init__(self, summaryColumnNames, sort = True, datasetColumnName = 'component'):
+        self.summaryColumnNames = summaryColumnNames
         self.sort = sort
         self.datasetColumnName = datasetColumnName
 
     def __repr__(self):
-        return '{}(keyNames = {!r}, valNames = {!r}, sort = {!r}, datasetColumnName = {!r})'.format(
+        return '{}(summaryColumnNames = {!r}, sort = {!r}, datasetColumnName = {!r})'.format(
             self.__class__.__name__,
-            self.keyNames,
-            self.valNames,
+            self.summaryColumnNames,
             self.sort,
             self.datasetColumnName
         )
@@ -81,7 +79,7 @@ class CombineIntoList(object):
         #     ('TTJets', 300, 3,  15,  30)
         # ]
 
-        header = (self.datasetColumnName, ) + self.keyNames + self.valNames
+        header = (self.datasetColumnName, ) + self.summaryColumnNames
 
         ret.insert(0, header)
         # e.g.,
