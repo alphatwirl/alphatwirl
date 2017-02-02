@@ -51,27 +51,9 @@ class CombineIntoList(object):
         # ]
         # note: summarizers can be added
 
-        dataset_key_vals_dict_pairs = [ ]
-        for dataset, summarizer in dataset_summarizer_pairs:
-            key_vals_dict = summarizer_to_key_vals_dict(summarizer)
-            dataset_key_vals_dict_pairs.append((dataset, key_vals_dict))
-        # e.g.,
-        # dataset_key_vals_dict_pairs = [
-        #     ('QCD', OrderedDict([
-        #         ((200, 2), [array([120, 240])]),
-        #         ((300, 2), [array([490, 980])]),
-        #         ((300, 3), [array([210, 420])])
-        #     ])),
-        #     ('TTJets', OrderedDict([
-        #         ((300, 2), [array([20, 40])]),
-        #         ((300, 3), [array([15, 30])])
-        #     ])),
-        #     ('WJets', OrderedDict())
-        # ]
-
         dataset_tuple_list_pairs = [ ]
-        for dataset, key_vals_dict in dataset_key_vals_dict_pairs:
-            tuple_list = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0, sort = self.sort)
+        for dataset, summarizer in dataset_summarizer_pairs:
+            tuple_list = summarizer_to_tuple_list(summarizer, sort = self.sort)
             dataset_tuple_list_pairs.append((dataset, tuple_list))
         # e.g.,
         # dataset_tuple_list_pairs = [
@@ -116,6 +98,36 @@ class CombineIntoList(object):
 
 ##__________________________________________________________________||
 def summarizer_to_key_vals_dict(summarizer):
-    return collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
+
+    ret = collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
+    # e.g.,
+    # OrderedDict([
+    #     ((200, 2), [array([120, 240])]),
+    #     ((300, 2), [array([490, 980])]),
+    #     ((300, 3), [array([210, 420])])
+    # ])
+
+    return ret
+
+##__________________________________________________________________||
+def summarizer_to_tuple_list(summarizer, sort):
+
+    key_vals_dict = summarizer_to_key_vals_dict(summarizer)
+    # e.g.,
+    # OrderedDict([
+    #     ((200, 2), [array([120, 240])]),
+    #     ((300, 2), [array([490, 980])]),
+    #     ((300, 3), [array([210, 420])])
+    # ])
+
+    tuple_list = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0, sort = sort)
+    # e.g.,
+    # [
+    #     (200, 2, 120, 240),
+    #     (300, 2, 490, 980),
+    #     (300, 3, 210, 420)
+    # ]
+
+    return tuple_list
 
 ##__________________________________________________________________||
