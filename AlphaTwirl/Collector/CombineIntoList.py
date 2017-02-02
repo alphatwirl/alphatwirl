@@ -53,7 +53,7 @@ class CombineIntoList(object):
 
         dataset_key_vals_dict_pairs = [ ]
         for dataset, summarizer in dataset_summarizer_pairs:
-            key_vals_dict = collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
+            key_vals_dict = summarizer_to_key_vals_dict(summarizer)
             dataset_key_vals_dict_pairs.append((dataset, key_vals_dict))
         # e.g.,
         # dataset_key_vals_dict_pairs = [
@@ -113,5 +113,9 @@ class CombineIntoList(object):
         # ]
 
         return ret
+
+##__________________________________________________________________||
+def summarizer_to_key_vals_dict(summarizer):
+    return collections.OrderedDict([(k, v.contents) for k, v in summarizer.results().iteritems()])
 
 ##__________________________________________________________________||
