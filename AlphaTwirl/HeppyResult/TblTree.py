@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..mkdir_p import mkdir_p
-from ..listToAlignedText import listToAlignedText
+from ..misc import mkdir_p
+from ..misc import listToAlignedText
 import os
 import ROOT
 

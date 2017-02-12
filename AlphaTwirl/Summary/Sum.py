@@ -1,54 +1,41 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##__________________________________________________________________||
 import numpy as np
+import copy
 
 ##__________________________________________________________________||
 class Sum(object):
-    def __init__(self, initial_val = (0, )):
-        self._results = { }
-        self.initial_val = initial_val
 
-    def add(self, key, val, weight = 1):
-        self.add_key(key)
-        self._results[key] = self._results[key] + np.array(val*weight)
+    def __init__(self, val = None, weight = 1, contents = None):
 
-    def add_key(self, key):
-        if key not in self._results:
-            self._results[key] = np.array(self.initial_val)
+        if contents is not None:
+            self.contents = copy.deepcopy(contents)
+            return
 
-    def keys(self):
-        return self._results.keys()
+        if val is None:
+            self.contents = [np.array([0])] # will be broadcasted when
+                                            # added with more than 1
+                                            # element
+            return
 
-    def copy_from(self, src):
-        self._results.clear()
-        self._results.update(src._results)
-
-    def results(self):
-        return self._results
+        self.contents = [np.array(val)*weight]
 
     def __add__(self, other):
-        ret = Sum()
-        results = {k: v.copy() for k, v in self._results.iteritems()}
-        if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
-            self._add_results_inplace(results, other._results)
-        ret._results.clear()
-        ret._results.update(results)
-        return ret
-
-    def __iadd__(self, other):
-        self._add_results_inplace(self._results, other._results)
-        return self
+        contents = [self.contents[0] + other.contents[0]]
+        return self.__class__(contents = contents)
 
     def __radd__(self, other):
-        return self.__add__(other)
+        # is called with other = 0 when e.g. sum([obj1, obj2])
+        if other == 0:
+            return self.__class__() + self
+        raise TypeError('unsupported: {!r} + {!r}'.format(other, self))
 
-    def _add_results_inplace(self, res1, res2):
-        # res1 += res2, modify res1
-        for k, v in res2.iteritems():
-            if k not in self._results:
-                res1[k] = v.copy()
-            else:
-                res1[k] = self._results[k] + v
+    def __repr__(self):
+        return '{}(contents = {!r})'.format(self.__class__.__name__, self.contents)
+        return '{}(contents = {!r})'.format(self.__class__.__name__, self.contents)
+
+    def __eq__(self, other):
+        if len(self.contents) != len(other.contents): return False
+        return all([np.all(self.contents[i] == other.contents[i]) for i in range(len(self.contents))])
 
 ##__________________________________________________________________||

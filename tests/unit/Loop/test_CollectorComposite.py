@@ -20,6 +20,10 @@ class MockReader(object):
 ##__________________________________________________________________||
 class TestCollectorComposite(unittest.TestCase):
 
+    def test_repr(self):
+        obj = CollectorComposite()
+        repr(obj)
+
     def test_collect(self):
         """
         1:composite

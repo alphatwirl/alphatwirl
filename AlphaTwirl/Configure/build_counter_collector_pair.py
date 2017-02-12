@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Summary import Summarizer, NextKeyComposer, KeyValueComposer
-from ..CombineIntoList import CombineIntoList
-from ..WriteListToFile import WriteListToFile
+from ..Summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
+from ..Collector import CombineIntoList
+from ..Collector import WriteListToFile
 from ..Loop import Collector
 
 ##__________________________________________________________________||
@@ -13,19 +13,23 @@ def build_counter_collector_pair(tblcfg):
         valAttrNames = tblcfg['valAttrNames'],
         valIndices = tblcfg['valIndices']
     )
-    nextKeyComposer = NextKeyComposer(tblcfg['binnings'])
+    nextKeyComposer = NextKeyComposer(tblcfg['binnings']) if tblcfg['binnings'] is not None else None
     summarizer = Summarizer(
+        Summary = tblcfg['summaryClass']
+    )
+    reader = Reader(
         keyValComposer = keyValComposer,
-        summary = tblcfg['summaryClass'](**tblcfg['summaryClassArgs']),
+        summarizer = summarizer,
         nextKeyComposer = nextKeyComposer,
-        weightCalculator = tblcfg['weight']
+        weightCalculator = tblcfg['weight'],
+        nevents = tblcfg['nevents']
     )
     resultsCombinationMethod = CombineIntoList(
-        keyNames = tblcfg['keyOutColumnNames'],
-        valNames = tblcfg['valOutColumnNames']
+        summaryColumnNames = tblcfg['keyOutColumnNames'] + tblcfg['valOutColumnNames'],
+        sort = tblcfg['sort']
     )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
-    return summarizer, collector
+    return reader, collector
 
 ##__________________________________________________________________||

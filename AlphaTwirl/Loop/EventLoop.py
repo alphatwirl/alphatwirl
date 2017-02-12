@@ -6,19 +6,24 @@ import uuid
 class EventLoop(object):
     """An event loop
     """
-    def __init__(self, eventBuilder, dataset, reader, start = 0, nEvents = -1):
-        self.eventBuilder = eventBuilder
-        self.dataset = dataset
+    def __init__(self, build_events, reader):
+        self.build_events = build_events
         self.reader = reader
-        self.start = start
-        self.nEvents = nEvents
         self.progressReportWriter = EventLoopProgressReportWriter()
 
         # assign a random unique id to be used by progress bar
         self.taskid = uuid.uuid4()
 
+    def __repr__(self):
+        return '{}(build_events = {!r}, reader = {!r}, progressReportWriter = {!r})'.format(
+            self.__class__.__name__,
+            self.build_events,
+            self.reader,
+            self.progressReportWriter
+        )
+
     def __call__(self, progressReporter = None):
-        events = self.eventBuilder.build(self.dataset, start = self.start, nEvents = self.nEvents)
+        events = self.build_events()
         self._reportProgress(progressReporter, events)
         self.reader.begin(events)
         for event in events:
@@ -29,7 +34,7 @@ class EventLoop(object):
 
     def _reportProgress(self, progressReporter, event):
         if progressReporter is None: return
-        report = self.progressReportWriter.write(self.taskid, self.dataset, event)
+        report = self.progressReportWriter.write(self.taskid, event.config, event)
         progressReporter.report(report)
 
 ##__________________________________________________________________||

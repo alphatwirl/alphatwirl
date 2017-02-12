@@ -18,6 +18,10 @@ class KeyValueComposer(object):
     """
     def __init__(self, keyAttrNames = None, binnings = None, keyIndices = None,
                  valAttrNames = None, valIndices = None):
+
+        # save args for __repr__()
+        self.args = (keyAttrNames, binnings, keyIndices, valAttrNames, valIndices)
+
         key_attr_names = tuple(keyAttrNames) if keyAttrNames is not None else ()
         key_idxs = tuple(keyIndices) if keyIndices is not None else (None, )*len(key_attr_names)
         val_attr_names = tuple(valAttrNames) if valAttrNames is not None else ()
@@ -51,6 +55,12 @@ class KeyValueComposer(object):
         self.backref_idxs, self.idxs_conf = parse_indices_config(self.idxs_conf)
 
         self.ArrayReader = BackrefMultipleArrayReader
+
+    def __repr__(self):
+        return '{}(keyAttrNames = {!r}, binnings = {!r}, keyIndices = {!r}, valAttrNames = {!r}, valIndices = {!r})'.format(
+            self.__class__.__name__,
+            self.args[0], self.args[1], self.args[2], self.args[3], self.args[4]
+        )
 
     def begin(self, event):
         arrays = self._collect_arrays(event,  self.attr_names)

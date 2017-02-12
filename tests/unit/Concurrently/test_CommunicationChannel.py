@@ -1,191 +1,131 @@
-from AlphaTwirl.Concurrently import CommunicationChannel
+# Tai Sakuma <tai.sakuma@cern.ch>
 import unittest
-import time
-import os
+import collections
+import logging
+
+from AlphaTwirl.Concurrently import CommunicationChannel, TaskPackage
 
 ##__________________________________________________________________||
-class MockResult(object):
-    def __init__(self, data = None):
-        self.data = data
+MockTask = collections.namedtuple('MockTask', 'name')
+MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
-class MockTask(object):
-    def __init__(self, result, time):
-        self.result = result
-        self.time = time
+class MockDropbox(object):
+    def __init__(self):
+        self.nopened = 0
+        self.nclosed = 0
+        self.packages = [ ]
+        self.result = None
 
-    def __call__(self, progressReporter):
-        time.sleep(self.time)
-        self.result.progressReporter = progressReporter
+    def open(self):
+        self.nopened += 1
+
+    def put(self, package):
+        self.packages.append(package)
+
+    def receive(self):
         return self.result
 
+    def close(self):
+        self.nclosed += 1
+
 ##__________________________________________________________________||
-class MockProgressReporter(object):
-    def report(self, event, component): pass
+class MockProgressReporter(object): pass
 
 ##__________________________________________________________________||
 class MockProgressMonitor(object):
-    def createReporter(self): return MockProgressReporter()
-    def monitor(self): pass
-    def last(self): pass
+    def __init__(self):
+        self.reporters = [ ]
+
+    def createReporter(self):
+        reporter = MockProgressReporter()
+        self.reporters.append(reporter)
+        return reporter
 
 ##__________________________________________________________________||
 class TestCommunicationChannel(unittest.TestCase):
 
-    def test_init(self):
-        self.assertRaises(ValueError, CommunicationChannel, nprocesses = 0)
+    def test_repr(self):
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
+        repr(obj)
 
     def test_begin_end(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
-        communicationChannel.end()
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
 
-    def test_begin_twice(self):
-        nprocesses = 8
-        communicationChannel = CommunicationChannel(nprocesses = nprocesses)
-        communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
-        communicationChannel.begin()
-        self.assertEqual(nprocesses, communicationChannel.nCurrentProcesses)
-        communicationChannel.end()
+        self.assertEqual(0, dropbox.nopened)
+        self.assertEqual(0, dropbox.nclosed)
+
+        obj.begin()
+        self.assertEqual(1, dropbox.nopened)
+        self.assertEqual(0, dropbox.nclosed)
+
+        obj.begin()
+        self.assertEqual(1, dropbox.nopened) # don't open twice
+        self.assertEqual(0, dropbox.nclosed)
+
+        obj.end()
+        self.assertEqual(1, dropbox.nopened)
+        self.assertEqual(1, dropbox.nclosed)
+
+        obj.end()
+        self.assertEqual(1, dropbox.nopened)
+        self.assertEqual(1, dropbox.nclosed) # don't close twice
+
+        obj.begin()
+        self.assertEqual(2, dropbox.nopened) # can open again
+        self.assertEqual(1, dropbox.nclosed)
+
 
     def test_put(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
+        obj.begin()
 
-        result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.003)
-        communicationChannel.put(task1)
+        task1 = MockTask('task1')
+        obj.put(task1)
 
-        result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
-        communicationChannel.put(task2)
+        task2 = MockTask('task2')
+        obj.put(task2, 123, 'ABC', A = 34)
 
-        communicationChannel.end()
+        self.assertEqual([
+            TaskPackage(task = task1, args = (), kwargs = {}),
+            TaskPackage(task = task2, args = (123, 'ABC'), kwargs = {'A': 34}),
+        ], dropbox.packages)
 
-    def test_put_receive(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
+        obj.end()
 
-        result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.003)
-        communicationChannel.put(task1)
+    def test_receive(self):
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
+        obj.begin()
 
-        result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
-        communicationChannel.put(task2)
+        result1 = MockResult('result1')
+        dropbox.result = result1
+        self.assertEqual(result1, obj.receive())
 
-        actual = [r.data for r in communicationChannel.receive()]
-        self.assertEqual(set(['task1', 'task2']), set(actual))
+        obj.end()
 
-        communicationChannel.end()
+    def test_put_when_closed(self):
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
 
-    def test_receive_order(self):
-        # results of tasks are sorted in the order in which the tasks
-        # are put.
+        # logging.getLogger('AlphaTwirl').setLevel(logging.DEBUG)
+        task1 = MockTask('task1')
+        obj.put(task1)
 
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
+        self.assertEqual([ ], dropbox.packages) # empty
 
-        result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.010)
-        communicationChannel.put(task1)
+    def test_receive_when_closed(self):
+        dropbox = MockDropbox()
+        obj = CommunicationChannel(dropbox = dropbox)
 
-        result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
-        communicationChannel.put(task2)
+        # logging.getLogger('AlphaTwirl').setLevel(logging.DEBUG)
+        result1 = MockResult('result1')
+        dropbox.result = result1
+        self.assertIsNone(obj.receive())
 
-        result3 = MockResult('task3')
-        task3 = MockTask(result3, 0.005)
-        communicationChannel.put(task3)
-
-        actual = [r.data for r in communicationChannel.receive()]
-        self.assertEqual(['task1', 'task2', 'task3'], actual)
-
-        communicationChannel.end()
-
-    def test_put_receive_repeat(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
-
-        result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.003)
-        communicationChannel.put(task1)
-
-        result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
-        communicationChannel.put(task2)
-
-        actual = [r.data for r in communicationChannel.receive()]
-        self.assertEqual(set(['task1', 'task2']), set(actual))
-
-        result3 = MockResult('task3')
-        task3 = MockTask(result3, 0.002)
-        communicationChannel.put(task3)
-
-        result4 = MockResult('task4')
-        task4 = MockTask(result4, 0.002)
-        communicationChannel.put(task4)
-
-        actual = [r.data for r in communicationChannel.receive()]
-        self.assertEqual(set(['task3', 'task4']), set(actual))
-
-        communicationChannel.end()
-
-    def test_begin_put_recive_end_repeat(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
-
-        result = MockResult('task1')
-        task = MockTask(result, 0.003)
-        communicationChannel.put(task)
-
-        communicationChannel.receive()
-
-        communicationChannel.end()
-
-        communicationChannel.begin()
-
-        result = MockResult('task2')
-        task = MockTask(result, 0.003)
-        communicationChannel.put(task)
-
-        communicationChannel.receive()
-
-        communicationChannel.end()
-
-
-    def test_receive_without_put(self):
-        communicationChannel = CommunicationChannel()
-        communicationChannel.begin()
-
-        self.assertEqual([ ], communicationChannel.receive())
-
-        communicationChannel.end()
-
-    def test_ProgressMonitor(self):
-        progressMonitor = MockProgressMonitor()
-        communicationChannel = CommunicationChannel(nprocesses = 3, progressMonitor = progressMonitor)
-        communicationChannel.begin()
-
-        result1 = MockResult('task1')
-        task1 = MockTask(result1, 0.003)
-        communicationChannel.put(task1)
-
-        result2 = MockResult('task2')
-        task2 = MockTask(result2, 0.001)
-        communicationChannel.put(task2)
-
-        # the results in the main process don't have a ProgressReporter
-        self.assertFalse(hasattr(result1, "progressReporter"))
-        self.assertFalse(hasattr(result2, "progressReporter"))
-
-        # the results returned from other processes do.
-        returnedResults = communicationChannel.receive()
-        self.assertIsInstance(returnedResults[0].progressReporter, MockProgressReporter)
-        self.assertIsInstance(returnedResults[1].progressReporter, MockProgressReporter)
-
-        communicationChannel.end()
-
+        obj.end()
 
 ##__________________________________________________________________||

@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..mkdir_p import mkdir_p
-from ..listToAlignedText import listToAlignedText
+from ..misc import mkdir_p
+from ..misc import listToAlignedText
 import os
 from ReadCounter import ReadCounter
 
@@ -59,9 +59,6 @@ class TblCounter(object):
     def _determine_columnNames_start_rows(self):
         if self.columnNames is None:
             self.columnNames = self.levels
-
-            # quote if space is in a level, e.g., "Sum Weights"
-            self.columnNames = ['"' + n + '"' if ' ' in n else n for n in self.columnNames]
         self._rows = [['component'] + list(self.columnNames)]
 
 

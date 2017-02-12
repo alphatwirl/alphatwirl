@@ -12,14 +12,6 @@ AlphaTwirl.ProgressBar.BProgressMonitor module
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.MPProgressMonitor module
------------------------------------------------
-
-.. automodule:: AlphaTwirl.ProgressBar.MPProgressMonitor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 AlphaTwirl.ProgressBar.NullProgressMonitor module
 -------------------------------------------------
 

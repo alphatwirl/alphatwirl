@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..mkdir_p import mkdir_p
-from ..listToAlignedText import listToAlignedText
+from ..misc import mkdir_p
+from ..misc import listToAlignedText
 import os
 from ReadCounter import ReadCounter
 
@@ -44,8 +44,6 @@ class TblCounterLong(object):
 
         for level, var in counter.items():
             if not self.levels is None and not level in self.levels: continue
-            # quote if space is in a level, e.g., "Sum Weights"
-            if ' ' in level: level =  '"' + level + '"'
             self._rows.append([component.name, level, var['count']])
 
     def end(self):

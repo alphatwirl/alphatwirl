@@ -2,47 +2,37 @@
 
 ##__________________________________________________________________||
 import numpy as np
+import copy
 
 ##__________________________________________________________________||
 class Scan(object):
-    def __init__(self, n = None):
-        self._results = [ ]
-        self.n = n
-        self.i = 0
+    def __init__(self, val = None, weight = 1, contents = None):
 
-    def add(self, key, val, weight = 1):
-        if self.n is not None and self.n <= self.i: return
-        self._results.append(key + val)
-        self.i += 1
+        if contents is not None:
+            self.contents = copy.deepcopy(contents)
+            return
 
-    def add_key(self, key):
-        pass
+        if val is None:
+            self.contents = [ ]
+            return
 
-    def keys(self):
-        return [ ]
-
-    def copy_from(self, src):
-        self._results[:] = src._results
-
-    def results(self):
-        return self._results
+        self.contents = [copy.deepcopy(val)]
 
     def __add__(self, other):
-        ret = Scan()
-        results = list(self._results) # copy
-        if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
-            self._add_results_inplace(results, other._results)
-        ret._results[:] = results
-        return ret
-
-    def __iadd__(self, other):
-        self._add_results_inplace(self._results, other._results)
-        return self
+        contents = copy.deepcopy(self.contents)
+        contents.extend(other.contents)
+        return self.__class__(contents = contents)
 
     def __radd__(self, other):
-        return self.__add__(other)
+        # is called with other = 0 when e.g. sum([obj1, obj2])
+        if other == 0:
+            return self.__class__() + self
+        raise TypeError('unsupported: {!r} + {!r}'.format(other, self))
 
-    def _add_results_inplace(self, res1, res2):
-        res1.extend(res2)
+    def __repr__(self):
+        return '{}(contents = {})'.format(self.__class__.__name__, self.contents)
+
+    def __eq__(self, other):
+        return self.contents == other.contents
 
 ##__________________________________________________________________||

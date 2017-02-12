@@ -25,6 +25,14 @@ class Collector(object):
 
         self._datasetReaderPairs = [ ]
 
+    def __repr__(self):
+        return '{}(resultsCombinationMethod = {!r}, deliveryMethod = {!r}, datasetReaderPairs = {!r})'.format(
+            self.__class__.__name__,
+            self.resultsCombinationMethod,
+            self.deliveryMethod,
+            self._datasetReaderPairs
+        )
+
     def addReader(self, datasetName, reader):
         self._datasetReaderPairs.append((datasetName, reader))
 

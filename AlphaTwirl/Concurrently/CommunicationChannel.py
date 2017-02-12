@@ -1,31 +1,14 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import logging
+
 from ..ProgressBar import NullProgressMonitor
-import multiprocessing
-from operator import itemgetter
-
-##__________________________________________________________________||
-class Worker(multiprocessing.Process):
-    def __init__(self, task_queue, result_queue, progressReporter, lock):
-        multiprocessing.Process.__init__(self)
-        self.task_queue = task_queue
-        self.result_queue = result_queue
-        self.lock = lock
-        self.progressReporter = progressReporter
-
-    def run(self):
-        while True:
-            message = self.task_queue.get()
-            if message is None:
-                self.task_queue.task_done()
-                break
-            taskNo, task = message
-            result = task(self.progressReporter)
-            self.task_queue.task_done()
-            self.result_queue.put((taskNo, result))
+from .TaskPackage import TaskPackage
 
 ##__________________________________________________________________||
 class CommunicationChannel(object):
     """A communication channel with workers in other processes.
+
+    (This docstring is outdated.)
 
     You can send tasks to workers through this channel. The workers,
     running in other processes, execute the tasks in the background.
@@ -48,23 +31,29 @@ class CommunicationChannel(object):
     ``progressReporter``, which is created by the ``progressMonitor``.
 
     Now, you are ready to send a task. A task is a function or any
-    object which is callable and picklable and which takes the only
-    argument ``progressReporter``. A value that a task returns is the
-    result of the task and must be picklable. For example, an instance
-    of ``EventLoop`` can be a task. You can send a task with the
-    method ``put``::
+    object which is callable and picklable. A task can take any number
+    of arguments. If a task takes a named argument
+    ``progressReporter``, the worker will give the
+    ``progressReporter`` to the task. A value that a task returns is
+    the result of the task and must be picklable. For example, an
+    instance of ``EventLoop`` can be a task. You can send a task with
+    the method ``put``::
 
-        channel.put(task1)
+        channel.put(task1, 10, 20, A = 30)
+
+    Here, 10, 20, A = 30 are the arguments to the task.
 
     This class sends the task to a worker. The worker which receives
-    the task will call the task with the ``progressReporter``.
-
+    the task will first try to call the task with the
+    ``progressReporter`` in addition to the arguments. If the task
+    doesn't take the ``progressReporter``, it calls only with the
+    arguments.
 
     You can send multiple tasks::
 
         channel.put(task2)
-        channel.put(task3)
-        channel.put(task4)
+        channel.put(task3, 100, 200)
+        channel.put(task4, A = 'abc')
         channel.put(task5)
 
     They will be executed by workers.
@@ -100,51 +89,47 @@ class CommunicationChannel(object):
 
     """
 
-    def __init__(self, nprocesses = 16, progressMonitor = None):
+    def __init__(self, dropbox):
+        self.dropbox = dropbox
+        self.isopen = False
 
-        if nprocesses <= 0:
-            raise ValueError("nprocesses must be at least one: " + str(nprocesses) + " is given")
-
-
-        self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
-        self.nMaxProcesses = nprocesses
-        self.nCurrentProcesses = 0
-        self.task_queue = multiprocessing.JoinableQueue()
-        self.result_queue = multiprocessing.Queue()
-        self.lock = multiprocessing.Lock()
-        self.nRunningTasks = 0
-        self.taskNo = 0
+    def __repr__(self):
+        return '{}(dropbox = {!r}, isopen = {!r}'.format(
+            self.__class__.__name__,
+            self.dropbox,
+            self.isopen
+        )
 
     def begin(self):
-        if self.nCurrentProcesses >= self.nMaxProcesses: return
-        for i in xrange(self.nCurrentProcesses, self.nMaxProcesses):
-            worker = Worker(self.task_queue, self.result_queue, self.progressMonitor.createReporter(), self.lock)
-            worker.start()
-            self.nCurrentProcesses += 1
+        if self.isopen: return
+        self.dropbox.open()
+        self.isopen = True
 
-    def put(self, task):
-        self.task_queue.put((self.taskNo, task))
-        self.taskNo += 1
-        self.nRunningTasks += 1
+    def put(self, task, *args, **kwargs):
+        if not self.isopen:
+            logger = logging.getLogger(__name__)
+            logger.warning('the drop box is not open')
+            return
+
+        package = TaskPackage(
+            task = task,
+            args = args,
+            kwargs =  kwargs
+        )
+        self.dropbox.put(package)
 
     def receive(self):
-        messages = [ ] # a list of (taskNo, result)
-        while self.nRunningTasks >= 1:
-            if self.result_queue.empty(): continue
-            message = self.result_queue.get()
-            messages.append(message)
-            self.nRunningTasks -= 1
+        if not self.isopen:
+            logger = logging.getLogger(__name__)
+            logger.warning('the drop box is not open')
+            return
 
-        # sort in the order of taskNo
-        messages = sorted(messages, key = itemgetter(0))
-
-        results = [result for taskNo, result in messages]
+        results = self.dropbox.receive()
         return results
 
     def end(self):
-        for i in xrange(self.nCurrentProcesses):
-            self.task_queue.put(None) # end workers
-        self.task_queue.join()
-        self.nCurrentProcesses = 0
+        if not self.isopen: return
+        self.dropbox.close()
+        self.isopen = False
 
 ##__________________________________________________________________||

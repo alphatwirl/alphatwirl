@@ -47,6 +47,16 @@ class Binning(object):
 
         self._valid = valid
 
+    def __repr__(self):
+        return '{}(boundaries = {!r}, underflow_bin = {!r}), overflow_bin = {!r}), valid = {!r})'.format(
+            self.__class__.__name__,
+            self.boundaries, self.underflow_bin, self.overflow_bin, self._valid
+        )
+
+    def __str__(self):
+        ret = '{:>5} {:>10} {:>10}\n'.format('bin', 'low', 'up')
+        return ret + "\n".join('{:>5} {:>10} {:>10}'.format(b, l, u) for b, l, u in zip(self.bins, self.lows, self.ups))
+
     def __call__(self, val):
         if not self._valid(val): return None
         if val < self.lows[0]: return self.underflow_bin
@@ -63,9 +73,5 @@ class Binning(object):
         if bin == self.overflow_bin: return self.overflow_bin
         if bin == self.bins[-1]: return self.overflow_bin
         return self.bins[self.bins.index(bin) + 1]
-
-    def __str__(self):
-        ret = "%5s %10s %10s\n" % ("bin", "low", "up")
-        return ret + "\n".join("%5s %10s %10s" % (str(b), str(l), str(u)) for b, l, u in zip(self.bins, self.lows, self.ups))
 
 ##__________________________________________________________________||

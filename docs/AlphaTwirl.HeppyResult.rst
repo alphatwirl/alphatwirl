@@ -52,6 +52,22 @@ AlphaTwirl.HeppyResult.EventBuilder module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.HeppyResult.EventBuilderConfig module
+------------------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.EventBuilderConfig
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+AlphaTwirl.HeppyResult.EventBuilderConfigMaker module
+-----------------------------------------------------
+
+.. automodule:: AlphaTwirl.HeppyResult.EventBuilderConfigMaker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.HeppyResult.HeppyResult module
 -----------------------------------------
 

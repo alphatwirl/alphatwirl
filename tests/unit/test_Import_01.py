@@ -29,10 +29,8 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isfunction(AlphaTwirl.Aggregate.stack_counts_categories))
         self.assertTrue(inspect.isfunction(AlphaTwirl.Aggregate.sumOverCategories))
 
-        self.assertTrue(inspect.isfunction(AlphaTwirl.buildBinningFromTbl))
-
-        self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoPandasDataFrame))
-        self.assertTrue(inspect.isclass(AlphaTwirl.WritePandasDataFrameToFile))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Collector.CombineIntoPandasDataFrame))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Collector.WritePandasDataFrameToFile))
 
     @unittest.skipUnless(hasROOT, "has no ROOT")
     def test_with_ROOT(self):
@@ -47,15 +45,14 @@ class TestImport_01(unittest.TestCase):
 
     def test_classes(self):
         self.assertTrue(inspect.isclass(AlphaTwirl.Loop.Collector))
-        self.assertTrue(inspect.isclass(AlphaTwirl.AlphaTwirl))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Binning))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Echo))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.Round))
         self.assertTrue(inspect.isclass(AlphaTwirl.Binning.RoundLog))
         self.assertTrue(inspect.isclass(AlphaTwirl.Concurrently.CommunicationChannel))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Combine))
-        self.assertTrue(inspect.isclass(AlphaTwirl.CombineIntoList))
-        self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Summarizer))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Collector.CombineIntoList))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Collector.WriteListToFile))
+        self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Reader))
         self.assertTrue(inspect.isclass(AlphaTwirl.Summary.Count))
         self.assertTrue(inspect.isclass(AlphaTwirl.Summary.NextKeyComposer))
         self.assertTrue(inspect.isclass(AlphaTwirl.Loop.Collector))
@@ -83,9 +80,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReport))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReporter))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.NullProgressMonitor))
-        self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.MPProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.BProgressMonitor))
         self.assertTrue(inspect.isclass(AlphaTwirl.ProgressBar.ProgressReportPickup))
-        self.assertTrue(inspect.isclass(AlphaTwirl.WriteListToFile))
 
 ##________________________________._________________________________||

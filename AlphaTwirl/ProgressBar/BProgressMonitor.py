@@ -64,6 +64,12 @@ class BProgressMonitor(object):
         self.queue = multiprocessing.Queue()
         self.presentation = presentation
 
+    def __repr__(self):
+        return '{}(presentation = {!r}'.format(
+            self.__class__.__name__,
+            self.presentation
+        )
+
     def begin(self):
         self.pickup = ProgressReportPickup(self.queue, self.presentation)
         self.pickup.start()

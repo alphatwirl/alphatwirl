@@ -20,6 +20,14 @@ AlphaTwirl.Configure.TableFileNameComposer module
     :undoc-members:
     :show-inheritance:
 
+AlphaTwirl.Configure.TableFileNameComposer2 module
+--------------------------------------------------
+
+.. automodule:: AlphaTwirl.Configure.TableFileNameComposer2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 AlphaTwirl.Configure.build_counter_collector_pair module
 --------------------------------------------------------
 

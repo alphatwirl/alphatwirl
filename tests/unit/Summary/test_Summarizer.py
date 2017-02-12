@@ -1,151 +1,161 @@
-import AlphaTwirl.Summary as Summary
 import unittest
+import copy
 
-##__________________________________________________________________||
-class MockEvent(object):
-    pass
+from AlphaTwirl.Summary import Summarizer
 
 ##__________________________________________________________________||
 class MockSummary(object):
-    def __init__(self):
-        self._counts = [ ]
-        self._keys = set()
-        self._added_keys = set()
+    def __init__(self, val = None, weight = 1, contents = None):
 
-    def add(self, key, val, weight):
-        self._counts.append((key, weight))
-        self._keys.add(key)
+        if contents is not None:
+            self.contents = contents
+            return
 
-    def add_key(self, key):
-        self._added_keys.add(key)
+        if val is None:
+            self.contents = 0
+            return
 
-    def keys(self):
-        return list(self._keys)
+        self.contents = val*weight
 
-    def copy_from(self, src):
-        self._counts[:] = src._counts[:]
+    def __add__(self, other):
+        contents = self.contents + other.contents
+        return self.__class__(contents = contents)
 
-    def results(self):
-        return self._counts
+    def __radd__(self, other):
+        # is called with other = 0 when e.g. sum([obj1, obj2])
+        return self.__class__() + self
 
-##__________________________________________________________________||
-class MockWeightCalculator(object):
-    def __call__(self, event):
-        return 1.0
+    def __repr__(self):
+        return '{}(contents = {})'.format(self.__class__.__name__, self.contents)
 
-##__________________________________________________________________||
-class MockKeyValueComposer(object):
-    def __init__(self, keyval_list = [ ]):
-        self.keyval_list = keyval_list
-        self._begin = None
-
-    def begin(self, event):
-        self._begin = event
-
-    def __call__(self, event):
-        return self.keyval_list.pop()
+    def __eq__(self, other):
+        return self.contents == other.contents
 
 ##__________________________________________________________________||
-class MockNextKeyComposer(object):
-    def __init__(self, nextdic):
-        self.nextdic = nextdic
-
-    def __call__(self, key):
-        return self.nextdic[key]
+class MockSummary2(object):
+    def __init__(self, val = None, weight = 1, contents = None):
+        pass
 
 ##__________________________________________________________________||
-class TestMockKeyValueComposer(unittest.TestCase):
+class TestMockSummary(unittest.TestCase):
 
-    def test_call(self):
-        keys = [
-            ((10,  5), (101, 22)),
-            ((11,  4), (102, 33)),
-            ((12,  3), (103, 44)),
-            ((13,  2), (104, 55)),
-        ]
-        keycomposer = MockKeyValueComposer(keys)
-        self.assertEqual(((13,  2), (104, 55)), keycomposer(MockEvent()))
-        self.assertEqual(((12,  3), (103, 44)), keycomposer(MockEvent()))
-        self.assertEqual(((11,  4), (102, 33)), keycomposer(MockEvent()))
-        self.assertEqual(((10,  5), (101, 22)), keycomposer(MockEvent()))
-        self.assertRaises(IndexError, keycomposer, MockEvent())
+    def test_01(self):
+        obj0 = MockSummary()
+        obj1 = MockSummary(val = 11)
+        self.assertIsNot(obj1, sum([obj1])) # will call __radd__(other = 0)
+        obj2 = MockSummary(val = 22)
+        obj3 = MockSummary(val = 33)
+        self.assertEqual(obj3, (obj1 + obj2))
+        obj4 = MockSummary(val = 43)
+        self.assertNotEqual(obj4, (obj1 + obj2))
 
 ##__________________________________________________________________||
 class TestSummarizer(unittest.TestCase):
 
-    def test_events(self):
-        summary = MockSummary()
-        keyval_list = [
-            [((11, ), ()), ((12, ), ())],
-            [((12, ), ())],
-            [ ],
-            [((14, ), ())],
-            [((11, ), ())]
-        ]
-        keycomposer = MockKeyValueComposer(keyval_list)
-        nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
-        nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer, MockWeightCalculator())
+    def test_init_repr(self):
+        obj = Summarizer(Summary = MockSummary)
+        repr(obj)
 
-        event = MockEvent()
-        counter.begin(event)
-        self.assertEqual(event, keycomposer._begin)
+    def test_add(self):
 
-        event = MockEvent()
-        counter.event(event)
-        self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual(summary, counter.results())
+        obj = Summarizer(Summary = MockSummary)
 
-        counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
+        obj.add('A', 12)
+        expected  = {'A': MockSummary(contents = 12)}
+        self.assertEqual(expected, obj.results())
 
-        counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0)], summary.results())
+        obj.add('A', 23)
+        expected  = {'A': MockSummary(contents = 35)}
+        self.assertEqual(expected, obj.results())
 
-        counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0)], summary.results())
+        obj.add('A', 10, weight = 2)
+        expected  = {'A': MockSummary(contents = 55)}
+        self.assertEqual(expected, obj.results())
 
-        counter.event(MockEvent())
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary._counts)
-        self.assertEqual([((11,), 1.0), ((14,), 1.0), ((12,), 1.0), ((11,), 1.0), ((12,), 1.0)], summary.results())
+        obj.add('B', 20, weight = 3.2)
+        expected  = {
+            'A': MockSummary(contents = 55),
+            'B': MockSummary(contents = 64.0)
+        }
+        self.assertEqual(expected, obj.results())
 
-        counter.end()
-        self.assertEqual(set([(15, ), (13, ), (12, )]), summary._added_keys)
+        return
 
-    def test_default_weight(self):
-        summary = MockSummary()
-        keyval_list = [
-            [((11, ), ()), ((12, ), ())],
-            [((12, ), ())],
-            [ ],
-            [((14, ), ())],
-            [((11, ), ())]
-        ]
-        keycomposer = MockKeyValueComposer(keyval_list)
-        nextdic = {(11, ): ((12, ), ), (12, ): ((13, ), ), (14, ): ((15, ), )}
-        nextKeyComposer = MockNextKeyComposer(nextdic)
-        counter = Summary.Summarizer(keycomposer, summary, nextKeyComposer)
+    def test_add_key(self):
+        obj = Summarizer(Summary = MockSummary)
+        obj.add_key('A')
+        expected  = {'A': MockSummary(contents = 0)}
+        self.assertEqual(expected, obj.results())
 
-        self.assertIsInstance(counter.weightCalculator, Summary.WeightCalculatorOne)
-
-        event = MockEvent()
-        counter.event(event)
-        self.assertEqual([((11, ), 1.0)], summary._counts)
-        self.assertEqual(summary, counter.results())
+        obj.add_key('B')
+        obj.add_key('C')
+        expected  = {
+            'A': MockSummary(contents = 0),
+            'B': MockSummary(contents = 0),
+            'C': MockSummary(contents = 0),
+        }
+        self.assertEqual(expected, obj.results())
 
     def test_copy_from(self):
-        summary = MockSummary()
-        counter = Summary.Summarizer(MockKeyValueComposer(), summary, MockWeightCalculator())
+        obj = Summarizer(Summary = MockSummary2)
+        src_obj = Summarizer(Summary = MockSummary)
 
-        src_summary = MockSummary()
-        src_counter = Summary.Summarizer(MockKeyValueComposer(), src_summary, MockWeightCalculator())
-        src_summary._counts[:] = [((11, ), 1.0)]
+        src_results  = {
+            'A': MockSummary(contents = 55),
+            'B': MockSummary(contents = 64.0)
+        }
 
-        self.assertEqual([ ], summary._counts)
-        counter.copy_from(src_counter)
-        self.assertEqual([((11,), 1.0)], summary._counts)
+        src_obj._results.update(src_results)
+        obj.copy_from(src_obj)
+        self.assertEqual(src_results, obj.results())
+        self.assertIsNot(src_obj._results, obj._results)
+        self.assertEqual(obj.Summary, src_obj.Summary)
+        self.assertIsNot(src_obj._results['A'], obj._results['A'])
+        self.assertIsNot(src_obj._results['B'], obj._results['B'])
+
+##__________________________________________________________________||
+class TestSummarizer_operator(unittest.TestCase):
+
+    def setUp(self):
+        self.obj1 = Summarizer(Summary = MockSummary)
+        self.obj2 = Summarizer(Summary = MockSummary)
+
+        self.obj1._results  = {
+            (1, ): MockSummary(contents = 4),
+            (2, ): MockSummary(contents = 3),
+            (3, ): MockSummary(contents = 2),
+            }
+
+        self.obj2._results  = {
+            (2, ): MockSummary(contents = 3.2),
+            (4, ): MockSummary(contents = 2),
+        }
+
+        self.expected = {
+            (1, ): MockSummary(contents = 4),
+            (2, ): MockSummary(contents = 6.2),
+            (3, ): MockSummary(contents = 2),
+            (4, ): MockSummary(contents = 2),
+            }
+
+    def test_add(self):
+        obj3 = self.obj1 + self.obj2
+        self.assertEqual(self.expected, obj3._results)
+        self.assertIsNot(self.obj1._results[(1, )], obj3._results[(1, )])
+        self.assertIsNot(self.obj2._results[(4, )], obj3._results[(4, )])
+
+    def test_radd(self):
+        obj3 = sum([self.obj1, self.obj2]) # 0 + obj1 is executed
+        self.assertEqual(self.expected, obj3._results)
+        self.assertIsNot(self.obj1._results[(1, )], obj3._results[(1, )])
+        self.assertIsNot(self.obj2._results[(4, )], obj3._results[(4, )])
+
+    def test_iadd(self):
+        obj1 = self.obj1
+
+        self.obj1 += self.obj2
+        self.assertIs(self.obj1, obj1)
+        self.assertEqual(self.expected, self.obj1._results)
+
 
 ##__________________________________________________________________||

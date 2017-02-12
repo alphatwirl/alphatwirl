@@ -19,6 +19,12 @@ class ReaderComposite(object):
     def __init__(self):
         self.readers = []
 
+    def __repr__(self):
+        return '{}({!r})'.format(
+            self.__class__.__name__,
+            self.readers
+        )
+
     def add(self, reader):
         self.readers.append(reader)
 

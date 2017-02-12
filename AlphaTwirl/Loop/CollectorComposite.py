@@ -17,6 +17,13 @@ class CollectorComposite(object):
         self.components = [ ]
         self.progressReporter = progressReporter
 
+    def __repr__(self):
+        return '{}(components = {!r}, progressReporter = {!r})'.format(
+            self.__class__.__name__,
+            self.components,
+            self.progressReporter
+        )
+
     def add(self, collector):
         """add a collector
 
