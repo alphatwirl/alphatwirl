@@ -7,4 +7,5 @@ setup(
     author = 'Tai Sakuma',
     author_email = 'tai.sakuma@gmail.com',
     url = 'https://github.com/TaiSakuma/AlphaTwirl',
+    packages = ['AlphaTwirl'],
 )
