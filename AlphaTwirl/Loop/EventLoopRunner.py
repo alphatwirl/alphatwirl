@@ -12,6 +12,13 @@ class EventLoopRunner(object):
         self.progressReporter = progressMonitor.createReporter()
         self.results = [ ]
 
+    def __repr__(self):
+        return '{}(progressReporter = {!r}, results = {!r})'.format(
+            self.__class__.__name__,
+            self.progressReporter,
+            self.results
+        )
+
     def begin(self):
         self.results = [ ]
 

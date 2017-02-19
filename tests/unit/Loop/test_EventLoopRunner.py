@@ -18,6 +18,9 @@ class TestEventLoopRunner(unittest.TestCase):
     def setUp(self):
         self.obj = EventLoopRunner()
 
+    def test_repr(self):
+        repr(self.obj)
+
     def test_begin(self):
         self.obj.begin()
 
