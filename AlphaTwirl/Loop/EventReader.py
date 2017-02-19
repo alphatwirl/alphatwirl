@@ -11,8 +11,11 @@ class EventReader(object):
     split_into_build_events(), which splits the data set into chunks,
     creates the function build_events() for each chunk, and returns a
     list of the functions. Then, for each build_events(), This class
-    creates a reader associated with the collector, creates an event
-    loop, and send it to the event loop runner.
+    creates a copy of the reader, creates an event loop, and send it
+    to the event loop runner.
+
+    At the end, this class receives results from the event loop runner
+    and have the collector collect them.
 
     """
     def __init__(self, eventLoopRunner, reader, collector,
