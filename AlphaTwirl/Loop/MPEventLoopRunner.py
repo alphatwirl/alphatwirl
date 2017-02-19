@@ -43,17 +43,19 @@ class MPEventLoopRunner(object):
     After giving all event loops that you need to run to this class,
     you need to call the method `end()`::
 
-        runner.end()
+        results = runner.end()
 
     If workers are in the background, this method will wait until
     workers finish running all event loops. If the worker is in the
-    foreground, this method immediately returns.
+    foreground, this method immediately returns. This method returns
+    the results, the list of the values eventLoops return, sorted in
+    the order given with `run()`.
 
     """
 
     def __init__(self, communicationChannel):
         self.communicationChannel = communicationChannel
-        self._original_readers = [ ]
+        self.nruns = 0
 
     def __repr__(self):
         return '{}(communicationChannel = {!r}'.format(
@@ -76,42 +78,26 @@ class MPEventLoopRunner(object):
 
         """
 
-        self._original_readers.append(eventLoop.reader)
         self.communicationChannel.put(eventLoop)
+        self.nruns += 1
 
     def end(self):
-        """wait until all event loops end
-
-        In addition, if necessary, this method also carries out a
-        somewhat complex copying operation because of the duplication
-        of objects that occurs in multiprocessing.
-
-        If eventLoops were executed in other processes, the readers in
-        the main process did not read the events; therefore, they
-        don't have the results. The readers in other processes read
-        the events. They have the results. The readers in other
-        process are pickled and sent back to the main process.
-        However, these returned readers are no longer the same objects
-        as the original readers in the main process.
-
-        The method copies the returned readers to the original readers
-        if they are different objects.
+        """wait until all event loops end and returns the results.
 
         """
 
-        returned_readers = self.communicationChannel.receive()
+        results = self.communicationChannel.receive()
 
-        if len(self._original_readers) != len(returned_readers):
+        if self.nruns != len(results):
             import logging
             logger = logging.getLogger(__name__)
+            # logger.setLevel(logging.DEBUG)
             logger.warning(
-                'the same number of the readers were not received: {} readers put, {} readers received'.format(
-                    len(self._original_readers),
-                    len(returned_readers)
+                'too fee results received: {} results received, {} expected'.format(
+                    len(results),
+                    self.nruns
                 ))
 
-        for original, returned in zip(self._original_readers, returned_readers):
-            if original is returned: continue
-            original.copy_from(returned)
+        return results
 
 ##__________________________________________________________________||
