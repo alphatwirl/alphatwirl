@@ -1,30 +1,44 @@
-from AlphaTwirl.Loop import EventLoopRunner
 import unittest
+from AlphaTwirl.Loop import EventLoopRunner
+
+##__________________________________________________________________||
+class MockResult(object): pass
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
-    def __init__(self):
-        self.called = False
+    def __init__(self, result):
+        self.result = result
 
     def __call__(self, progressReporter):
-        self.called = True
+        return self.result
 
 ##__________________________________________________________________||
 class TestEventLoopRunner(unittest.TestCase):
 
     def setUp(self):
-        self.runner = EventLoopRunner()
+        self.obj = EventLoopRunner()
 
     def test_begin(self):
-        self.runner.begin()
-
-    def test_run(self):
-        loop = MockEventLoop()
-        self.assertFalse(loop.called)
-        self.runner.run(loop)
-        self.assertTrue(loop.called)
+        self.obj.begin()
 
     def test_end(self):
-        self.runner.end()
+        self.obj.begin()
+        self.assertEqual([ ], self.obj.end())
+
+    def test_end_without_begin(self):
+        self.assertEqual([ ], self.obj.end())
+
+    def test_run(self):
+        self.obj.begin()
+
+        result1 = MockResult()
+        loop1 = MockEventLoop(result1)
+        self.obj.run(loop1)
+
+        result2 = MockResult()
+        loop2 = MockEventLoop(result2)
+        self.obj.run(loop2)
+
+        self.assertEqual([result1, result2], self.obj.end())
 
 ##__________________________________________________________________||
