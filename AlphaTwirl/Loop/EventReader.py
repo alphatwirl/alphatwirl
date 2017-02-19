@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import copy
+
 from .EventLoop import EventLoop
 from .Associator import Associator
 
@@ -35,16 +37,21 @@ class EventReader(object):
 
     def begin(self):
         self.eventLoopRunner.begin()
+        self.dataset_names = [ ]
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
         for build_events in build_events_list:
-            reader = self.associator.make(dataset.name)
+            ## reader = self.associator.make(dataset.name)
+            self.dataset_names.append(dataset.name)
+            reader = copy.deepcopy(self.reader)
             eventLoop = self.EventLoop(build_events, reader)
             self.eventLoopRunner.run(eventLoop)
 
     def end(self):
-        self.eventLoopRunner.end()
+        returned_readers = self.eventLoopRunner.end()
+        for d, r in zip(self.dataset_names, returned_readers):
+            self.collector.addReader(d, r)
         return self.collector.collect()
 
 ##__________________________________________________________________||

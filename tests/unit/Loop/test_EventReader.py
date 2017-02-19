@@ -48,6 +48,7 @@ class MockEventLoopRunner(object):
 
     def end(self):
         self.ended = True
+        return [l.reader for l in self.eventLoops]
 
 ##__________________________________________________________________||
 class MockEventLoop(object):
@@ -93,24 +94,15 @@ class TestEventReader(unittest.TestCase):
         self.assertIs(build_events1, eventLoop1.build_events)
         self.assertIsInstance(eventLoop1.reader, MockReader)
 
-        self.assertEqual("dataset1", collector.pairs[0][0])
-        self.assertIs(eventLoop1.reader, collector.pairs[0][1])
-
         eventLoop2 =  eventLoopRunner.eventLoops[1]
         self.assertIsInstance(eventLoop2, MockEventLoop)
         self.assertIs(build_events2, eventLoop2.build_events)
         self.assertIsInstance(eventLoop2.reader, MockReader)
 
-        self.assertEqual("dataset1", collector.pairs[1][0])
-        self.assertIs(eventLoop2.reader, collector.pairs[1][1])
-
         eventLoop3 =  eventLoopRunner.eventLoops[2]
         self.assertIsInstance(eventLoop3, MockEventLoop)
         self.assertIs(build_events3, eventLoop3.build_events)
         self.assertIsInstance(eventLoop3.reader, MockReader)
-
-        self.assertEqual("dataset1", collector.pairs[2][0])
-        self.assertIs(eventLoop3.reader, collector.pairs[2][1])
 
         # end
         self.assertFalse(eventLoopRunner.ended)
@@ -118,5 +110,14 @@ class TestEventReader(unittest.TestCase):
         self.assertIs(collector.ret, obj.end())
         self.assertTrue(eventLoopRunner.ended)
         self.assertTrue(collector.collected)
+
+        self.assertEqual("dataset1", collector.pairs[0][0])
+        self.assertIs(eventLoop1.reader, collector.pairs[0][1])
+
+        self.assertEqual("dataset1", collector.pairs[1][0])
+        self.assertIs(eventLoop2.reader, collector.pairs[1][1])
+
+        self.assertEqual("dataset1", collector.pairs[2][0])
+        self.assertIs(eventLoop3.reader, collector.pairs[2][1])
 
 ##__________________________________________________________________||
