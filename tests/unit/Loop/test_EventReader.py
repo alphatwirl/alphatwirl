@@ -66,6 +66,28 @@ class TestEventReader(unittest.TestCase):
         self.obj = EventReader(self.eventLoopRunner, self.reader, self.collector, mock_split_into_build_events)
 
     def test_repr(self):
+    def test_begin(self):
+        self.obj.begin()
+
+    def test_end(self):
+        self.obj.begin()
+        self.obj.end()
+
+    def test_end_without_begin(self):
+        self.obj.end()
+
+    def test_wrong_number_of_results(self):
+        self.obj.EventLoop = MockEventLoop
+
+        build_events1 = MockEventBuilder()
+        eventLoop1 = MockEventLoop(build_events1, MockReader())
+        build_events2 = MockEventBuilder()
+        eventLoop2 = MockEventLoop(build_events2, MockReader())
+        self.eventLoopRunner.run(eventLoop1)
+        self.eventLoopRunner.run(eventLoop2)
+
+        self.obj.dataset_names[:] = ['dataset1']
+        self.assertIsNone(self.obj.end())
 
     def test_standard(self):
         self.obj.EventLoop = MockEventLoop

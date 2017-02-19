@@ -24,7 +24,10 @@ class EventReader(object):
         self.reader = reader
         self.collector = collector
         self.split_into_build_events = split_into_build_events
+
         self.EventLoop = EventLoop
+
+        self.dataset_names = [ ]
 
     def __repr__(self):
         return '{}(eventLoopRunner = {!r}, reader = {!r}, collector = {!r}, split_into_build_events = {!r})'.format(
@@ -50,6 +53,17 @@ class EventReader(object):
 
     def end(self):
         returned_readers = self.eventLoopRunner.end()
+
+        if len(self.dataset_names) != len(returned_readers):
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                'the same number of the readers were not returned: {} readers sent, {} readers returned. cannot collect results'.format(
+                    len(self.dataset_names),
+                    len(returned_readers)
+                ))
+            return None
+
         for d, r in zip(self.dataset_names, returned_readers):
             self.collector.addReader(d, r)
         return self.collector.collect()
