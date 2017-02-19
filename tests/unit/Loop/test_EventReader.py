@@ -66,6 +66,8 @@ class TestEventReader(unittest.TestCase):
         self.obj = EventReader(self.eventLoopRunner, self.reader, self.collector, mock_split_into_build_events)
 
     def test_repr(self):
+        repr(self.obj)
+
     def test_begin(self):
         self.obj.begin()
 
