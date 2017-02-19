@@ -4,14 +4,6 @@ AlphaTwirl.Loop package
 Submodules
 ----------
 
-AlphaTwirl.Loop.Associator module
----------------------------------
-
-.. automodule:: AlphaTwirl.Loop.Associator
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 AlphaTwirl.Loop.Collector module
 --------------------------------
 

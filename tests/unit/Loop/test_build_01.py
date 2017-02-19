@@ -1,9 +1,10 @@
+import unittest
+import copy
+
 from AlphaTwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Reader
 from AlphaTwirl.Binning import Echo
-from AlphaTwirl.Loop import Associator
 from AlphaTwirl.Loop import ReaderComposite
 from AlphaTwirl.Loop import Collector, CollectorComposite, CollectorDelegate
-import unittest
 
 ##__________________________________________________________________||
 class MockProgressReporter(object): pass
@@ -66,10 +67,11 @@ class TesEventReader_build_01(unittest.TestCase):
         collector1.add(collector7)
         collector1.add(collector8)
 
-        associator1 = Associator(reader1, collector1)
 
-        reader1_ds1 = associator1.make('ds1')
-        reader1_ds2 = associator1.make('ds2')
+        reader1_ds1 = copy.deepcopy(reader1)
+        reader1_ds2 = copy.deepcopy(reader1)
+        collector1.addReader('ds1', reader1_ds1)
+        collector1.addReader('ds2', reader1_ds2)
 
         reader3_ds1 = reader1_ds1.readers[0]
         reader4_ds1 = reader3_ds1.readers[0]

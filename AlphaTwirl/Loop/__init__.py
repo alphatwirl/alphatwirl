@@ -1,7 +1,6 @@
 from EventReader import EventReader
 from EventLoopRunner import EventLoopRunner
 from MPEventLoopRunner import MPEventLoopRunner
-from Associator import Associator
 from Collector import Collector
 from NullCollector import NullCollector
 from CollectorComposite import CollectorComposite
