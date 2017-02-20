@@ -15,7 +15,6 @@ class MockSummarizer(object):
         self.add_called_with = [ ]
         self.add_key_called_with = [ ]
         self.keys_return = [ ]
-        self.copy_from_called_with = [ ]
 
     def add(self, key, val, weight):
         self.add_called_with.append((key, val, weight))
@@ -25,9 +24,6 @@ class MockSummarizer(object):
 
     def keys(self):
         return self.keys_return
-
-    def copy_from(self, src):
-        self.copy_from_called_with.append(src)
 
 ##__________________________________________________________________||
 class MockWeightCalculator(object):
@@ -158,18 +154,6 @@ class TestReader(unittest.TestCase):
         obj = Summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
         obj.end()
         self.assertEqual(set([]), set(summarizer.add_key_called_with))
-
-    def test_copy_from(self):
-        keyvalcomposer1 = MockKeyValueComposer()
-        summarizer1 = MockSummarizer()
-        obj1 = Summary.Reader(keyvalcomposer1, summarizer1)
-
-        keyvalcomposer2 = MockKeyValueComposer()
-        summarizer2 = MockSummarizer()
-        obj2 = Summary.Reader(keyvalcomposer2, summarizer2)
-
-        obj1.copy_from(obj2)
-        self.assertIs(summarizer2, summarizer1.copy_from_called_with[0])
 
     def test_results(self):
         keyvalcomposer = MockKeyValueComposer()

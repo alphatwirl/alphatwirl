@@ -42,9 +42,6 @@ class Reader(object):
             nextKeys = self.nextKeyComposer(key)
             for nextKey in nextKeys: self.summarizer.add_key(nextKey)
 
-    def copy_from(self, src):
-        self.summarizer.copy_from(src.summarizer)
-
     def results(self):
         return self.summarizer
 

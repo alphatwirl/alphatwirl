@@ -96,23 +96,6 @@ class TestSummarizer(unittest.TestCase):
         }
         self.assertEqual(expected, obj.results())
 
-    def test_copy_from(self):
-        obj = Summarizer(Summary = MockSummary2)
-        src_obj = Summarizer(Summary = MockSummary)
-
-        src_results  = {
-            'A': MockSummary(contents = 55),
-            'B': MockSummary(contents = 64.0)
-        }
-
-        src_obj._results.update(src_results)
-        obj.copy_from(src_obj)
-        self.assertEqual(src_results, obj.results())
-        self.assertIsNot(src_obj._results, obj._results)
-        self.assertEqual(obj.Summary, src_obj.Summary)
-        self.assertIsNot(src_obj._results['A'], obj._results['A'])
-        self.assertIsNot(src_obj._results['B'], obj._results['B'])
-
 ##__________________________________________________________________||
 class TestSummarizer_operator(unittest.TestCase):
 

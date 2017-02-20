@@ -27,12 +27,6 @@ class Summarizer(object):
     def keys(self):
         return self._results.keys()
 
-    def copy_from(self, src):
-        src = copy.deepcopy(src)
-        self._results.clear()
-        self._results.update(src._results)
-        self.Summary = src.Summary
-
     def results(self):
         return self._results
 
