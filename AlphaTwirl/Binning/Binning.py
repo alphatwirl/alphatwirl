@@ -6,11 +6,13 @@ def returnTrue(x): return True
 ##__________________________________________________________________||
 class Binning(object):
     """The Binning class allows the set of bins used to summarize the
-	information from one TTree branch to be completely and
-	unambiguously defined by the user.  An instance of the Binning class
-	can be defined with one argument ``boundaries``, which is set equal
-	to a list of the bin boundaries which start at the lowest value, and
-	increase for every bin added, like::
+	information from one TTree branch to be defined with specific lower
+	and upper bin edge values set by the user.
+	
+	An instance of the Binning class can be defined with a single argument
+	``boundaries``, which is set equal to a list of the bin boundaries
+	which start at the lowest value, and increase for every bin
+	added, like::
 		
 		Binning = AlphaTwirl.Binning.Binning
 		metbin = Binning(boundaries = (0, 100, 200, 400, 700, 1100))
