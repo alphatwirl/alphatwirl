@@ -5,13 +5,56 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class Binning(object):
+    """The Binning class allows the set of bins used to summarize the
+	information from one TTree branch to be completely and
+	unambiguously defined by the user.  An instance of the Binning class
+	can be defined with one argument ``boundaries``, which is set equal
+	to a list of the bin boundaries which start at the lowest value, and
+	increase for every bin added, like::
+		
+		Binning = AlphaTwirl.Binning.Binning
+		metbin = Binning(boundaries = (0, 100, 200, 400, 700, 1100))
+	
+	Alternatively, an instance of the Binning class can be defined with
+	two arguments ``lows`` and ``ups``.  These two arguments are set equal
+	to two lists of the same length that specify the lower and upper edge
+	of every bin, like::
+		
+		Binning = AlphaTwirl.Binning.Binning
+		jetPtBin = Binning(lows = (0, 20, 40, 60), ups = (20, 40, 60, 200))
+	
+	In general, if the results should be summarized in non-overlapping
+	bins which completely cover a well defined domain of a variable, the
+	single argument ``boundaries`` definition of the Binning class should
+	be used.
+
+	Two powerful features of the two argument definition of a Binning
+	class instance are that a subset of variable values can be blinded
+	from the summary created by AlphaTwirl, and overlapping bins can
+	be defined.  If an input TTree passed to AlphaTwirl contains a branch
+	with the dilepton mass using the two leading leptons in each event,
+	the following binning would summarize events in 4 different bins
+	that are all centered at 90 GeV::
+
+		Binning = AlphaTwirl.Binning.Binning
+		massOverlapBins = Binning(lows = (60, 70, 80, 85), ups = (120, 110, 100, 95))
+
+	Using the same input TTree and dilepton mass branch, events with 
+	dilepton mass between 85 and 95 would be ignored in the AlphaTwirl
+	summary if the following binning is used::
+
+		Binning = AlphaTwirl.Binning.Binning
+		massIgnoreBins = Binning(lows = (70, 80, 95, 95), ups = (85, 85, 100, 110))
+
+	
+    """
     def __init__(self, boundaries = None, lows = None, ups = None,
                  retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
                  valid = returnTrue):
 
         if boundaries is None:
             if lows is None or ups is None:
-                raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
+                raise ValueError("Only a list of bin boundaries, or pairs of (bin lower bound, bin upper bound) need to be given!")
             if not tuple(lows[1:]) == tuple(ups[:-1]):
                 raise ValueError("Boundaries cannot be determined from lows = " + str(lows) + " and ups = " + str(ups))
             self.boundaries = tuple(lows) + (ups[-1], )
