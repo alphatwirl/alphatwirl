@@ -9,33 +9,37 @@ def returnTrue(x): return True
 ##__________________________________________________________________||
 class Round(object):
     """The Round class allows the user to define a set of fixed linear
-	width bins used to summarize a variable.  This can also be done with the
-	Binning class, but using the Round class will yield more
-	intelligently chosen bins (in terms of their lower and upper edges)
-	in less time.
+	width bins used for an input variable.
 
-	An instance of the Round class is defined with two arguments.  The
-	first specifies the width of every bin in the units used to make
-	the TTree branch.  The second argument identifies one particular
-	bin boundary - the upper edge of one bin, and the lower edge of
-	the next bin.  The Round class studies the input TTree branch and
-	chooses the lower edge value of the lowest bin so that the user
-	defined bin boundary and bin width are respected, there are no
-	underflow events, and the number of initial bins (starting with
-	bin number 1) with zero entries is minimized.  The Round class
-	will automatically create more bins until there are no overflow events.
+	An instance of the Round class can be defined with several
+	arguments.
 
-	If an input TTree contains a branch with the leading jet pT in
-	GeV, then the following binning would yield non-overlapping bins
+	aBoundary is the lower edge of one particular bin.  The low edge
+	belongs to the bin, whereas the upper edge of the bin belongs to
+	the next bin.
+	
+	If the input variable is the leading jet pT in GeV, then
+	the following binning would yield non-overlapping bins
 	which are 20 GeV wide, and the lower edge of one bin would be
 	100 GeV::
 		
-		Round = AlphaTwirl.Binning.Round
 		jetptbin = Round(20, 100)
 
 	One bin would cover 100 to 120 GeV, the next bin would cover
 	120 to 140 GeV, the bin after that would cover 140 to 160 GeV,
 	and so on.
+
+	HOW TO INSTANTIATE
+
+	if aBoundary is not given, then the bin boundaries are set to
+	half the bin width
+
+	EXECUTE __call__ AND DESCRIBE WHAT IS RETURNED
+
+	EXECUTE __next__ AND DESCRIBE WHAT IS RETURNED
+	
+	SHOW FUNCTOR EXAMPLE see tests/unit/Binning/test_Round.py. Line 17
+	is for call, and the object is defined on line 18.
 	
 	
     """
@@ -44,6 +48,9 @@ class Round(object):
                  max = None, overflow_bin = None,
                  valid = returnTrue, retvalue = 'lowedge'
     ):
+		"""similar to other binning classes, the argument 'valid' is a user defined function
+
+		"""
 
         supportedRetvalues = ('center', 'lowedge')
         if retvalue not in supportedRetvalues:
@@ -74,6 +81,25 @@ class Round(object):
         )
 
     def __call__(self, val):
+		"""
+		this function needs to be fast, as it is called many times when running
+		the program.
+
+		first check if the value 'val' added using __init__ is valid.
+
+		then, if 'min' set in __init__ is not None, then check if 'val' belongs to the
+		underflow (below 'min') or overflow bin (below max)
+
+		then, check if 'val' is plus or minus infinity. this is only necessary if 'max'
+		and/or 'min' is not defined.
+
+		internally, this class keeps track of a list of bin boundaries.
+		
+		This list is named 'boundaries', and is updated
+		if a new bin is needed in the internal list (either a new element at the
+		beginning or end of the list).
+
+		"""
 
         if not self.valid(val):
             return None
@@ -111,6 +137,24 @@ class Round(object):
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
+		"""
+		given a bin, this returns the next bin.
+
+		first check that the bin given in the argument 'bin' exists in the set of bins already
+		defined.  Return None if 'bin' is not valid.
+
+		if bin corresponds to underflow_bin, return the first bin (just above underflow_bin)
+		
+		if bin corresponds to overflow_bin, return the overflow_bin
+
+		if bin is not None, and does not match underflow_bin or overflow_bin, then make
+		sure that the bin already is saved in the internal list of bin boundaries named
+		'boundaries'
+
+		then take the first bin boundary (lower edge of first bin just above underflow)
+		and find and return the next bin.
+
+		"""
 
         bin = self.__call__(bin)
 

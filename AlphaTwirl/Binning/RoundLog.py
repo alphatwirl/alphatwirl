@@ -7,9 +7,26 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class RoundLog(object):
-    """Similar to the Round class, the RoundLog class allows the user
+    """
+	UPDATE THIS TO BE CONSISTENT WITH Round CLASS
+
+	HOW TO INSTANTIATE
+
+	if aBoundary is not given, then the bin boundaries are set to
+	half the bin width
+
+	EXECUTE __call__ AND DESCRIBE WHAT IS RETURNED
+
+	EXECUTE __next__ AND DESCRIBE WHAT IS RETURNED
+	
+	SHOW FUNCTOR EXAMPLE see tests/unit/Binning/test_Round.py. Line 17
+	is for call, and the object is defined on line 18.
+	
+	Similar to the Round class, the RoundLog class allows the user
 	to define a set of bins used to summarize a variable that have a
-	fixed width in log base 10.
+	fixed width in log scale.  The actual widths of the bins are
+	defined in log base 10.  The bin boundary, if given, must be given
+	in linear scale.
 
 	An instance of the RoundLog class is defined with two arguments.  The
 	first specifies the width of every bin in log base 10 of the units used
@@ -27,7 +44,6 @@ class RoundLog(object):
 	which are 0.1 units wide in log(GeV), and the lower edge of one
 	bin would be 100 GeV::
 		
-		RoundLog = AlphaTwirl.Binning.RoundLog
 		jetptlogbin = RoundLog(0.1, 100)
 
 	One bin would cover 2.0 (100 GeV in log base 10) to 2.1 (125 GeV

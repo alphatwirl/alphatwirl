@@ -15,8 +15,8 @@ class TestRound(unittest.TestCase):
         repr(obj)
 
     def test_call(self):
-        obj = Round()
-        self.assertEqual(0.5, obj(0.5))
+        obj = Round()   #now obj is an instance of the Round class
+        self.assertEqual(0.5, obj(0.5))  #calling obj(0.5) here is equivalent to calling obj.__call__(0.5)
         self.assertEqual(0.5, obj(1.4))
         self.assertEqual(104.5, obj(104.5))
         self.assertEqual(-0.5, obj(-0.4))
@@ -27,7 +27,7 @@ class TestRound(unittest.TestCase):
 
     def test_call_width_2(self):
         obj = Round(2)
-        self.assertEqual( -3, obj( -2.9))
+        self.assertEqual( -3, obj( -2.9))   #equivalent to obj.__call__(-2.9)
         self.assertEqual( -3, obj( -2  ))
         self.assertEqual( -3, obj( -1.1))
         self.assertEqual( -1, obj( -0.9))
@@ -40,7 +40,7 @@ class TestRound(unittest.TestCase):
     def test_call_width_2_aboundary_0(self):
         obj = Round(2, 0)
         self.assertEqual( -2, obj( -1.9))
-        self.assertEqual( -2, obj( -1  ))
+        self.assertEqual( -2, obj( -1  ))   #equivalent to calling obj.__call__(-1)
         self.assertEqual( -2, obj( -0.1))
         self.assertEqual(  0, obj(  0.1))
         self.assertEqual(  0, obj(  1  ))
