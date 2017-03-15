@@ -7,7 +7,7 @@ from Component import Component
 from ReadVersionInfo import ReadVersionInfo
 
 ##__________________________________________________________________||
-defaultExcludeList = ['Chunks', 'failed']
+DEFAULT_EXCLUDE_LIST = ['Chunks', 'failed']
 componentHasTheseFiles = ['config.pck', 'config.txt']
 
 ##__________________________________________________________________||
@@ -17,13 +17,13 @@ class HeppyResult(object):
     Args:
         path (str): the path to the Heppy result
         componentNames (list, optional): the list of the names of the components to read. If not given, all components except the ones listed in `excludeList` will be read.
-        excludeList (list, optional): a list of the names of the directory in the Heppy result directory which are to be excluded to be considered as components. if not given, `defaultExcludeList` will be used.
+        excludeList (list, optional): a list of the names of the directory in the Heppy result directory which are to be excluded to be considered as components. if not given, `DEFAULT_EXCLUDE_LIST` will be used.
         isComponent (function, optional): a function that determines if a directory is a Heppy component. if not give, `IsComponent` will be used.
     """
 
     def __init__(self, path,
                  componentNames = None,
-                 excludeList = defaultExcludeList,
+                 excludeList = DEFAULT_EXCLUDE_LIST,
                  isComponent = None,
     ):
         self.path = os.path.normpath(path)
