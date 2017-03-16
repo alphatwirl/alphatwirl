@@ -26,3 +26,11 @@ log_handler.setFormatter(log_formatter)
 logger.addHandler(log_handler)
 
 ##__________________________________________________________________||
+try:
+    ## https://root-forum.cern.ch/t/pyroot-hijacks-help/15207
+    import ROOT
+    ROOT.PyConfig.IgnoreCommandLineOptions = True
+except ImportError:
+    pass
+
+##__________________________________________________________________||
