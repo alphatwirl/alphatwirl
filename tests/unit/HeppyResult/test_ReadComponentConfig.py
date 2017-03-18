@@ -1,4 +1,4 @@
-from AlphaTwirl.HeppyResult import ReadComponentConfig
+from alphatwirl.HeppyResult import ReadComponentConfig
 import unittest
 import cStringIO
 import os

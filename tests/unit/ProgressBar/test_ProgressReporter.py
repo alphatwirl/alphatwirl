@@ -1,4 +1,4 @@
-from AlphaTwirl.ProgressBar import ProgressReporter, ProgressReport
+from alphatwirl.ProgressBar import ProgressReporter, ProgressReport
 import unittest
 
 ##__________________________________________________________________||

@@ -3,8 +3,8 @@ import unittest
 import time
 import os
 
-from AlphaTwirl.Concurrently import MultiprocessingDropbox
-from AlphaTwirl.Concurrently import TaskPackage
+from alphatwirl.Concurrently import MultiprocessingDropbox
+from alphatwirl.Concurrently import TaskPackage
 
 ##__________________________________________________________________||
 class MockTask(object):

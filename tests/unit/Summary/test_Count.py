@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from AlphaTwirl.Summary import Count
+from alphatwirl.Summary import Count
 
 ##__________________________________________________________________||
 class TestCount(unittest.TestCase):

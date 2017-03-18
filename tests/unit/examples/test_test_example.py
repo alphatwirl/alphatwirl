@@ -1,4 +1,4 @@
-import AlphaTwirl
+import alphatwirl
 import unittest
 
 ##__________________________________________________________________||

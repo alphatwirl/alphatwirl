@@ -1,4 +1,4 @@
-from AlphaTwirl.HeppyResult import ComponentReaderComposite
+from alphatwirl.HeppyResult import ComponentReaderComposite
 import unittest
 
 ##__________________________________________________________________||

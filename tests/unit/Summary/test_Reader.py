@@ -1,7 +1,7 @@
 import unittest
 import collections
 
-import AlphaTwirl.Summary as Summary
+import alphatwirl.Summary as Summary
 
 ##__________________________________________________________________||
 MockKey = collections.namedtuple('MockKey', 'key')

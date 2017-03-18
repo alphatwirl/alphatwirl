@@ -10,7 +10,7 @@ import getpass
 import re
 import logging
 
-import AlphaTwirl
+import alphatwirl
 
 ##__________________________________________________________________||
 # https://htcondor-wiki.cs.wisc.edu/index.cgi/wiki?p=MagicNumbers
@@ -58,7 +58,7 @@ class HTCondorJobSubmitter(object):
         resultdir_basename = os.path.splitext(package_path)[0]
         resultdir_basename = os.path.splitext(resultdir_basename)[0]
         resultdir = os.path.join('results', resultdir_basename)
-        AlphaTwirl.mkdir_p(resultdir)
+        alphatwirl.mkdir_p(resultdir)
 
         input_files = [package_path, 'python_modules.tar.gz']
         input_files = [f for f in input_files if os.path.exists(f)]

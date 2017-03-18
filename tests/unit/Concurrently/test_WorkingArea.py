@@ -10,8 +10,8 @@ try:
 except:
    import pickle
 
-from AlphaTwirl.Concurrently import WorkingArea
-from AlphaTwirl import mkdir_p
+from alphatwirl.Concurrently import WorkingArea
+from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||
 MockPackage = collections.namedtuple('MockPackage', 'name')
@@ -27,7 +27,7 @@ class TestWorkingArea(unittest.TestCase):
         shutil.rmtree(self.tmpdir)
 
     def test_open(self):
-        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
         self.assertIsNone(obj.path)
         self.assertIsNone(obj.last_package_index)
 
@@ -39,7 +39,7 @@ class TestWorkingArea(unittest.TestCase):
         self.assertTrue(os.path.isfile(os.path.join(obj.path, 'python_modules.tar.gz')))
 
     def test_put_package(self):
-        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
         obj.open()
 
         package1 = MockPackage(name = 'package1')
@@ -50,7 +50,7 @@ class TestWorkingArea(unittest.TestCase):
         self.assertEqual(package1, pickle.load(f))
 
     def test_collect_result(self):
-        obj = WorkingArea(dir = self.tmpdir, python_modules = ('AlphaTwirl', ))
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
         obj.open()
 
         result = MockResult(name = 'result1')

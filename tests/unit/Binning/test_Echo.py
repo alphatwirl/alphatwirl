@@ -1,4 +1,4 @@
-from AlphaTwirl.Binning import Echo
+from alphatwirl.Binning import Echo
 import unittest
 
 ##__________________________________________________________________||

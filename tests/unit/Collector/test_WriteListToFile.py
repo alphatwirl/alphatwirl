@@ -1,4 +1,4 @@
-from AlphaTwirl.Collector import WriteListToFile
+from alphatwirl.Collector import WriteListToFile
 import unittest
 import cStringIO
 

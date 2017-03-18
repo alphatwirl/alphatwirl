@@ -9,9 +9,9 @@ import tempfile
 thisdir =  os.path.dirname(os.path.realpath(__file__))
 alphatwirldir = os.path.dirname(thisdir)
 sys.path.insert(1, alphatwirldir)
-from AlphaTwirl.Counter import Counts
-from AlphaTwirl.Binning import RoundLog, Echo
-import AlphaTwirl
+from alphatwirl.Counter import Counts
+from alphatwirl.Binning import RoundLog, Echo
+import alphatwirl
 
 ##__________________________________________________________________||
 heppydir='/Users/sakuma/work/cms/c150130_RA1_data/PHYS14/20150507_SingleMu'
@@ -20,7 +20,7 @@ outdir = tempfile.mkdtemp()
 sys.argv.extend(["-i", heppydir, "-n", str(nevents), "-o", outdir])
 
 ##__________________________________________________________________||
-alphaTwirl = AlphaTwirl.AlphaTwirl()
+alphaTwirl = alphatwirl.AlphaTwirl()
 
 tblcfg = [
     dict(outFileName = 'tbl_met.txt',

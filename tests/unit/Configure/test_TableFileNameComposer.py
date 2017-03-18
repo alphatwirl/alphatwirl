@@ -1,4 +1,4 @@
-from AlphaTwirl.Configure import TableFileNameComposer
+from alphatwirl.Configure import TableFileNameComposer
 import unittest
 
 ##__________________________________________________________________||

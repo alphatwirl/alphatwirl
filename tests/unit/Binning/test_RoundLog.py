@@ -1,6 +1,6 @@
 import unittest
 
-from AlphaTwirl.Binning import RoundLog
+from alphatwirl.Binning import RoundLog
 
 ##__________________________________________________________________||
 class TestRoundLog(unittest.TestCase):

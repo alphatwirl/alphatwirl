@@ -1,4 +1,4 @@
-from AlphaTwirl.Events import Branch
+from alphatwirl.Events import Branch
 import unittest
 import array
 

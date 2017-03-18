@@ -1,4 +1,4 @@
-import AlphaTwirl.Summary as Summary
+import alphatwirl.Summary as Summary
 import unittest
 
 ##__________________________________________________________________||

@@ -1,13 +1,13 @@
 import unittest
 import sys
 
-from AlphaTwirl.HeppyResult import EventBuilderConfig
+from alphatwirl.HeppyResult import EventBuilderConfig
 
 ##__________________________________________________________________||
 hasROOT = False
 try:
     import ROOT
-    from AlphaTwirl.HeppyResult.BEventBuilder import BEventBuilder
+    from alphatwirl.HeppyResult.BEventBuilder import BEventBuilder
     hasROOT = True
 except ImportError:
     pass
@@ -54,7 +54,7 @@ class MockEvents(object):
 class TestBEventBuilder(unittest.TestCase):
 
     def setUp(self):
-        self.moduleBEventBuilder = sys.modules['AlphaTwirl.HeppyResult.BEventBuilder']
+        self.moduleBEventBuilder = sys.modules['alphatwirl.HeppyResult.BEventBuilder']
         self.orgROOT = self.moduleBEventBuilder.ROOT
         self.moduleBEventBuilder.ROOT = MockROOT()
 

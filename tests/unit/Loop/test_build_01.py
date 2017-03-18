@@ -1,10 +1,10 @@
 import unittest
 import copy
 
-from AlphaTwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Reader
-from AlphaTwirl.Binning import Echo
-from AlphaTwirl.Loop import ReaderComposite
-from AlphaTwirl.Loop import Collector, CollectorComposite, CollectorDelegate
+from alphatwirl.Summary import Count, KeyValueComposer, NextKeyComposer, Reader
+from alphatwirl.Binning import Echo
+from alphatwirl.Loop import ReaderComposite
+from alphatwirl.Loop import Collector, CollectorComposite, CollectorDelegate
 
 ##__________________________________________________________________||
 class MockProgressReporter(object): pass

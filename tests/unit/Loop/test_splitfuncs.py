@@ -1,10 +1,10 @@
 import sys
 import unittest
 
-from AlphaTwirl.Loop.splitfuncs import *
-from AlphaTwirl.Loop.splitfuncs import _apply_max_total
-from AlphaTwirl.Loop.splitfuncs import _start_length_pairs_for_split_lists
-from AlphaTwirl.Loop.splitfuncs import _minimum_positive_value
+from alphatwirl.Loop.splitfuncs import *
+from alphatwirl.Loop.splitfuncs import _apply_max_total
+from alphatwirl.Loop.splitfuncs import _start_length_pairs_for_split_lists
+from alphatwirl.Loop.splitfuncs import _minimum_positive_value
 
 ##__________________________________________________________________||
 class TestSplitfuncs(unittest.TestCase):

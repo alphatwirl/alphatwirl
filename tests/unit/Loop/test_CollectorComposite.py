@@ -1,4 +1,4 @@
-from AlphaTwirl.Loop import CollectorComposite, ReaderComposite
+from alphatwirl.Loop import CollectorComposite, ReaderComposite
 import unittest
 
 ##__________________________________________________________________||

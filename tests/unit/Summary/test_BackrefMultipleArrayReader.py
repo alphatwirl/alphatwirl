@@ -1,5 +1,5 @@
 import unittest
-import AlphaTwirl.Summary as Summary
+import alphatwirl.Summary as Summary
 
 ##__________________________________________________________________||
 class TestBackrefMultipleArrayReader_init(unittest.TestCase):

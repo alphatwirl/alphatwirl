@@ -1,4 +1,4 @@
-from AlphaTwirl.Concurrently import CommunicationChannel0
+from alphatwirl.Concurrently import CommunicationChannel0
 import unittest
 import time
 import os

@@ -4,7 +4,7 @@ import ROOT
 import os
 import argparse
 
-import AlphaTwirl
+import alphatwirl
 
 ##__________________________________________________________________||
 ROOT.gROOT.SetBatch(1)
@@ -22,13 +22,13 @@ parser.add_argument("-t", "--tree-name", default = 'tree', help = "the name of t
 args = parser.parse_args()
 
 ##__________________________________________________________________||
-heppyResult = AlphaTwirl.HeppyResult.HeppyResult(args.input_dir)
+heppyResult = alphatwirl.HeppyResult.HeppyResult(args.input_dir)
 for component in heppyResult.components():
     analyzer = getattr(component, args.analyzer_name)
     input_path = os.path.join(analyzer.path, args.rootfile_name)
     file = ROOT.TFile.Open(input_path)
     tree = file.Get(args.tree_name)
-    events = AlphaTwirl.Events.BEvents(tree, args.nevents)
+    events = alphatwirl.Events.BEvents(tree, args.nevents)
     for event in events:
         print '{:>35}'.format(component.name),
         print '{:>6} {:>10} {:>9}'.format(event.run[0], event.lumi[0], event.evt[0]),

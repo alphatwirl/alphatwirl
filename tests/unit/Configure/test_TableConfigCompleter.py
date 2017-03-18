@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from AlphaTwirl.Configure import TableConfigCompleter
+from alphatwirl.Configure import TableConfigCompleter
 
 ##__________________________________________________________________||
 class MockDefaultSummary: pass

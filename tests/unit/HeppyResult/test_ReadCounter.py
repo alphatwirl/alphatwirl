@@ -1,4 +1,4 @@
-from AlphaTwirl.HeppyResult import ReadCounter
+from alphatwirl.HeppyResult import ReadCounter
 import unittest
 import collections
 import cStringIO

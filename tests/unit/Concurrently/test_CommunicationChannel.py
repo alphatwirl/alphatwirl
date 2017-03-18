@@ -3,7 +3,7 @@ import unittest
 import collections
 import logging
 
-from AlphaTwirl.Concurrently import CommunicationChannel, TaskPackage
+from alphatwirl.Concurrently import CommunicationChannel, TaskPackage
 
 ##__________________________________________________________________||
 MockTask = collections.namedtuple('MockTask', 'name')

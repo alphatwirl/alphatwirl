@@ -1,4 +1,4 @@
-from AlphaTwirl.Binning import Combine, Round, RoundLog
+from alphatwirl.Binning import Combine, Round, RoundLog
 import unittest
 
 ##__________________________________________________________________||
