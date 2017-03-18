@@ -21,13 +21,13 @@ args = parser.parse_args()
 ##__________________________________________________________________||
 file = ROOT.TFile.Open(args.input)
 tree = file.Get(args.tree)
-events = alphatwirl.Events.BEvents(tree, args.nevents)
+events = alphatwirl.events.BEvents(tree, args.nevents)
 
 keyAttrNames = ('nJet40', 'nBJet40')
-binnings = (alphatwirl.Binning.Echo(), alphatwirl.Binning.Echo())
-keyValueComposer = alphatwirl.Summary.KeyValueComposer(keyAttrNames, binnings)
-summary = alphatwirl.Summary.Count()
-summarizer = alphatwirl.Summary.Summarizer(keyValueComposer, summary)
+binnings = (alphatwirl.binning.Echo(), alphatwirl.binning.Echo())
+keyValueComposer = alphatwirl.summary.KeyValueComposer(keyAttrNames, binnings)
+summary = alphatwirl.summary.Count()
+summarizer = alphatwirl.summary.Summarizer(keyValueComposer, summary)
 
 summarizer.begin(events)
 for event in events:

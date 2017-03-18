@@ -5,7 +5,7 @@ import unittest
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.Events import BEvents
+    from alphatwirl.events import BEvents
     hasROOT = True
 except ImportError:
     pass

@@ -21,7 +21,7 @@ args = parser.parse_args()
 ##__________________________________________________________________||
 file = ROOT.TFile.Open(args.input)
 tree = file.Get(args.tree)
-events = alphatwirl.Events.BEvents(tree, args.nevents)
+events = alphatwirl.events.BEvents(tree, args.nevents)
 
 for event in events:
     print '{:>6} {:>10} {:>9}'.format(event.run[0], event.lumi[0], event.evt[0]),

@@ -1,7 +1,7 @@
 import unittest
 import copy
 
-from alphatwirl.Summary import Summarizer
+from alphatwirl.summary import Summarizer
 
 ##__________________________________________________________________||
 class MockSummary(object):

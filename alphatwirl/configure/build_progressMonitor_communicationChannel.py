@@ -1,8 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import sys
 
-from .. import ProgressBar
-from .. import Concurrently
+from .. import progressbar
+from .. import concurrently
 
 ##__________________________________________________________________||
 def build_progressMonitor_communicationChannel(quiet, processes):
@@ -10,17 +10,17 @@ def build_progressMonitor_communicationChannel(quiet, processes):
     if quiet:
         progressBar = None
     elif sys.stdout.isatty():
-        progressBar = ProgressBar.ProgressBar()
+        progressBar = progressbar.ProgressBar()
     else:
-        progressBar = ProgressBar.ProgressPrint()
+        progressBar = progressbar.ProgressPrint()
 
     if processes is None or processes == 0:
-        progressMonitor = ProgressBar.NullProgressMonitor() if quiet else ProgressBar.ProgressMonitor(presentation = progressBar)
-        communicationChannel = Concurrently.CommunicationChannel0(progressMonitor)
+        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.ProgressMonitor(presentation = progressBar)
+        communicationChannel = concurrently.CommunicationChannel0(progressMonitor)
     else:
-        progressMonitor = ProgressBar.NullProgressMonitor() if quiet else ProgressBar.BProgressMonitor(presentation = progressBar)
-        dropbox = Concurrently.MultiprocessingDropbox(processes, progressMonitor)
-        communicationChannel = Concurrently.CommunicationChannel(dropbox = dropbox)
+        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.BProgressMonitor(presentation = progressBar)
+        dropbox = concurrently.MultiprocessingDropbox(processes, progressMonitor)
+        communicationChannel = concurrently.CommunicationChannel(dropbox = dropbox)
 
     return progressMonitor, communicationChannel
 

@@ -1,6 +1,6 @@
 import unittest
 
-from alphatwirl.Binning import Binning
+from alphatwirl.binning import Binning
 
 ##__________________________________________________________________||
 class TestBinning(unittest.TestCase):

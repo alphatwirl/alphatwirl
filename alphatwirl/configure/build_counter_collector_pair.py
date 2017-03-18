@@ -1,8 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..Summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
-from ..Collector import CombineIntoList
-from ..Collector import WriteListToFile
-from ..Loop import Collector
+from ..summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
+from ..collector import CombineIntoList
+from ..collector import WriteListToFile
+from ..loop import Collector
 
 ##__________________________________________________________________||
 def build_counter_collector_pair(tblcfg):

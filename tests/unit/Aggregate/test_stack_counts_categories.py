@@ -5,7 +5,7 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
-    from alphatwirl.Aggregate import stack_counts_categories
+    from alphatwirl.aggregate import stack_counts_categories
     hasPandas = True
 except ImportError:
     class PD:

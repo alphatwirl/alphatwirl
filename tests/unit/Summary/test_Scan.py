@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from alphatwirl.Summary import Scan
+from alphatwirl.summary import Scan
 
 ##__________________________________________________________________||
 class TestScan(unittest.TestCase):

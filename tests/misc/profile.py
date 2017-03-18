@@ -10,7 +10,7 @@ thisdir =  os.path.dirname(os.path.realpath(__file__))
 alphatwirldir = os.path.dirname(thisdir)
 sys.path.insert(1, alphatwirldir)
 from alphatwirl.Counter import Counts
-from alphatwirl.Binning import RoundLog, Echo
+from alphatwirl.binning import RoundLog, Echo
 import alphatwirl
 
 ##__________________________________________________________________||

@@ -1,4 +1,4 @@
-from alphatwirl.HeppyResult import TblComponentConfig
+from alphatwirl.heppyresult import TblComponentConfig
 import unittest
 import cStringIO
 

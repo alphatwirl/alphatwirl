@@ -2,7 +2,7 @@
 import multiprocessing
 from operator import itemgetter
 
-from ..ProgressBar import NullProgressMonitor
+from ..progressbar import NullProgressMonitor
 from .TaskPackage import TaskPackage
 
 from .Worker import Worker

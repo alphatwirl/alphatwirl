@@ -1,6 +1,6 @@
 import unittest
 
-from alphatwirl.Loop import EventReader
+from alphatwirl.loop import EventReader
 
 ##__________________________________________________________________||
 class MockEventBuilder(object): pass

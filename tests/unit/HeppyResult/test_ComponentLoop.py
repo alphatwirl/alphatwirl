@@ -1,4 +1,4 @@
-from alphatwirl.HeppyResult import ComponentLoop
+from alphatwirl.heppyresult import ComponentLoop
 import unittest
 
 ##__________________________________________________________________||

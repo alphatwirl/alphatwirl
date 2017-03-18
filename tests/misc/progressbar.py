@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.ProgressBar import ProgressReport, BProgressMonitor
-from alphatwirl.ProgressBar import ProgressBar
-from alphatwirl.ProgressBar import ProgressPrint
-from alphatwirl.Concurrently import CommunicationChannel
+from alphatwirl.progressbar import ProgressReport, BProgressMonitor
+from alphatwirl.progressbar import ProgressBar
+from alphatwirl.progressbar import ProgressPrint
+from alphatwirl.concurrently import CommunicationChannel
 import sys
 import time, random
 import uuid

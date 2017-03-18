@@ -6,7 +6,7 @@ import numpy as np
 hasPandas = False
 try:
     import pandas
-    from alphatwirl.Collector import countsToDataFrame, CombineIntoPandasDataFrame
+    from alphatwirl.collector import countsToDataFrame, CombineIntoPandasDataFrame
     hasPandas = True
 except ImportError:
     pass

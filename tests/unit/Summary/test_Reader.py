@@ -1,7 +1,7 @@
 import unittest
 import collections
 
-import alphatwirl.Summary as Summary
+import alphatwirl.summary as summary
 
 ##__________________________________________________________________||
 MockKey = collections.namedtuple('MockKey', 'key')
@@ -55,7 +55,7 @@ class TestReader(unittest.TestCase):
     def test_begin(self):
         keyvalcomposer = MockKeyValueComposer()
         summarizer = MockSummarizer()
-        obj = Summary.Reader(keyvalcomposer, summarizer)
+        obj = summary.Reader(keyvalcomposer, summarizer)
         self.assertIsNone(keyvalcomposer.began_with)
         event = MockEvent(event = 'event1', keys = (), vals = ())
         obj.begin(event)
@@ -65,7 +65,7 @@ class TestReader(unittest.TestCase):
         keyvalcomposer = MockKeyValueComposer()
         summarizer = MockSummarizer()
         weightCalculator = MockWeightCalculator()
-        obj = Summary.Reader(keyvalcomposer, summarizer, weightCalculator = weightCalculator)
+        obj = summary.Reader(keyvalcomposer, summarizer, weightCalculator = weightCalculator)
 
         # two key-val pairs
         key1 = MockKey('key1')
@@ -98,7 +98,7 @@ class TestReader(unittest.TestCase):
         keyvalcomposer = MockKeyValueComposer()
         summarizer = MockSummarizer()
         weightCalculator = MockWeightCalculator()
-        obj = Summary.Reader(
+        obj = summary.Reader(
             keyvalcomposer, summarizer,
             weightCalculator = weightCalculator,
             nevents = 2 # read only first 2 events
@@ -138,7 +138,7 @@ class TestReader(unittest.TestCase):
         summarizer = MockSummarizer()
         summarizer.keys_return[:] = [key1, key2, key3]
         nextKeyComposer = MockNextKeyComposer(nextdic)
-        obj = Summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
+        obj = summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
         obj.end()
         self.assertEqual(set([key11, key21, key22]), set(summarizer.add_key_called_with))
 
@@ -151,14 +151,14 @@ class TestReader(unittest.TestCase):
         summarizer = MockSummarizer()
         summarizer.keys_return[:] = [key1, key2, key3]
         nextKeyComposer = None
-        obj = Summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
+        obj = summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
         obj.end()
         self.assertEqual(set([]), set(summarizer.add_key_called_with))
 
     def test_results(self):
         keyvalcomposer = MockKeyValueComposer()
         summarizer = MockSummarizer()
-        obj = Summary.Reader(keyvalcomposer, summarizer)
+        obj = summary.Reader(keyvalcomposer, summarizer)
         self.assertIs(summarizer, obj.results())
 
 ##__________________________________________________________________||

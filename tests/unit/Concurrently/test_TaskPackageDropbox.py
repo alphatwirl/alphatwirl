@@ -1,7 +1,7 @@
 import unittest
 import collections
 
-from alphatwirl.Concurrently import TaskPackageDropbox
+from alphatwirl.concurrently import TaskPackageDropbox
 from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||

@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import collections
 
-from alphatwirl.Collector.functions import convert_key_vals_dict_to_tuple_list
+from alphatwirl.collector.functions import convert_key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):

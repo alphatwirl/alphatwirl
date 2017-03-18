@@ -5,7 +5,7 @@ import unittest
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.Events import BranchBuilder
+    from alphatwirl.events import BranchBuilder
     hasROOT = True
 except ImportError:
     pass
@@ -114,7 +114,7 @@ class TestMockTree(unittest.TestCase):
 class TestBranchBuilder(unittest.TestCase):
 
     def setUp(self):
-        self.moduleBranchBuilder = sys.modules['alphatwirl.Events.BranchBuilder']
+        self.moduleBranchBuilder = sys.modules['alphatwirl.events.BranchBuilder']
         self.org_branchAddressManager = self.moduleBranchBuilder.branchAddressManager
         self.moduleBranchBuilder.branchAddressManager = MockBranchAddressManager()
 

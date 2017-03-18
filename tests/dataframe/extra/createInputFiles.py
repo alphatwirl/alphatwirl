@@ -5,7 +5,7 @@ import argparse
 
 
 import alphatwirl
-import alphatwirl.HeppyResult as HeppyResult
+import alphatwirl.heppyresult as HeppyResult
 HeppyResult.componentHasTheseFiles[:] = ['roctree']
 
 ##__________________________________________________________________||
@@ -29,7 +29,7 @@ treeName = 'tree'
 
 ##__________________________________________________________________||
 tbl_xsec_path = os.path.join(args.outDir, 'tbl_xsec.txt')
-tblXsec = HeppyResult.TblComponentConfig(
+tblXsec = heppyresult.TblComponentConfig(
     outPath = tbl_xsec_path,
     columnNames = ('xsec', ),
     keys = ('xSection', ),
@@ -37,7 +37,7 @@ tblXsec = HeppyResult.TblComponentConfig(
 alphaTwirl.addComponentReader(tblXsec)
 
 tbl_nevt_path = os.path.join(args.outDir, 'tbl_nevt.txt')
-tblNevt = HeppyResult.TblCounter(
+tblNevt = heppyresult.TblCounter(
     outPath = tbl_nevt_path,
     columnNames = ('nevt', 'nevt_sumw'),
     analyzerName = 'skimAnalyzerCount',
@@ -47,7 +47,7 @@ tblNevt = HeppyResult.TblCounter(
 alphaTwirl.addComponentReader(tblNevt)
 
 ##__________________________________________________________________||
-from alphatwirl.Binning import RoundLog
+from alphatwirl.binning import RoundLog
 tblcfg = [
     dict(
         keyAttrNames = ('met_pt', ),
@@ -56,22 +56,22 @@ tblcfg = [
      )
 ]
 
-tableConfigCompleter = alphatwirl.Configure.TableConfigCompleter(
-    defaultSummaryClass = alphatwirl.Summary.Count,
+tableConfigCompleter = alphatwirl.configure.TableConfigCompleter(
+    defaultSummaryClass = alphatwirl.summary.Count,
     defaultOutDir = args.outDir,
-    createOutFileName = alphatwirl.Configure.TableFileNameComposer2()
+    createOutFileName = alphatwirl.configure.TableFileNameComposer2()
 )
 tblcfg = [tableConfigCompleter.complete(c) for c in tblcfg]
 
-reader_collector_pair = [alphatwirl.Configure.build_counter_collector_pair(c) for c in tblcfg]
-reader = alphatwirl.Loop.ReaderComposite()
-collector = alphatwirl.Loop.CollectorComposite(alphaTwirl.progressMonitor.createReporter())
+reader_collector_pair = [alphatwirl.configure.build_counter_collector_pair(c) for c in tblcfg]
+reader = alphatwirl.loop.ReaderComposite()
+collector = alphatwirl.loop.CollectorComposite(alphaTwirl.progressMonitor.createReporter())
 for r, c in reader_collector_pair:
     reader.add(r)
     collector.add(c)
-eventLoopRunner = alphatwirl.Loop.MPEventLoopRunner(alphaTwirl.communicationChannel)
-eventBuilder = alphatwirl.HeppyResult.BEventBuilder(analyzerName, fileName, treeName, args.nevents)
-eventReader = alphatwirl.Loop.EventReader(eventBuilder, eventLoopRunner, reader, collector, args.max_events_per_process)
+eventLoopRunner = alphatwirl.loop.MPEventLoopRunner(alphaTwirl.communicationChannel)
+eventBuilder = alphatwirl.heppyresult.BEventBuilder(analyzerName, fileName, treeName, args.nevents)
+eventReader = alphatwirl.loop.EventReader(eventBuilder, eventLoopRunner, reader, collector, args.max_events_per_process)
 alphaTwirl.addComponentReader(eventReader)
 
 alphaTwirl.run()

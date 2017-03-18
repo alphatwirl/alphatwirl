@@ -1,5 +1,5 @@
 import unittest
-from alphatwirl.Loop import EventLoopRunner
+from alphatwirl.loop import EventLoopRunner
 
 ##__________________________________________________________________||
 class MockResult(object): pass

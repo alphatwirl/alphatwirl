@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from alphatwirl.Summary import Sum
+from alphatwirl.summary import Sum
 
 ##__________________________________________________________________||
 class TestSum(unittest.TestCase):

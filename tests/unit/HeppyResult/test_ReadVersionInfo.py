@@ -1,4 +1,4 @@
-from alphatwirl.HeppyResult import ReadVersionInfo
+from alphatwirl.heppyresult import ReadVersionInfo
 import os
 import unittest
 import cStringIO

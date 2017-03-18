@@ -10,7 +10,7 @@ try:
 except:
    import pickle
 
-from alphatwirl.Concurrently import WorkingArea
+from alphatwirl.concurrently import WorkingArea
 from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||

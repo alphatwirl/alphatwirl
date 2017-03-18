@@ -1,17 +1,13 @@
-import Aggregate
-import Binning
-import Collector
-import Concurrently
-import Configure
-import Events
-import HeppyResult
-import Loop
-import ProgressBar
-import Summary
-import Loop
-import ProgressBar
-import Aggregate
-import Concurrently
+import aggregate
+import binning
+import collector
+import concurrently
+import configure
+import events
+import heppyresult
+import loop
+import progressbar
+import summary
 from misc import mkdir_p
 from misc import listToAlignedText
 from misc import quote_string

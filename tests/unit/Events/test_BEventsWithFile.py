@@ -5,8 +5,8 @@ import os
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.Events import BEvents as Events
-    from alphatwirl.Events import Branch
+    from alphatwirl.events import BEvents as Events
+    from alphatwirl.events import Branch
     hasROOT = True
 except ImportError:
     pass

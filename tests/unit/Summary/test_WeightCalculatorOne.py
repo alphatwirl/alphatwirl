@@ -1,4 +1,4 @@
-import alphatwirl.Summary as Summary
+import alphatwirl.summary as summary
 import unittest
 
 ##__________________________________________________________________||
@@ -8,7 +8,7 @@ class MockEvent(object): pass
 class TestWeightCalculatorOne(unittest.TestCase):
 
     def test_events(self):
-        weight = Summary.WeightCalculatorOne()
+        weight = summary.WeightCalculatorOne()
         self.assertEqual(1.0, weight(MockEvent()))
 
 ##__________________________________________________________________||

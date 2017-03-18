@@ -1,4 +1,4 @@
-from alphatwirl.Events import Events
+from alphatwirl.events import Events
 import unittest
 
 ##__________________________________________________________________||

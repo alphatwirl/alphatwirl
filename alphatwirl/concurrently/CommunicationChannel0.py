@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..ProgressBar import NullProgressMonitor
+from ..progressbar import NullProgressMonitor
 
 ##__________________________________________________________________||
 class CommunicationChannel0(object):

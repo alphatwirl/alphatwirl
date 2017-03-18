@@ -1,6 +1,6 @@
 import unittest
 
-from alphatwirl.Binning import Round
+from alphatwirl.binning import Round
 
 ##__________________________________________________________________||
 class TestRound(unittest.TestCase):

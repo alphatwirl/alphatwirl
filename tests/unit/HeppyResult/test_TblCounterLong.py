@@ -1,4 +1,4 @@
-from alphatwirl.HeppyResult import TblCounterLong
+from alphatwirl.heppyresult import TblCounterLong
 import unittest
 import cStringIO
 import collections

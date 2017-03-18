@@ -1,7 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import logging
 
-from ..ProgressBar import NullProgressMonitor
 from .TaskPackage import TaskPackage
 
 ##__________________________________________________________________||

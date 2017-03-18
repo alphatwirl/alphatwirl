@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..ProgressBar import ProgressReport
+from ..progressbar import ProgressReport
 
 ##__________________________________________________________________||
 class CollectorComposite(object):

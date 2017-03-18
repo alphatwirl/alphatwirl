@@ -1,4 +1,4 @@
-from alphatwirl.ProgressBar import ProgressReportPickup
+from alphatwirl.progressbar import ProgressReportPickup
 import unittest
 import multiprocessing
 

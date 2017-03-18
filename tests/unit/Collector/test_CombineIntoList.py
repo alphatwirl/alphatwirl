@@ -3,7 +3,7 @@ import collections
 import copy
 import numpy as np
 
-from alphatwirl.Collector import CombineIntoList
+from alphatwirl.collector import CombineIntoList
 
 ##__________________________________________________________________||
 class MockReader(object):

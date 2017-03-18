@@ -2,7 +2,7 @@
 # Tai Sakuma <sakuma@cern.ch>
 import pandas as pd
 
-from alphatwirl.Aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
+from alphatwirl.aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
 
 ##__________________________________________________________________||
 def main():

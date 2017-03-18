@@ -2,7 +2,7 @@ import sys
 import collections
 import unittest
 
-from alphatwirl.Loop import DatasetIntoEventBuildersSplitter
+from alphatwirl.loop import DatasetIntoEventBuildersSplitter
 
 ##__________________________________________________________________||
 MockEventBuilder = collections.namedtuple('MockEventBuilder', 'config')

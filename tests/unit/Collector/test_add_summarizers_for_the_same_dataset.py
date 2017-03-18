@@ -1,7 +1,7 @@
 import unittest
 import itertools
 
-from alphatwirl.Collector.functions import add_summarizers_for_the_same_dataset
+from alphatwirl.collector.functions import add_summarizers_for_the_same_dataset
 
 ##__________________________________________________________________||
 class MockSummarizer(object):
