@@ -6,7 +6,7 @@ import os, sys
 import timeit
 import array
 import ROOT
-from AlphaTwirl.Events import Events, BEvents
+from alphatwirl.events import Events, BEvents
 
 ##__________________________________________________________________||
 inputPath = 'tree.root'

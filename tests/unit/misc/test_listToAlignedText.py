@@ -1,4 +1,4 @@
-from AlphaTwirl import listToAlignedText
+from alphatwirl import listToAlignedText
 import unittest
 
 ##__________________________________________________________________||

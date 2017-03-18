@@ -1,6 +1,6 @@
 import unittest
 
-from AlphaTwirl import quote_string
+from alphatwirl import quote_string
 
 ##__________________________________________________________________||
 class TestQuoteString(unittest.TestCase):
