@@ -1,53 +1,53 @@
-AlphaTwirl.Events package
+alphatwirl.events package
 =========================
 
 Submodules
 ----------
 
-AlphaTwirl.Events.BEvents module
+alphatwirl.events.BEvents module
 --------------------------------
 
-.. automodule:: AlphaTwirl.Events.BEvents
+.. automodule:: alphatwirl.events.BEvents
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Events.Branch module
+alphatwirl.events.Branch module
 -------------------------------
 
-.. automodule:: AlphaTwirl.Events.Branch
+.. automodule:: alphatwirl.events.Branch
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Events.BranchAddressManager module
+alphatwirl.events.BranchAddressManager module
 ---------------------------------------------
 
-.. automodule:: AlphaTwirl.Events.BranchAddressManager
+.. automodule:: alphatwirl.events.BranchAddressManager
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Events.BranchAddressManagerForVector module
+alphatwirl.events.BranchAddressManagerForVector module
 ------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Events.BranchAddressManagerForVector
+.. automodule:: alphatwirl.events.BranchAddressManagerForVector
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Events.BranchBuilder module
+alphatwirl.events.BranchBuilder module
 --------------------------------------
 
-.. automodule:: AlphaTwirl.Events.BranchBuilder
+.. automodule:: alphatwirl.events.BranchBuilder
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Events.Events module
+alphatwirl.events.Events module
 -------------------------------
 
-.. automodule:: AlphaTwirl.Events.Events
+.. automodule:: alphatwirl.events.Events
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,7 +56,7 @@ AlphaTwirl.Events.Events module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Events
+.. automodule:: alphatwirl.events
     :members:
     :undoc-members:
     :show-inheritance:

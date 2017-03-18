@@ -1,85 +1,85 @@
-AlphaTwirl.Summary package
+alphatwirl.summary package
 ==========================
 
 Submodules
 ----------
 
-AlphaTwirl.Summary.BackrefMultipleArrayReader module
+alphatwirl.summary.BackrefMultipleArrayReader module
 ----------------------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.BackrefMultipleArrayReader
+.. automodule:: alphatwirl.summary.BackrefMultipleArrayReader
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.Count module
+alphatwirl.summary.Count module
 -------------------------------
 
-.. automodule:: AlphaTwirl.Summary.Count
+.. automodule:: alphatwirl.summary.Count
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.KeyValueComposer module
+alphatwirl.summary.KeyValueComposer module
 ------------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.KeyValueComposer
+.. automodule:: alphatwirl.summary.KeyValueComposer
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.NextKeyComposer module
+alphatwirl.summary.NextKeyComposer module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.NextKeyComposer
+.. automodule:: alphatwirl.summary.NextKeyComposer
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.Reader module
+alphatwirl.summary.Reader module
 --------------------------------
 
-.. automodule:: AlphaTwirl.Summary.Reader
+.. automodule:: alphatwirl.summary.Reader
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.Scan module
+alphatwirl.summary.Scan module
 ------------------------------
 
-.. automodule:: AlphaTwirl.Summary.Scan
+.. automodule:: alphatwirl.summary.Scan
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.Sum module
+alphatwirl.summary.Sum module
 -----------------------------
 
-.. automodule:: AlphaTwirl.Summary.Sum
+.. automodule:: alphatwirl.summary.Sum
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.Summarizer module
+alphatwirl.summary.Summarizer module
 ------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.Summarizer
+.. automodule:: alphatwirl.summary.Summarizer
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.WeightCalculatorOne module
+alphatwirl.summary.WeightCalculatorOne module
 ---------------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.WeightCalculatorOne
+.. automodule:: alphatwirl.summary.WeightCalculatorOne
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Summary.parse_indices_config module
+alphatwirl.summary.parse_indices_config module
 ----------------------------------------------
 
-.. automodule:: AlphaTwirl.Summary.parse_indices_config
+.. automodule:: alphatwirl.summary.parse_indices_config
     :members:
     :undoc-members:
     :show-inheritance:
@@ -88,7 +88,7 @@ AlphaTwirl.Summary.parse_indices_config module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Summary
+.. automodule:: alphatwirl.summary
     :members:
     :undoc-members:
     :show-inheritance:

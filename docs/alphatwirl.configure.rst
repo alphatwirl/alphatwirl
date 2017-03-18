@@ -1,45 +1,45 @@
-AlphaTwirl.Configure package
+alphatwirl.configure package
 ============================
 
 Submodules
 ----------
 
-AlphaTwirl.Configure.TableConfigCompleter module
+alphatwirl.configure.TableConfigCompleter module
 ------------------------------------------------
 
-.. automodule:: AlphaTwirl.Configure.TableConfigCompleter
+.. automodule:: alphatwirl.configure.TableConfigCompleter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Configure.TableFileNameComposer module
+alphatwirl.configure.TableFileNameComposer module
 -------------------------------------------------
 
-.. automodule:: AlphaTwirl.Configure.TableFileNameComposer
+.. automodule:: alphatwirl.configure.TableFileNameComposer
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Configure.TableFileNameComposer2 module
+alphatwirl.configure.TableFileNameComposer2 module
 --------------------------------------------------
 
-.. automodule:: AlphaTwirl.Configure.TableFileNameComposer2
+.. automodule:: alphatwirl.configure.TableFileNameComposer2
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Configure.build_counter_collector_pair module
+alphatwirl.configure.build_counter_collector_pair module
 --------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Configure.build_counter_collector_pair
+.. automodule:: alphatwirl.configure.build_counter_collector_pair
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Configure.build_progressMonitor_communicationChannel module
+alphatwirl.configure.build_progressMonitor_communicationChannel module
 ----------------------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Configure.build_progressMonitor_communicationChannel
+.. automodule:: alphatwirl.configure.build_progressMonitor_communicationChannel
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ AlphaTwirl.Configure.build_progressMonitor_communicationChannel module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Configure
+.. automodule:: alphatwirl.configure
     :members:
     :undoc-members:
     :show-inheritance:

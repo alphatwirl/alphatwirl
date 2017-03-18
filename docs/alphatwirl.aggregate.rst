@@ -1,13 +1,13 @@
-AlphaTwirl.Aggregate package
+alphatwirl.aggregate package
 ============================
 
 Submodules
 ----------
 
-AlphaTwirl.Aggregate.functions module
+alphatwirl.aggregate.functions module
 -------------------------------------
 
-.. automodule:: AlphaTwirl.Aggregate.functions
+.. automodule:: alphatwirl.aggregate.functions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ AlphaTwirl.Aggregate.functions module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Aggregate
+.. automodule:: alphatwirl.aggregate
     :members:
     :undoc-members:
     :show-inheritance:

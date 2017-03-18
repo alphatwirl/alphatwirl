@@ -1,101 +1,101 @@
-AlphaTwirl.Loop package
+alphatwirl.loop package
 =======================
 
 Submodules
 ----------
 
-AlphaTwirl.Loop.Collector module
+alphatwirl.loop.Collector module
 --------------------------------
 
-.. automodule:: AlphaTwirl.Loop.Collector
+.. automodule:: alphatwirl.loop.Collector
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.CollectorComposite module
+alphatwirl.loop.CollectorComposite module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.CollectorComposite
+.. automodule:: alphatwirl.loop.CollectorComposite
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.CollectorDelegate module
+alphatwirl.loop.CollectorDelegate module
 ----------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.CollectorDelegate
+.. automodule:: alphatwirl.loop.CollectorDelegate
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.DatasetIntoEventBuildersSplitter module
+alphatwirl.loop.DatasetIntoEventBuildersSplitter module
 -------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.DatasetIntoEventBuildersSplitter
+.. automodule:: alphatwirl.loop.DatasetIntoEventBuildersSplitter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.EventLoop module
+alphatwirl.loop.EventLoop module
 --------------------------------
 
-.. automodule:: AlphaTwirl.Loop.EventLoop
+.. automodule:: alphatwirl.loop.EventLoop
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.EventLoopProgressReportWriter module
+alphatwirl.loop.EventLoopProgressReportWriter module
 ----------------------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.EventLoopProgressReportWriter
+.. automodule:: alphatwirl.loop.EventLoopProgressReportWriter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.EventLoopRunner module
+alphatwirl.loop.EventLoopRunner module
 --------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.EventLoopRunner
+.. automodule:: alphatwirl.loop.EventLoopRunner
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.EventReader module
+alphatwirl.loop.EventReader module
 ----------------------------------
 
-.. automodule:: AlphaTwirl.Loop.EventReader
+.. automodule:: alphatwirl.loop.EventReader
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.MPEventLoopRunner module
+alphatwirl.loop.MPEventLoopRunner module
 ----------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.MPEventLoopRunner
+.. automodule:: alphatwirl.loop.MPEventLoopRunner
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.NullCollector module
+alphatwirl.loop.NullCollector module
 ------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.NullCollector
+.. automodule:: alphatwirl.loop.NullCollector
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.ReaderComposite module
+alphatwirl.loop.ReaderComposite module
 --------------------------------------
 
-.. automodule:: AlphaTwirl.Loop.ReaderComposite
+.. automodule:: alphatwirl.loop.ReaderComposite
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Loop.splitfuncs module
+alphatwirl.loop.splitfuncs module
 ---------------------------------
 
-.. automodule:: AlphaTwirl.Loop.splitfuncs
+.. automodule:: alphatwirl.loop.splitfuncs
     :members:
     :undoc-members:
     :show-inheritance:
@@ -104,7 +104,7 @@ AlphaTwirl.Loop.splitfuncs module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Loop
+.. automodule:: alphatwirl.loop
     :members:
     :undoc-members:
     :show-inheritance:

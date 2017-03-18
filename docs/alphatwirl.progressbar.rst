@@ -1,69 +1,69 @@
-AlphaTwirl.ProgressBar package
+alphatwirl.progressbar package
 ==============================
 
 Submodules
 ----------
 
-AlphaTwirl.ProgressBar.BProgressMonitor module
+alphatwirl.progressbar.BProgressMonitor module
 ----------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.BProgressMonitor
+.. automodule:: alphatwirl.progressbar.BProgressMonitor
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.NullProgressMonitor module
+alphatwirl.progressbar.NullProgressMonitor module
 -------------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.NullProgressMonitor
+.. automodule:: alphatwirl.progressbar.NullProgressMonitor
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressBar module
+alphatwirl.progressbar.ProgressBar module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressBar
+.. automodule:: alphatwirl.progressbar.ProgressBar
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressMonitor module
+alphatwirl.progressbar.ProgressMonitor module
 ---------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressMonitor
+.. automodule:: alphatwirl.progressbar.ProgressMonitor
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressPrint module
+alphatwirl.progressbar.ProgressPrint module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressPrint
+.. automodule:: alphatwirl.progressbar.ProgressPrint
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressReport module
+alphatwirl.progressbar.ProgressReport module
 --------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressReport
+.. automodule:: alphatwirl.progressbar.ProgressReport
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressReportPickup module
+alphatwirl.progressbar.ProgressReportPickup module
 --------------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressReportPickup
+.. automodule:: alphatwirl.progressbar.ProgressReportPickup
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.ProgressBar.ProgressReporter module
+alphatwirl.progressbar.ProgressReporter module
 ----------------------------------------------
 
-.. automodule:: AlphaTwirl.ProgressBar.ProgressReporter
+.. automodule:: alphatwirl.progressbar.ProgressReporter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -72,7 +72,7 @@ AlphaTwirl.ProgressBar.ProgressReporter module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.ProgressBar
+.. automodule:: alphatwirl.progressbar
     :members:
     :undoc-members:
     :show-inheritance:

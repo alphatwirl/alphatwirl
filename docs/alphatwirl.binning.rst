@@ -1,45 +1,45 @@
-AlphaTwirl.Binning package
+alphatwirl.binning package
 ==========================
 
 Submodules
 ----------
 
-AlphaTwirl.Binning.Binning module
+alphatwirl.binning.Binning module
 ---------------------------------
 
-.. automodule:: AlphaTwirl.Binning.Binning
+.. automodule:: alphatwirl.binning.Binning
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Binning.Combine module
+alphatwirl.binning.Combine module
 ---------------------------------
 
-.. automodule:: AlphaTwirl.Binning.Combine
+.. automodule:: alphatwirl.binning.Combine
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Binning.Echo module
+alphatwirl.binning.Echo module
 ------------------------------
 
-.. automodule:: AlphaTwirl.Binning.Echo
+.. automodule:: alphatwirl.binning.Echo
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Binning.Round module
+alphatwirl.binning.Round module
 -------------------------------
 
-.. automodule:: AlphaTwirl.Binning.Round
+.. automodule:: alphatwirl.binning.Round
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Binning.RoundLog module
+alphatwirl.binning.RoundLog module
 ----------------------------------
 
-.. automodule:: AlphaTwirl.Binning.RoundLog
+.. automodule:: alphatwirl.binning.RoundLog
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ AlphaTwirl.Binning.RoundLog module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Binning
+.. automodule:: alphatwirl.binning
     :members:
     :undoc-members:
     :show-inheritance:

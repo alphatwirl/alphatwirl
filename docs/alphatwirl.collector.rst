@@ -1,45 +1,45 @@
-AlphaTwirl.Collector package
+alphatwirl.collector package
 ============================
 
 Submodules
 ----------
 
-AlphaTwirl.Collector.CombineIntoList module
+alphatwirl.collector.CombineIntoList module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.Collector.CombineIntoList
+.. automodule:: alphatwirl.collector.CombineIntoList
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Collector.CombineIntoPandasDataFrame module
+alphatwirl.collector.CombineIntoPandasDataFrame module
 ------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Collector.CombineIntoPandasDataFrame
+.. automodule:: alphatwirl.collector.CombineIntoPandasDataFrame
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Collector.WriteListToFile module
+alphatwirl.collector.WriteListToFile module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.Collector.WriteListToFile
+.. automodule:: alphatwirl.collector.WriteListToFile
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Collector.WritePandasDataFrameToFile module
+alphatwirl.collector.WritePandasDataFrameToFile module
 ------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Collector.WritePandasDataFrameToFile
+.. automodule:: alphatwirl.collector.WritePandasDataFrameToFile
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Collector.functions module
+alphatwirl.collector.functions module
 -------------------------------------
 
-.. automodule:: AlphaTwirl.Collector.functions
+.. automodule:: alphatwirl.collector.functions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -48,7 +48,7 @@ AlphaTwirl.Collector.functions module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Collector
+.. automodule:: alphatwirl.collector
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,29 +1,29 @@
-AlphaTwirl.misc package
+alphatwirl.misc package
 =======================
 
 Submodules
 ----------
 
-AlphaTwirl.misc.listToAlignedText module
+alphatwirl.misc.listToAlignedText module
 ----------------------------------------
 
-.. automodule:: AlphaTwirl.misc.listToAlignedText
+.. automodule:: alphatwirl.misc.listToAlignedText
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.misc.mkdir_p module
+alphatwirl.misc.mkdir_p module
 ------------------------------
 
-.. automodule:: AlphaTwirl.misc.mkdir_p
+.. automodule:: alphatwirl.misc.mkdir_p
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.misc.quote_string module
+alphatwirl.misc.quote_string module
 -----------------------------------
 
-.. automodule:: AlphaTwirl.misc.quote_string
+.. automodule:: alphatwirl.misc.quote_string
     :members:
     :undoc-members:
     :show-inheritance:
@@ -32,7 +32,7 @@ AlphaTwirl.misc.quote_string module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.misc
+.. automodule:: alphatwirl.misc
     :members:
     :undoc-members:
     :show-inheritance:

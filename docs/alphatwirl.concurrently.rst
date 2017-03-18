@@ -1,109 +1,109 @@
-AlphaTwirl.Concurrently package
+alphatwirl.concurrently package
 ===============================
 
 Submodules
 ----------
 
-AlphaTwirl.Concurrently.CommunicationChannel module
+alphatwirl.concurrently.CommunicationChannel module
 ---------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.CommunicationChannel
+.. automodule:: alphatwirl.concurrently.CommunicationChannel
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.CommunicationChannel0 module
+alphatwirl.concurrently.CommunicationChannel0 module
 ----------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.CommunicationChannel0
+.. automodule:: alphatwirl.concurrently.CommunicationChannel0
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.HTCondorJobSubmitter module
+alphatwirl.concurrently.HTCondorJobSubmitter module
 ---------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.HTCondorJobSubmitter
+.. automodule:: alphatwirl.concurrently.HTCondorJobSubmitter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.MultiprocessingDropbox module
+alphatwirl.concurrently.MultiprocessingDropbox module
 -----------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.MultiprocessingDropbox
+.. automodule:: alphatwirl.concurrently.MultiprocessingDropbox
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.SubprocessRunner module
+alphatwirl.concurrently.SubprocessRunner module
 -----------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.SubprocessRunner
+.. automodule:: alphatwirl.concurrently.SubprocessRunner
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.TaskPackage module
+alphatwirl.concurrently.TaskPackage module
 ------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.TaskPackage
+.. automodule:: alphatwirl.concurrently.TaskPackage
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.TaskPackageDropbox module
+alphatwirl.concurrently.TaskPackageDropbox module
 -------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.TaskPackageDropbox
+.. automodule:: alphatwirl.concurrently.TaskPackageDropbox
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.Worker module
+alphatwirl.concurrently.Worker module
 -------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.Worker
+.. automodule:: alphatwirl.concurrently.Worker
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.WorkingArea module
+alphatwirl.concurrently.WorkingArea module
 ------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.WorkingArea
+.. automodule:: alphatwirl.concurrently.WorkingArea
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.example_load module
+alphatwirl.concurrently.example_load module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.example_load
+.. automodule:: alphatwirl.concurrently.example_load
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.example_load_result module
+alphatwirl.concurrently.example_load_result module
 --------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.example_load_result
+.. automodule:: alphatwirl.concurrently.example_load_result
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.example_submit_htcondor module
+alphatwirl.concurrently.example_submit_htcondor module
 ------------------------------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.example_submit_htcondor
+.. automodule:: alphatwirl.concurrently.example_submit_htcondor
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.Concurrently.run module
+alphatwirl.concurrently.run module
 ----------------------------------
 
-.. automodule:: AlphaTwirl.Concurrently.run
+.. automodule:: alphatwirl.concurrently.run
     :members:
     :undoc-members:
     :show-inheritance:
@@ -112,7 +112,7 @@ AlphaTwirl.Concurrently.run module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.Concurrently
+.. automodule:: alphatwirl.concurrently
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,149 +1,149 @@
-AlphaTwirl.HeppyResult package
+alphatwirl.heppyresult package
 ==============================
 
 Submodules
 ----------
 
-AlphaTwirl.HeppyResult.Analyzer module
+alphatwirl.heppyresult.Analyzer module
 --------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.Analyzer
+.. automodule:: alphatwirl.heppyresult.Analyzer
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.BEventBuilder module
+alphatwirl.heppyresult.BEventBuilder module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.BEventBuilder
+.. automodule:: alphatwirl.heppyresult.BEventBuilder
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.Component module
+alphatwirl.heppyresult.Component module
 ---------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.Component
+.. automodule:: alphatwirl.heppyresult.Component
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.ComponentLoop module
+alphatwirl.heppyresult.ComponentLoop module
 -------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.ComponentLoop
+.. automodule:: alphatwirl.heppyresult.ComponentLoop
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.ComponentReaderComposite module
+alphatwirl.heppyresult.ComponentReaderComposite module
 ------------------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.ComponentReaderComposite
+.. automodule:: alphatwirl.heppyresult.ComponentReaderComposite
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.EventBuilder module
+alphatwirl.heppyresult.EventBuilder module
 ------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.EventBuilder
+.. automodule:: alphatwirl.heppyresult.EventBuilder
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.EventBuilderConfig module
+alphatwirl.heppyresult.EventBuilderConfig module
 ------------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.EventBuilderConfig
+.. automodule:: alphatwirl.heppyresult.EventBuilderConfig
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.EventBuilderConfigMaker module
+alphatwirl.heppyresult.EventBuilderConfigMaker module
 -----------------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.EventBuilderConfigMaker
+.. automodule:: alphatwirl.heppyresult.EventBuilderConfigMaker
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.HeppyResult module
+alphatwirl.heppyresult.HeppyResult module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.HeppyResult
+.. automodule:: alphatwirl.heppyresult.HeppyResult
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.ReadComponentConfig module
+alphatwirl.heppyresult.ReadComponentConfig module
 -------------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.ReadComponentConfig
+.. automodule:: alphatwirl.heppyresult.ReadComponentConfig
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.ReadCounter module
+alphatwirl.heppyresult.ReadCounter module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.ReadCounter
+.. automodule:: alphatwirl.heppyresult.ReadCounter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.ReadVersionInfo module
+alphatwirl.heppyresult.ReadVersionInfo module
 ---------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.ReadVersionInfo
+.. automodule:: alphatwirl.heppyresult.ReadVersionInfo
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblBranch module
+alphatwirl.heppyresult.TblBranch module
 ---------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblBranch
+.. automodule:: alphatwirl.heppyresult.TblBranch
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblBrilCalc module
+alphatwirl.heppyresult.TblBrilCalc module
 -----------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblBrilCalc
+.. automodule:: alphatwirl.heppyresult.TblBrilCalc
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblComponentConfig module
+alphatwirl.heppyresult.TblComponentConfig module
 ------------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblComponentConfig
+.. automodule:: alphatwirl.heppyresult.TblComponentConfig
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblCounter module
+alphatwirl.heppyresult.TblCounter module
 ----------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblCounter
+.. automodule:: alphatwirl.heppyresult.TblCounter
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblCounterLong module
+alphatwirl.heppyresult.TblCounterLong module
 --------------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblCounterLong
+.. automodule:: alphatwirl.heppyresult.TblCounterLong
     :members:
     :undoc-members:
     :show-inheritance:
 
-AlphaTwirl.HeppyResult.TblTree module
+alphatwirl.heppyresult.TblTree module
 -------------------------------------
 
-.. automodule:: AlphaTwirl.HeppyResult.TblTree
+.. automodule:: alphatwirl.heppyresult.TblTree
     :members:
     :undoc-members:
     :show-inheritance:
@@ -152,7 +152,7 @@ AlphaTwirl.HeppyResult.TblTree module
 Module contents
 ---------------
 
-.. automodule:: AlphaTwirl.HeppyResult
+.. automodule:: alphatwirl.heppyresult
     :members:
     :undoc-members:
     :show-inheritance:
