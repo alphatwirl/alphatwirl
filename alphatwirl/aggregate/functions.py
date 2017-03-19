@@ -197,7 +197,8 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
         tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt_sumw', ))
         tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
     else:
-        tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
+        if 'nevt_sumw' in tbl_nevt.columns:
+            tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
         tbl_nevt = pd.merge(tbl_process, tbl_nevt)
         tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
         tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
