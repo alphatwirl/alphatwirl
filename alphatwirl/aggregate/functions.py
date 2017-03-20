@@ -2,14 +2,6 @@
 import pandas as pd
 
 ##__________________________________________________________________||
-def sumOverCategories(tbl, categories, variables):
-    import logging
-    logging.warning('the function "{}" is renamed "{}"'.format(
-        "sumOverCategories", "sum_over_categories")
-    )
-    return sum_over_categories(tbl, categories, variables)
-
-##__________________________________________________________________||
 def sum_over_categories(tbl, categories, variables):
 
     if categories is None: categories = ()
