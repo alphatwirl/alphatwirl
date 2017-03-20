@@ -82,21 +82,21 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     tbl_process is the data frame that relates the components, the
     phase spaces, and the processes, e.g.,::
 
-                  component             phasespace  process
-            QCD_HT_100To250        QCD_HT_100To250  QCD
-            QCD_HT_250To500        QCD_HT_250To500  QCD
-           QCD_HT_500To1000       QCD_HT_500To1000  QCD
-           QCD_HT_1000ToInf       QCD_HT_1000ToInf  QCD
-       QCD_HT_250To500_ext1        QCD_HT_250To500  QCD
-      QCD_HT_500To1000_ext1       QCD_HT_500To1000  QCD
-      QCD_HT_1000ToInf_ext1       QCD_HT_1000ToInf  QCD
-             TToLeptons_sch         TToLeptons_sch  T
-          TBarToLeptons_sch      TBarToLeptons_sch  T
-             TToLeptons_tch         TToLeptons_tch  T
-          TBarToLeptons_tch      TBarToLeptons_tch  T
-                     T_tWch                 T_tWch  T
-                  TBar_tWch              TBar_tWch  T
-                     TTJets                 TTJets  TTJets
+                  component             phasespace     process
+            QCD_HT_100To250        QCD_HT_100To250         QCD
+            QCD_HT_250To500        QCD_HT_250To500         QCD
+           QCD_HT_500To1000       QCD_HT_500To1000         QCD
+           QCD_HT_1000ToInf       QCD_HT_1000ToInf         QCD
+       QCD_HT_250To500_ext1        QCD_HT_250To500         QCD
+      QCD_HT_500To1000_ext1       QCD_HT_500To1000         QCD
+      QCD_HT_1000ToInf_ext1       QCD_HT_1000ToInf         QCD
+             TToLeptons_sch         TToLeptons_sch           T
+          TBarToLeptons_sch      TBarToLeptons_sch           T
+             TToLeptons_tch         TToLeptons_tch           T
+          TBarToLeptons_tch      TBarToLeptons_tch           T
+                     T_tWch                 T_tWch           T
+                  TBar_tWch              TBar_tWch           T
+                     TTJets                 TTJets      TTJets
       WJetsToLNu_HT100to200  WJetsToLNu_HT100to200  WJetsToLNu
       WJetsToLNu_HT200to400  WJetsToLNu_HT200to400  WJetsToLNu
       WJetsToLNu_HT400to600  WJetsToLNu_HT400to600  WJetsToLNu
@@ -187,29 +187,22 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     tbl = pd.merge(tbl_process, tbl_yield)
     tbl = sum_over_categories(tbl, categories = ('component', ), variables = ('n', 'nvar'))
 
+    dataset_column = 'component'
+    nevt_column = 'nevt'
     if use_nevt_sumw:
-        tbl_nevt = tbl_nevt.drop('nevt', axis = 1)
-        tbl_nevt = pd.merge(tbl_process, tbl_nevt)
-        tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt_sumw', ))
-        tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
-    else:
-        if 'nevt_sumw' in tbl_nevt.columns:
-            tbl_nevt = tbl_nevt.drop('nevt_sumw', axis = 1)
-        tbl_nevt = pd.merge(tbl_process, tbl_nevt)
-        tbl_nevt = sum_over_categories(tbl_nevt, categories = ('component', ), variables = ('nevt', ))
-        tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
+        nevt_column = 'nevt_sumw'
+
+    tbl_nevt = tbl_nevt[[dataset_column, nevt_column]]
+    tbl_nevt = pd.merge(tbl_process, tbl_nevt)
+    tbl_nevt = sum_over_categories(tbl_nevt, categories = (dataset_column, ), variables = (nevt_column, ))
+    tbl_nevt = pd.merge(tbl_nevt, tbl_xsec)
 
     tbl = pd.merge(tbl, tbl_nevt)
-    if use_nevt_sumw:
-        tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl.nevt_sumw)**2
-        tbl['xsec'] = tbl.n*(tbl.xsec/tbl.nevt_sumw)
-        del tbl['nevt_sumw']
-    else:
-        tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl.nevt)**2
-        tbl['xsec'] = tbl.n*(tbl.xsec/tbl.nevt)
-        del tbl['nevt']
-    del tbl['n']
-    del tbl['nvar']
+
+    tbl['xsecvar'] = tbl.nvar*(tbl.xsec/tbl[nevt_column])**2
+    tbl['xsec'] = tbl.n*(tbl.xsec/tbl[nevt_column])
+    tbl.drop(nevt_column, axis = 1, inplace = True)
+    tbl.drop(['n', 'nvar'], axis = 1, inplace = True)
 
     ret = sum_over_categories(tbl, categories = ('phasespace', ), variables = ('xsec', 'xsecvar'))
 
