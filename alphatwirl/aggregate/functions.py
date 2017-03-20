@@ -34,7 +34,9 @@ def sum_over_categories(tbl, categories, variables):
 
 ##__________________________________________________________________||
 def combine_MC_yields_in_datasets_into_xsec_in_processes(
-        tbl_yield, tbl_process, tbl_nevt, tbl_xsec, use_nevt_sumw = False):
+        tbl_yield, tbl_process, tbl_nevt, tbl_xsec,
+        dataset_column = 'component', nevt_column = 'nevt'):
+
     """return a data frame for cross sections for each process.
 
     This function receives four data frames:
@@ -185,12 +187,8 @@ def combine_MC_yields_in_datasets_into_xsec_in_processes(
     tbl_xsec = tbl_xsec[['phasespace', 'xsec']].drop_duplicates()
 
     tbl = pd.merge(tbl_process, tbl_yield)
-    tbl = sum_over_categories(tbl, categories = ('component', ), variables = ('n', 'nvar'))
+    tbl = sum_over_categories(tbl, categories = (dataset_column, ), variables = ('n', 'nvar'))
 
-    dataset_column = 'component'
-    nevt_column = 'nevt'
-    if use_nevt_sumw:
-        nevt_column = 'nevt_sumw'
 
     tbl_nevt = tbl_nevt[[dataset_column, nevt_column]]
     tbl_nevt = pd.merge(tbl_process, tbl_nevt)

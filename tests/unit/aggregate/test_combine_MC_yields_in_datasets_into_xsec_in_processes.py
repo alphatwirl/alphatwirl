@@ -219,7 +219,7 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
 
     def test_use_nevt_sumw(self):
         expect = tbl_process_met_sumw
-        actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec, use_nevt_sumw = True)
+        actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec, nevt_column = 'nevt_sumw')
         ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
         self.assertEqual(expect, actual)
 
