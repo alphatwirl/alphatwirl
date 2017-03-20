@@ -5,12 +5,14 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
-    from alphatwirl.aggregate import sum_over_categories
     hasPandas = True
 except ImportError:
     class PD:
         def read_table(self, *args, **kargs): pass
     pd = PD()
+
+if hasPandas:
+    from alphatwirl.aggregate import sum_over_categories
 
 ##__________________________________________________________________||
 def assertDataFrameEqual(df1, df2, **kwds):
