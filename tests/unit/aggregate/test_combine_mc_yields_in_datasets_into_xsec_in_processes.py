@@ -5,7 +5,7 @@ import cStringIO
 hasPandas = False
 try:
     import pandas as pd
-    from alphatwirl.aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
+    from alphatwirl.aggregate import combine_mc_yields_in_datasets_into_xsec_in_processes
     hasPandas = True
 except ImportError:
     class PD:
@@ -192,14 +192,14 @@ tbl_process_met_sumw['HT'] = tbl_process_met_sumw[:]['HT'].astype('category', or
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
-class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
+class Test_combine_mc_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
 
     def setUp(self):
         self.addTypeEqualityFunc(pd.core.frame.DataFrame, assertDataFrameEqual)
 
     def test_one(self):
         expect = tbl_process_met
-        actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec)
+        actual = combine_mc_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec)
         ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
         self.assertIsNot(tbl_component_met, actual)
         self.assertIsNot(expect, actual)
@@ -219,7 +219,7 @@ class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCas
 
     def test_use_nevt_sumw(self):
         expect = tbl_process_met_sumw
-        actual = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec, nevt_column = 'nevt_sumw')
+        actual = combine_mc_yields_in_datasets_into_xsec_in_processes(tbl_component_met, tbl_process, tbl_nevt, tbl_xsec, nevt_column = 'nevt_sumw')
         ## print actual.to_string(index = False, formatters={'xsec':'{:e}'.format})
         self.assertEqual(expect, actual)
 

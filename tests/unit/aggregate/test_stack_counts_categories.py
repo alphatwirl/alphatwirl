@@ -190,7 +190,7 @@ tbl_stack_process_top['nBJet40'] = tbl_stack_process_top[:]['nBJet40'].astype('c
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
-class Test_combine_MC_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
+class Test_combine_mc_yields_in_datasets_into_xsec_in_processes(unittest.TestCase):
 
     def setUp(self):
         self.addTypeEqualityFunc(pd.core.frame.DataFrame, assertDataFrameEqual)

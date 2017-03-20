@@ -33,7 +33,7 @@ def sum_over_categories(tbl, categories, variables):
     return ret
 
 ##__________________________________________________________________||
-def combine_MC_yields_in_datasets_into_xsec_in_processes(
+def combine_mc_yields_in_datasets_into_xsec_in_processes(
         tbl_yield, tbl_process, tbl_nevt, tbl_xsec,
         dataset_column = 'component', nevt_column = 'nevt'):
 

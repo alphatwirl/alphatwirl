@@ -2,7 +2,7 @@
 # Tai Sakuma <sakuma@cern.ch>
 import pandas as pd
 
-from alphatwirl.aggregate import combine_MC_yields_in_datasets_into_xsec_in_processes
+from alphatwirl.aggregate import combine_mc_yields_in_datasets_into_xsec_in_processes
 
 ##__________________________________________________________________||
 def main():
@@ -20,7 +20,7 @@ def main():
     tbl_yield = tbl_yield[tbl_yield['component'].isin(components)]
     del tbl_yield['jet2pt']
     writeToFile(tbl_yield, 'tbl_in.txt')
-    tbl_out = combine_MC_yields_in_datasets_into_xsec_in_processes(tbl_yield, tbl_process, tbl_nevt, tbl_xsec)
+    tbl_out = combine_mc_yields_in_datasets_into_xsec_in_processes(tbl_yield, tbl_process, tbl_nevt, tbl_xsec)
     writeToFile(tbl_out, 'tbl_out.txt')
 
 ##__________________________________________________________________||
