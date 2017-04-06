@@ -7,7 +7,7 @@ import copy
 ##__________________________________________________________________||
 class Summarizer(object):
     def __init__(self, Summary):
-        self._results = collections.OrderedDict()
+        self._results = collections.defaultdict(Summary)
         self.Summary = Summary
 
     def __repr__(self):
@@ -18,11 +18,10 @@ class Summarizer(object):
         )
 
     def add(self, key, val = None, weight = 1):
-        self.add_key(key)
-        self._results[key] = self._results[key] + self.Summary(val, weight)
+        self._results[key] += self.Summary(val, weight)
 
     def add_key(self, key):
-        self._results.setdefault(key, self.Summary())
+        self._results[key]
 
     def keys(self):
         return self._results.keys()
