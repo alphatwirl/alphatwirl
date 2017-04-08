@@ -10,10 +10,9 @@ class RoundLog(object):
     def __init__(self, width = 0.1, aBoundary = 1,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue,
-                 retvalue = 'lowedge',
-    ):
-        self._round = Round(width = width, aBoundary = math.log10(aBoundary), retvalue = retvalue)
+                 valid = returnTrue):
+
+        self._round = Round(width = width, aBoundary = math.log10(aBoundary))
         self.width = width
         self.aBoundary = aBoundary
         self.min = min

@@ -12,19 +12,13 @@ class Round(object):
     def __init__(self, width = 1, aBoundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue, retvalue = 'lowedge'
-    ):
-
-        supportedRetvalues = ('center', 'lowedge')
-        if retvalue not in supportedRetvalues:
-            raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
+                 valid = returnTrue):
 
         self.width = width
         self.aBoundary = aBoundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
         if aBoundary is None: aBoundary = self.halfWidth
         self.boundaries = collections.deque([aBoundary - width, aBoundary, aBoundary + width])
-        self.lowedge = (retvalue == 'lowedge')
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
@@ -44,13 +38,7 @@ class Round(object):
         )
 
     def __call__(self, val):
-
-        bin = self._lower_boundary(val)
-        if self.lowedge:
-            return bin
-
-        bin += self.halfWidth
-        return bin
+        return self._lower_boundary(val)
 
     def _lower_boundary(self, val):
 
@@ -90,13 +78,7 @@ class Round(object):
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
-
-        ret = self._next_lower_boundary(bin)
-        if self.lowedge:
-            return ret
-
-        ret += self.halfWidth
-        return ret
+        return self._next_lower_boundary(bin)
 
     def _next_lower_boundary(self, bin):
 
