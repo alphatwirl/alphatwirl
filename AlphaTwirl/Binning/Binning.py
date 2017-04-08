@@ -82,7 +82,7 @@ class Binning(object):
     def __init__(self, boundaries = None, lows = None, ups = None,
                  retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
                  valid = returnTrue):
-		"""this creates an instance of the Binning class.
+		"""__init__ creates an instance of the Binning class.
 
 		By default:
 			retvalue is set to lowedge.  It can also be set to number.
@@ -92,7 +92,10 @@ class Binning(object):
 
 		For example, underflow_bin could be -999, and overflow_bin could be the
 		upper edge of the last bin.
-		
+
+		valid can be set to any user defined function which returns
+		True or False.
+
 		"""
 
         if boundaries is None:

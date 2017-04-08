@@ -9,14 +9,29 @@ def returnTrue(x): return True
 ##__________________________________________________________________||
 class Round(object):
     """The Round class allows the user to define a set of fixed linear
-	width bins used for an input variable.
-
+	width bins used to summarize a variable.
+	
 	An instance of the Round class can be defined with several
-	arguments.
+	input arguments.  An instance can be created with no input args::
 
-	aBoundary is the lower edge of one particular bin.  The low edge
-	belongs to the bin, whereas the upper edge of the bin belongs to
-	the next bin.
+	roundBins = Round()
+
+	A lower edge of one bin can be specified using ``aBoundary``::
+
+	roundBins = Round(aBoundary = 10)
+
+	A lower bin edge and bin width can be specified using ``width``
+	and ``aBoundary``::
+
+	roundBins = Round(width = 5, aBoundary = 10)
+
+	If used, the lower bin edge specified by aBoundary is the lowest
+	value included in that particular bin.  The upper edge of every
+	bin belongs to the next bin.
+
+	If an instance of the Round class is made with no input args,
+	or with ``width`` specified without ``aBoundary``, then the
+	bin boundaries will be set to half of ``width``.
 	
 	If the input variable is the leading jet pT in GeV, then
 	the following binning would yield non-overlapping bins
@@ -29,26 +44,65 @@ class Round(object):
 	120 to 140 GeV, the bin after that would cover 140 to 160 GeV,
 	and so on.
 
-	HOW TO INSTANTIATE
-
-	if aBoundary is not given, then the bin boundaries are set to
-	half the bin width
-
-	EXECUTE __call__ AND DESCRIBE WHAT IS RETURNED
-
-	EXECUTE __next__ AND DESCRIBE WHAT IS RETURNED
 	
-	SHOW FUNCTOR EXAMPLE see tests/unit/Binning/test_Round.py. Line 17
-	is for call, and the object is defined on line 18.
+	The main function of this class is __call__.  Given an input
+	value or bin, the function returns the bin to which the input
+	argument belongs.  Users must check that __call__ does not
+	return None.  If an instance of the Round class named
+	roundBins has been created, then __call__ is executed via::
+
+	roundBins.__call__(2.5)
+
+	this is equivalent to roundBins(2.5)
+
+	A functor example of __call__ is::
+    
+	def test_call(self):
+        obj = Round(2, 0)  #width is 2, aBoundary is 0
+        self.assertEqual( -2, obj( -1.9))
+        self.assertEqual( -2, obj( -1  ))   #equivalent to calling obj.__call__(-1)
+        self.assertEqual( -2, obj( -0.1))
+        self.assertEqual(  0, obj(  0.1))
+
 	
-	
-    """
+	The next function takes a bin as an input argument, and
+	returns the bin immediately following the input bin.  If
+	the input bin is None, then None is returned.  If an
+	instance of the Round class named roundBins has been
+	created, then next is executed via::
+
+	roundBins.next(4)
+
+	A functor example of next is::
+    
+	def test_next(self):
+        obj = Round(0.02, 0.005)   #width is 0.02, aBoundary is 0.005
+        self.assertEqual( -0.015, obj.next( -0.035))
+        self.assertEqual(  0.005, obj.next( -0.015))
+        self.assertEqual(  0.025, obj.next(  0.005))
+        self.assertEqual(  0.045, obj.next(  0.025))
+
+    
+	"""
     def __init__(self, width = 1, aBoundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
                  valid = returnTrue, retvalue = 'lowedge'
     ):
-		"""similar to other binning classes, the argument 'valid' is a user defined function
+		"""__init__ creates an instance of the Round class.
+
+		By default:
+			retvalue is set to lowedge.  It can also be set to center.
+			every value added to the Round class object has the parameter
+			valid set to True.  Thus, __call__ will never return None.
+			specific max and min values are not set.
+			specific underflow_bin and overflow_bin values are not set.
+
+		underflow_bin could be set to -999, and overflow_bin could be
+		set to the upper edge of the last bin.
+		
+		valid can be set to any user defined function which returns
+		True or False.
 
 		"""
 
@@ -81,24 +135,19 @@ class Round(object):
         )
 
     def __call__(self, val):
-		"""
-		this function needs to be fast, as it is called many times when running
-		the program.
+		"""main function of this class. returns the bin to which val belongs.
 
-		first check if the value 'val' added using __init__ is valid.
+		first check if the value val added using __init__ is valid.
 
-		then, if 'min' set in __init__ is not None, then check if 'val' belongs to the
-		underflow (below 'min') or overflow bin (below max)
+		then, if min and max set in __init__ are not None, check if val belongs to the
+		underflow (below min) or overflow bin (below max)
 
 		then, check if 'val' is plus or minus infinity. this is only necessary if 'max'
-		and/or 'min' is not defined.
+		and/or 'min' are not defined.
 
-		internally, this class keeps track of a list of bin boundaries.
+		This class keeps an internal list of bin boundaries named 'boundaries' which is updated
+		if a new value val is added which does not fall in an existing bin.
 		
-		This list is named 'boundaries', and is updated
-		if a new bin is needed in the internal list (either a new element at the
-		beginning or end of the list).
-
 		"""
 
         if not self.valid(val):
@@ -130,6 +179,14 @@ class Round(object):
         return bin
 
     def _updateBoundaries(self, val):
+		"""when a new value val is added that does not fit in an existing bin, this
+		function creates a new bin in the internal list of bins.  This new bin has
+		width equal to the class variable width.
+
+		This function is called automatically when needed.  Users should not call
+		this function explicitly.
+
+		"""
         while val < self.boundaries[0]:
             self.boundaries.insert(0, self.boundaries[0] - self.width)
 
@@ -137,11 +194,10 @@ class Round(object):
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
-		"""
-		given a bin, this returns the next bin.
+		"""given the input bin, this function returns the next bin.
 
 		first check that the bin given in the argument 'bin' exists in the set of bins already
-		defined.  Return None if 'bin' is not valid.
+		defined.  Return None if bin is not valid.
 
 		if bin corresponds to underflow_bin, return the first bin (just above underflow_bin)
 		
@@ -149,10 +205,8 @@ class Round(object):
 
 		if bin is not None, and does not match underflow_bin or overflow_bin, then make
 		sure that the bin already is saved in the internal list of bin boundaries named
-		'boundaries'
-
-		then take the first bin boundary (lower edge of first bin just above underflow)
-		and find and return the next bin.
+		boundaries.  After this check, find the bin passed as input in the internal list
+		of bin boundaries.  Return the next bin from the internal list of bin boundaries.
 
 		"""
 
