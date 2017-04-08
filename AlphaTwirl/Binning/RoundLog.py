@@ -7,50 +7,61 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class RoundLog(object):
-    """
-	UPDATE THIS TO BE CONSISTENT WITH Round CLASS
+    """The RoundLog class allows the user to define a set of bins to
+	summarize a variable with constant bin widths whose value is fixed
+	in log base 10 scale.
 
-	HOW TO INSTANTIATE
+	An instance of the RoundLog class can be created as follows::
 
-	if aBoundary is not given, then the bin boundaries are set to
-	half the bin width
+	roundLogBins = RoundLog(0.1, 100)
 
-	EXECUTE __call__ AND DESCRIBE WHAT IS RETURNED
-
-	EXECUTE __next__ AND DESCRIBE WHAT IS RETURNED
+	where 0.1 is the width (``width``) of each bin in log base 10, and the
+	lower edge of one bin (``aBoundary``) is 100.  In this
+	example, one bin whose low edge is 100 would cover values
+	between 2.0 (100) and 2.1 (125) in log base 10.  The next
+	bin would cover 2.1 to 2.2 (158) in log base 10, and so on.  If
+	a bin boundary is given, it must be given in linear scale.
 	
-	SHOW FUNCTOR EXAMPLE see tests/unit/Binning/test_Round.py. Line 17
-	is for call, and the object is defined on line 18.
-	
-	Similar to the Round class, the RoundLog class allows the user
-	to define a set of bins used to summarize a variable that have a
-	fixed width in log scale.  The actual widths of the bins are
-	defined in log base 10.  The bin boundary, if given, must be given
-	in linear scale.
+	If an instance of the RoundLog class is made with no input args,
+	or with ``width`` specified without ``aBoundary``, then the
+	bin boundaries will be set to half of ``width``.
 
-	An instance of the RoundLog class is defined with two arguments.  The
-	first specifies the width of every bin in log base 10 of the units used
-	to make the TTree branch.  The second argument identifies one particular
-	bin boundary - the upper edge of one bin, and the lower edge of
-	the next bin.  The RoundLog class studies the input TTree branch and
-	chooses the lower edge value of the lowest bin so that the user
-	defined bin boundary and bin width are respected, there are no
-	underflow events, and the number of initial bins (starting with
-	bin number 1) with zero entries is minimized.  The RoundLog class
-	will automatically create more bins until there are no overflow events.
-
-	If an input TTree contains a branch with the leading jet pT in
-	GeV, then the following binning would yield non-overlapping bins
-	which are 0.1 units wide in log(GeV), and the lower edge of one
-	bin would be 100 GeV::
-		
-		jetptlogbin = RoundLog(0.1, 100)
-
-	One bin would cover 2.0 (100 GeV in log base 10) to 2.1 (125 GeV
-	in log base 10), the next bin would cover 2.1 to 2.2 (158 GeV in
-	log base 10), and so on.
 	
+	The main function of this class is __call__.  Given an input
+	value or bin, the function returns the bin to which the input
+	argument belongs.  Users must check that __call__ does not
+	return None.  If an instance of the RoundLog class named
+	roundLogBins has been created, then __call__ is executed via::
+
+	roundLogBins.__call__(2.5)
+
+	this is equivalent to roundLogBins(2.5)
+
+	A functor example of __call__ is::
+    
+	def test_call(self):
+        obj = RoundLog(0.1, 100)  #width is 0.1 in log scale, aBoundary is 100
+        self.assertEqual( 100, obj( 100))
+
 	
+	The next function takes a bin as an input argument, and
+	returns the bin immediately following the input bin.  If
+	the input bin is None, then None is returned.  If an
+	instance of the RoundLog class named roundLogBins has been
+	created, then next is executed via::
+
+	roundLogBins.next(3)
+
+	A functor example of next is::
+    
+	def test_next(self):
+		obj = RoundLog(retvalue = 'center')  #the default bin width defined in __init__ is used
+        self.assertAlmostEqual( 2.818382931264, obj.next(2.23872113856834))
+        self.assertAlmostEqual( 28.18382931264, obj.next(22.3872113856834))
+
+
+
+
     """
     def __init__(self, width = 0.1, aBoundary = 1,
                  min = None, underflow_bin = None,
@@ -58,6 +69,11 @@ class RoundLog(object):
                  valid = returnTrue,
                  retvalue = 'lowedge',
     ):
+		"""valid can be any user defined function which returns True or False.
+		retvalue can be lowedge or center.  See Round.py class for information
+		about other __init__ input parameters.
+
+		"""
         self._round = Round(width = width, aBoundary = math.log10(aBoundary), retvalue = retvalue)
         self.width = width
         self.aBoundary = aBoundary
@@ -80,6 +96,15 @@ class RoundLog(object):
         )
 
     def __call__(self, val):
+		"""main function of this class. returns the bin to which val belongs.
+		
+		check if the input val is valid (return None if not valid), then
+		check if the input val is zero, or falls in the underflow or
+		overflow bin.  If none of these conditions are met, use the
+		__call__ function defined in the Round class to determine the bin
+		to which val belongs.
+
+		"""
 
         if not self.valid(val):
             return None
@@ -107,6 +132,19 @@ class RoundLog(object):
         return 10**val
 
     def next(self, bin):
+		"""given the input bin, this function returns the next bin.
+
+		first check that the bin given in the argument 'bin' exists in the set of bins already
+		defined.  Return None if bin is not valid.
+
+		if bin corresponds to underflow_bin, return the first bin (just above underflow_bin)
+		
+		if bin corresponds to overflow_bin, return the overflow_bin
+
+		if bin is not None, and does not match underflow_bin or overflow_bin, then use the
+		next function defined in the Round class to identify the next bin.
+
+		"""
 
         bin = self.__call__(bin)
 
