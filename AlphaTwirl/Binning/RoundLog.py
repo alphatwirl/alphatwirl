@@ -16,14 +16,14 @@ class RoundLog(object):
 	roundLogBins = RoundLog(0.1, 100)
 
 	where 0.1 is the width (``width``) of each bin in log base 10, and the
-	lower edge of one bin (``aBoundary``) is 100.  In this
+	lower edge of one bin (``aboundary``) is 100.  In this
 	example, one bin whose low edge is 100 would cover values
 	between 2.0 (100) and 2.1 (125) in log base 10.  The next
 	bin would cover 2.1 to 2.2 (158) in log base 10, and so on.  If
 	a bin boundary is given, it must be given in linear scale.
 	
 	If an instance of the RoundLog class is made with no input args,
-	or with ``width`` specified without ``aBoundary``, then the
+	or with ``width`` specified without ``aboundary``, then the
 	bin boundaries will be set to half of ``width``.
 
 	
@@ -40,7 +40,7 @@ class RoundLog(object):
 	A functor example of __call__ is::
     
 	def test_call(self):
-        obj = RoundLog(0.1, 100)  #width is 0.1 in log scale, aBoundary is 100
+        obj = RoundLog(0.1, 100)  #width is 0.1 in log scale, aboundary is 100
         self.assertEqual( 100, obj( 100))
 
 	
@@ -63,7 +63,7 @@ class RoundLog(object):
 
 
     """
-    def __init__(self, width = 0.1, aBoundary = 1,
+    def __init__(self, width = 0.1, aboundary = 1,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
                  valid = returnTrue,
@@ -74,9 +74,9 @@ class RoundLog(object):
 		about other __init__ input parameters.
 
 		"""
-        self._round = Round(width = width, aBoundary = math.log10(aBoundary), retvalue = retvalue)
+        self._round = Round(width = width, aboundary = math.log10(aboundary), retvalue = retvalue)
         self.width = width
-        self.aBoundary = aBoundary
+        self.aboundary = aboundary
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
@@ -84,10 +84,10 @@ class RoundLog(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aBoundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
             self.__class__.__name__,
             self.width,
-            self.aBoundary,
+            self.aboundary,
             self.min,
             self.underflow_bin,
             self.max,

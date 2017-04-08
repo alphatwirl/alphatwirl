@@ -16,21 +16,21 @@ class Round(object):
 
 	roundBins = Round()
 
-	A lower edge of one bin can be specified using ``aBoundary``::
+	A lower edge of one bin can be specified using ``aboundary``::
 
-	roundBins = Round(aBoundary = 10)
+	roundBins = Round(aboundary = 10)
 
 	A lower bin edge and bin width can be specified using ``width``
-	and ``aBoundary``::
+	and ``aboundary``::
 
-	roundBins = Round(width = 5, aBoundary = 10)
+	roundBins = Round(width = 5, aboundary = 10)
 
-	If used, the lower bin edge specified by aBoundary is the lowest
+	If used, the lower bin edge specified by aboundary is the lowest
 	value included in that particular bin.  The upper edge of every
 	bin belongs to the next bin.
 
 	If an instance of the Round class is made with no input args,
-	or with ``width`` specified without ``aBoundary``, then the
+	or with ``width`` specified without ``aboundary``, then the
 	bin boundaries will be set to half of ``width``.
 	
 	If the input variable is the leading jet pT in GeV, then
@@ -58,7 +58,7 @@ class Round(object):
 	A functor example of __call__ is::
     
 	def test_call(self):
-        obj = Round(2, 0)  #width is 2, aBoundary is 0
+        obj = Round(2, 0)  #width is 2, aboundary is 0
         self.assertEqual( -2, obj( -1.9))
         self.assertEqual( -2, obj( -1  ))   #equivalent to calling obj.__call__(-1)
         self.assertEqual( -2, obj( -0.1))
@@ -76,7 +76,7 @@ class Round(object):
 	A functor example of next is::
     
 	def test_next(self):
-        obj = Round(0.02, 0.005)   #width is 0.02, aBoundary is 0.005
+        obj = Round(0.02, 0.005)   #width is 0.02, aboundary is 0.005
         self.assertEqual( -0.015, obj.next( -0.035))
         self.assertEqual(  0.005, obj.next( -0.015))
         self.assertEqual(  0.025, obj.next(  0.005))
@@ -84,7 +84,7 @@ class Round(object):
 
     
 	"""
-    def __init__(self, width = 1, aBoundary = None,
+    def __init__(self, width = 1, aboundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
                  valid = returnTrue, retvalue = 'lowedge'
@@ -111,10 +111,10 @@ class Round(object):
             raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
 
         self.width = width
-        self.aBoundary = aBoundary
+        self.aboundary = aboundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
-        if aBoundary is None: aBoundary = self.halfWidth
-        self.boundaries = [aBoundary - width, aBoundary, aBoundary + width]
+        if aboundary is None: aboundary = self.halfWidth
+        self.boundaries = [aboundary - width, aboundary, aboundary + width]
         self.lowedge = (retvalue == 'lowedge')
         self.min = min
         self.underflow_bin = underflow_bin
@@ -123,10 +123,10 @@ class Round(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aBoundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
             self.__class__.__name__,
             self.width,
-            self.aBoundary,
+            self.aboundary,
             self.min,
             self.underflow_bin,
             self.max,
