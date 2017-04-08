@@ -35,6 +35,19 @@ class Combine(object):
 	This class requires bin labels of both binnings to be values in
     the bins.
 
+	The main function of this class is __call__.
+	__call__ takes one input argument - the value of a variable or a bin.
+	It returns the bin to which the input argument belongs.
+
+	next takes one input argument - a bin.  It returns the bin immediately
+	after the input bin.
+
+	If an instance of the Combine class has already been created and is
+	named obj, then __call__ and next are used as follows:
+
+	obj.__call__(2)
+	obj.next(3)
+
     """
     def __init__(self, low, high, at):
 		"""initialize the two sets of bins, and the threshold 'at' where the
@@ -60,7 +73,7 @@ class Combine(object):
 		of bins used above the threshold 'at'.
 
 		Then, use the next function already defined for the low or
-		high set of bins to determine the next bin.
+		high set of bins to return the next bin.
 
 		"""
         if bin < self._at:
