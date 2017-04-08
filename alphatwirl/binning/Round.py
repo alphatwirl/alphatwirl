@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 import math
+import collections
 import logging
 
 ##__________________________________________________________________||
@@ -8,22 +9,16 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None,
+    def __init__(self, width = 1, aboundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue, retvalue = 'lowedge'
-    ):
-
-        supportedRetvalues = ('center', 'lowedge')
-        if retvalue not in supportedRetvalues:
-            raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
+                 valid = returnTrue):
 
         self.width = width
-        self.aBoundary = aBoundary
+        self.aboundary = aboundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
-        if aBoundary is None: aBoundary = self.halfWidth
-        self.boundaries = [aBoundary - width, aBoundary, aBoundary + width]
-        self.lowedge = (retvalue == 'lowedge')
+        if aboundary is None: aboundary = self.halfWidth
+        self.boundaries = collections.deque([aboundary - width, aboundary, aboundary + width])
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
@@ -31,10 +26,10 @@ class Round(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aBoundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
             self.__class__.__name__,
             self.width,
-            self.aBoundary,
+            self.aboundary,
             self.min,
             self.underflow_bin,
             self.max,
@@ -43,6 +38,9 @@ class Round(object):
         )
 
     def __call__(self, val):
+        return self._lower_boundary(val)
+
+    def _lower_boundary(self, val):
 
         if not self.valid(val):
             return None
@@ -60,52 +58,43 @@ class Round(object):
             logger.warning('val = {}. will return {}'.format(val, None))
             return None
 
-        self._updateBoundaries(val)
+        self._update_boundaries(val)
+
         bin = self.boundaries[0]
-
-        for b in self.boundaries[1:]:
-            if b <= val: bin = b
-            else: break
-
-        if not self.lowedge:
-            bin += self.halfWidth
+        for b in self.boundaries:
+            if b <= val:
+                bin = b
+            else:
+                break
 
         return bin
 
-    def _updateBoundaries(self, val):
+    def _update_boundaries(self, val):
+
         while val < self.boundaries[0]:
-            self.boundaries.insert(0, self.boundaries[0] - self.width)
+            self.boundaries.appendleft(self.boundaries[0] - self.width)
 
         while val > self.boundaries[-1]:
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
+        return self._next_lower_boundary(bin)
 
-        bin = self.__call__(bin)
+    def _next_lower_boundary(self, bin):
+
+        bin = self._lower_boundary(bin)
 
         if bin is None:
             return None
 
         if bin == self.underflow_bin:
-            return self.__call__(self.min)
+            return self._lower_boundary(self.min)
 
         if bin == self.overflow_bin:
             return self.overflow_bin
 
-        self._updateBoundaries(bin)
-        self._updateBoundaries(bin + self.width)
+        self._update_boundaries(bin)
 
-        nbin = self.boundaries[0]
-
-        for b in self.boundaries[1:]:
-            if b <= bin: nbin = b
-            else: break
-
-        ret = self.boundaries[self.boundaries.index(nbin) + 1]
-
-        if not self.lowedge:
-            ret += self.halfWidth
-
-        return ret
+        return self._lower_boundary(bin + self.width*1.001)
 
 ##__________________________________________________________________||

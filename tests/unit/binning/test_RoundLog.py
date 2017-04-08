@@ -6,9 +6,7 @@ from alphatwirl.binning import RoundLog
 class TestRoundLog(unittest.TestCase):
 
     def test_init(self):
-        RoundLog(retvalue = 'center')
-        RoundLog(retvalue = 'lowedge')
-        self.assertRaises(ValueError, RoundLog, retvalue = 'yyy')
+        obj = RoundLog()
 
     def test_call(self):
         obj = RoundLog()
@@ -16,17 +14,11 @@ class TestRoundLog(unittest.TestCase):
         self.assertAlmostEqual( 19.952623149688, obj(  20))
         self.assertAlmostEqual( 199.52623149688, obj( 200))
 
-    def test_call_center(self):
-        obj = RoundLog(retvalue = 'center')
-        self.assertAlmostEqual( 2.23872113856834, obj(   2))
-        self.assertAlmostEqual( 22.3872113856834, obj(  20))
-        self.assertAlmostEqual( 223.872113856834, obj( 200))
-
     def test_next(self):
-        obj = RoundLog(retvalue = 'center')
-        self.assertAlmostEqual( 2.818382931264, obj.next(2.23872113856834))
-        self.assertAlmostEqual( 28.18382931264, obj.next(22.3872113856834))
-        self.assertAlmostEqual( 281.8382931264, obj.next(223.872113856834))
+        obj = RoundLog()
+        self.assertAlmostEqual( 2.51188643150958, obj.next(2.23872113856834))
+        self.assertAlmostEqual( 25.11886431509581, obj.next(22.3872113856834))
+        self.assertAlmostEqual( 251.18864315095848, obj.next(223.872113856834))
 
     def test_call_zero(self):
         obj = RoundLog()
