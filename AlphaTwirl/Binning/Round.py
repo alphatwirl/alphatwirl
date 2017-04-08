@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 import math
+import collections
 import logging
 
 ##__________________________________________________________________||
@@ -61,7 +62,6 @@ class Round(object):
         obj = Round(2, 0)  #width is 2, aboundary is 0
         self.assertEqual( -2, obj( -1.9))
         self.assertEqual( -2, obj( -1  ))   #equivalent to calling obj.__call__(-1)
-        self.assertEqual( -2, obj( -0.1))
         self.assertEqual(  0, obj(  0.1))
 
 	
@@ -80,19 +80,17 @@ class Round(object):
         self.assertEqual( -0.015, obj.next( -0.035))
         self.assertEqual(  0.005, obj.next( -0.015))
         self.assertEqual(  0.025, obj.next(  0.005))
-        self.assertEqual(  0.045, obj.next(  0.025))
 
     
 	"""
     def __init__(self, width = 1, aboundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue, retvalue = 'lowedge'
+                 valid = returnTrue 
     ):
 		"""__init__ creates an instance of the Round class.
 
 		By default:
-			retvalue is set to lowedge.  It can also be set to center.
 			every value added to the Round class object has the parameter
 			valid set to True.  Thus, __call__ will never return None.
 			specific max and min values are not set.
@@ -106,16 +104,12 @@ class Round(object):
 
 		"""
 
-        supportedRetvalues = ('center', 'lowedge')
-        if retvalue not in supportedRetvalues:
-            raise ValueError("The retvalue '%s' is not supported! " % (retvalue, ) + "Supported values are '" + "', '".join(supportedRetvalues)  + "'")
-
         self.width = width
         self.aboundary = aboundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
         if aboundary is None: aboundary = self.halfWidth
-        self.boundaries = [aboundary - width, aboundary, aboundary + width]
-        self.lowedge = (retvalue == 'lowedge')
+        self.boundaries = collections.deque([aboundary - width, aboundary, aboundary + width])
+        #self.lowedge = (retvalue == 'lowedge')
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
@@ -136,21 +130,32 @@ class Round(object):
 
     def __call__(self, val):
 		"""main function of this class. returns the bin to which val belongs.
+		For improved performance the work done by this function has been moved
+		to the function _lower_boundary, which is called automatically by
+		__call__
 
-		first check if the value val added using __init__ is valid.
+		"""
+        return self._lower_boundary(val)
+
+	def _lower_boundary(self, val):
+		"""returns the bin to which val belongs.
+		This function is executed automatically by __call__, and should not be
+		called explicitly by users.
+
+		first check if the value val is valid.
 
 		then, if min and max set in __init__ are not None, check if val belongs to the
 		underflow (below min) or overflow bin (below max)
 
-		then, check if 'val' is plus or minus infinity. this is only necessary if 'max'
-		and/or 'min' are not defined.
+		then, check if val is plus or minus infinity. this is only necessary if max
+		and/or min are not defined.
 
-		This class keeps an internal list of bin boundaries named 'boundaries' which is updated
+		This class keeps an internal list of bin boundaries named boundaries which is updated
 		if a new value val is added which does not fall in an existing bin.
 		
 		"""
 
-        if not self.valid(val):
+		if not self.valid(val):
             return None
 
         if self.min is not None:
@@ -166,17 +171,16 @@ class Round(object):
             logger.warning('val = {}. will return {}'.format(val, None))
             return None
 
-        self._updateBoundaries(val)
+        self._update_boundaries(val)
+
         bin = self.boundaries[0]
+        for b in self.boundaries:
+            if b <= val:
+                bin = b
+            else:
+                break
 
-        for b in self.boundaries[1:]:
-            if b <= val: bin = b
-            else: break
-
-        if not self.lowedge:
-            bin += self.halfWidth
-
-        return bin
+		return bin
 
     def _updateBoundaries(self, val):
 		"""when a new value val is added that does not fit in an existing bin, this
@@ -187,16 +191,28 @@ class Round(object):
 		this function explicitly.
 
 		"""
-        while val < self.boundaries[0]:
-            self.boundaries.insert(0, self.boundaries[0] - self.width)
+        
+		while val < self.boundaries[0]:
+            self.boundaries.appendleft(self.boundaries[0] - self.width)
 
-        while val > self.boundaries[-1]:
+		while val > self.boundaries[-1]:
             self.boundaries.append(self.boundaries[-1] + self.width)
 
     def next(self, bin):
 		"""given the input bin, this function returns the next bin.
+		For improved performance the work done by this function has been moved
+		to the function _next_lower_boundary, which is called automatically by
+		next
 
-		first check that the bin given in the argument 'bin' exists in the set of bins already
+		"""
+        return self._next_lower_boundary(bin)
+
+	def _next_lower_boundary(self, bin):
+		"""given the input bin, this function returns the next bin.
+		This function is automatically called by next, and should not be called
+		explicitly by users.
+
+		first check that the bin given in the argument bin exists in the set of bins already
 		defined.  Return None if bin is not valid.
 
 		if bin corresponds to underflow_bin, return the first bin (just above underflow_bin)
@@ -210,31 +226,19 @@ class Round(object):
 
 		"""
 
-        bin = self.__call__(bin)
+		bin = self._lower_boundary(bin)
 
         if bin is None:
             return None
 
         if bin == self.underflow_bin:
-            return self.__call__(self.min)
+            return self._lower_boundary(self.min)
 
         if bin == self.overflow_bin:
             return self.overflow_bin
 
-        self._updateBoundaries(bin)
-        self._updateBoundaries(bin + self.width)
+        self._update_boundaries(bin)
 
-        nbin = self.boundaries[0]
-
-        for b in self.boundaries[1:]:
-            if b <= bin: nbin = b
-            else: break
-
-        ret = self.boundaries[self.boundaries.index(nbin) + 1]
-
-        if not self.lowedge:
-            ret += self.halfWidth
-
-        return ret
+        return self._lower_boundary(bin + self.width*1.001)
 
 ##__________________________________________________________________||

@@ -100,7 +100,7 @@ class Binning(object):
 
         if boundaries is None:
             if lows is None or ups is None:
-                raise ValueError("Only a list of bin boundaries, or pairs of (bin lower bound, bin upper bound) need to be given!")
+                raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
             if not tuple(lows[1:]) == tuple(ups[:-1]):
                 raise ValueError("Boundaries cannot be determined from lows = " + str(lows) + " and ups = " + str(ups))
             self.boundaries = tuple(lows) + (ups[-1], )

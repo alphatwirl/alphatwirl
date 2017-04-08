@@ -55,7 +55,7 @@ class RoundLog(object):
 	A functor example of next is::
     
 	def test_next(self):
-		obj = RoundLog(retvalue = 'center')  #the default bin width defined in __init__ is used
+		obj = RoundLog()  #the default bin width defined in __init__ is used
         self.assertAlmostEqual( 2.818382931264, obj.next(2.23872113856834))
         self.assertAlmostEqual( 28.18382931264, obj.next(22.3872113856834))
 
@@ -66,15 +66,13 @@ class RoundLog(object):
     def __init__(self, width = 0.1, aboundary = 1,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue,
-                 retvalue = 'lowedge',
+                 valid = returnTrue
     ):
 		"""valid can be any user defined function which returns True or False.
-		retvalue can be lowedge or center.  See Round.py class for information
-		about other __init__ input parameters.
+		See Round class for information about other __init__ input parameters.
 
 		"""
-        self._round = Round(width = width, aboundary = math.log10(aboundary), retvalue = retvalue)
+        self._round = Round(width = width, aboundary = math.log10(aboundary))
         self.width = width
         self.aboundary = aboundary
         self.min = min
