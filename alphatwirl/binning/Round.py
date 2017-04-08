@@ -9,16 +9,16 @@ def returnTrue(x): return True
 
 ##__________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aBoundary = None,
+    def __init__(self, width = 1, aboundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
                  valid = returnTrue):
 
         self.width = width
-        self.aBoundary = aBoundary
+        self.aboundary = aboundary
         self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
-        if aBoundary is None: aBoundary = self.halfWidth
-        self.boundaries = collections.deque([aBoundary - width, aBoundary, aBoundary + width])
+        if aboundary is None: aboundary = self.halfWidth
+        self.boundaries = collections.deque([aboundary - width, aboundary, aboundary + width])
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
@@ -26,10 +26,10 @@ class Round(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aBoundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
             self.__class__.__name__,
             self.width,
-            self.aBoundary,
+            self.aboundary,
             self.min,
             self.underflow_bin,
             self.max,
