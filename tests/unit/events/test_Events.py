@@ -7,16 +7,16 @@ class MockFile(object):
 
 ##__________________________________________________________________||
 class MockTree(object):
-    def __init__(self, Entries = 100):
-        self.Entries = Entries
+    def __init__(self, entries = 100):
+        self.entries = entries
         self.iEvent = -1
         self.branch1 = 1111
     def GetDirectory(self):
         return MockFile()
     def GetEntries(self):
-        return self.Entries
+        return self.entries
     def GetEntry(self, ientry):
-        if ientry < self.Entries:
+        if ientry < self.entries:
             nbytes = 10
             self.iEvent = ientry
         else:
@@ -28,7 +28,7 @@ class MockTree(object):
 class TestMockTree(unittest.TestCase):
 
     def test_mocktree(self):
-        tree = MockTree(Entries = 3)
+        tree = MockTree(entries = 3)
         self.assertIsInstance(tree.GetDirectory(), MockFile)
         self.assertEqual(3, tree.GetEntries())
 
@@ -59,7 +59,7 @@ class TestEvents(unittest.TestCase):
         self.assertIs(tree, events.tree)
 
     def test_nEvents(self):
-        tree = MockTree(Entries = 100)
+        tree = MockTree(entries = 100)
         events = Events(tree)
         self.assertEqual(100, events.nEvents) # default the same as entries
 
@@ -77,7 +77,7 @@ class TestEvents(unittest.TestCase):
 
     def test_nEvents_start(self):
 
-        tree = MockTree(Entries = 100)
+        tree = MockTree(entries = 100)
 
         events = Events(tree, maxEvents = -1, start = 1)
         self.assertEqual(99, events.nEvents)
@@ -103,7 +103,7 @@ class TestEvents(unittest.TestCase):
         self.assertRaises(ValueError, Events, tree, maxEvents = -1, start = -10)
 
     def test_iter_iEvent(self):
-        tree = MockTree(Entries = 4)
+        tree = MockTree(entries = 4)
         events = Events(tree)
         self.assertEqual(-1, events.iEvent)
 
@@ -124,7 +124,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, event.iEvent)
 
     def test_iter_maxEvents(self):
-        tree = MockTree(Entries = 40)
+        tree = MockTree(entries = 40)
         events = Events(tree, maxEvents = 4)
         self.assertEqual(-1, events.iEvent)
 
@@ -141,7 +141,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, event.iEvent)
 
     def test_iter_iEvent_start(self):
-        tree = MockTree(Entries = 4)
+        tree = MockTree(entries = 4)
         events = Events(tree, start = 2)
         self.assertEqual(-1, events.iEvent)
 
@@ -156,7 +156,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, event.iEvent)
 
     def test_iter_maxEvents_start(self):
-        tree = MockTree(Entries = 40)
+        tree = MockTree(entries = 40)
         events = Events(tree, maxEvents = 4, start = 2)
         self.assertEqual(-1, events.iEvent)
 
@@ -177,7 +177,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, event.iEvent)
 
     def test_iter_getattr(self):
-        tree = MockTree(Entries = 5)
+        tree = MockTree(entries = 5)
         events = Events(tree)
         it = iter(events)
         event = next(it)
@@ -186,7 +186,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(2222, event.branch1)
 
     def test_getitem(self):
-        tree = MockTree(Entries = 4)
+        tree = MockTree(entries = 4)
         events = Events(tree)
         self.assertEqual(-1, events.iEvent)
 
@@ -206,7 +206,7 @@ class TestEvents(unittest.TestCase):
         self.assertEqual(-1, events.iEvent)
 
     def test_getitem_start(self):
-        tree = MockTree(Entries = 4)
+        tree = MockTree(entries = 4)
         events = Events(tree, start = 2)
         self.assertEqual(-1, events.iEvent)
 
