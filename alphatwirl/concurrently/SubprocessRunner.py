@@ -24,6 +24,7 @@ class SubprocessRunner(object):
             cwd = taskdir
         )
         self.running_procs.append(proc)
+        return proc.pid
 
     def wait(self):
         ret = [ ] # a list of pairs of stdout and stderr,

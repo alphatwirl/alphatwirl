@@ -11,7 +11,9 @@ run_py = """
 #!/usr/bin/env python
 import time
 import sys
+import os
 time.sleep(float(sys.argv[1]))
+print os.getpid(),
 print ' '.join(sys.argv)
 """
 run_py = run_py.lstrip()
@@ -35,13 +37,13 @@ class TestSubprocessRunner(unittest.TestCase):
     def test_run_wait_terminate(self):
         self._copy_run_script_to_taskdir(run_py, self.tmpdir)
         obj = SubprocessRunner(pipe = True)
-        obj.run(taskdir = self.tmpdir, package_path = '0.20')
-        obj.run(taskdir = self.tmpdir, package_path = '0.02')
-        obj.run(taskdir = self.tmpdir, package_path = '0.15')
+        pid1 = obj.run(taskdir = self.tmpdir, package_path = '0.20')
+        pid2 = obj.run(taskdir = self.tmpdir, package_path = '0.02')
+        pid3 = obj.run(taskdir = self.tmpdir, package_path = '0.15')
         expected = [
-            ('./run.py 0.20\n', ''),
-            ('./run.py 0.02\n', ''),
-            ('./run.py 0.15\n', ''),
+            ('{} ./run.py 0.20\n'.format(pid1), ''),
+            ('{} ./run.py 0.02\n'.format(pid2), ''),
+            ('{} ./run.py 0.15\n'.format(pid3), ''),
         ]
         actual = obj.wait()
         self.assertEqual(expected, actual)
