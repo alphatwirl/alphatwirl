@@ -48,8 +48,19 @@ class Events(object):
             self.nEvents = min(nEventsInTree - start, maxEvents)
         else:
             self.nEvents = nEventsInTree - start
+        self.maxEvents = maxEvents
         self.start = start
         self.iEvent = -1
+
+    def __repr__(self):
+        return '{}(tree = {!r}, maxEvents = {!r}, start = {!r}, nEvents = {!r}, iEvent = {!r}'.format(
+            self.__class__.__name__,
+            self.tree,
+            self.maxEvents,
+            self.start,
+            self.nEvents,
+            self.iEvent
+        )
 
     def __getitem__(self, i):
         if i >= self.nEvents:

@@ -58,6 +58,9 @@ class TestEvents(unittest.TestCase):
 
         self.assertIs(tree, events.tree)
 
+    def test_repr(self):
+        repr(self.events)
+
     def test_nEvents(self):
         tree = MockTree(entries = 100)
         events = Events(tree)
