@@ -74,6 +74,11 @@ class TestMockTree(unittest.TestCase):
 @unittest.skipUnless(hasROOT, "has no ROOT")
 class TestBEvents(unittest.TestCase):
 
+    def test_repr(self):
+        tree = MockTree()
+        events = BEvents(tree)
+        repr(events)
+
     def test_init_branch_status(self):
         tree = MockTree()
         self.assertEqual([ ], tree.branchstatus)

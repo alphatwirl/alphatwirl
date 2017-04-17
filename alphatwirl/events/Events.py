@@ -53,8 +53,13 @@ class Events(object):
         self.iEvent = -1
 
     def __repr__(self):
-        return '{}(tree = {!r}, maxEvents = {!r}, start = {!r}, nEvents = {!r}, iEvent = {!r}'.format(
+        return '{}({})'.format(
             self.__class__.__name__,
+            self._repr_contents()
+        )
+
+    def _repr_contents(self):
+        return 'tree = {!r}, maxEvents = {!r}, start = {!r}, nEvents = {!r}, iEvent = {!r}'.format(
             self.tree,
             self.maxEvents,
             self.start,
