@@ -15,6 +15,13 @@ class TaskPackageDropbox(object):
         self.workingArea = workingArea
         self.dispatcher = dispatcher
 
+    def __repr__(self):
+        return '{}(workingArea = {!r}, dispatcher = {!r})'.format(
+            self.__class__.__name__,
+            self.workingArea,
+            self.dispatcher
+        )
+
     def open(self):
         self.workingArea.open()
         self.package_indices = [ ]

@@ -49,6 +49,12 @@ class MockDispatcher(object):
 ##__________________________________________________________________||
 class TestTaskPackageDropbox(unittest.TestCase):
 
+    def test_repr(self):
+        workingArea = MockWorkingArea(path = '/A/B')
+        dispatcher = MockDispatcher()
+        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        repr(obj)
+
     def test_open_close(self):
         workingArea = MockWorkingArea(path = '/A/B')
         dispatcher = MockDispatcher()
