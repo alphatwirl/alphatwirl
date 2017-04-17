@@ -4,6 +4,7 @@ import shutil
 import datetime
 import tempfile
 import imp
+import logging
 import tarfile
 import gzip
 
@@ -62,8 +63,13 @@ class WorkingArea(object):
         result_path = os.path.join(self.path, 'results', dirname, 'result.p.gz')
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
-        f = gzip.open(result_path, 'rb')
-        result = pickle.load(f)
+        try:
+           f = gzip.open(result_path, 'rb')
+           result = pickle.load(f)
+        except IOError, e:
+           logger = logging.getLogger(__name__)
+           logger.warning(e)
+           return None
 
         return result
 

@@ -66,5 +66,13 @@ class TestWorkingArea(unittest.TestCase):
 
         self.assertEqual(result, obj.collect_result(package_index = package_index))
 
+    def test_collect_result_error(self):
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
+        obj.open()
+
+        # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
+        package_index = 9
+        self.assertIsNone(obj.collect_result(package_index = package_index))
+
 ##__________________________________________________________________||
 
