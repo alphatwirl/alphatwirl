@@ -159,6 +159,26 @@ class TestBEvents(unittest.TestCase):
         self.assertEqual(0, events.iEvent)
         self.assertEqual(10, tree.ievent)
 
+        event = next(it)
+        tree.getEntry_called = False
+        self.assertEqual(1, events.iEvent)
+        self.assertEqual(11, tree.ievent)
+        self.assertFalse(tree.getEntry_called)
+        jet_pt = event.jet_pt
+        self.assertFalse(tree.getEntry_called)
+
+        tree.getEntry_called = False
+        met_pt = event.met_pt
+        self.assertFalse(tree.getEntry_called)
+        self.assertEqual(1, events.iEvent)
+        self.assertEqual(11, tree.ievent)
+
+        tree.getEntry_called = False
+        njets = event.njets
+        self.assertTrue(tree.getEntry_called)
+        self.assertEqual(1, events.iEvent)
+        self.assertEqual(11, tree.ievent)
+
     def test_pass_arguments_to_base_class(self):
         tree = MockTree(entries = 1000)
         events = BEvents(tree, 100)
