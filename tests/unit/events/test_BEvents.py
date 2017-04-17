@@ -17,24 +17,24 @@ class MockFile(object): pass
 
 ##__________________________________________________________________||
 class MockTree(object):
-    def __init__(self, Entries = 100):
-        self.Entries = Entries
-        self.iEvent = -1
+    def __init__(self, entries = 100):
+        self.entries = entries
+        self.ievent = -1
         self.branchstatus = [ ]
-        self.getEntryCalled = False
+        self.getEntry_called = False
         self.directory = MockFile()
     def GetDirectory(self):
         return self.directory
     def GetEntries(self):
-        return self.Entries
+        return self.entries
     def GetEntry(self, ientry):
-        self.getEntryCalled = True
-        if ientry < self.Entries:
+        self.getEntry_called = True
+        if ientry < self.entries:
             nbytes = 10
-            self.iEvent = ientry
+            self.ievent = ientry
         else:
             nbytes = 0
-            self.iEvent = -1
+            self.ievent = -1
         return nbytes
 
     def SetBranchStatus(self, bname, status):
@@ -54,21 +54,21 @@ class MockBranchBuilder(object):
 class TestMockTree(unittest.TestCase):
 
     def test_mocktree(self):
-        tree = MockTree(Entries = 3)
+        tree = MockTree(entries = 3)
         self.assertIsInstance(tree.GetDirectory(), MockFile)
         self.assertEqual(3, tree.GetEntries())
 
-        self.assertEqual(-1, tree.iEvent)
+        self.assertEqual(-1, tree.ievent)
 
         nbytes = 10
         self.assertEqual(nbytes, tree.GetEntry(0))
-        self.assertEqual(0, tree.iEvent)
+        self.assertEqual(0, tree.ievent)
         self.assertEqual(nbytes, tree.GetEntry(1))
-        self.assertEqual(1, tree.iEvent)
+        self.assertEqual(1, tree.ievent)
         self.assertEqual(nbytes, tree.GetEntry(2))
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         self.assertEqual(0, tree.GetEntry(3))
-        self.assertEqual(-1, tree.iEvent)
+        self.assertEqual(-1, tree.ievent)
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
@@ -133,29 +133,29 @@ class TestBEvents(unittest.TestCase):
         events.buildBranch = branchBuilder
 
         self.assertEqual(-1, events.iEvent)
-        self.assertEqual(-1, tree.iEvent)
-        self.assertFalse(tree.getEntryCalled)
+        self.assertEqual(-1, tree.ievent)
+        self.assertFalse(tree.getEntry_called)
         branchBuilder.next = MockBranch()
         jet_pt = events.jet_pt
-        self.assertFalse(tree.getEntryCalled)
+        self.assertFalse(tree.getEntry_called)
 
         it = iter(events)
         event = next(it)
-        tree.getEntryCalled = False
+        tree.getEntry_called = False
         self.assertEqual(0, events.iEvent)
-        self.assertEqual(10, tree.iEvent)
-        self.assertFalse(tree.getEntryCalled)
+        self.assertEqual(10, tree.ievent)
+        self.assertFalse(tree.getEntry_called)
         jet_pt = event.jet_pt
-        self.assertFalse(tree.getEntryCalled)
+        self.assertFalse(tree.getEntry_called)
 
-        tree.getEntryCalled = False
+        tree.getEntry_called = False
         met_pt = event.met_pt
-        self.assertTrue(tree.getEntryCalled)
+        self.assertTrue(tree.getEntry_called)
         self.assertEqual(0, events.iEvent)
-        self.assertEqual(10, tree.iEvent)
+        self.assertEqual(10, tree.ievent)
 
     def test_pass_arguments_to_base_class(self):
-        tree = MockTree(Entries = 1000)
+        tree = MockTree(entries = 1000)
         events = BEvents(tree, 100)
         self.assertEqual(100, events.nEvents)
         self.assertEqual(0, events.start)
