@@ -23,7 +23,6 @@ class BEvents(Events):
         if branch is None: raise AttributeError("'" + str(self) + "' has no attribute '" + name + "'")
         self.branches[name] = branch
         if self.iEvent >= 0: self.tree.GetEntry(self.start + self.iEvent)
-        ## if self.iEvent >= 0: self.tree.GetEntry(self.iEvent)
         return self.branches[name]
 
 ##__________________________________________________________________||
