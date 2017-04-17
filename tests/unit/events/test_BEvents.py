@@ -5,10 +5,12 @@ import unittest
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.events import BEvents
     hasROOT = True
 except ImportError:
     pass
+
+if hasROOT:
+    from alphatwirl.events import BEvents
 
 ##__________________________________________________________________||
 class MockFile(object): pass
