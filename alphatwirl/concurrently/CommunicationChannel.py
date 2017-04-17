@@ -93,7 +93,7 @@ class CommunicationChannel(object):
         self.isopen = False
 
     def __repr__(self):
-        return '{}(dropbox = {!r}, isopen = {!r}'.format(
+        return '{}(dropbox = {!r}, isopen = {!r})'.format(
             self.__class__.__name__,
             self.dropbox,
             self.isopen
