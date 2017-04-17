@@ -111,7 +111,7 @@ class TestCommunicationChannel(unittest.TestCase):
         dropbox = MockDropbox()
         obj = CommunicationChannel(dropbox = dropbox)
 
-        # logging.getLogger('AlphaTwirl').setLevel(logging.DEBUG)
+        # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
         task1 = MockTask('task1')
         obj.put(task1)
 
@@ -121,7 +121,7 @@ class TestCommunicationChannel(unittest.TestCase):
         dropbox = MockDropbox()
         obj = CommunicationChannel(dropbox = dropbox)
 
-        # logging.getLogger('AlphaTwirl').setLevel(logging.DEBUG)
+        # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
         result1 = MockResult('result1')
         dropbox.result = result1
         self.assertIsNone(obj.receive())
