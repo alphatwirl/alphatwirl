@@ -1,4 +1,5 @@
 import unittest
+import logging
 import collections
 
 from alphatwirl.concurrently import TaskPackageDropbox
@@ -223,7 +224,11 @@ class TestTaskPackageDropbox(unittest.TestCase):
         workingArea.results[1].extend([result1])
         workingArea.results[2].extend([None, None, result2]) # fail twice before success
         self.assertEqual(0, dispatcher.npolled)
+
+        ## logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
+
         self.assertEqual([result0, result1, result2], obj.receive())
+
         self.assertEqual(4, dispatcher.npolled)
 
         #

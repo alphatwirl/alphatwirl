@@ -54,6 +54,9 @@ class TaskPackageDropbox(object):
 
                 # rerun failed jobs
                 for package_index in failed_package_indices:
+                    logger = logging.getLogger(__name__)
+                    logger.warning('resubmitting {}'.format(self.workingArea.package_path(package_index)))
+
                     runid = self.dispatcher.run(self.workingArea, package_index)
                     self.runid_package_index_map[runid] = package_index
 
