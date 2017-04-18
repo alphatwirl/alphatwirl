@@ -35,6 +35,7 @@ class TaskPackageDropbox(object):
     def receive(self):
         package_index_result_pairs = [ ] # a list of (package_index, _result)
         try:
+            sleep = 5
             while self.runid_package_index_map:
 
                 finished_runid = self.dispatcher.poll()
@@ -61,6 +62,8 @@ class TaskPackageDropbox(object):
                     self.runid_package_index_map[runid] = package_index
 
                 package_index_result_pairs.extend(pairs)
+
+                time.sleep(sleep)
 
         except KeyboardInterrupt:
             logger = logging.getLogger(__name__)
