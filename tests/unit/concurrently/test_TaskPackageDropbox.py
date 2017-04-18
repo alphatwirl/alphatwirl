@@ -61,13 +61,13 @@ class TestTaskPackageDropbox(unittest.TestCase):
     def test_repr(self):
         workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher)
         repr(obj)
 
     def test_open_close(self):
         workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher)
 
         self.assertEqual(0, workingArea.nopened)
         self.assertEqual(0, workingArea.nclosed)
@@ -86,7 +86,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
     def test_all_finished_once(self):
         workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher)
 
         #
         # open
@@ -132,7 +132,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
     def test_finished_in_steps(self):
         workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher)
 
         #
         # open
@@ -184,7 +184,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
     def test_rerun(self):
         workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
+        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher)
 
         #
         # open
