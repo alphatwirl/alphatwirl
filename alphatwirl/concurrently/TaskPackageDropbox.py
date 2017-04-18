@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import logging
+from operator import itemgetter
 
 from .WorkingArea import WorkingArea
 
@@ -24,23 +25,30 @@ class TaskPackageDropbox(object):
 
     def open(self):
         self.workingArea.open()
-        self.package_indices = [ ]
+        self.runid_package_index_map = { }
 
     def put(self, package):
         package_index, package_path = self.workingArea.put_package(package)
-        self.package_indices.append(package_index)
-        self.dispatcher.run(self.workingArea.path, package_path)
+        runid = self.dispatcher.run(self.workingArea.path, package_path)
+        self.runid_package_index_map[runid] = package_index
 
     def receive(self):
+        package_index_result_pairs = [ ] # a list of (package_index, _result)
         try:
-            self.dispatcher.wait()
+            while len(package_index_result_pairs) < len(self.runid_package_index_map):
+                finished_runid = self.dispatcher.poll()
+                package_indices = [self.runid_package_index_map[i] for i in finished_runid]
+                pairs = [(i, self.workingArea.collect_result(i)) for i in package_indices]
+                package_index_result_pairs.extend(pairs)
         except KeyboardInterrupt:
             logger = logging.getLogger(__name__)
             logger.warning('received KeyboardInterrupt')
             self.dispatcher.terminate()
 
-        results = [self.workingArea.collect_result(i) for i in self.package_indices]
-        self.package_indices[:] = [ ]
+        # sort in the order of package_index
+        package_index_result_pairs = sorted(package_index_result_pairs, key = itemgetter(0))
+        results = [result for i, result in package_index_result_pairs]
+        self.runid_package_index_map.clear()
         return results
 
     def close(self):
