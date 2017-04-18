@@ -35,9 +35,9 @@ class TaskPackageDropbox(object):
     def receive(self):
         package_index_result_pairs = [ ] # a list of (package_index, _result)
         try:
-            while len(package_index_result_pairs) < len(self.runid_package_index_map):
+            while self.runid_package_index_map:
                 finished_runid = self.dispatcher.poll()
-                package_indices = [self.runid_package_index_map[i] for i in finished_runid]
+                package_indices = [self.runid_package_index_map.pop(i) for i in finished_runid]
                 pairs = [(i, self.workingArea.collect_result(i)) for i in package_indices]
                 package_index_result_pairs.extend(pairs)
         except KeyboardInterrupt:
@@ -47,8 +47,8 @@ class TaskPackageDropbox(object):
 
         # sort in the order of package_index
         package_index_result_pairs = sorted(package_index_result_pairs, key = itemgetter(0))
+
         results = [result for i, result in package_index_result_pairs]
-        self.runid_package_index_map.clear()
         return results
 
     def close(self):
