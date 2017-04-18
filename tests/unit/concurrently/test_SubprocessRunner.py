@@ -62,30 +62,8 @@ class TestSubprocessRunner(unittest.TestCase):
         self.workingArea = MockWorkingArea()
         self.workingArea.open()
 
-        self.tmpdir = tempfile.mkdtemp()
-        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
-        self._setup_packages(self.tmpdir)
-
     def tearDown(self):
         self.workingArea.close()
-        shutil.rmtree(self.tmpdir)
-
-    def _copy_run_script_to_taskdir(self, content, taskdir):
-        path = os.path.join(taskdir, 'run.py')
-        with open(path, 'w') as f:
-            f.write(content)
-        os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
-
-    def _setup_packages(self, taskdir):
-        os.makedirs(os.path.join(taskdir, 'aaa'))
-        os.makedirs(os.path.join(taskdir, 'bbb'))
-        os.makedirs(os.path.join(taskdir, 'ccc'))
-        with open(os.path.join(taskdir, 'aaa', 'sleep.txt'), 'w') as f:
-            f.write('0.20')
-        with open(os.path.join(taskdir, 'bbb', 'sleep.txt'), 'w') as f:
-            f.write('0.02')
-        with open(os.path.join(taskdir, 'ccc', 'sleep.txt'), 'w') as f:
-            f.write('0.15')
 
     def test_run_wait_terminate(self):
         obj = SubprocessRunner(pipe = True)
