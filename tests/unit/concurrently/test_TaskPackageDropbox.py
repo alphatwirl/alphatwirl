@@ -36,16 +36,11 @@ class MockDispatcher(object):
         self.runargs = [ ]
         self.nterminated = 0
         self.npolled = 0
-        self.runids = collections.deque()
-        self.last_runid = 32349
-        self.nfinished = 0
         self.run_returns = collections.deque()
         self.poll_returns = collections.deque()
 
     def run(self, taskdir, package_path):
         self.runargs.append([taskdir, package_path])
-        self.last_runid += 1
-        self.runids.append(self.last_runid)
         return self.run_returns.popleft()
 
     def poll(self):
