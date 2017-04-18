@@ -10,8 +10,7 @@ MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
 class MockWorkingArea(object):
-    def __init__(self, path):
-        self.path = path
+    def __init__(self):
         self.nopened = 0
         self.nclosed = 0
         self.packages = [ ]
@@ -59,13 +58,13 @@ class MockDispatcher(object):
 class TestTaskPackageDropbox(unittest.TestCase):
 
     def test_repr(self):
-        workingArea = MockWorkingArea(path = '/A/B')
+        workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
         obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
         repr(obj)
 
     def test_open_close(self):
-        workingArea = MockWorkingArea(path = '/A/B')
+        workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
         obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
 
@@ -84,7 +83,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         self.assertEqual(1, dispatcher.nterminated)
 
     def test_all_finished_once(self):
-        workingArea = MockWorkingArea(path = '/A/B')
+        workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
         obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
 
@@ -129,7 +128,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         self.assertEqual(1, dispatcher.nterminated)
 
     def test_finished_in_steps(self):
-        workingArea = MockWorkingArea(path = '/A/B')
+        workingArea = MockWorkingArea()
         dispatcher = MockDispatcher()
         obj = TaskPackageDropbox(workingArea = workingArea,  dispatcher = dispatcher)
 
