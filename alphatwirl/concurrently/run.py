@@ -41,8 +41,6 @@ def main():
 def setup():
     dirname = 'python_modules'
     tarname = dirname + '.tar.gz'
-    print os.getcwd()
-    print os.listdir(os.getcwd())
 
     if os.path.exists(tarname) and not os.path.exists(dirname):
         if try_make_file('.untarring'):
