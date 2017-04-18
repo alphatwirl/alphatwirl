@@ -134,33 +134,11 @@ class HTCondorJobSubmitter(object):
     def wait(self):
         """wait until all jobs finish and return a list of cluster IDs
         """
-
         sleep = 5
-
-        while True:
-            clusterid_status_list = query_status_for(self.clusterids_outstanding)
-
-            if clusterid_status_list:
-                clusterids, statuses = zip(*clusterid_status_list)
-            else:
-                clusterids, statuses = (), ()
-
-            self.clusterids_finished.extend([i for i in self.clusterids_outstanding if i not in clusterids])
-            self.clusterids_outstanding[:] = clusterids
-
-            # logging
-            counter = collections.Counter(statuses)
-            messages = [ ]
-            if counter:
-                messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
-            if self.clusterids_finished:
-                messages.append('Finished {}'.format(len(self.clusterids_finished)))
-            logger = logging.getLogger(__name__)
-            logger.info(', '.join(messages))
-
-            if not self.clusterids_outstanding: break
-
+        while self.clusterids_outstanding:
+            self.poll()
             time.sleep(sleep)
+        return self.clusterids_finished
 
     def terminate(self):
         n_at_a_time = 500
