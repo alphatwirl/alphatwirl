@@ -43,7 +43,8 @@ class TestWorkingArea(unittest.TestCase):
         obj.open()
 
         package1 = MockPackage(name = 'package1')
-        package_index, package_path = obj.put_package(package1)
+        package_index = obj.put_package(package1)
+        package_path = obj.package_path(package_index)
         package_fullpath = os.path.join(obj.path, package_path)
         self.assertTrue(os.path.isfile(package_fullpath))
         f = gzip.open(package_fullpath, 'rb')

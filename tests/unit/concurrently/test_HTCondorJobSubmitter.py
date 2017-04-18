@@ -7,6 +7,18 @@ import shutil
 from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
+class MockWorkingArea(object):
+    def open(self):
+        self.path = tempfile.mkdtemp()
+
+    def close(self):
+        shutil.rmtree(self.path)
+        self.path = None
+
+    def package_path(self, package_index):
+        return ''
+
+##__________________________________________________________________||
 class MockPopen(object):
     def communicate(self, *args, **kwargs):
         return 'submitted to cluster 1012.', ''
@@ -32,17 +44,18 @@ class TestHTCondorJobSubmitter(unittest.TestCase):
         self.module.subprocess = MockSubprocess()
         self.cwd = os.getcwd()
 
-        self.tmpdir = tempfile.mkdtemp()
+        self.workingArea = MockWorkingArea()
+        self.workingArea.open()
 
     def tearDown(self):
         self.module.subprocess = self.org_subprocess
         os.chdir(self.cwd)
 
-        shutil.rmtree(self.tmpdir)
+        self.workingArea.close()
 
     def test_run(self):
         obj = HTCondorJobSubmitter()
-        obj.run(taskdir = self.tmpdir, package_path = '0.20')
+        ## obj.run(workingArea = self.workingArea, package_index = 0)
 
 ##__________________________________________________________________||
 

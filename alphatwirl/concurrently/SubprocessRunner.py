@@ -9,7 +9,11 @@ class SubprocessRunner(object):
         self.running_procs = collections.deque()
         self.pipe = pipe
 
-    def run(self, taskdir, package_path):
+    def run(self, workingArea, package_index):
+
+        taskdir = workingArea.path
+
+        package_path = workingArea.package_path(package_index)
 
         # run_script = os.path.join(taskdir, 'run.py') # This doesn't work.
                                                        # It contradicts with the document https://docs.python.org/2/library/subprocess.html
@@ -26,14 +30,29 @@ class SubprocessRunner(object):
         self.running_procs.append(proc)
         return proc.pid
 
-    def wait(self):
-        ret = [ ] # a list of pairs of stdout and stderr,
-                  # e.g., [(stdout, stderr), (stdout, stderr)]
+    def poll(self):
+        """check if the jobs are running and return a list of pids for
+        finished jobs
 
+        """
+        finished_procs = [p for p in self.running_procs if p.poll() is not None]
+        self.running_procs = [p for p in self.running_procs if p not in finished_procs]
+
+        for proc in finished_procs:
+            stdout, stderr = proc.communicate()
+            ## proc.communicate() returns (stdout, stderr) when
+            ## self.pipe = True. Otherwise they are (None, None)
+
+        finished_pids = [p.pid for p in  finished_procs]
+        return finished_pids
+
+    def wait(self):
+        """wait until all jobs finish and return a list of pids
+        """
+        finished_pids = [ ]
         while self.running_procs:
-            proc = self.running_procs.popleft()
-            ret.append(proc.communicate())
-        return ret
+            finished_pids.extend(self.poll())
+        return finished_pids
 
     def terminate(self):
         while self.running_procs:
