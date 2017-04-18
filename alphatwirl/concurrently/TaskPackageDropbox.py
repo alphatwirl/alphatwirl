@@ -28,8 +28,8 @@ class TaskPackageDropbox(object):
         self.runid_package_index_map = { }
 
     def put(self, package):
-        package_index, package_path = self.workingArea.put_package(package)
-        runid = self.dispatcher.run(self.workingArea.path, package_path)
+        package_index = self.workingArea.put_package(package)
+        runid = self.dispatcher.run(self.workingArea, package_index)
         self.runid_package_index_map[runid] = package_index
 
     def receive(self):
