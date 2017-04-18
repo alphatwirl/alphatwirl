@@ -106,38 +106,30 @@ class HTCondorJobSubmitter(object):
 
         """
 
-        sleep = 5
+        clusterid_status_list = query_status_for(self.clusterids_outstanding)
+        # e.g., [['1730126', 2], ['1730127', 2], ['1730129', 1], ['1730130', 1]]
 
-        print self.clusterids_outstanding
-        while True:
-            clusterid_status_list = query_status_for(self.clusterids_outstanding)
-            # e.g., [['1730126', 2], ['1730127', 2], ['1730129', 1], ['1730130', 1]]
-            print clusterid_status_list
 
-            if clusterid_status_list:
-                clusterids, statuses = zip(*clusterid_status_list)
-            else:
-                clusterids, statuses = (), ()
+        if clusterid_status_list:
+            clusterids, statuses = zip(*clusterid_status_list)
+        else:
+            clusterids, statuses = (), ()
 
-            self.clusterids_finished.extend([i for i in self.clusterids_outstanding if i not in clusterids])
-            self.clusterids_outstanding[:] = clusterids
+        clusterids_finished = [i for i in self.clusterids_outstanding if i not in clusterids]
+        self.clusterids_finished.extend(clusterids_finished)
+        self.clusterids_outstanding[:] = clusterids
 
-            # logging
-            counter = collections.Counter(statuses)
-            messages = [ ]
-            if counter:
-                messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
-            if self.clusterids_finished:
-                messages.append('Finished {}'.format(len(self.clusterids_finished)))
-            logger = logging.getLogger(__name__)
-            logger.info(', '.join(messages))
+        # logging
+        counter = collections.Counter(statuses)
+        messages = [ ]
+        if counter:
+            messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
+        if self.clusterids_finished:
+            messages.append('Finished {}'.format(len(self.clusterids_finished)))
+        logger = logging.getLogger(__name__)
+        logger.info(', '.join(messages))
 
-            if not self.clusterids_outstanding: break
-
-            time.sleep(sleep)
-
-        print self.clusterids_finished
-        return self.clusterids_finished
+        return clusterids_finished
 
     def wait(self):
         """wait until all jobs finish and return a list of cluster IDs
