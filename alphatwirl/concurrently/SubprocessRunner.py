@@ -27,18 +27,21 @@ class SubprocessRunner(object):
         return proc.pid
 
     def wait(self):
+        """wait until all jobs finish and return a list of pids
+        """
 
-        finished_pid = [ ]
+        finished_pids = [ ]
         while self.running_procs:
+
             proc = self.running_procs.popleft()
 
             stdout, stderr = proc.communicate()
             ## proc.communicate() returns (stdout, stderr) when
             ## self.pipe = True. Otherwise they are (None, None)
 
-            finished_pid.append(proc.pid)
+            finished_pids.append(proc.pid)
 
-        return finished_pid
+        return finished_pids
 
     def terminate(self):
         while self.running_procs:
