@@ -9,7 +9,11 @@ class SubprocessRunner(object):
         self.running_procs = collections.deque()
         self.pipe = pipe
 
-    def run(self, taskdir, package_path):
+    def run(self, workingArea, package_index):
+
+        taskdir = workingArea.path
+
+        package_path = workingArea.package_path(package_index)
 
         # run_script = os.path.join(taskdir, 'run.py') # This doesn't work.
                                                        # It contradicts with the document https://docs.python.org/2/library/subprocess.html
