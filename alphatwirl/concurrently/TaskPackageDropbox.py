@@ -13,15 +13,17 @@ class TaskPackageDropbox(object):
     that execute the tasks.
 
     """
-    def __init__(self, workingArea, dispatcher):
+    def __init__(self, workingArea, dispatcher, sleep = 5):
         self.workingArea = workingArea
         self.dispatcher = dispatcher
+        self.sleep = sleep
 
     def __repr__(self):
-        return '{}(workingArea = {!r}, dispatcher = {!r})'.format(
+        return '{}(workingArea = {!r}, dispatcher = {!r}, sleep = {!r})'.format(
             self.__class__.__name__,
             self.workingArea,
-            self.dispatcher
+            self.dispatcher,
+            self.sleep
         )
 
     def open(self):
@@ -36,7 +38,6 @@ class TaskPackageDropbox(object):
     def receive(self):
         package_index_result_pairs = [ ] # a list of (package_index, _result)
         try:
-            sleep = 5
             while self.runid_package_index_map:
 
                 finished_runid = self.dispatcher.poll()
@@ -64,7 +65,7 @@ class TaskPackageDropbox(object):
 
                 package_index_result_pairs.extend(pairs)
 
-                time.sleep(sleep)
+                time.sleep(self.sleep)
 
         except KeyboardInterrupt:
             logger = logging.getLogger(__name__)
