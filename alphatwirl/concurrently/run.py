@@ -41,14 +41,32 @@ def main():
 def setup():
     dirname = 'python_modules'
     tarname = dirname + '.tar.gz'
+    print os.getcwd()
+    print os.listdir(os.getcwd())
+
     if os.path.exists(tarname) and not os.path.exists(dirname):
-        tar = tarfile.open(tarname)
-        tar.extractall()
-        tar.close()
+        if try_make_file('.untarring'):
+            tar = tarfile.open(tarname)
+            tar.extractall()
+            tar.close()
+            os.remove('.untarring')
+
+    while os.path.isfile('.untarring'):
+       pass
 
     if not os.path.exists(dirname): return
 
     sys.path.insert(0, dirname)
+
+##_______________________________________________________________||
+# http://stackoverflow.com/questions/33223564/atomically-creating-a-file-if-it-doesnt-exist-in-python
+def try_make_file(filename):
+    try:
+        os.open(filename,  os.O_CREAT | os.O_EXCL)
+        return True
+    except OSError:
+        # FileExistsError can be used for Python 3
+        return False
 
 ##__________________________________________________________________||
 def run(package_path):
