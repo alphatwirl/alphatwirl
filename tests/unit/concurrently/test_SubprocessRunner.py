@@ -1,6 +1,7 @@
 import unittest
 import os
 import stat
+import time
 import tempfile
 import shutil
 
@@ -54,10 +55,10 @@ class TestSubprocessRunner(unittest.TestCase):
         pid1 = obj.run(taskdir = self.tmpdir, package_path = 'aaa')
         pid2 = obj.run(taskdir = self.tmpdir, package_path = 'bbb')
         pid3 = obj.run(taskdir = self.tmpdir, package_path = 'ccc')
-        expected = [pid1, pid2, pid3]
 
-        actual = obj.wait()
-        self.assertEqual(expected, actual)
+
+        self.assertEqual({pid1, pid2, pid3}, set(obj.wait()))
+        # obj.wait() returns a list of finished pids, unsorted
 
         self.assertEqual(
             '{} aaa 0.20'.format(pid1),
@@ -73,6 +74,12 @@ class TestSubprocessRunner(unittest.TestCase):
         )
 
         obj.terminate()
+
+    def test_run_poll_terminate(self):
+        # don't explicitly test poll() because the finished jobs are
+        # not deterministic. poll() is used by wait() and is
+        # indirectly tested through wait().
+        pass
 
     def test_run_terminate(self):
         obj = SubprocessRunner(pipe = True)
