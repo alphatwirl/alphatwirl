@@ -43,7 +43,7 @@ class WorkingArea(object):
         self.last_package_index += 1
         package_index = self.last_package_index
 
-        package_path = 'task_{:05d}.p.gz'.format(package_index)
+        package_path = self.package_path(package_index)
         # relative to self.path, e.g., 'task_00009.p'
 
         package_fullpath = os.path.join(self.path, package_path)
@@ -53,7 +53,10 @@ class WorkingArea(object):
         pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
         f.close()
 
-        return package_index, package_path
+        return package_index
+
+    def package_path(self, package_index):
+        return 'task_{:05d}.p.gz'.format(package_index)
 
     def collect_result(self, package_index):
 
