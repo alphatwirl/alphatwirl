@@ -27,13 +27,18 @@ class SubprocessRunner(object):
         return proc.pid
 
     def wait(self):
-        ret = [ ] # a list of pairs of stdout and stderr,
-                  # e.g., [(stdout, stderr), (stdout, stderr)]
 
+        finished_pid = [ ]
         while self.running_procs:
             proc = self.running_procs.popleft()
-            ret.append(proc.communicate())
-        return ret
+
+            stdout, stderr = proc.communicate()
+            ## proc.communicate() returns (stdout, stderr) when
+            ## self.pipe = True. Otherwise they are (None, None)
+
+            finished_pid.append(proc.pid)
+
+        return finished_pid
 
     def terminate(self):
         while self.running_procs:

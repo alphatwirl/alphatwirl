@@ -12,9 +12,11 @@ run_py = """
 import time
 import sys
 import os
-time.sleep(float(sys.argv[1]))
-print os.getpid(),
-print ' '.join(sys.argv)
+with open(os.path.join(sys.argv[1], 'sleep.txt'), 'r') as f:
+    secs = f.read()
+time.sleep(float(secs))
+with open(os.path.join(sys.argv[1], 'result.txt'), 'w') as f:
+    f.write('{} {} {}'.format(os.getpid(), sys.argv[1], secs))
 """
 run_py = run_py.lstrip()
 
@@ -23,34 +25,56 @@ class TestSubprocessRunner(unittest.TestCase):
 
     def setUp(self):
         self.tmpdir = tempfile.mkdtemp()
+        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
+        self._setup_packages(self.tmpdir)
 
     def tearDown(self):
         shutil.rmtree(self.tmpdir)
 
     def _copy_run_script_to_taskdir(self, content, taskdir):
         path = os.path.join(taskdir, 'run.py')
-        f = open(path, 'w')
-        f.write(content)
-        f.close()
+        with open(path, 'w') as f:
+            f.write(content)
         os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
 
+    def _setup_packages(self, taskdir):
+        os.makedirs(os.path.join(taskdir, 'aaa'))
+        os.makedirs(os.path.join(taskdir, 'bbb'))
+        os.makedirs(os.path.join(taskdir, 'ccc'))
+        with open(os.path.join(taskdir, 'aaa', 'sleep.txt'), 'w') as f:
+            f.write('0.20')
+        with open(os.path.join(taskdir, 'bbb', 'sleep.txt'), 'w') as f:
+            f.write('0.02')
+        with open(os.path.join(taskdir, 'ccc', 'sleep.txt'), 'w') as f:
+            f.write('0.15')
+
     def test_run_wait_terminate(self):
-        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
         obj = SubprocessRunner(pipe = True)
-        pid1 = obj.run(taskdir = self.tmpdir, package_path = '0.20')
-        pid2 = obj.run(taskdir = self.tmpdir, package_path = '0.02')
-        pid3 = obj.run(taskdir = self.tmpdir, package_path = '0.15')
-        expected = [
-            ('{} ./run.py 0.20\n'.format(pid1), ''),
-            ('{} ./run.py 0.02\n'.format(pid2), ''),
-            ('{} ./run.py 0.15\n'.format(pid3), ''),
-        ]
+
+        pid1 = obj.run(taskdir = self.tmpdir, package_path = 'aaa')
+        pid2 = obj.run(taskdir = self.tmpdir, package_path = 'bbb')
+        pid3 = obj.run(taskdir = self.tmpdir, package_path = 'ccc')
+        expected = [pid1, pid2, pid3]
+
         actual = obj.wait()
         self.assertEqual(expected, actual)
+
+        self.assertEqual(
+            '{} aaa 0.20'.format(pid1),
+            open(os.path.join(self.tmpdir, 'aaa', 'result.txt')).read()
+        )
+        self.assertEqual(
+            '{} bbb 0.02'.format(pid2),
+            open(os.path.join(self.tmpdir, 'bbb', 'result.txt')).read()
+        )
+        self.assertEqual(
+            '{} ccc 0.15'.format(pid3),
+            open(os.path.join(self.tmpdir, 'ccc', 'result.txt')).read()
+        )
+
         obj.terminate()
 
     def test_run_terminate(self):
-        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
         obj = SubprocessRunner(pipe = True)
         obj.run(taskdir = self.tmpdir, package_path = '0.20')
         obj.run(taskdir = self.tmpdir, package_path = '0.02')
@@ -58,7 +82,6 @@ class TestSubprocessRunner(unittest.TestCase):
         obj.terminate()
 
     def test_wait_terminate(self):
-        self._copy_run_script_to_taskdir(run_py, self.tmpdir)
         obj = SubprocessRunner(pipe = True)
         expected = [ ]
         actual = obj.wait()
