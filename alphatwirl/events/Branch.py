@@ -43,9 +43,9 @@ class Branch(object):
 
     def __getitem__(self, i):
         if self.countarray is None and 0 != i:
-            raise IndexError("the index should be zero for this branch: " + self.name + "[" + str(i) + "]")
+            raise IndexError('the index should be zero for this branch: {}[{}]'.format(self.name, i))
         if self.countarray is not None and i >= self.countarray[0]:
-            raise IndexError("the index is out of range: " + self.name + "[" + str(i) + "]")
+            raise IndexError('the index is out of range: {}[{}]'.format(self.name, i))
         return self.array[i]
 
     def __len__(self):
