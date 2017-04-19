@@ -7,10 +7,12 @@ from alphatwirl.heppyresult import EventBuilderConfig
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.heppyresult.BEventBuilder import BEventBuilder
     hasROOT = True
 except ImportError:
     pass
+
+if hasROOT:
+    from alphatwirl.heppyresult.BEventBuilder import BEventBuilder
 
 ##__________________________________________________________________||
 class MockAnalyzer(object):
