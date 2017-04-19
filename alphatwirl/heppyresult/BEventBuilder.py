@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..roottree import BEvents
 from ..roottree import BEventBuilder as BaseEventBuilder
 
 ##__________________________________________________________________||
