@@ -1,5 +1,6 @@
-from alphatwirl.roottree import Events
 import unittest
+
+from alphatwirl.roottree import Events
 
 ##__________________________________________________________________||
 class MockFile(object):
@@ -9,19 +10,20 @@ class MockFile(object):
 class MockTree(object):
     def __init__(self, entries = 100):
         self.entries = entries
-        self.iEvent = -1
+        self.ievent = -1
         self.branch1 = 1111
+        self.directory = MockFile()
     def GetDirectory(self):
-        return MockFile()
+        return self.directory
     def GetEntries(self):
         return self.entries
     def GetEntry(self, ientry):
         if ientry < self.entries:
             nbytes = 10
-            self.iEvent = ientry
+            self.ievent = ientry
         else:
             nbytes = 0
-            self.iEvent = -1
+            self.ievent = -1
         return nbytes
 
 ##__________________________________________________________________||
@@ -32,17 +34,17 @@ class TestMockTree(unittest.TestCase):
         self.assertIsInstance(tree.GetDirectory(), MockFile)
         self.assertEqual(3, tree.GetEntries())
 
-        self.assertEqual(-1, tree.iEvent)
+        self.assertEqual(-1, tree.ievent)
 
         nbytes = 10
         self.assertEqual(nbytes, tree.GetEntry(0))
-        self.assertEqual(0, tree.iEvent)
+        self.assertEqual(0, tree.ievent)
         self.assertEqual(nbytes, tree.GetEntry(1))
-        self.assertEqual(1, tree.iEvent)
+        self.assertEqual(1, tree.ievent)
         self.assertEqual(nbytes, tree.GetEntry(2))
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         self.assertEqual(0, tree.GetEntry(3))
-        self.assertEqual(-1, tree.iEvent)
+        self.assertEqual(-1, tree.ievent)
 
 ##__________________________________________________________________||
 class TestEvents(unittest.TestCase):
@@ -113,16 +115,16 @@ class TestEvents(unittest.TestCase):
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
-        self.assertEqual(0, tree.iEvent)
+        self.assertEqual(0, tree.ievent)
         event = next(it)
         self.assertEqual(1, event.iEvent)
-        self.assertEqual(1, tree.iEvent)
+        self.assertEqual(1, tree.ievent)
         event = next(it)
         self.assertEqual(2, event.iEvent)
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         event = next(it)
         self.assertEqual(3, event.iEvent)
-        self.assertEqual(3, tree.iEvent)
+        self.assertEqual(3, tree.ievent)
         self.assertRaises(StopIteration, next, it)
         self.assertEqual(-1, event.iEvent)
 
@@ -151,10 +153,10 @@ class TestEvents(unittest.TestCase):
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         event = next(it)
         self.assertEqual(1, event.iEvent)
-        self.assertEqual(3, tree.iEvent)
+        self.assertEqual(3, tree.ievent)
         self.assertRaises(StopIteration, next, it)
         self.assertEqual(-1, event.iEvent)
 
@@ -166,16 +168,16 @@ class TestEvents(unittest.TestCase):
         it = iter(events)
         event = next(it)
         self.assertEqual(0, event.iEvent)
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         event = next(it)
         self.assertEqual(1, event.iEvent)
-        self.assertEqual(3, tree.iEvent)
+        self.assertEqual(3, tree.ievent)
         event = next(it)
         self.assertEqual(2, event.iEvent)
-        self.assertEqual(4, tree.iEvent)
+        self.assertEqual(4, tree.ievent)
         event = next(it)
         self.assertEqual(3, event.iEvent)
-        self.assertEqual(5, tree.iEvent)
+        self.assertEqual(5, tree.ievent)
         self.assertRaises(StopIteration, next, it)
         self.assertEqual(-1, event.iEvent)
 
@@ -195,16 +197,16 @@ class TestEvents(unittest.TestCase):
 
         event = events[0]
         self.assertEqual(0, event.iEvent)
-        self.assertEqual(0, tree.iEvent)
+        self.assertEqual(0, tree.ievent)
         event = events[1]
         self.assertEqual(1, event.iEvent)
-        self.assertEqual(1, tree.iEvent)
+        self.assertEqual(1, tree.ievent)
         event = events[2]
         self.assertEqual(2, event.iEvent)
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         event = events[3]
         self.assertEqual(3, event.iEvent)
-        self.assertEqual(3, tree.iEvent)
+        self.assertEqual(3, tree.ievent)
         self.assertRaises(IndexError, events.__getitem__, 4)
         self.assertEqual(-1, events.iEvent)
 
@@ -215,10 +217,10 @@ class TestEvents(unittest.TestCase):
 
         event = events[0]
         self.assertEqual(0, event.iEvent)
-        self.assertEqual(2, tree.iEvent)
+        self.assertEqual(2, tree.ievent)
         event = events[1]
         self.assertEqual(1, event.iEvent)
-        self.assertEqual(3, tree.iEvent)
+        self.assertEqual(3, tree.ievent)
         self.assertRaises(IndexError, events.__getitem__, 4)
         self.assertEqual(-1, events.iEvent)
 
