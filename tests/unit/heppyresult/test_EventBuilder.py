@@ -7,86 +7,63 @@ from alphatwirl.heppyresult import EventBuilderConfig
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.heppyresult.EventBuilder import EventBuilder
     hasROOT = True
 except ImportError:
     pass
 
-##__________________________________________________________________||
-class MockAnalyzer(object):
-    def __init__(self):
-        self.path = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT'
-
-##__________________________________________________________________||
-class MockComponent(object):
-    def __init__(self):
-        self.treeProducerSusyAlphaT = MockAnalyzer()
-
-##__________________________________________________________________||
-class MockTObject(object):
-    def __init__(self, name):
-        self.name = name
-
-    def GetEntries(self):
-        return 5500
-
-##__________________________________________________________________||
-class MockTFile(object):
-    def Open(self, path):
-        self.path = path
-        return self
-    def Get(self, name):
-        return MockTObject(name)
-
-##__________________________________________________________________||
-class MockROOT(object):
-    def __init__(self): self.TFile = MockTFile()
+if hasROOT:
+    from alphatwirl.heppyresult.EventBuilder import EventBuilder
+    # depends on ROOT through roottree.BEventBuilder
 
 ##__________________________________________________________________||
 class MockEvents(object):
-    def __init__(self, tree, maxEvents, start = 0):
-        self.tree = tree
-        self.maxEvents = maxEvents
-        self.start = start
+    def __init__(self, config):
+        self.config = config
+
+##__________________________________________________________________||
+class MockComponent(object):
+    pass
+
+##__________________________________________________________________||
+class MockBaseEventBuilder(object):
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self):
+        return MockEvents(self.config)
+
+##__________________________________________________________________||
+class MockBaseConfig(object):
+    pass
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
 class TestEventBuilder(unittest.TestCase):
 
     def setUp(self):
-        self.moduleEventBuilder = sys.modules['alphatwirl.heppyresult.EventBuilder']
-        self.orgROOT = self.moduleEventBuilder.ROOT
-        self.moduleEventBuilder.ROOT = MockROOT()
-
-        self.orgEvents = self.moduleEventBuilder.Events
-        self.moduleEventBuilder.Events = MockEvents
+        self.module = sys.modules['alphatwirl.heppyresult.EventBuilder']
+        self.org_BaseEventBuilder = self.module.BaseEventBuilder
+        self.module.BaseEventBuilder = MockBaseEventBuilder
 
     def tearDown(self):
-        self.moduleEventBuilder.ROOT = self.orgROOT
-        self.moduleEventBuilder.Events = self.orgEvents
+        self.module.BaseEventBuilder = self.org_BaseEventBuilder
 
     def test_build(self):
 
+        base_config = MockBaseConfig
         component = MockComponent()
 
         config = EventBuilderConfig(
-            inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
-            treeName = 'tree',
-            maxEvents = 123,
-            start = 11,
+            base = base_config,
             component = component,
-            name = 'TTJets'
         )
 
         obj = EventBuilder(config)
 
         events = obj()
 
-        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
-        self.assertIsInstance(events, MockEvents)
-        self.assertEqual('tree', events.tree.name)
-        self.assertEqual(11, events.start)
-        self.assertEqual(123, events.maxEvents)
+        self.assertIs(base_config, events.config)
         self.assertIs(component, events.component)
 
 ##__________________________________________________________________||

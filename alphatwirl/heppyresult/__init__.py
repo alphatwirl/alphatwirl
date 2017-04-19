@@ -20,7 +20,7 @@ except ImportError:
     pass
 
 if hasROOT:
-    from BEventBuilder import BEventBuilder
+    from EventBuilder import EventBuilder
     from EventBuilderConfigMaker import EventBuilderConfigMaker
     from TblBranch import TblBranch
     from TblTree import TblTree

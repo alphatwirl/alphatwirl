@@ -39,7 +39,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(alphatwirl.roottree.BEvents))
         self.assertTrue(inspect.isclass(alphatwirl.roottree.BranchAddressManagerForVector))
 
-        self.assertTrue(inspect.isclass(alphatwirl.heppyresult.BEventBuilder))
+        self.assertTrue(inspect.isclass(alphatwirl.heppyresult.EventBuilder))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.EventBuilderConfigMaker))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.TblBranch))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.TblTree))
