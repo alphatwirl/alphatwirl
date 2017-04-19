@@ -1,7 +1,7 @@
 import unittest
 import sys
 
-from alphatwirl.heppyresult import EventBuilderConfig
+from alphatwirl.roottree import EventBuilderConfig
 
 ##__________________________________________________________________||
 hasROOT = False

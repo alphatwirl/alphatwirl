@@ -1,6 +1,7 @@
 from Events import Events
 from BranchAddressManager import BranchAddressManager
 from Branch import Branch
+from EventBuilderConfig import EventBuilderConfig
 
 hasROOT = False
 try:
