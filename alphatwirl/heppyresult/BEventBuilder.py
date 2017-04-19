@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import ROOT
-from ..events import BEvents
+from ..roottree import BEvents
 
 ##__________________________________________________________________||
 class BEventBuilder(object):

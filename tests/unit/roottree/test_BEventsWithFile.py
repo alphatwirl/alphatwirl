@@ -10,8 +10,8 @@ except ImportError:
     pass
 
 if hasROOT:
-    from alphatwirl.events import BEvents as Events
-    from alphatwirl.events import Branch
+    from alphatwirl.roottree import BEvents as Events
+    from alphatwirl.roottree import Branch
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")

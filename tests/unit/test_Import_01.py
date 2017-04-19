@@ -36,8 +36,8 @@ class TestImport_01(unittest.TestCase):
 
     @unittest.skipUnless(hasROOT, "has no ROOT")
     def test_with_ROOT(self):
-        self.assertTrue(inspect.isclass(alphatwirl.events.BEvents))
-        self.assertTrue(inspect.isclass(alphatwirl.events.BranchAddressManagerForVector))
+        self.assertTrue(inspect.isclass(alphatwirl.roottree.BEvents))
+        self.assertTrue(inspect.isclass(alphatwirl.roottree.BranchAddressManagerForVector))
 
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.BEventBuilder))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.EventBuilder))
@@ -70,9 +70,9 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(alphatwirl.configure.TableConfigCompleter))
         self.assertTrue(inspect.isclass(alphatwirl.configure.TableFileNameComposer))
         self.assertTrue(inspect.isclass(alphatwirl.configure.TableFileNameComposer2))
-        self.assertTrue(inspect.isclass(alphatwirl.events.Branch))
-        self.assertTrue(inspect.isclass(alphatwirl.events.BranchAddressManager))
-        self.assertTrue(inspect.isclass(alphatwirl.events.Events))
+        self.assertTrue(inspect.isclass(alphatwirl.roottree.Branch))
+        self.assertTrue(inspect.isclass(alphatwirl.roottree.BranchAddressManager))
+        self.assertTrue(inspect.isclass(alphatwirl.roottree.Events))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.Analyzer))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.Component))
         self.assertTrue(inspect.isclass(alphatwirl.heppyresult.ComponentLoop))

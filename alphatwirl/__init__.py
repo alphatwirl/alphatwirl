@@ -3,7 +3,7 @@ import binning
 import collector
 import concurrently
 import configure
-import events
+import roottree
 import heppyresult
 import loop
 import progressbar
