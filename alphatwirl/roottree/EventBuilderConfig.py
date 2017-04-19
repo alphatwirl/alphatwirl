@@ -8,5 +8,6 @@ EventBuilderConfig = collections.namedtuple(
     'EventBuilderConfig',
     'inputPath treeName maxEvents start name'
 )
+# 'name' is used by loop.EventLoopProgressReportWriter
 
 ##__________________________________________________________________||
