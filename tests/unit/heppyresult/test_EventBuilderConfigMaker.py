@@ -1,6 +1,7 @@
 import sys
 import unittest
 
+from alphatwirl.roottree import EventBuilderConfig as BaseEventBuilderConfig
 from alphatwirl.heppyresult import EventBuilderConfig
 
 ##__________________________________________________________________||
@@ -68,12 +69,14 @@ class TestEventBuilderConfigMaker(unittest.TestCase):
         component = MockComponent()
 
         expected = EventBuilderConfig(
-            inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
-            treeName = 'tree',
-            maxEvents = 30,
-            start = 20,
+            base = BaseEventBuilderConfig(
+                inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
+                treeName = 'tree',
+                maxEvents = 30,
+                start = 20,
+                name = 'TTJets'
+                ),
             component = component,
-            name = 'TTJets'
         )
 
         actual = obj.create_config_for(
