@@ -41,6 +41,14 @@ class Branch(object):
         self.array = array
         self.countarray = countarray
 
+    def __repr__(self):
+        return '{}(name = {!r}, array = {!r}, countarray = {!r})'.format(
+            self.__class__.__name__,
+            self.name,
+            self.array,
+            self.countarray
+        )
+
     def __getitem__(self, i):
         if self.countarray is None and 0 != i:
             raise IndexError('the index should be zero for this branch: {}[{}]'.format(self.name, i))
