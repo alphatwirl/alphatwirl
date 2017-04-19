@@ -1,4 +1,4 @@
-from alphatwirl.events import BranchAddressManager
+from alphatwirl.roottree import BranchAddressManager
 import unittest
 
 ##__________________________________________________________________||

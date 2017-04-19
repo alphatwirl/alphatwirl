@@ -10,7 +10,7 @@ except ImportError:
     pass
 
 if hasROOT:
-    from alphatwirl.events import BEvents
+    from alphatwirl.roottree import BEvents
 
 ##__________________________________________________________________||
 class MockFile(object): pass

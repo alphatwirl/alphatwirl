@@ -21,7 +21,7 @@ args = parser.parse_args()
 ##__________________________________________________________________||
 file = ROOT.TFile.Open(args.input)
 tree = file.Get(args.tree)
-events = alphatwirl.events.BEvents(tree, args.nevents)
+events = alphatwirl.roottree.BEvents(tree, args.nevents)
 
 keyAttrNames = ('nJet40', 'nBJet40')
 binnings = (alphatwirl.binning.Echo(), alphatwirl.binning.Echo())

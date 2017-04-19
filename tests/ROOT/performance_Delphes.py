@@ -7,7 +7,7 @@ import timeit
 import array
 import ROOT
 
-from alphatwirl.events import Events, BEvents
+from alphatwirl.roottree import Events, BEvents
 
 # https://cp3.irmp.ucl.ac.be/projects/delphes/ticket/1039
 ROOT.gInterpreter.Declare('#include "classes/DelphesClasses.h"')

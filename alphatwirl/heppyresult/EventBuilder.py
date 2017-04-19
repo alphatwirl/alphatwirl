@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import ROOT
-from ..events import Events
+from ..roottree import Events
 
 ##__________________________________________________________________||
 class EventBuilder(object):
