@@ -18,7 +18,6 @@ class BEventBuilder(object):
         tree = file.Get(self.config.treeName)
         events = BEvents(tree, self.config.maxEvents, self.config.start)
         events.config = self.config
-        events.component = self.config.component
         return events
 
 ##__________________________________________________________________||

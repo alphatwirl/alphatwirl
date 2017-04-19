@@ -15,16 +15,6 @@ if hasROOT:
     from alphatwirl.roottree.BEventBuilder import BEventBuilder
 
 ##__________________________________________________________________||
-class MockAnalyzer(object):
-    def __init__(self):
-        self.path = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT'
-
-##__________________________________________________________________||
-class MockComponent(object):
-    def __init__(self):
-        self.treeProducerSusyAlphaT = MockAnalyzer()
-
-##__________________________________________________________________||
 class MockTObject(object):
     def __init__(self, name):
         self.name = name
@@ -69,14 +59,11 @@ class TestBEventBuilder(unittest.TestCase):
 
     def test_build(self):
 
-        component = MockComponent()
-
         config = EventBuilderConfig(
             inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
             treeName = 'tree',
             maxEvents = 123,
             start = 11,
-            component = component,
             name = 'TTJets'
         )
 
@@ -89,6 +76,5 @@ class TestBEventBuilder(unittest.TestCase):
         self.assertEqual('tree', events.tree.name)
         self.assertEqual(11, events.start)
         self.assertEqual(123, events.maxEvents)
-        self.assertIs(component, events.component)
 
 ##__________________________________________________________________||
