@@ -3,7 +3,8 @@ import os
 
 import ROOT
 
-from .EventBuilderConfig import EventBuilderConfig
+from ..roottree import EventBuilderConfig as BaseEventBuilderConfig
+from .EventBuilderConfig import EventBuilderConfig as HeppyEventBuilderConfig
 
 ##__________________________________________________________________||
 class EventBuilderConfigMaker(object):
@@ -14,13 +15,16 @@ class EventBuilderConfigMaker(object):
         self.treeName = treeName
 
     def create_config_for(self, dataset, file_, start, length):
-        config = EventBuilderConfig(
+        base_config = BaseEventBuilderConfig(
             inputPath = file_,
             treeName = self.treeName,
             maxEvents = length,
             start = start,
-            component = dataset, # for scribblers
             name = dataset.name # for the progress report writer
+        )
+        config = HeppyEventBuilderConfig(
+            base = base_config,
+            component = dataset # for scribblers
         )
         return config
 

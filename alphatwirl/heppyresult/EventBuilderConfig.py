@@ -6,7 +6,9 @@ import collections
 ##__________________________________________________________________||
 EventBuilderConfig = collections.namedtuple(
     'EventBuilderConfig',
-    'inputPath treeName maxEvents start component name'
+    'base component'
 )
+
+# base is for roottree.EventBuilderConfig
 
 ##__________________________________________________________________||
