@@ -12,5 +12,6 @@ except ImportError:
 
 if hasROOT:
     from BEvents import BEvents
+    from BEventBuilder import BEventBuilder
     from BranchBuilder import BranchBuilder
     from BranchAddressManagerForVector import BranchAddressManagerForVector
