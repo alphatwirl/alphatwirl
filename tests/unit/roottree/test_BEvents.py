@@ -13,7 +13,8 @@ if hasROOT:
     from alphatwirl.roottree import BEvents
 
 ##__________________________________________________________________||
-class MockFile(object): pass
+class MockFile(object):
+    pass
 
 ##__________________________________________________________________||
 class MockTree(object):
