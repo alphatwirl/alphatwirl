@@ -15,24 +15,18 @@ if hasROOT:
     from alphatwirl.roottree.EventBuilder import EventBuilder
 
 ##__________________________________________________________________||
-class MockTObject(object):
+class MockTChain(object):
     def __init__(self, name):
-        self.name = name
+        self.treeName = name
+        self.paths = [ ]
 
-    def GetEntries(self):
-        return 5500
-
-##__________________________________________________________________||
-class MockTFile(object):
-    def Open(self, path):
-        self.path = path
-        return self
-    def Get(self, name):
-        return MockTObject(name)
+    def Add(self, name):
+        self.paths.append(name)
 
 ##__________________________________________________________________||
 class MockROOT(object):
-    def __init__(self): self.TFile = MockTFile()
+    def __init__(self):
+        self.TChain = MockTChain
 
 ##__________________________________________________________________||
 class MockEvents(object):
@@ -46,16 +40,16 @@ class MockEvents(object):
 class TestEventBuilder(unittest.TestCase):
 
     def setUp(self):
-        self.moduleEventBuilder = sys.modules['alphatwirl.roottree.EventBuilder']
-        self.orgROOT = self.moduleEventBuilder.ROOT
-        self.moduleEventBuilder.ROOT = MockROOT()
+        self.module = sys.modules['alphatwirl.roottree.EventBuilder']
+        self.orgROOT = self.module.ROOT
+        self.module.ROOT = MockROOT()
 
-        self.orgEvents = self.moduleEventBuilder.Events
-        self.moduleEventBuilder.Events = MockEvents
+        self.orgEvents = self.module.Events
+        self.module.Events = MockEvents
 
     def tearDown(self):
-        self.moduleEventBuilder.ROOT = self.orgROOT
-        self.moduleEventBuilder.Events = self.orgEvents
+        self.module.ROOT = self.orgROOT
+        self.module.BEvents = self.orgEvents
 
     def test_build(self):
 
@@ -71,9 +65,9 @@ class TestEventBuilder(unittest.TestCase):
 
         events = obj()
 
-        self.assertEqual('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root', self.moduleEventBuilder.ROOT.TFile.path)
+        self.assertEqual(['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'], events.tree.paths)
         self.assertIsInstance(events, MockEvents)
-        self.assertEqual('tree', events.tree.name)
+        self.assertEqual('tree', events.tree.treeName)
         self.assertEqual(11, events.start)
         self.assertEqual(123, events.maxEvents)
 

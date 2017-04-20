@@ -14,9 +14,9 @@ class EventBuilder(object):
         )
 
     def __call__(self):
-        file = ROOT.TFile.Open(self.config.inputPath)
-        tree = file.Get(self.config.treeName)
-        events = Events(tree, self.config.maxEvents, self.config.start)
+        chain = ROOT.TChain(self.config.treeName)
+        chain.Add(self.config.inputPath)
+        events = Events(chain, self.config.maxEvents, self.config.start)
         events.config = self.config
         return events
 
