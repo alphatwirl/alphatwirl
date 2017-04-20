@@ -68,36 +68,6 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
     def test_repr(self):
         repr(self.obj)
 
-    def test_init_raise(self):
-        configMaker = MockEventBuilderConfigMaker()
-        self.assertRaises(ValueError,
-                          DatasetIntoEventBuildersSplitter,
-                          MockEventBuilder,
-                          configMaker,
-                          maxEvents = 0
-        )
-
-        self.assertRaises(ValueError,
-                          DatasetIntoEventBuildersSplitter,
-                          MockEventBuilder,
-                          configMaker,
-                          maxEventsPerRun = 0
-        )
-
-        self.assertRaises(ValueError,
-                          DatasetIntoEventBuildersSplitter,
-                          MockEventBuilder,
-                          configMaker,
-                          maxFiles = 0
-        )
-
-        self.assertRaises(ValueError,
-                          DatasetIntoEventBuildersSplitter,
-                          MockEventBuilder,
-                          configMaker,
-                          maxFilesPerRun = 0
-        )
-
     def test_file_start_length_list_fast_path_00(self):
         dataset = MockDataset()
         maxEvents = -1        # < 0
@@ -141,7 +111,7 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         maxEvents = -1        # < 0
         maxEventsPerRun = -1  # < 0
         maxFiles = -1         # < 0
-        maxFilesPerRun = 2
+        maxFilesPerRun = 2    # > 0
         expected = [
             (['A.root', 'B.root'], 0, -1),
             (['C.root', 'D.root'], 0, -1),
@@ -159,8 +129,8 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         dataset = MockDataset()
         maxEvents = -1        # < 0
         maxEventsPerRun = -1  # < 0
-        maxFiles = 3
-        maxFilesPerRun = 2
+        maxFiles = 3          # > 0
+        maxFilesPerRun = 2    # > 0
         expected = [
             (['A.root', 'B.root'], 0, -1),
             (['C.root'], 0, -1),
@@ -173,12 +143,60 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         self.assertEqual([ ], self.split_func.args_call)
         self.assertEqual(expected, actual)
 
+    def test_file_start_length_list_fast_path_04(self):
+        dataset = MockDataset()
+        maxEvents = -1        # < 0
+        maxEventsPerRun = -1  # < 0
+        maxFiles = 0          # = 0
+        maxFilesPerRun = 2    # > 0
+        expected = [
+        ]
+        actual = self.obj._file_start_length_list(
+            dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun,
+            maxFiles = maxFiles, maxFilesPerRun = maxFilesPerRun
+        )
+        self.assertEqual([(dataset, 0)], self.configMaker.args_file_list_in)
+        self.assertEqual([ ], self.split_func.args_call)
+        self.assertEqual(expected, actual)
+
+    def test_file_start_length_list_fast_path_05(self):
+        dataset = MockDataset()
+        maxEvents = -1        # < 0
+        maxEventsPerRun = -1  # < 0
+        maxFiles = 0          # = 0
+        maxFilesPerRun = 0    # = 0
+        expected = [
+        ]
+        actual = self.obj._file_start_length_list(
+            dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun,
+            maxFiles = maxFiles, maxFilesPerRun = maxFilesPerRun
+        )
+        self.assertEqual([(dataset, 0)], self.configMaker.args_file_list_in)
+        self.assertEqual([ ], self.split_func.args_call)
+        self.assertEqual(expected, actual)
+
+    def test_file_start_length_list_fast_path_05(self):
+        dataset = MockDataset()
+        maxEvents = -1        # < 0
+        maxEventsPerRun = -1  # < 0
+        maxFiles = -1         # < 0
+        maxFilesPerRun = 0    # = 0
+        expected = [
+        ]
+        actual = self.obj._file_start_length_list(
+            dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun,
+            maxFiles = maxFiles, maxFilesPerRun = maxFilesPerRun
+        )
+        self.assertEqual([(dataset, -1)], self.configMaker.args_file_list_in)
+        self.assertEqual([ ], self.split_func.args_call)
+        self.assertEqual(expected, actual)
+
     def test_file_start_length_list_long_path(self):
         dataset = MockDataset()
-        maxEvents = 110        # >= 0
-        maxEventsPerRun = 40   # >= 0
-        maxFiles = 5
-        maxFilesPerRun = 1
+        maxEvents = 110        # > 0
+        maxEventsPerRun = 40   # > 0
+        maxFiles = 5           # > 0
+        maxFilesPerRun = 1     # > 0
         expected = [
             ('A.root', 0, 40),
             ('A.root', 40, 40),

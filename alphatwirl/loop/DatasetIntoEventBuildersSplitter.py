@@ -10,18 +10,6 @@ class DatasetIntoEventBuildersSplitter(object):
                  maxFiles = -1, maxFilesPerRun = 1
     ):
 
-        if maxEvents == 0:
-            raise ValueError("maxEvents cannot be 0")
-
-        if maxEventsPerRun == 0:
-            raise ValueError("maxEventsPerRun cannot be 0")
-
-        if maxFiles == 0:
-            raise ValueError("maxFiles cannot be 0")
-
-        if maxFilesPerRun == 0:
-            raise ValueError("maxFilesPerRun cannot be 0")
-
         self.EventBuilder = EventBuilder
         self.eventBuilderConfigMaker = eventBuilderConfigMaker
         self.maxEvents = maxEvents
@@ -58,8 +46,12 @@ class DatasetIntoEventBuildersSplitter(object):
         if maxEvents < 0 and maxEventsPerRun < 0:
             # fast path. unnecessary to get the number events in the files
             files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles = maxFiles)
+            if not files:
+                return [ ]
             if maxFilesPerRun < 0:
                 return [(files, 0, -1)]
+            if maxFilesPerRun == 0:
+                return [ ]
             return [(files[i:(i + maxFilesPerRun)], 0, -1) for i in xrange(0, len(files), maxFilesPerRun)]
 
         # this can be slow
