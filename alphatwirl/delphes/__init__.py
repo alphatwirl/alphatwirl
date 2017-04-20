@@ -8,3 +8,4 @@ except ImportError:
 if hasROOT:
     from DelphesEvents import DelphesEvents
     from DelphesEventBuilder import DelphesEventBuilder
+    from EventBuilderConfigMaker import EventBuilderConfigMaker
