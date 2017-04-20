@@ -11,9 +11,6 @@ class TTreeWrap(object):
     def __init__(self, treeReader):
         self.treeReader = treeReader
 
-    def GetDirectory(self):
-        return None
-
     def GetEntries(self):
         return self.treeReader.GetEntries()
 
@@ -28,8 +25,6 @@ class DelphesEvents(Events):
             tree = TTreeWrap(self.treeReader),
             maxEvents = maxEvents, start = start
         )
-        self.file = tree.GetDirectory() # so a file won't close
-
         self.branches = { }
 
     def __repr__(self):
