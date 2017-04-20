@@ -40,7 +40,7 @@ class DatasetIntoEventBuildersSplitter(object):
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
 
-    def _file_start_length_list(self, dataset, maxEvents, maxEventsPerRun, maxFiles):
+    def _file_start_length_list(self, dataset, maxEvents = -1, maxEventsPerRun = -1, maxFiles = -1):
 
         if maxEvents < 0 and maxEventsPerRun < 0:
             # fast path. unnecessary to get the number events in the files
@@ -48,7 +48,7 @@ class DatasetIntoEventBuildersSplitter(object):
             return [(file_, 0, -1) for file_ in files]
 
         # this can be slow
-        file_nevents_list = self.eventBuilderConfigMaker.file_nevents_list_for(
+        file_nevents_list = self._file_nevents_list_for(
             dataset,
             maxEvents = maxEvents,
             maxFiles = maxFiles
@@ -56,6 +56,18 @@ class DatasetIntoEventBuildersSplitter(object):
 
         file_start_length_list = self.create_file_start_length_list(file_nevents_list, maxEventsPerRun, maxEvents)
         return file_start_length_list
+
+    def _file_nevents_list_for(self, dataset, maxEvents = -1, maxFiles = -1):
+        files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles = maxFiles)
+        totalEvents = 0
+        ret = [ ]
+        for f in files:
+            if 0 <= maxEvents <= totalEvents:
+                return ret
+            n = self.eventBuilderConfigMaker.nevents_in_file(f)
+            ret.append((f, n))
+            totalEvents += n
+        return ret
 
     def _create_configs(self, dataset, file_start_length_list):
         configs = [ ]

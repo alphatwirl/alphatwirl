@@ -35,18 +35,6 @@ class EventBuilderConfigMaker(object):
             return files
         return files[:min(maxFiles, len(files))]
 
-    def file_nevents_list_for(self, dataset, maxEvents = -1, maxFiles = -1):
-        files = self.file_list_in(dataset, maxFiles = maxFiles)
-        totalEvents = 0
-        ret = [ ]
-        for f in files:
-            if 0 <= maxEvents <= totalEvents:
-                return ret
-            n = self.nevents_in_file(f)
-            ret.append((f, n))
-            totalEvents += n
-        return ret
-
     def nevents_in_file(self, path):
         file = ROOT.TFile.Open(path)
         tree = file.Get(self.treeName)

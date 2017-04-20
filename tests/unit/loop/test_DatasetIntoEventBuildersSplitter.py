@@ -29,19 +29,20 @@ class MockSplitFunc(object):
 class MockEventBuilderConfigMaker(object):
     def __init__(self):
         self.args_file_list_in = [ ]
-        self.args_file_nevents_list_for = [ ]
         self.args_create_config_for = [ ]
         self.ret_file_list_in = None
-        self.ret_file_nevents_list_for = None
         self.ret_create_config_for = None
+        self.ret_nevents_in_file = collections.deque()
 
     def file_list_in(self, dataset, maxFiles):
         self.args_file_list_in.append((dataset, maxFiles))
-        return self.ret_file_list_in
+        if maxFiles < 0:
+            return self.ret_file_list_in
+        else:
+            return self.ret_file_list_in[:maxFiles]
 
-    def file_nevents_list_for(self, dataset, maxEvents, maxFiles):
-        self.args_file_nevents_list_for.append((dataset, maxEvents, maxFiles))
-        return  self.ret_file_nevents_list_for
+    def nevents_in_file(self, path):
+        return self.ret_nevents_in_file.popleft()
 
     def create_config_for(self, dataset, file_, start, length):
         self.args_create_config_for.append((dataset, file_, start, length))
@@ -53,7 +54,7 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
     def setUp(self):
         self.configMaker = MockEventBuilderConfigMaker()
         self.configMaker.ret_file_list_in = ['A.root', 'B.root']
-        self.configMaker.ret_file_nevents_list_for = [('A.root', 100), ('B.root', 200)]
+        self.configMaker.ret_nevents_in_file.extend([100, 200])
 
         self.obj = DatasetIntoEventBuildersSplitter(
             MockEventBuilder,
@@ -84,7 +85,6 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         expected = [('A.root', 0, -1), ('B.root', 0, -1)]
         actual = self.obj._file_start_length_list(dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun, maxFiles = maxFiles)
         self.assertEqual([(dataset, 5)], self.configMaker.args_file_list_in)
-        self.assertEqual([ ], self.configMaker.args_file_nevents_list_for)
         self.assertEqual([ ], self.configMaker.args_create_config_for)
         self.assertEqual([ ], self.split_func.args_call)
         self.assertEqual(expected, actual)
@@ -96,10 +96,31 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
         maxFiles = 5
         expected = [('A.root', 0, 40), ('A.root', 40, 40), ('A.root', 80, 20), ('B.root', 0, 10)]
         actual = self.obj._file_start_length_list(dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun, maxFiles = maxFiles)
-        self.assertEqual([ ], self.configMaker.args_file_list_in)
-        self.assertEqual([(dataset, 110, 5)], self.configMaker.args_file_nevents_list_for)
+        self.assertEqual([(dataset, 5)], self.configMaker.args_file_list_in)
         self.assertEqual([ ], self.configMaker.args_create_config_for)
         self.assertEqual([([('A.root', 100), ('B.root', 200)], 40, 110)], self.split_func.args_call)
+
+    def test_file_nevents_list_for(self):
+
+        dataset = MockDataset()
+
+        expected = [('A.root', 100), ('B.root', 200)]
+
+        actual = self.obj._file_nevents_list_for(dataset)
+
+        self.assertEqual(expected, actual)
+
+    def test_file_nevents_list_for_maxFiles(self):
+
+        dataset = MockDataset()
+
+        expected = [('A.root', 100)]
+        actual = self.obj._file_nevents_list_for(dataset, maxFiles = 1)
+        self.assertEqual(expected, actual)
+
+        expected = [ ]
+        actual = self.obj._file_nevents_list_for(dataset, maxFiles = 0)
+        self.assertEqual(expected, actual)
 
     def test_create_configs(self):
         dataset = MockDataset()
