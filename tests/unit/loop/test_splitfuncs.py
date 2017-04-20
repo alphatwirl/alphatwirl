@@ -2,7 +2,7 @@ import sys
 import unittest
 
 from alphatwirl.loop.splitfuncs import *
-from alphatwirl.loop.splitfuncs import _apply_max_total
+from alphatwirl.loop.splitfuncs import _apply_max_events_total
 from alphatwirl.loop.splitfuncs import _start_length_pairs_for_split_lists
 from alphatwirl.loop.splitfuncs import _minimum_positive_value
 
@@ -13,59 +13,59 @@ class TestSplitfuncs(unittest.TestCase):
 
         # simple
         file_nevents_list = [('A', 100), ('B', 100)]
-        max_per_run = 30
-        max_total = 140
+        max_events_per_run = 30
+        max_events_total = 140
 
         expected = [
             ('A', 0, 30), ('A', 30, 30), ('A', 60, 30), ('A', 90, 10),
             ('B', 0, 30), ('B', 30, 10),
         ]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_per_run, max_total))
+        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
 
         # no split
         file_nevents_list = [('A', 100), ('B', 100)]
-        max_per_run = -1
-        max_total = 140
+        max_events_per_run = -1
+        max_events_total = 140
         expected = [('A', 0, 100), ('B', 0, 40)]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_per_run, max_total))
+        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
 
         # no split, no max
         file_nevents_list = [('A', 100), ('B', 100)]
-        max_per_run = -1
-        max_total = -1
+        max_events_per_run = -1
+        max_events_total = -1
         expected = [('A', 0, 100), ('B', 0, 100)]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_per_run, max_total))
+        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
 
-    def test_apply_max_total(self):
+    def test_apply_max_events_total(self):
 
         # simple
         file_nevents_list = [('A', 100), ('B', 100)]
-        max_total = 120
+        max_events_total = 120
         expected = [('A', 100), ('B', 20)]
-        self.assertEqual(expected, _apply_max_total(file_nevents_list, max_total))
+        self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
 
         # exact
         file_nevents_list = [('A', 100), ('B', 200)]
-        max_total = 300
+        max_events_total = 300
         expected = [('A', 100), ('B', 200)]
-        self.assertEqual(expected, _apply_max_total(file_nevents_list, max_total))
+        self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
 
         # default
         file_nevents_list = [('A', 100), ('B', 200)]
         expected = [('A', 100), ('B', 200)]
-        self.assertEqual(expected, _apply_max_total(file_nevents_list))
+        self.assertEqual(expected, _apply_max_events_total(file_nevents_list))
 
         # zero
         file_nevents_list = [('A', 100), ('B', 200)]
-        max_total = 0
+        max_events_total = 0
         expected = [ ]
-        self.assertEqual(expected, _apply_max_total(file_nevents_list, max_total))
+        self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
 
         # empty
         file_nevents_list = [ ]
-        max_total = 10
+        max_events_total = 10
         expected = [ ]
-        self.assertEqual(expected, _apply_max_total(file_nevents_list, max_total))
+        self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
 
     def test_start_length_pairs_for_split_lists(self):
         self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], _start_length_pairs_for_split_lists(40, 10))
