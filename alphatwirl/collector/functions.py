@@ -8,7 +8,8 @@ def add_summarizers_for_the_same_dataset(dataset_summarizer_pairs):
     for dataset, summarizer in dataset_summarizer_pairs:
         if not summarizer: continue
         if dataset in ret:
-            ret[dataset] = ret[dataset] + summarizer
+            ## ret[dataset] = ret[dataset] + summarizer # this is slow
+            ret[dataset] += summarizer # faster. it modifies ret[dataset]
         else:
             ret[dataset] = summarizer
     return ret.items()
