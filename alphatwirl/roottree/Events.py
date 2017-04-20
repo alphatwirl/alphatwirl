@@ -40,7 +40,6 @@ class Events(object):
         if start < 0:
             raise ValueError("start must be greater than or equal to zero: {} is given".format(start))
 
-        self.file = tree.GetDirectory() # so a file won't close
         self.tree = tree
         nEventsInTree = self.tree.GetEntries()
         start = min(nEventsInTree, start)
