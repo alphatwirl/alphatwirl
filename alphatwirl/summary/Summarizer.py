@@ -30,12 +30,11 @@ class Summarizer(object):
         return self._results
 
     def __add__(self, other):
-        ret = self.__class__(self.Summary)
-        results = copy.deepcopy(self._results)
+        results = copy.deepcopy(self._results) # this copy is very slow
         if not other == 0: # other is 0 when e.g. sum([obj1, obj2])
             self._add_results_inplace(results, other._results)
-        ret._results.clear()
-        ret._results.update(results)
+        ret = self.__class__(self.Summary)
+        ret._results = results
         return ret
 
     def __iadd__(self, other):
@@ -49,7 +48,8 @@ class Summarizer(object):
         # res1 += res2, modify res1
         for k, v in res2.iteritems():
             if k not in res1:
-                res1[k] = copy.deepcopy(v)
+                res1[k] = copy.deepcopy(v) # this copy is not so slow
+                # res1[k] = v
             else:
                 res1[k] = res1[k] + v
 
