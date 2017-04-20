@@ -17,7 +17,8 @@ class Count(object):
     def __init__(self, val = None, weight = 1, contents = None):
 
         if contents is not None:
-            self.contents = copy.deepcopy(contents)
+            ## self.contents = copy.deepcopy(contents)
+            self.contents = contents
             return
 
         if val is None:
