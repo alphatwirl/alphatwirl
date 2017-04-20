@@ -5,7 +5,7 @@ import ROOT
 from ..roottree.Events import Events
 
 ##__________________________________________________________________||
-class TTreeWrapper(object):
+class TTreeWrap(object):
     """wrap ExRootTreeReader so that Events can treat it as TTree
     """
     def __init__(self, treeReader):
@@ -25,7 +25,7 @@ class DelphesEvents(Events):
     def __init__(self, tree, maxEvents = -1, start = 0):
         self.treeReader = ROOT.ExRootTreeReader(tree)
         super(DelphesEvents, self).__init__(
-            tree = TTreeWrapper(self.treeReader),
+            tree = TTreeWrap(self.treeReader),
             maxEvents = maxEvents, start = start
         )
         self.file = tree.GetDirectory() # so a file won't close
@@ -44,6 +44,8 @@ class DelphesEvents(Events):
             return self.branches[name]
 
         branch = self.treeReader.UseBranch(name)
+
+        # branch = TClonesArrayWrap(branch) # can uncomment when TClonesArrayWrap works fast
         self.branches[name] = branch
 
         if self.iEvent >= 0:
