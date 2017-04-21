@@ -21,8 +21,8 @@ class MockSplitFunc(object):
         self.args_call = [ ]
         self.ret = None
 
-    def __call__(self, file_nevents_list, max_per_run = -1, max_total = -1):
-        self.args_call.append((file_nevents_list, max_per_run, max_total))
+    def __call__(self, file_nevents_list, max_events_per_run = -1, max_events_total = -1, max_files_per_run = 1):
+        self.args_call.append((file_nevents_list, max_events_per_run, max_events_total, max_files_per_run))
         return self.ret
 
 ##__________________________________________________________________||
@@ -62,7 +62,11 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
             )
 
         self.split_func = MockSplitFunc()
-        self.split_func.ret = [('A.root', 0, 40), ('A.root', 40, 40), ('A.root', 80, 20), ('B.root', 0, 10)]
+        self.split_func.ret = [
+            (['A.root'], 0, 80), (['A.root', 'B.root'], 80, 80),
+            (['B.root'], 60, 80), (['B.root', 'C.root'], 140, 80),
+            (['C.root'], 20, 10)
+        ]
         self.obj.create_file_start_length_list = self.split_func
 
     def test_repr(self):
@@ -193,22 +197,22 @@ class TestDatasetIntoEventBuildersSplitter(unittest.TestCase):
 
     def test_file_start_length_list_long_path(self):
         dataset = MockDataset()
-        maxEvents = 110        # > 0
-        maxEventsPerRun = 40   # > 0
-        maxFiles = 5           # > 0
-        maxFilesPerRun = 1     # > 0
+        maxEvents = 330        # > 0
+        maxEventsPerRun = 80   # > 0
+        maxFiles = 4           # > 0
+        maxFilesPerRun = 2     # > 0
         expected = [
-            ('A.root', 0, 40),
-            ('A.root', 40, 40),
-            ('A.root', 80, 20),
-            ('B.root', 0, 10)
+            (['A.root'], 0, 80), (['A.root', 'B.root'], 80, 80),
+            (['B.root'], 60, 80), (['B.root', 'C.root'], 140, 80),
+            (['C.root'], 20, 10)
         ]
         actual = self.obj._file_start_length_list(
             dataset, maxEvents = maxEvents, maxEventsPerRun = maxEventsPerRun,
             maxFiles = maxFiles, maxFilesPerRun = maxFilesPerRun
         )
-        self.assertEqual([(dataset, 5)], self.configMaker.args_file_list_in)
-        self.assertEqual([([('A.root', 100), ('B.root', 200)], 40, 110)], self.split_func.args_call)
+        self.assertEqual([(dataset, 4)], self.configMaker.args_file_list_in)
+        self.assertEqual([([('A.root', 100), ('B.root', 200), ('C.root', 150)], 80, 330, 2)], self.split_func.args_call)
+        self.assertEqual(expected, actual)
 
     def test_file_nevents_list_for(self):
 
