@@ -4,6 +4,8 @@ import ROOT
 
 from ..roottree.Events import Events
 
+from .load_delphes import load_delphes
+
 ##__________________________________________________________________||
 class TTreeWrap(object):
     """wrap ExRootTreeReader so that Events can treat it as TTree
@@ -20,6 +22,7 @@ class TTreeWrap(object):
 ##__________________________________________________________________||
 class DelphesEvents(Events):
     def __init__(self, tree, maxEvents = -1, start = 0):
+        load_delphes()
         self.treeReader = ROOT.ExRootTreeReader(tree)
         super(DelphesEvents, self).__init__(
             tree = TTreeWrap(self.treeReader),

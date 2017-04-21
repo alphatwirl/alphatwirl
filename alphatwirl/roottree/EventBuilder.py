@@ -15,7 +15,8 @@ class EventBuilder(object):
 
     def __call__(self):
         chain = ROOT.TChain(self.config.treeName)
-        chain.Add(self.config.inputPath)
+        for path in self.config.inputPaths:
+            chain.Add(path)
         events = Events(chain, self.config.maxEvents, self.config.start)
         events.config = self.config
         return events

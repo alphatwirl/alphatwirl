@@ -54,7 +54,7 @@ class TestBEventBuilder(unittest.TestCase):
     def test_build(self):
 
         config = EventBuilderConfig(
-            inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
+            inputPaths = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
             treeName = 'tree',
             maxEvents = 123,
             start = 11,

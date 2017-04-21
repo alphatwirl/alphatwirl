@@ -14,9 +14,9 @@ class EventBuilderConfigMaker(object):
         self.fileName = fileName
         self.treeName = treeName
 
-    def create_config_for(self, dataset, file_, start, length):
+    def create_config_for(self, dataset, files, start, length):
         base_config = BaseEventBuilderConfig(
-            inputPath = file_,
+            inputPaths = files,
             treeName = self.treeName,
             maxEvents = length,
             start = start,
