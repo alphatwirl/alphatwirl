@@ -4,6 +4,7 @@ import os
 import ROOT
 
 from .EventBuilderConfig import EventBuilderConfig
+from .load_delphes import load_delphes
 
 ##__________________________________________________________________||
 class EventBuilderConfigMaker(object):
@@ -27,6 +28,7 @@ class EventBuilderConfigMaker(object):
         return dataset.files[:min(maxFiles, len(dataset.files))]
 
     def nevents_in_file(self, path):
+        load_delphes()
         file = ROOT.TFile.Open(path)
         tree = file.Get(self.treeName)
         return tree.GetEntries() # GetEntries() is slow. call only as
