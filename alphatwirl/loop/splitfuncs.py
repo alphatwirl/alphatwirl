@@ -1,16 +1,11 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, max_events_total = -1):
+def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, max_events_total = -1, max_files_per_run = 1):
 
     file_nevents_list = _apply_max_events_total(file_nevents_list, max_events_total)
 
-    ret = [ ]
-    for file, nevents in file_nevents_list:
-        start_length_pairs = _start_length_pairs_for_split_lists(nevents, max_events_per_run)
-        for start, length in start_length_pairs:
-            ret.append((file, start, length))
-    return ret
+    return _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run)
 
 ##__________________________________________________________________||
 def _apply_max_events_total(file_nevents_list, max_events_total = -1):
@@ -34,6 +29,20 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
     total_nevents = sum([n for f, n, in file_nevents_list])
     if total_nevents == 0:
         return [ ]
+
+    if max_files_per_run == 0:
+        return [ ]
+
+    if max_events_per_run == 0:
+        return [ ]
+
+    if max_events_per_run < 0:
+        max_events_per_run = total_nevents
+
+    total_nfiles = len(set([f for f, n, in file_nevents_list]))
+    if max_files_per_run < 0:
+        max_files_per_run = total_nfiles
+
 
     files = [ ]
     nevents = [ ]

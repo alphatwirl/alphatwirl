@@ -16,26 +16,13 @@ class TestSplitfuncs(unittest.TestCase):
         file_nevents_list = [('A', 100), ('B', 100)]
         max_events_per_run = 30
         max_events_total = 140
+        max_files_per_run = 2
 
         expected = [
-            ('A', 0, 30), ('A', 30, 30), ('A', 60, 30), ('A', 90, 10),
-            ('B', 0, 30), ('B', 30, 10),
+            (['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B'], 90, 30),
+            (['B'], 20, 20)
         ]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
-
-        # no split
-        file_nevents_list = [('A', 100), ('B', 100)]
-        max_events_per_run = -1
-        max_events_total = 140
-        expected = [('A', 0, 100), ('B', 0, 40)]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
-
-        # no split, no max
-        file_nevents_list = [('A', 100), ('B', 100)]
-        max_events_per_run = -1
-        max_events_total = -1
-        expected = [('A', 0, 100), ('B', 0, 100)]
-        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total))
+        self.assertEqual(expected, create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total, max_files_per_run))
 
     def test_apply_max_events_total(self):
 
@@ -199,6 +186,34 @@ class TestSplitfuncs(unittest.TestCase):
 
         args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, 1)
         expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A'], 90, 10), (['B'], 0, 5), (['C'], 0, 7), (['D'], 0, 30), (['D'], 30, 30), (['D'], 60, 30), (['D'], 90, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_list_05(self):
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, -1) # max_files_per_run = -1
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B', 'C', 'D'], 90, 30), (['D'], 8, 30), (['D'], 38, 30), (['D'], 68, 30), (['D'], 98, 2)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], -1, 2) # max_events_per_run = -1
+        expected = [(['A', 'B'], 0, 105), (['C', 'D'], 0, 107)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], -1, -1) # both are -1
+        expected = [(['A', 'B', 'C', 'D'], 0, 212)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_list_06(self):
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, 0) # max_files_per_run = 0
+        expected = [ ]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 0, 2) # max_events_per_run = 0
+        expected = [ ]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 0, 0) # both are 0
+        expected = [ ]
         self.assertEqual(expected, _file_start_length_list(*args))
 
     def test_start_length_pairs_for_split_lists(self):
