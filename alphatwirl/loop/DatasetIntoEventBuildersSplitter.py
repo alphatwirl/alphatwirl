@@ -61,10 +61,12 @@ class DatasetIntoEventBuildersSplitter(object):
             maxFiles = maxFiles
         )
 
+
         file_start_length_list = self.create_file_start_length_list(
-            file_nevents_list,
-            maxEventsPerRun,
-            maxEvents
+            file_nevents_list = file_nevents_list,
+            max_events_per_run = maxEventsPerRun,
+            max_events_total = maxEvents,
+            max_files_per_run = maxFilesPerRun
         )
         return file_start_length_list
 
