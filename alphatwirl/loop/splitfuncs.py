@@ -38,7 +38,13 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
         nevents[i] += nev
         if max_events_per_run > nevents[i]:
             length[i] = nevents[i]
-            continue
+        elif max_events_per_run == nevents[i]:
+            length[i] = nevents[i]
+            i += 1
+            files.append([ ])
+            nevents.append(0)
+            start.append(0)
+            length.append(0)
         else:
             dlength = max_events_per_run - length[i]
             length[i] = max_events_per_run
@@ -48,7 +54,7 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
             nevents.append(nevents[i-1] - length[i-1])
             start.append(dlength)
 
-            while max_events_per_run <= nevents[i]:
+            while max_events_per_run < nevents[i]:
                 length.append(max_events_per_run)
 
                 i += 1
@@ -58,6 +64,7 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
 
             length.append(nevents[i])
 
+    # print files, nevents, start, length
     ret = zip(files, start, length)
 
     return ret
