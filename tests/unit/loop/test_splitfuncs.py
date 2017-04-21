@@ -68,14 +68,111 @@ class TestSplitfuncs(unittest.TestCase):
         expected = [ ]
         self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
 
-    def test_file_start_length_list_01(self):
-        args = ([('A', 100), ('B', 20)], 110, 2)
+    def test_file_start_length_list_empty_01(self):
+        args = ([ ], 20, 2) # empty file list
+        expected = [ ]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 0)], 20, 2) # no events
+        expected = [ ]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 0), ('B', 0), ('C', 0)], 20, 2) # no events
+        expected = [ ]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 0), ('B', 10), ('C', 0)], 20, 2) # no events in some files
+        expected = [(['B'], 0, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 0), ('B', 20), ('C', 0)], 20, 2) # the last file has no events
+                                                        # the 2nd last has max_events_per_run
+        expected = [(['B'], 0, 20)] # shouldn't be [(['B'], 0, 20), ([ ], 0, 0)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 0), ('C', 0)], 20, 2)
+        expected = [(['A'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_list_onefile_01(self):
+        args = ([('A', 20)], 30, 2)
+        expected = [(['A'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20)], 20, 2)
+        expected = [(['A'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20)], 10, 2)
+        expected = [(['A'], 0, 10), (['A'], 10, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20)], 7, 2)
+        expected = [(['A'], 0, 7), (['A'], 7, 7), (['A'], 14, 6)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_twofiles_01(self):
+
+        args = ([('A', 20), ('B', 20)], 20, 2) # exact
+        expected = [(['A'], 0, 20), (['B'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 25)], 20, 2) # exact first file
+        expected = [(['A'], 0, 20), (['B'], 0, 20), (['B'], 20, 5)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 40), ('B', 25)], 20, 2) # twice the exact first file
+        expected = [(['A'], 0, 20), (['A'], 20, 20), (['B'], 0, 20), (['B'], 20, 5)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 60), ('B', 25)], 20, 2) # three times the exact first file
+        expected = [(['A'], 0, 20), (['A'], 20, 20), (['A'], 40, 20), (['B'], 0, 20), (['B'], 20, 5)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 20)], 110, 2) # short first file
         expected = [(['A', 'B'], 0, 110), (['B'], 10, 10)]
         self.assertEqual(expected, _file_start_length_list(*args))
 
-    def test_file_start_length_list_02(self):
-        args = ([('A', 100), ('B', 30)], 30, 2)
+        args = ([('A', 20), ('B', 25)], 30, 2) # short first file
+        expected = [(['A', 'B'], 0, 30), (['B'], 10, 15)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 100)], 30, 2) # short first file
+        expected = [(['A', 'B'], 0, 30), (['B'], 10, 30), (['B'], 40, 30), (['B'], 70, 30)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 30)], 30, 2) # long first file
         expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B'], 90, 30), (['B'], 20, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_twofiles_02_maxfile1(self):
+
+        args = ([('A', 20), ('B', 20)], 20, 1) # exact
+        expected = [(['A'], 0, 20), (['B'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 25)], 20, 1) # exact fist file
+        expected = [(['A'], 0, 20), (['B'], 0, 20), (['B'], 20, 5)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 20)], 110, 1) # short first file
+        expected = [(['A'], 0, 100), (['B'], 0, 20)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 25)], 30, 1) # short first file
+        expected = [(['A'], 0, 20), (['B'], 0, 25)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 20), ('B', 100)], 30, 1) # short first file
+        expected = [(['A'], 0, 20), (['B'], 0, 30), (['B'], 30, 30), (['B'], 60, 30), (['B'], 90, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 30)], 30, 1) # long first file
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A'], 90, 10), (['B'], 0, 30)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 90), ('B', 30)], 30, 1) # long first file
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['B'], 0, 30)]
         self.assertEqual(expected, _file_start_length_list(*args))
 
     def test_file_start_length_list_03(self):
@@ -86,21 +183,6 @@ class TestSplitfuncs(unittest.TestCase):
     def test_file_start_length_list_04(self):
         args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, 10)
         expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B', 'C', 'D'], 90, 30), (['D'], 8, 30), (['D'], 38, 30), (['D'], 68, 30), (['D'], 98, 2)]
-        self.assertEqual(expected, _file_start_length_list(*args))
-
-    def test_file_start_length_list_05(self):
-        args = ([('A', 20), ('B', 25)], 30, 2)
-        expected = [(['A', 'B'], 0, 30), (['B'], 10, 15)]
-        self.assertEqual(expected, _file_start_length_list(*args))
-
-    def test_file_start_length_list_06(self):
-        args = ([('A', 20), ('B', 100)], 30, 2)
-        expected = [(['A', 'B'], 0, 30), (['B'], 10, 30), (['B'], 40, 30), (['B'], 70, 30)]
-        self.assertEqual(expected, _file_start_length_list(*args))
-
-    def test_file_start_length_list_07(self):
-        args = ([('A', 20), ('B', 25)], 20, 2)
-        expected = [(['A'], 0, 20), (['B'], 0, 20), (['B'], 20, 5)]
         self.assertEqual(expected, _file_start_length_list(*args))
 
     def test_start_length_pairs_for_split_lists(self):
