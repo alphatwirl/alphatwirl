@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
+import logging
 
 import ROOT
 
@@ -29,9 +30,16 @@ class EventBuilderConfigMaker(object):
 
     def nevents_in_file(self, path):
         load_delphes()
-        file = ROOT.TFile.Open(path)
-        tree = file.Get(self.treeName)
-        return tree.GetEntries() # GetEntries() is slow. call only as
-                                 # many times as necessary
+        try:
+            file = ROOT.TFile.Open(path)
+            tree = file.Get(self.treeName)
+            return tree.GetEntries() # GetEntries() is slow. call only as
+                                     # many times as necessary
+        except StandardError as e:
+            logger = logging.getLogger(__name__)
+            logger.warning(str(e))
+            logger.warning(path)
+            logger.warning('returning 0')
+            return 0
 
 ##__________________________________________________________________||
