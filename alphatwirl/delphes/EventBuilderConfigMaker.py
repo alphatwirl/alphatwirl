@@ -10,9 +10,9 @@ class EventBuilderConfigMaker(object):
     def __init__(self):
         self.treeName = 'Delphes'
 
-    def create_config_for(self, dataset, file_, start, length):
+    def create_config_for(self, dataset, files, start, length):
         config = EventBuilderConfig(
-            inputPath = file_,
+            inputPaths = files,
             treeName = self.treeName,
             maxEvents = length,
             start = start,

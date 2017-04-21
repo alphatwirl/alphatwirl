@@ -6,7 +6,7 @@ import collections
 ##__________________________________________________________________||
 EventBuilderConfig = collections.namedtuple(
     'EventBuilderConfig',
-    'inputPath treeName maxEvents start name'
+    'inputPaths treeName maxEvents start name'
 )
 # 'name' is used by loop.EventLoopProgressReportWriter
 

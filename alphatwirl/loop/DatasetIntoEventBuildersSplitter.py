@@ -84,8 +84,8 @@ class DatasetIntoEventBuildersSplitter(object):
 
     def _create_configs(self, dataset, file_start_length_list):
         configs = [ ]
-        for file_, start, length in file_start_length_list:
-            config = self.eventBuilderConfigMaker.create_config_for(dataset, file_, start, length)
+        for files, start, length in file_start_length_list:
+            config = self.eventBuilderConfigMaker.create_config_for(dataset, files, start, length)
             configs.append(config)
         return configs
 ##__________________________________________________________________||

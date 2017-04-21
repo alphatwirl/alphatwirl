@@ -6,7 +6,7 @@ import collections
 ##__________________________________________________________________||
 EventBuilderConfig = collections.namedtuple(
     'EventBuilderConfig',
-    'inputPath treeName maxEvents start dataset name'
+    'inputPaths treeName maxEvents start dataset name'
 )
 
 ##__________________________________________________________________||

@@ -70,7 +70,7 @@ class TestEventBuilderConfigMaker(unittest.TestCase):
 
         expected = EventBuilderConfig(
             base = BaseEventBuilderConfig(
-                inputPath = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
+                inputPaths = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
                 treeName = 'tree',
                 maxEvents = 30,
                 start = 20,
@@ -81,7 +81,7 @@ class TestEventBuilderConfigMaker(unittest.TestCase):
 
         actual = obj.create_config_for(
             component,
-            file_ = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root',
+            files = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
             start = 20,
             length = 30
         )
