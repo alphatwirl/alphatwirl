@@ -3,6 +3,7 @@ import unittest
 
 from alphatwirl.loop.splitfuncs import *
 from alphatwirl.loop.splitfuncs import _apply_max_events_total
+from alphatwirl.loop.splitfuncs import _file_start_length_list
 from alphatwirl.loop.splitfuncs import _start_length_pairs_for_split_lists
 from alphatwirl.loop.splitfuncs import _minimum_positive_value
 
@@ -66,6 +67,21 @@ class TestSplitfuncs(unittest.TestCase):
         max_events_total = 10
         expected = [ ]
         self.assertEqual(expected, _apply_max_events_total(file_nevents_list, max_events_total))
+
+    def test_file_start_length_list_01(self):
+        args = ([('A', 100), ('B', 20)], 110, 2)
+        expected = [(['A', 'B'], 0, 110), (['B'], 10, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_list_02(self):
+        args = ([('A', 100), ('B', 30)], 30, 2)
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B'], 90, 30), (['B'], 20, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+    def test_file_start_length_list_03(self):
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 30)], 30, 10)
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B', 'C', 'D'], 90, 30), (['D'], 8, 22)]
+        self.assertEqual(expected, _file_start_length_list(*args))
 
     def test_start_length_pairs_for_split_lists(self):
         self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], _start_length_pairs_for_split_lists(40, 10))

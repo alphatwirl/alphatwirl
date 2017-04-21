@@ -26,6 +26,43 @@ def _apply_max_events_total(file_nevents_list, max_events_total = -1):
     return ret
 
 ##__________________________________________________________________||
+def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run):
+
+    files = [[ ]]
+    nevents = [0]
+    start = [0]
+    length = [0]
+    i = 0
+    for file_, nev in file_nevents_list:
+        files[i].append(file_)
+        nevents[i] += nev
+        if max_events_per_run > nevents[i]:
+            length[i] = nevents[i]
+            continue
+        else:
+            dlength = max_events_per_run - length[i]
+            length[i] = max_events_per_run
+
+            i += 1
+            files.append([file_])
+            nevents.append(nevents[i-1] - length[i-1])
+            start.append(dlength)
+
+            while max_events_per_run <= nevents[i]:
+                length.append(max_events_per_run)
+
+                i += 1
+                files.append([file_])
+                nevents.append(nevents[i-1] - length[i-1])
+                start.append(start[i-1] + length[i-1])
+
+            length.append(nevents[i])
+
+    ret = zip(files, start, length)
+
+    return ret
+
+##__________________________________________________________________||
 def _start_length_pairs_for_split_lists(ntotal, max_per_list):
     # e.g., ntotal =  35, max_per_list = 10
 
