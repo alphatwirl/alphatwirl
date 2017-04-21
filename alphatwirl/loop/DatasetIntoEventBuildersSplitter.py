@@ -34,7 +34,8 @@ class DatasetIntoEventBuildersSplitter(object):
             dataset,
             maxEvents = self.maxEvents,
             maxEventsPerRun = self.maxEventsPerRun,
-            maxFiles = self.maxFiles
+            maxFiles = self.maxFiles,
+            maxFilesPerRun = self.maxFilesPerRun
         )
         configs = self._create_configs(dataset, file_start_length_list)
         eventBuilders = [self.EventBuilder(c) for c in configs]
