@@ -185,6 +185,18 @@ class TestSplitfuncs(unittest.TestCase):
         expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B', 'C', 'D'], 90, 30), (['D'], 8, 30), (['D'], 38, 30), (['D'], 68, 30), (['D'], 98, 2)]
         self.assertEqual(expected, _file_start_length_list(*args))
 
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, 3)
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B', 'C'], 90, 22), (['D'], 0, 30), (['D'], 30, 30), (['D'], 60, 30), (['D'], 90, 10)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('C', 7), ('D', 100)], 30, 2)
+        expected = [(['C', 'D'], 0, 30), (['D'], 23, 30), (['D'], 53, 30), (['D'], 83, 17)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
+        args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 30, 2)
+        expected = [(['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B'], 90, 15), (['C', 'D'], 0, 30), (['D'], 23, 30), (['D'], 53, 30), (['D'], 83, 17)]
+        self.assertEqual(expected, _file_start_length_list(*args))
+
     def test_start_length_pairs_for_split_lists(self):
         self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10)], _start_length_pairs_for_split_lists(40, 10))
         self.assertEqual([(0, 10), (10, 10), (20, 10), (30, 10), (40, 1)], _start_length_pairs_for_split_lists(41, 10))
