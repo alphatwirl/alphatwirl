@@ -33,8 +33,8 @@ class EventBuilderConfigMaker(object):
         try:
             file = ROOT.TFile.Open(path)
             tree = file.Get(self.treeName)
-            return tree.GetEntries() # GetEntries() is slow. call only as
-                                     # many times as necessary
+            return tree.GetEntriesFast()
+
         except StandardError as e:
             logger = logging.getLogger(__name__)
             logger.warning(str(e))
