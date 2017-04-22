@@ -43,6 +43,7 @@ class MockDispatcher(object):
         self.npolled = 0
         self.run_returns = collections.deque()
         self.poll_returns = collections.deque()
+        self.failed_runids_args = [ ]
 
     def run(self, workingArea, package_index):
         self.runargs.append([workingArea, package_index])
@@ -51,6 +52,9 @@ class MockDispatcher(object):
     def poll(self):
         self.npolled += 1
         return self.poll_returns.popleft()
+
+    def failed_runids(self, runids):
+        self.failed_runids_args.append(runids)
 
     def terminate(self):
         self.nterminated += 1
@@ -121,6 +125,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         self.assertEqual(0, dispatcher.npolled)
         self.assertEqual([result0, result1], obj.receive())
         self.assertEqual(1, dispatcher.npolled)
+        self.assertEqual([[ ]], dispatcher.failed_runids_args)
 
         #
         # close
@@ -173,6 +178,7 @@ class TestTaskPackageDropbox(unittest.TestCase):
         self.assertEqual(0, dispatcher.npolled)
         self.assertEqual([result0, result1, result2], obj.receive())
         self.assertEqual(3, dispatcher.npolled)
+        self.assertEqual([[ ], [ ], [ ]], dispatcher.failed_runids_args)
 
         #
         # close
@@ -230,6 +236,8 @@ class TestTaskPackageDropbox(unittest.TestCase):
         self.assertEqual([result0, result1, result2], obj.receive())
 
         self.assertEqual(4, dispatcher.npolled)
+
+        self.assertEqual([[1003], [ ], [1004], [ ]], dispatcher.failed_runids_args)
 
         #
         # close

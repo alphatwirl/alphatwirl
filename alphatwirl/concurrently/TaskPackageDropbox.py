@@ -55,6 +55,10 @@ class TaskPackageDropbox(object):
                 succeeded = [e for e in runid_pkgidx_result if e not in failed]
                 # e.g., [(1001, 0, result0)]
 
+                # let the dispatcher know the failed runid
+                failed_runid = [e[0] for e in failed]
+                self.dispatcher.failed_runids(failed_runid)
+
                 # rerun failed jobs
                 for _, pkgidx, _ in failed:
                     logger = logging.getLogger(__name__)
