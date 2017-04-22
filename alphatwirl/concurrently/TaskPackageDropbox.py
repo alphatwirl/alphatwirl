@@ -36,34 +36,37 @@ class TaskPackageDropbox(object):
         self.runid_package_index_map[runid] = package_index
 
     def receive(self):
-        package_index_result_pairs = [ ] # a list of (package_index, _result)
+        pkgidx_result_pairs = [ ] # a list of (package_index, _result)
         try:
             while self.runid_package_index_map:
 
                 finished_runid = self.dispatcher.poll()
                 # e.g., [1001, 1003]
 
-                package_indices = [self.runid_package_index_map.pop(i) for i in finished_runid]
-                # e.g., [0, 2]
+                runid_pkgidx = [(i, self.runid_package_index_map.pop(i)) for i in finished_runid]
+                # e.g., [(1001, 0), (1003, 2)]
 
-                pairs = [(i, self.workingArea.collect_result(i)) for i in package_indices]
-                # e.g., [(0, result0), (2, None)] # None indicates the job failed
+                runid_pkgidx_result = [(ri, pi, self.workingArea.collect_result(pi)) for ri, pi in runid_pkgidx]
+                # e.g., [(1001, 0, result0), (1003, 2, None)] # None indicates the job failed
 
-                failed_package_indices = [i for i, r in pairs if r is None]
-                # e.g., [2]
+                failed = [e for e in runid_pkgidx_result if e[2] is None]
+                # e.g., [(1003, 2, None)]
 
-                pairs = [(i, r) for i, r in pairs if i not in failed_package_indices]
-                # e.g., [(0, result0)] # only successful ones
+                succeeded = [e for e in runid_pkgidx_result if e not in failed]
+                # e.g., [(1001, 0, result0)]
 
                 # rerun failed jobs
-                for package_index in failed_package_indices:
+                for _, pkgidx, _ in failed:
                     logger = logging.getLogger(__name__)
-                    logger.warning('resubmitting {}'.format(self.workingArea.package_path(package_index)))
+                    logger.warning('resubmitting {}'.format(self.workingArea.package_path(pkgidx)))
 
-                    runid = self.dispatcher.run(self.workingArea, package_index)
-                    self.runid_package_index_map[runid] = package_index
+                    runid = self.dispatcher.run(self.workingArea, pkgidx)
+                    self.runid_package_index_map[runid] = pkgidx
 
-                package_index_result_pairs.extend(pairs)
+                pairs = [(pkgidx, result) for runid, pkgidx, result in succeeded]
+                # e.g., [(0, result0)] # only successful ones
+
+                pkgidx_result_pairs.extend(pairs)
 
                 time.sleep(self.sleep)
 
@@ -73,9 +76,9 @@ class TaskPackageDropbox(object):
             self.dispatcher.terminate()
 
         # sort in the order of package_index
-        package_index_result_pairs = sorted(package_index_result_pairs, key = itemgetter(0))
+        pkgidx_result_pairs = sorted(pkgidx_result_pairs, key = itemgetter(0))
 
-        results = [result for i, result in package_index_result_pairs]
+        results = [result for i, result in pkgidx_result_pairs]
         return results
 
     def close(self):
