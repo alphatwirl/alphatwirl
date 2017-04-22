@@ -88,6 +88,8 @@ class TestSubprocessRunner(unittest.TestCase):
             open(os.path.join(self.workingArea.path, 'ccc', 'result.txt')).read()
         )
 
+        obj.failed_runids([])
+
         obj.terminate()
 
     def test_run_poll_terminate(self):

@@ -140,6 +140,16 @@ class HTCondorJobSubmitter(object):
             time.sleep(sleep)
         return self.clusterids_finished
 
+    def failed_runids(self, runids):
+        # remove failed clusterids from self.clusterids_finished
+        # so that len(self.clusterids_finished)) becomes the number
+        # of the successfully finished jobs
+        for i in runids:
+            try:
+                self.clusterids_finished.remove(i)
+            except ValueError:
+                pass
+
     def terminate(self):
         n_at_a_time = 500
         ids_split = [self.clusterids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterids_outstanding), n_at_a_time)]

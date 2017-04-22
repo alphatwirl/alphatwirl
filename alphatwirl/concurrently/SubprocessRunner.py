@@ -28,7 +28,7 @@ class SubprocessRunner(object):
             cwd = taskdir
         )
         self.running_procs.append(proc)
-        return proc.pid
+        return proc.pid # as runid
 
     def poll(self):
         """check if the jobs are running and return a list of pids for
@@ -44,7 +44,7 @@ class SubprocessRunner(object):
             ## self.pipe = True. Otherwise they are (None, None)
 
         finished_pids = [p.pid for p in  finished_procs]
-        return finished_pids
+        return finished_pids # as runids
 
     def wait(self):
         """wait until all jobs finish and return a list of pids
@@ -52,7 +52,10 @@ class SubprocessRunner(object):
         finished_pids = [ ]
         while self.running_procs:
             finished_pids.extend(self.poll())
-        return finished_pids
+        return finished_pids # as runids
+
+    def failed_runids(self, runids):
+        pass
 
     def terminate(self):
         while self.running_procs:
