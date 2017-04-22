@@ -27,7 +27,7 @@ HTCONDOR_JOBSTATUS = {
 
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
-    def __init__(self):
+    def __init__(self, job_desc_extra = [ ]):
 
         self.job_desc_template = """
         Executable = {job_script}
@@ -46,6 +46,11 @@ class HTCondorJobSubmitter(object):
         queue 1
         """
         self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
+
+        if job_desc_extra:
+            job_desc_list = self.job_desc_template.split('\n')
+            job_desc_list[-1:-1] = job_desc_extra
+            self.job_desc_template = '\n'.join(job_desc_list)
 
         self.clusterids_outstanding = [ ]
         self.clusterids_finished = [ ]
