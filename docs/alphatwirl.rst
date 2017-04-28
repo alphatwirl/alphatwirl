@@ -11,11 +11,12 @@ Subpackages
     alphatwirl.collector
     alphatwirl.concurrently
     alphatwirl.configure
-    alphatwirl.events
+    alphatwirl.delphes
     alphatwirl.heppyresult
     alphatwirl.loop
     alphatwirl.misc
     alphatwirl.progressbar
+    alphatwirl.roottree
     alphatwirl.summary
 
 Module contents

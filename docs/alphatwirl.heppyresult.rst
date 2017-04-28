@@ -12,14 +12,6 @@ alphatwirl.heppyresult.Analyzer module
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.heppyresult.BEventBuilder module
--------------------------------------------
-
-.. automodule:: alphatwirl.heppyresult.BEventBuilder
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 alphatwirl.heppyresult.Component module
 ---------------------------------------
 
