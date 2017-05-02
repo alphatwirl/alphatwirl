@@ -1,5 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-import ROOT
+try:
+    import ROOT
+except ImportError:
+    pass
 
 _loaded = False
 
