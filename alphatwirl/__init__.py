@@ -9,6 +9,7 @@ import loop
 import progressbar
 import summary
 import delphes
+import cmsedm
 from misc import mkdir_p
 from misc import listToAlignedText
 from misc import quote_string
