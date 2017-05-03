@@ -1,4 +1,5 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.290223.svg)](https://doi.org/10.5281/zenodo.290223)
+[![DOI](https://zenodo.org/badge/30841569.svg)](https://zenodo.org/badge/latestdoi/30841569)
+
 
 [<img src="images/AlphaTwirl.png" width="500">](images/AlphaTwirl.png?raw=true)
 
