@@ -1,7 +1,7 @@
 
-##### How to run the unit tests.
+#### How to run the unit tests.
 
-###### Run all tests
+##### Run all tests
 
 The arguments depend on where you are.
 
@@ -20,7 +20,7 @@ from further up:
 python -m unittest discover -s ./AlphaTwirl/tests/unit -t ./AlphaTwirl/
 ```
 
-###### Run a particular test
+##### Run a particular test
 
 from the top directory of AlphaTwirl (one directory up from this directory):
 ```
