@@ -2,15 +2,14 @@
 from Round import Round
 import math
 
-##__________________________________________________________________||
-def returnTrue(x): return True
+from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class RoundLog(object):
     def __init__(self, width = 0.1, aboundary = 1,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue):
+                 valid = ReturnTrue()):
 
         self._round = Round(width = width, aboundary = math.log10(aboundary))
         self.width = width

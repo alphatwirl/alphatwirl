@@ -1,13 +1,12 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##__________________________________________________________________||
-def returnTrue(x): return True
+from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class Binning(object):
     def __init__(self, boundaries = None, lows = None, ups = None,
                  retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
-                 valid = returnTrue):
+                 valid = ReturnTrue()):
 
         if boundaries is None:
             if lows is None or ups is None:

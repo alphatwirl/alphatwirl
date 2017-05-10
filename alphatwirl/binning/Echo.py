@@ -1,14 +1,20 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##__________________________________________________________________||
-def returnTrue(x): return True
+from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
-def plusOne(x): return x + 1
+class PlusOne(object):
+    def __repr__(self):
+        return '{}()'.format(
+            self.__class__.__name__,
+        )
+
+    def __call__(self, x):
+        return x + 1
 
 ##__________________________________________________________________||
 class Echo(object):
-    def __init__(self, nextFunc = plusOne, valid = returnTrue):
+    def __init__(self, nextFunc = PlusOne(), valid = ReturnTrue()):
         self._nextFunc = nextFunc
         self._valid = valid
 

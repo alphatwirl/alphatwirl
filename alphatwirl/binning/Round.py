@@ -4,15 +4,14 @@ import math
 import collections
 import logging
 
-##__________________________________________________________________||
-def returnTrue(x): return True
+from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class Round(object):
     def __init__(self, width = 1, aboundary = None,
                  min = None, underflow_bin = None,
                  max = None, overflow_bin = None,
-                 valid = returnTrue):
+                 valid = ReturnTrue()):
 
         self.width = width
         self.aboundary = aboundary
