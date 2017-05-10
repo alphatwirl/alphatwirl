@@ -26,11 +26,6 @@ class TestImport_01(unittest.TestCase):
 
     @unittest.skipUnless(hasPandas, "has no pandas")
     def test_with_pandas(self):
-        self.assertTrue(inspect.isfunction(alphatwirl.aggregate.combine_mc_yields_in_datasets_into_xsec_in_processes))
-        self.assertTrue(inspect.isfunction(alphatwirl.aggregate.stack_counts_categories))
-        self.assertTrue(inspect.isfunction(alphatwirl.aggregate.sum_over_categories))
-        self.assertTrue(inspect.isfunction(alphatwirl.aggregate.keep_dtype))
-
         self.assertTrue(inspect.isclass(alphatwirl.collector.CombineIntoPandasDataFrame))
         self.assertTrue(inspect.isclass(alphatwirl.collector.WritePandasDataFrameToFile))
 
