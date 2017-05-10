@@ -16,6 +16,12 @@ class Combine(object):
         self._high = high
         self._at = at
 
+    def __repr__(self):
+        return '{}(low = {!r}, high = {!r}), at = {!r})'.format(
+            self.__class__.__name__,
+            self._low, self._high, self._at
+        )
+
     def __call__(self, val):
         if val < self._at:
             return self._low(val)
