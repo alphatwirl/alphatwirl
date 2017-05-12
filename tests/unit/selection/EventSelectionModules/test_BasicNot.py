@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.basic import EventSelectionNot
+from alphatwirl.selection.EventSelectionModules.basic import Not
 import unittest
 
 ##__________________________________________________________________||
@@ -23,11 +23,11 @@ class MockEventSelection(object):
         self.isEndCalled = True
 
 ##__________________________________________________________________||
-class Test_EventSelectionNot(unittest.TestCase):
+class Test_Not(unittest.TestCase):
 
     def test_one(self):
         selection = MockEventSelection()
-        obj = EventSelectionNot(selection)
+        obj = Not(selection)
 
         self.assertFalse(selection.isBeginCalled)
         self.assertFalse(selection.isEndCalled)

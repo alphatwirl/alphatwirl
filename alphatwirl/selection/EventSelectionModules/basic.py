@@ -73,7 +73,7 @@ class Any(object):
             if hasattr(s, 'end'): s.end()
 
 ##__________________________________________________________________||
-class EventSelectionNot(object):
+class Not(object):
     """select events that do NOT pass the selection
 
     """

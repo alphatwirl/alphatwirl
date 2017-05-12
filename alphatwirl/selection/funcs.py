@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from .EventSelectionModules.basic import All
 from .EventSelectionModules.basic import Any
-from .EventSelectionModules.basic import EventSelectionNot
+from .EventSelectionModules.basic import Not
 from .EventSelectionModules.LambdaStr import LambdaStr
 from .EventSelectionFactories.FactoryDispatcher import FactoryDispatcher
 
@@ -18,7 +18,7 @@ def build_selection(**kargs):
 
     if 'AllClass' not in kargs: kargs['AllClass'] = All
     if 'AnyClass' not in kargs: kargs['AnyClass'] = Any
-    if 'NotClass' not in kargs: kargs['NotClass'] = EventSelectionNot
+    if 'NotClass' not in kargs: kargs['NotClass'] = Not
     if 'LambdaStrClass' not in kargs: kargs['LambdaStrClass'] = LambdaStr
 
     return FactoryDispatcher(**kargs)
