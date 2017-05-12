@@ -3,7 +3,7 @@ import unittest
 
 from alphatwirl.selection import build_selection
 from alphatwirl.selection.EventSelectionModules.basic import All
-from alphatwirl.selection.EventSelectionModules.basic import EventSelectionAny
+from alphatwirl.selection.EventSelectionModules.basic import Any
 from alphatwirl.selection.EventSelectionModules.basic import EventSelectionNot
 from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
 
@@ -50,7 +50,7 @@ class Test_buildSelection(unittest.TestCase):
             )
 
         self.assertIs(All, obj.pop('AllClass'))
-        self.assertIs(EventSelectionAny, obj.pop('AnyClass'))
+        self.assertIs(Any, obj.pop('AnyClass'))
         self.assertIs(EventSelectionNot, obj.pop('NotClass'))
         self.assertIs(LambdaStr, obj.pop('LambdaStrClass'))
         obj.pop('aliasDict')

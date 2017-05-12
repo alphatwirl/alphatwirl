@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.basic import EventSelectionAny
+from alphatwirl.selection.EventSelectionModules.basic import Any
 import unittest
 
 ##__________________________________________________________________||
@@ -22,10 +22,10 @@ class MockEventSelection(object):
         self.isEndCalled = True
 
 ##__________________________________________________________________||
-class Test_EventSelectionAny(unittest.TestCase):
+class Test_Any(unittest.TestCase):
 
     def test_standard(self):
-        obj = EventSelectionAny()
+        obj = Any()
         selection1 = MockEventSelection()
         selection2 = MockEventSelection()
 

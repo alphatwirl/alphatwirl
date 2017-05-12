@@ -37,7 +37,7 @@ class All(object):
             if hasattr(s, 'end'): s.end()
 
 ##__________________________________________________________________||
-class EventSelectionAny(object):
+class Any(object):
     """select events that meet any of the conditions
 
     """
