@@ -2,7 +2,7 @@
 import unittest
 import copy
 
-from ...EventSelectionModules.EventSelectionAllCount import Count
+from alphatwirl.selection.EventSelectionModules.EventSelectionAllCount import Count
 
 ##__________________________________________________________________||
 class MockEventSelection(object):

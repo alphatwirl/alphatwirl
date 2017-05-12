@@ -1,10 +1,11 @@
+import sys
 import unittest
 
-from .. import buildEventSelection
-from ..EventSelectionModules.EventSelectionAll import EventSelectionAll
-from ..EventSelectionModules.EventSelectionAny import EventSelectionAny
-from ..EventSelectionModules.EventSelectionNot import EventSelectionNot
-from ..EventSelectionModules.LambdaStr import LambdaStr
+from alphatwirl.selection import buildEventSelection
+from alphatwirl.selection.EventSelectionModules.EventSelectionAll import EventSelectionAll
+from alphatwirl.selection.EventSelectionModules.EventSelectionAny import EventSelectionAny
+from alphatwirl.selection.EventSelectionModules.EventSelectionNot import EventSelectionNot
+from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
 
 ##__________________________________________________________________||
 class MockFactoryDispatcher(object):
@@ -15,11 +16,12 @@ class MockFactoryDispatcher(object):
 class Test_buildEventSelection(unittest.TestCase):
 
     def setUp(self):
-        self._org_FactoryDispatcher = buildEventSelection.FactoryDispatcher
-        buildEventSelection.FactoryDispatcher = MockFactoryDispatcher()
+        self.module = sys.modules['alphatwirl.selection.buildEventSelection']
+        self._org_FactoryDispatcher = self.module.FactoryDispatcher
+        self.module.FactoryDispatcher = MockFactoryDispatcher()
 
     def tearDown(self):
-        buildEventSelection.FactoryDispatcher = self._org_FactoryDispatcher
+        self.module.FactoryDispatcher = self._org_FactoryDispatcher
 
     def test_call_kargs(self):
 
@@ -29,7 +31,7 @@ class Test_buildEventSelection(unittest.TestCase):
             level = dict(factory = 'test_level1', arg2 = 2, arg3 = 3)
         )
 
-        obj = buildEventSelection.buildEventSelection(**kargs)
+        obj = buildEventSelection(**kargs)
 
         self.assertIsNot(kargs, obj)
         obj.pop('AllClass')
@@ -41,7 +43,7 @@ class Test_buildEventSelection(unittest.TestCase):
 
     def test_call_default_modules(self):
 
-        obj = buildEventSelection.buildEventSelection(
+        obj = buildEventSelection(
             arg1 = 10,
             arg2 = 20,
             level = dict(factory = 'test_level1', arg2 = 2, arg3 = 3)

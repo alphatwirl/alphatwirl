@@ -1,5 +1,5 @@
-from ...EventSelectionFactories.LambdaStrFromDictFactory import LambdaStrFromDictFactory
-from ...EventSelectionModules.LambdaStr import LambdaStr
+from alphatwirl.selection.EventSelectionFactories.LambdaStrFromDictFactory import LambdaStrFromDictFactory
+from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
 import unittest
 
 ##__________________________________________________________________||
