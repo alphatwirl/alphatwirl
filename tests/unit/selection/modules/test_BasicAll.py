@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.modules.basic import All
+from alphatwirl.selection.modules import All
 import unittest
 
 ##__________________________________________________________________||

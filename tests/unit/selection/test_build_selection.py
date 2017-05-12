@@ -2,9 +2,9 @@ import sys
 import unittest
 
 from alphatwirl.selection import build_selection
-from alphatwirl.selection.modules.basic import All
-from alphatwirl.selection.modules.basic import Any
-from alphatwirl.selection.modules.basic import Not
+from alphatwirl.selection.modules import All
+from alphatwirl.selection.modules import Any
+from alphatwirl.selection.modules import Not
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
 
 ##__________________________________________________________________||
