@@ -4,7 +4,7 @@ import copy
 from .Count import Count
 
 ##__________________________________________________________________||
-class EventSelectionAnyCount(object):
+class AnywCount(object):
     """select events that meet all conditions
 
     """

@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.EventSelectionNotCount import EventSelectionNotCount
+from alphatwirl.selection.EventSelectionModules.EventSelectionNotCount import NotwCount
 import unittest
 
 ##__________________________________________________________________||
@@ -23,12 +23,12 @@ class MockEventSelection(object):
         self.is_end_called = True
 
 ##__________________________________________________________________||
-class Test_EventSelectionNotCount(unittest.TestCase):
+class Test_NotwCount(unittest.TestCase):
 
     def test_standard(self):
 
         sel1 = MockEventSelection(name = 'sel1')
-        obj = EventSelectionNotCount(selection = sel1)
+        obj = NotwCount(selection = sel1)
 
         self.assertFalse(sel1.is_begin_called)
 

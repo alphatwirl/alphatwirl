@@ -5,7 +5,7 @@ import copy
 from .Count import Count
 
 ##__________________________________________________________________||
-class EventSelectionNotCount(object):
+class NotwCount(object):
     """select events that do NOT pass the selection
 
     """

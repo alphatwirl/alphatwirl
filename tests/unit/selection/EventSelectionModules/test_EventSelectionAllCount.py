@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.EventSelectionAllCount import EventSelectionAllCount
+from alphatwirl.selection.EventSelectionModules.EventSelectionAllCount import AllwCount
 import unittest
 
 ##__________________________________________________________________||
@@ -23,10 +23,10 @@ class MockEventSelection(object):
         self.is_end_called = True
 
 ##__________________________________________________________________||
-class Test_EventSelectionAllCount(unittest.TestCase):
+class Test_AllwCount(unittest.TestCase):
 
     def test_empty(self):
-        obj = EventSelectionAllCount()
+        obj = AllwCount()
 
         event = MockEvent()
         obj.begin(event)
@@ -38,7 +38,7 @@ class Test_EventSelectionAllCount(unittest.TestCase):
         self.assertEqual([ ], count._results)
 
     def test_standard(self):
-        obj = EventSelectionAllCount()
+        obj = AllwCount()
         sel1 = MockEventSelection(name = 'sel1')
         sel2 = MockEventSelection()
 
@@ -98,9 +98,9 @@ class Test_EventSelectionAllCount(unittest.TestCase):
         #            +- sel (sel3)
         #
 
-        obj = EventSelectionAllCount()
-        obj1 = EventSelectionAllCount('all1')
-        obj2 = EventSelectionAllCount('all2')
+        obj = AllwCount()
+        obj1 = AllwCount('all1')
+        obj2 = AllwCount('all2')
         sel3 = MockEventSelection('sel3')
         sel11 = MockEventSelection('sel11')
         sel12 = MockEventSelection('sel12')
@@ -152,10 +152,10 @@ class Test_EventSelectionAllCount(unittest.TestCase):
         count = obj.results()
         self.assertEqual(
             [
-                [1, 'EventSelectionAllCount', 'all1',  1, 1],
+                [1, 'AllwCount', 'all1',  1, 1],
                 [2, 'MockEventSelection',     'sel11', 1, 1],
                 [2, 'MockEventSelection',     'sel12', 1, 1],
-                [1, 'EventSelectionAllCount', 'all2',  1, 1],
+                [1, 'AllwCount', 'all2',  1, 1],
                 [2, 'MockEventSelection',     'sel21', 1, 1],
                 [2, 'MockEventSelection',     'sel22', 1, 1],
                 [1, 'MockEventSelection',     'sel3',  1, 1],
