@@ -1,7 +1,7 @@
 import sys
 import unittest
 
-from alphatwirl.selection import buildEventSelection
+from alphatwirl.selection import build_selection
 from alphatwirl.selection.EventSelectionModules.EventSelectionAll import EventSelectionAll
 from alphatwirl.selection.EventSelectionModules.EventSelectionAny import EventSelectionAny
 from alphatwirl.selection.EventSelectionModules.EventSelectionNot import EventSelectionNot
@@ -13,10 +13,10 @@ class MockFactoryDispatcher(object):
         return kargs
 
 ##__________________________________________________________________||
-class Test_buildEventSelection(unittest.TestCase):
+class Test_buildSelection(unittest.TestCase):
 
     def setUp(self):
-        self.module = sys.modules['alphatwirl.selection.buildEventSelection']
+        self.module = sys.modules['alphatwirl.selection.funcs']
         self._org_FactoryDispatcher = self.module.FactoryDispatcher
         self.module.FactoryDispatcher = MockFactoryDispatcher()
 
@@ -31,7 +31,7 @@ class Test_buildEventSelection(unittest.TestCase):
             level = dict(factory = 'test_level1', arg2 = 2, arg3 = 3)
         )
 
-        obj = buildEventSelection(**kargs)
+        obj = build_selection(**kargs)
 
         self.assertIsNot(kargs, obj)
         obj.pop('AllClass')
@@ -43,7 +43,7 @@ class Test_buildEventSelection(unittest.TestCase):
 
     def test_call_default_modules(self):
 
-        obj = buildEventSelection(
+        obj = build_selection(
             arg1 = 10,
             arg2 = 20,
             level = dict(factory = 'test_level1', arg2 = 2, arg3 = 3)

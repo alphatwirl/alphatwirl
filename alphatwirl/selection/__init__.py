@@ -1,1 +1,1 @@
-from buildEventSelection import buildEventSelection
+from funcs import build_selection

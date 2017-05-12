@@ -12,7 +12,7 @@ thisDir = os.path.dirname(os.path.realpath(__file__))
 if not thisDir in sys.path: sys.path.append(thisDir)
 
 ##__________________________________________________________________||
-def buildEventSelection(**kargs):
+def build_selection(**kargs):
 
     if 'aliasDict' not in kargs: kargs['aliasDict'] = { }
 
