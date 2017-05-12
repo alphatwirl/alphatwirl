@@ -1,8 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from .EventSelectionModules.basic import All
-from .EventSelectionModules.basic import Any
-from .EventSelectionModules.basic import Not
-from .EventSelectionModules.LambdaStr import LambdaStr
+from .modules.basic import All
+from .modules.basic import Any
+from .modules.basic import Not
+from .modules.LambdaStr import LambdaStr
 from .EventSelectionFactories.FactoryDispatcher import FactoryDispatcher
 
 import os, sys

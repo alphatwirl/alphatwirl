@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.with_count import AnywCount
+from alphatwirl.selection.modules.with_count import AllwCount
 import unittest
 
 ##__________________________________________________________________||
@@ -23,22 +23,22 @@ class MockEventSelection(object):
         self.is_end_called = True
 
 ##__________________________________________________________________||
-class Test_AnywCount(unittest.TestCase):
+class Test_AllwCount(unittest.TestCase):
 
     def test_empty(self):
-        obj = AnywCount()
+        obj = AllwCount()
 
         event = MockEvent()
         obj.begin(event)
 
         event = MockEvent()
-        self.assertFalse(obj(event))
+        self.assertTrue(obj(event))
 
         count = obj.results()
         self.assertEqual([ ], count._results)
 
     def test_standard(self):
-        obj = AnywCount()
+        obj = AllwCount()
         sel1 = MockEventSelection(name = 'sel1')
         sel2 = MockEventSelection()
 
@@ -58,18 +58,18 @@ class Test_AnywCount(unittest.TestCase):
 
         event = MockEvent()
         sel1.ret = True   # 1/1
-        sel2.ret = True   # 0/0
+        sel2.ret = True   # 1/1
         self.assertTrue(obj(event))
 
         event = MockEvent()
         sel1.ret = True   # 2/2
-        sel2.ret = False  # 0/0
-        self.assertTrue(obj(event))
+        sel2.ret = False  # 1/2
+        self.assertFalse(obj(event))
 
         event = MockEvent()
         sel1.ret = False  # 2/3
-        sel2.ret = True   # 1/1
-        self.assertTrue(obj.event(event))
+        sel2.ret = True   # 1/2
+        self.assertFalse(obj.event(event))
 
         event = MockEvent()
         sel1.ret = False  # 2/4
@@ -91,16 +91,16 @@ class Test_AnywCount(unittest.TestCase):
 
     def test_nested(self):
         #
-        # any (obj) --- any (obj1) --- sel (sel11)
+        # all (obj) --- all (obj1) --- sel (sel11)
         #            |              +- sel (sel12)
-        #            +- any (obj2) --- sel (sel21)
+        #            +- all (obj2) --- sel (sel21)
         #            |              +- sel (sel22)
         #            +- sel (sel3)
         #
 
-        obj = AnywCount()
-        obj1 = AnywCount('all1')
-        obj2 = AnywCount('all2')
+        obj = AllwCount()
+        obj1 = AllwCount('all1')
+        obj2 = AllwCount('all2')
         sel3 = MockEventSelection('sel3')
         sel11 = MockEventSelection('sel11')
         sel12 = MockEventSelection('sel12')
@@ -152,13 +152,13 @@ class Test_AnywCount(unittest.TestCase):
         count = obj.results()
         self.assertEqual(
             [
-                [1, 'AnywCount', 'all1',  1, 1],
+                [1, 'AllwCount', 'all1',  1, 1],
                 [2, 'MockEventSelection',     'sel11', 1, 1],
-                [2, 'MockEventSelection',     'sel12', 0, 0],
-                [1, 'AnywCount', 'all2',  0, 0],
-                [2, 'MockEventSelection',     'sel21', 0, 0],
-                [2, 'MockEventSelection',     'sel22', 0, 0],
-                [1, 'MockEventSelection',     'sel3',  0, 0],
+                [2, 'MockEventSelection',     'sel12', 1, 1],
+                [1, 'AllwCount', 'all2',  1, 1],
+                [2, 'MockEventSelection',     'sel21', 1, 1],
+                [2, 'MockEventSelection',     'sel22', 1, 1],
+                [1, 'MockEventSelection',     'sel3',  1, 1],
             ],
             count._results
         )

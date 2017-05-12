@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
+from alphatwirl.selection.modules.LambdaStr import LambdaStr
 import unittest
 
 ##__________________________________________________________________||

@@ -2,10 +2,10 @@ import sys
 import unittest
 
 from alphatwirl.selection import build_selection
-from alphatwirl.selection.EventSelectionModules.basic import All
-from alphatwirl.selection.EventSelectionModules.basic import Any
-from alphatwirl.selection.EventSelectionModules.basic import Not
-from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
+from alphatwirl.selection.modules.basic import All
+from alphatwirl.selection.modules.basic import Any
+from alphatwirl.selection.modules.basic import Not
+from alphatwirl.selection.modules.LambdaStr import LambdaStr
 
 ##__________________________________________________________________||
 class MockFactoryDispatcher(object):
