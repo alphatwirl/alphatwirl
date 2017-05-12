@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from alphatwirl.selection.EventSelectionModules.EventSelectionAny import EventSelectionAny
+from alphatwirl.selection.EventSelectionModules.basic import EventSelectionAny
 import unittest
 
 ##__________________________________________________________________||

@@ -1,6 +1,6 @@
 from alphatwirl.selection.EventSelectionFactories.AllFactory import AllFactory
-from alphatwirl.selection.EventSelectionModules.EventSelectionAll import EventSelectionAll
-from alphatwirl.selection.EventSelectionModules.EventSelectionAny import EventSelectionAny
+from alphatwirl.selection.EventSelectionModules.basic import EventSelectionAll
+from alphatwirl.selection.EventSelectionModules.basic import EventSelectionAny
 from alphatwirl.selection.EventSelectionModules.LambdaStr import LambdaStr
 import unittest
 

@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from .EventSelectionModules.EventSelectionAll import EventSelectionAll
-from .EventSelectionModules.EventSelectionAny import EventSelectionAny
-from .EventSelectionModules.EventSelectionNot import EventSelectionNot
+from .EventSelectionModules.basic import EventSelectionAll
+from .EventSelectionModules.basic import EventSelectionAny
+from .EventSelectionModules.basic import EventSelectionNot
 from .EventSelectionModules.LambdaStr import LambdaStr
 from .EventSelectionFactories.FactoryDispatcher import FactoryDispatcher
 
