@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-class EventSelectionAll(object):
+class All(object):
     """select events that meet all conditions
 
     """
