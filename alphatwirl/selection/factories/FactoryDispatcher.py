@@ -77,13 +77,13 @@ def expand_path_cfg(path_cfg, aliasDict = None, overriding_kargs = dict()):
 def find_factory(name):
     import imp
 
-    top_module_name = 'EventSelectionFactories'
+    top_module_name = 'factories'
     f, filename, description = imp.find_module(top_module_name)
     top_module = imp.load_module(top_module_name, f, filename, description)
     ##______________________________________________________________||
 
     module_name = "{}.{}".format(top_module_name, name)
-    # e.g., 'EventSelectionFactories.AllFactory'
+    # e.g., 'factories.AllFactory'
 
     f, filename, description = imp.find_module(name, top_module.__path__)
     module = imp.load_module(module_name, f, filename, description)

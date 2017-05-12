@@ -3,7 +3,7 @@ from .modules.basic import All
 from .modules.basic import Any
 from .modules.basic import Not
 from .modules.LambdaStr import LambdaStr
-from .EventSelectionFactories.FactoryDispatcher import FactoryDispatcher
+from .factories.FactoryDispatcher import FactoryDispatcher
 
 import os, sys
 

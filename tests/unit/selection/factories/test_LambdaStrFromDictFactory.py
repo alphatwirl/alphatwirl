@@ -1,4 +1,4 @@
-from alphatwirl.selection.EventSelectionFactories.LambdaStrFromDictFactory import LambdaStrFromDictFactory
+from alphatwirl.selection.factories.LambdaStrFromDictFactory import LambdaStrFromDictFactory
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
 import unittest
 

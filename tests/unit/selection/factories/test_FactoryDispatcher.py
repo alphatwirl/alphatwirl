@@ -1,5 +1,5 @@
-from alphatwirl.selection.EventSelectionFactories.FactoryDispatcher import FactoryDispatcher
-from alphatwirl.selection.EventSelectionFactories.FactoryDispatcher import expand_path_cfg
+from alphatwirl.selection.factories.FactoryDispatcher import FactoryDispatcher
+from alphatwirl.selection.factories.FactoryDispatcher import expand_path_cfg
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
 import unittest
 import os, sys

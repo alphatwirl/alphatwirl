@@ -1,4 +1,4 @@
-from alphatwirl.selection.EventSelectionFactories.AllFactory import AllFactory
+from alphatwirl.selection.factories.AllFactory import AllFactory
 from alphatwirl.selection.modules.basic import All
 from alphatwirl.selection.modules.basic import Any
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
