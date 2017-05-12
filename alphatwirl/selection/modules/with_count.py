@@ -22,13 +22,6 @@ class AllwCount(object):
             self.count
         )
 
-    def copy_from(self, src):
-        src = copy.deepcopy(src)
-        self.count = src.count
-        for s, f in zip(self.selections, src.selections):
-            if hasattr(s, 'copy_from'):
-                s.copy_from(f)
-
     def add(self, selection):
         self.selections.append(selection)
         self.count.add(selection)
@@ -87,13 +80,6 @@ class AnywCount(object):
             self.selections,
             self.count
         )
-
-    def copy_from(self, src):
-        src = copy.deepcopy(src)
-        self.count = src.count
-        for s, f in zip(self.selections, src.selections):
-            if hasattr(s, 'copy_from'):
-                s.copy_from(f)
 
     def add(self, selection):
         self.selections.append(selection)
@@ -154,12 +140,6 @@ class NotwCount(object):
             self.selection,
             self.count
         )
-
-    def copy_from(self, src):
-        src = copy.deepcopy(src)
-        self.count = src.count
-        if hasattr(self.selection, 'copy_from'):
-            self.selection.copy_from(src.selection)
 
     def begin(self, event):
         if hasattr(self.selection, 'begin'): self.selection.begin(event)
