@@ -14,6 +14,7 @@ import collector
 import concurrently
 import configure
 import roottree
+import selection
 import heppyresult
 import loop
 import progressbar
