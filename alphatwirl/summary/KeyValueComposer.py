@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import logging
+
 from .parse_indices_config import parse_indices_config
 from .BackrefMultipleArrayReader import BackrefMultipleArrayReader
 
@@ -74,7 +76,6 @@ class KeyValueComposer(object):
             try:
                 attr = getattr(event, varname)
             except AttributeError, e:
-                import logging
                 logging.warning(e)
                 return None
             ret.append(attr)
@@ -83,7 +84,13 @@ class KeyValueComposer(object):
     def __call__(self, event):
         if not self.active: return ()
 
-        arrays = self._array_reader.read()
+        try:
+            arrays = self._array_reader.read()
+        except StandardError, e:
+            logger = logging.getLogger(__name__)
+            logger.error(e)
+            logger.error(self)
+            raise
         # e.g.,
         # arrays = (
         #     (1001, 15.3, -1.2, 20.2,  2.2, 0.1, 16.2, 22.1),

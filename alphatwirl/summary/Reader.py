@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import logging
+
 from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
@@ -31,7 +33,14 @@ class Reader(object):
         if self.nevents is not None and self.nevents <= self.ievent: return
         self.ievent += 1
 
-        keyvals = self.keyValComposer(event)
+        try:
+            keyvals = self.keyValComposer(event)
+        except StandardError, e:
+            logger = logging.getLogger(__name__)
+            logger.error(e)
+            logger.error(self)
+            raise
+
         weight = self.weightCalculator(event)
         for key, val in keyvals:
             self.summarizer.add(key = key, val = val, weight = weight)
