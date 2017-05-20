@@ -21,31 +21,26 @@ class TestTableConfigCompleter(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None # https://docs.python.org/2/library/unittest.html
 
-    def test_repr(self):
-        obj = TableConfigCompleter(
+        self.defaultWeight = MockWeight()
+        self.obj = TableConfigCompleter(
             defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
+            defaultWeight = self.defaultWeight,
             defaultOutDir = 'tmp'
         )
+
+    def test_repr(self):
+        obj = self.obj
         repr(obj)
 
     def test_copy_not_the_same_object(self):
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = MockWeight(),
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
         tblcfg_in = dict(keyAttrNames = ('met_pt', ), binnings = (MockBinning(), ))
         tblcfg_out = obj.complete(tblcfg_in)
         self.assertIsNot(tblcfg_in, tblcfg_out)
 
     def test_empty_input(self):
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         expected = dict(
             keyAttrNames = (),
@@ -71,12 +66,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_simple_input(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
 
@@ -109,12 +100,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_default_summary_class_empty_key(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         expected = dict(
             keyAttrNames = (),
@@ -145,12 +132,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_empty_key_empty_val(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         expected = dict(
             keyAttrNames = (),
@@ -182,12 +165,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_2_keys_empty_vals(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
         binning2 = MockBinning()
@@ -222,12 +201,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_2_keys_2_vals(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
         binning2 = MockBinning()
@@ -263,12 +238,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_2_keys_2_vals_key_indices(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
         binning2 = MockBinning()
@@ -305,12 +276,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_2_keys_2_vals_val_indices(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
         binning2 = MockBinning()
@@ -347,12 +314,8 @@ class TestTableConfigCompleter(unittest.TestCase):
 
     def test_specify_summary_class_2_keys_2_vals_key_indices_val_indices(self):
 
-        defaultWeight = MockWeight()
-        obj = TableConfigCompleter(
-            defaultSummaryClass = MockDefaultSummary,
-            defaultWeight = defaultWeight,
-            defaultOutDir = 'tmp'
-        )
+        obj = self.obj
+        defaultWeight = self.defaultWeight
 
         binning1 = MockBinning()
         binning2 = MockBinning()
