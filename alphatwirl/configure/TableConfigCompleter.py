@@ -36,6 +36,18 @@ class TableConfigCompleter(object):
         self.defaultOutDir = defaultOutDir
         self.createOutFileName = createOutFileName
 
+    def __repr__(self):
+        name_value_pairs = (
+            ('defaultSummaryClass', self.defaultSummaryClass),
+            ('defaultWeight', self.defaultWeight),
+            ('defaultOutDir', self.defaultOutDir),
+            ('createOutFileName', self.createOutFileName),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
     def complete(self, tblcfg):
         ret = tblcfg.copy()
 

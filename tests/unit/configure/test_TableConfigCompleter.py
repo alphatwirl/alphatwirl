@@ -19,7 +19,15 @@ class MockBinning: pass
 class TestTableConfigCompleter(unittest.TestCase):
 
     def setUp(self):
-        self.maxDiff = None
+        self.maxDiff = None # https://docs.python.org/2/library/unittest.html
+
+    def test_repr(self):
+        obj = TableConfigCompleter(
+            defaultSummaryClass = MockDefaultSummary,
+            defaultWeight = MockWeight(),
+            defaultOutDir = 'tmp'
+        )
+        repr(obj)
 
     def test_copy_not_the_same_object(self):
         obj = TableConfigCompleter(
