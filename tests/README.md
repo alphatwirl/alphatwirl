@@ -12,7 +12,7 @@ python -m unittest discover -s ./unit/ -t ../
 
 from the top directory of AlphaTwirl (one directory up from this directory):
 ```
-python -m unittest discover -s ./tests/unit/ 
+python -m unittest discover -s ./tests/unit/ -t ./
 ```
 
 from further up:
