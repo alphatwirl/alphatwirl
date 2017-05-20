@@ -76,7 +76,9 @@ class KeyValueComposer(object):
             try:
                 attr = getattr(event, varname)
             except AttributeError, e:
-                logging.warning(e)
+                logger = logging.getLogger(__name__)
+                logger.warning(e)
+                logger.warning(self)
                 return None
             ret.append(attr)
         return ret
