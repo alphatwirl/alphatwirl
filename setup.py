@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = 'AlphaTwirl',
@@ -7,5 +7,5 @@ setup(
     author = 'Tai Sakuma',
     author_email = 'tai.sakuma@gmail.com',
     url = 'https://github.com/TaiSakuma/AlphaTwirl',
-    packages = ['alphatwirl'],
+    packages = find_packages(exclude=['docs', 'images', 'tests']),
 )
