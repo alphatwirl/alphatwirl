@@ -44,10 +44,10 @@ class WorkingArea(object):
         package_index = self.last_package_index
 
         package_path = self.package_path(package_index)
-        # relative to self.path, e.g., 'task_00009.p'
+        # relative to self.path, e.g., 'task_00009.p.gz'
 
         package_fullpath = os.path.join(self.path, package_path)
-        # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p'
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p.gz'
 
         f = gzip.open(package_fullpath, 'wb')
         pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
