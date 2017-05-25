@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # Tai Sakuma <sakuma@fnal.gov>
+from __future__ import print_function
+
 import os, sys
 import errno
 import argparse
@@ -19,6 +21,15 @@ args = parser.parse_args()
 ##__________________________________________________________________||
 def main():
 
+    try:
+        run_tasks()
+    except StandardError as e:
+        print_logs(e)
+        raise
+
+##__________________________________________________________________||
+def run_tasks():
+
     setup()
 
     for package_path in args.paths:
@@ -36,6 +47,24 @@ def main():
         # e.g., '/a/b/c/d/results/task_00003/result.p.gz'
 
         store_result(result, result_path)
+
+##__________________________________________________________________||
+def print_logs(error):
+    import socket
+    import datetime
+    messages = [
+        '',
+        '{:>20}: {}'.format('error', error),
+        '{:>20}: {}'.format('sys.argv', sys.argv),
+        '{:>20}: {}'.format('time', datetime.datetime.now()),
+        '{:>20}: {}'.format('hostname', socket.getfqdn()),
+        '{:>20}: {}'.format('pwd', os.getcwd()),
+        '{:>20}: {}'.format('ls', ', '.join(sorted(os.listdir(os.getcwd())))),
+        '{:>20}: {}'.format('sys.path', ', '.join(sys.path)),
+        '{:>20}: {}'.format('os.environ', os.environ)
+
+    ]
+    print('\n'.join(messages), file = sys.stderr)
 
 ##__________________________________________________________________||
 def setup():
