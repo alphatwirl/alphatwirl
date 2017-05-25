@@ -20,7 +20,7 @@ def task_null(*args, **kwargs):
 
 ##__________________________________________________________________||
 def task_raise(*args, **kwargs):
-    raise StandardError('test error from task_raise()')
+    raise Exception('test error from task_raise()')
 
 ##__________________________________________________________________||
 class TestRunPy(unittest.TestCase):
@@ -91,7 +91,7 @@ class TestRunPy(unittest.TestCase):
             env = self.env
         )
         stdout, stderr = proc.communicate()
-        # print stderr
+        self.assertIn('Exception:', stderr)
 
 ##__________________________________________________________________||
 

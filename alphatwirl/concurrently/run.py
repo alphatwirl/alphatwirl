@@ -23,7 +23,7 @@ def main():
 
     try:
         run_tasks()
-    except StandardError as e:
+    except Exception as e:
         print_logs(e)
         raise
 
