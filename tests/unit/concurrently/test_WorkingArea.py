@@ -47,8 +47,8 @@ class TestWorkingArea(unittest.TestCase):
         package_path = obj.package_path(package_index)
         package_fullpath = os.path.join(obj.path, package_path)
         self.assertTrue(os.path.isfile(package_fullpath))
-        f = gzip.open(package_fullpath, 'rb')
-        self.assertEqual(package1, pickle.load(f))
+        with gzip.open(package_fullpath, 'rb') as f:
+           self.assertEqual(package1, pickle.load(f))
 
     def test_collect_result(self):
         obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
@@ -61,9 +61,9 @@ class TestWorkingArea(unittest.TestCase):
         result_dir = os.path.join(obj.path, 'results', dirname)
         mkdir_p(result_dir)
         result_path = os.path.join(result_dir, 'result.p.gz')
-        f = gzip.open(result_path, 'wb')
-        pickle.dump(result, f)
-        f.close()
+        with gzip.open(result_path, 'wb') as f:
+           pickle.dump(result, f)
+           f.close()
 
         self.assertEqual(result, obj.collect_result(package_index = package_index))
 
