@@ -67,12 +67,33 @@ class TestWorkingArea(unittest.TestCase):
 
         self.assertEqual(result, obj.collect_result(package_index = package_index))
 
-    def test_collect_result_error(self):
+    def test_collect_result_ioerror(self):
+       # the file 'result.p.gz' doesn't exist
+       # gzip.open() raises IOFError
+
         obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
         obj.open()
 
         # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
         package_index = 9
+        self.assertIsNone(obj.collect_result(package_index = package_index))
+
+    def test_collect_result_eoferror(self):
+       # the file 'result.p.gz' is empty.
+       # pickle.load() raises EOFError
+
+        obj = WorkingArea(dir = self.tmpdir, python_modules = ('alphatwirl', ))
+        obj.open()
+
+        package_index = 9
+        dirname = 'task_{:05d}'.format(package_index)
+        result_dir = os.path.join(obj.path, 'results', dirname)
+        mkdir_p(result_dir)
+
+        result_path = os.path.join(result_dir, 'result.p.gz')
+        with open(result_path, 'wb') as f:
+           f.close()
+
         self.assertIsNone(obj.collect_result(package_index = package_index))
 
 ##__________________________________________________________________||
