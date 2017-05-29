@@ -3,15 +3,14 @@
 
 In the top directory of AlphaTwirl (one directory up from this directory):
 
-    rm docs/AlphaTwirl*.rst
-    sphinx-apidoc -F -A "Tai Sakuma" -V "0.7" -R "0.7.x" -o docs/ AlphaTwirl/
+    rm docs/alphatwirl*.rst
+    sphinx-apidoc -F -o docs/ alphatwirl/
+    cd docs
 
-Edit conf.py to increment the version number
+Edit `conf.py` if need, e.g., increment the version number
 
 Make
 
-    $ make html
+    make html
 
-The entry page will be at
-
- * open _build/html/index.html
+The entry page will be at `_build/html/index.html`.
