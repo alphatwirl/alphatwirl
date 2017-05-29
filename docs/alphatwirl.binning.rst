@@ -28,6 +28,14 @@ alphatwirl.binning.Echo module
     :undoc-members:
     :show-inheritance:
 
+alphatwirl.binning.ReturnTrue module
+------------------------------------
+
+.. automodule:: alphatwirl.binning.ReturnTrue
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 alphatwirl.binning.Round module
 -------------------------------
 

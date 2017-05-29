@@ -21,7 +21,7 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
-   AlphaTwirl
+   alphatwirl
 
 
 Indices and tables

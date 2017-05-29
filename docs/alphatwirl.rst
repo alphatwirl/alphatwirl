@@ -6,8 +6,8 @@ Subpackages
 
 .. toctree::
 
-    alphatwirl.aggregate
     alphatwirl.binning
+    alphatwirl.cmsedm
     alphatwirl.collector
     alphatwirl.concurrently
     alphatwirl.configure
@@ -17,6 +17,7 @@ Subpackages
     alphatwirl.misc
     alphatwirl.progressbar
     alphatwirl.roottree
+    alphatwirl.selection
     alphatwirl.summary
 
 Module contents
