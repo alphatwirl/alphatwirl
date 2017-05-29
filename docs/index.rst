@@ -3,8 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to AlphaTwirl
-=====================
+|
+|
+
+.. image:: ../images/AlphaTwirl.png
+    :width: 300px
+    :alt: alphatwirl
+
+|
 
 The library contains a set of Python classes which can be used to loop over
 event data, summarize them, and store the results for further analysis or
