@@ -16,6 +16,15 @@ class Component(object):
         self._cfg = None
         self._readConfig = ReadComponentConfig()
 
+    def __repr__(self):
+        name_value_pairs = (
+            ('name', self.name),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
     def __getattr__(self, name):
         if name not in self._anaDict:
             if name not in self.analyzerNames:
