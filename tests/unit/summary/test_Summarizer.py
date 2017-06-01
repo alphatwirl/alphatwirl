@@ -1,98 +1,55 @@
 import unittest
 import copy
 
+import numpy as np
+
 from alphatwirl.summary import Summarizer
-
-##__________________________________________________________________||
-class MockSummary(object):
-    def __init__(self, val = None, weight = 1, contents = None):
-
-        if contents is not None:
-            self.contents = contents
-            return
-
-        if val is None:
-            self.contents = 0
-            return
-
-        self.contents = val*weight
-
-    def __add__(self, other):
-        contents = self.contents + other.contents
-        return self.__class__(contents = contents)
-
-    def __radd__(self, other):
-        # is called with other = 0 when e.g. sum([obj1, obj2])
-        return self.__class__() + self
-
-    def __repr__(self):
-        return '{}(contents = {})'.format(self.__class__.__name__, self.contents)
-
-    def __eq__(self, other):
-        return self.contents == other.contents
-
-##__________________________________________________________________||
-class MockSummary2(object):
-    def __init__(self, val = None, weight = 1, contents = None):
-        pass
-
-##__________________________________________________________________||
-class TestMockSummary(unittest.TestCase):
-
-    def test_01(self):
-        obj0 = MockSummary()
-        obj1 = MockSummary(val = 11)
-        self.assertIsNot(obj1, sum([obj1])) # will call __radd__(other = 0)
-        obj2 = MockSummary(val = 22)
-        obj3 = MockSummary(val = 33)
-        self.assertEqual(obj3, (obj1 + obj2))
-        obj4 = MockSummary(val = 43)
-        self.assertNotEqual(obj4, (obj1 + obj2))
+from alphatwirl.summary import Sum
 
 ##__________________________________________________________________||
 class TestSummarizer(unittest.TestCase):
 
     def test_init_repr(self):
-        obj = Summarizer(Summary = MockSummary)
+        obj = Summarizer(Summary = Sum)
         repr(obj)
 
     def test_add(self):
 
-        obj = Summarizer(Summary = MockSummary)
+        obj = Summarizer(Summary = Sum)
 
-        obj.add('A', 12)
-        expected  = {'A': MockSummary(contents = 12)}
+        obj.add('A', (12, ) )
+        expected  = {'A': Sum(contents = np.array((12, )))}
         self.assertEqual(expected, obj.results())
 
-        obj.add('A', 23)
-        expected  = {'A': MockSummary(contents = 35)}
+        obj.add('A', (23, ))
+        expected  = {'A': Sum(contents = np.array((35, )))}
         self.assertEqual(expected, obj.results())
 
-        obj.add('A', 10, weight = 2)
-        expected  = {'A': MockSummary(contents = 55)}
+        obj.add('A', (10, ), weight = 2)
+        expected  = {'A': Sum(contents = np.array((55, )))}
         self.assertEqual(expected, obj.results())
 
-        obj.add('B', 20, weight = 3.2)
+        obj.add('B', (20, ), weight = 3.2)
         expected  = {
-            'A': MockSummary(contents = 55),
-            'B': MockSummary(contents = 64.0)
+            'A': Sum(contents = np.array((55, ))),
+            'B': Sum(contents = np.array((64.0, ))),
         }
         self.assertEqual(expected, obj.results())
 
         return
 
     def test_add_key(self):
-        obj = Summarizer(Summary = MockSummary)
+        obj = Summarizer(Summary = Sum)
         obj.add_key('A')
-        expected  = {'A': MockSummary(contents = 0)}
+        expected  = {'A': Sum(contents = np.array((0, )))}
         self.assertEqual(expected, obj.results())
 
         obj.add_key('B')
         obj.add_key('C')
         expected  = {
-            'A': MockSummary(contents = 0),
-            'B': MockSummary(contents = 0),
-            'C': MockSummary(contents = 0),
+            'A': Sum(contents = np.array((0, ))),
+            'B': Sum(contents = np.array((0, ))),
+            'C': Sum(contents = np.array((0, ))),
         }
         self.assertEqual(expected, obj.results())
 
@@ -100,25 +57,25 @@ class TestSummarizer(unittest.TestCase):
 class TestSummarizer_operator(unittest.TestCase):
 
     def setUp(self):
-        self.obj1 = Summarizer(Summary = MockSummary)
-        self.obj2 = Summarizer(Summary = MockSummary)
+        self.obj1 = Summarizer(Summary = Sum)
+        self.obj2 = Summarizer(Summary = Sum)
 
         self.obj1._results  = {
-            (1, ): MockSummary(contents = 4),
-            (2, ): MockSummary(contents = 3),
-            (3, ): MockSummary(contents = 2),
+            (1, ): Sum(contents = np.array((4, ))),
+            (2, ): Sum(contents = np.array((3, ))),
+            (3, ): Sum(contents = np.array((2, ))),
             }
 
         self.obj2._results  = {
-            (2, ): MockSummary(contents = 3.2),
-            (4, ): MockSummary(contents = 2),
+            (2, ): Sum(contents = np.array((3.2, ))),
+            (4, ): Sum(contents = np.array((2, ))),
         }
 
         self.expected = {
-            (1, ): MockSummary(contents = 4),
-            (2, ): MockSummary(contents = 6.2),
-            (3, ): MockSummary(contents = 2),
-            (4, ): MockSummary(contents = 2),
+            (1, ): Sum(contents = np.array((4, ))),
+            (2, ): Sum(contents = np.array((6.2, ))),
+            (3, ): Sum(contents = np.array((2, ))),
+            (4, ): Sum(contents = np.array((2, ))),
             }
 
     def test_add(self):
