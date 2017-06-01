@@ -9,18 +9,17 @@ class Scan(object):
     def __init__(self, val = None, weight = 1, contents = None):
 
         if contents is not None:
-            self.contents = copy.deepcopy(contents)
+            self.contents = contents
             return
 
         if val is None:
             self.contents = [ ]
             return
 
-        self.contents = [copy.deepcopy(val)]
+        self.contents = [val]
 
     def __add__(self, other):
-        contents = copy.deepcopy(self.contents)
-        contents.extend(other.contents)
+        contents = self.contents + other.contents
         return self.__class__(contents = contents)
 
     def __radd__(self, other):
@@ -34,5 +33,9 @@ class Scan(object):
 
     def __eq__(self, other):
         return self.contents == other.contents
+
+    def __copy__(self):
+        contents = list(self.contents)
+        return self.__class__(contents = contents)
 
 ##__________________________________________________________________||
