@@ -11,10 +11,13 @@ class Summarizer(object):
         self.Summary = Summary
 
     def __repr__(self):
-        return '{}(Summary = {!r}, results = {!r})'.format(
+        name_value_pairs = (
+            ('Summary',  self.Summary),
+            ('results', self._results),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.Summary,
-            self._results,
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def add(self, key, val = None, weight = 1):
