@@ -50,10 +50,6 @@ class Summarizer(object):
     def _add_results_inplace(self, res1, res2):
         # res1 += res2, modify res1
         for k, v in res2.iteritems():
-            if k not in res1:
-                res1[k] = copy.deepcopy(v) # this copy is not so slow
-                # res1[k] = v
-            else:
-                res1[k] = res1[k] + v
+            res1[k] += v
 
 ##__________________________________________________________________||
