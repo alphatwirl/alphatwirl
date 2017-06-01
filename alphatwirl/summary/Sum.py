@@ -32,7 +32,6 @@ class Sum(object):
 
     def __repr__(self):
         return '{}(contents = {!r})'.format(self.__class__.__name__, self.contents)
-        return '{}(contents = {!r})'.format(self.__class__.__name__, self.contents)
 
     def __eq__(self, other):
         if len(self.contents) != len(other.contents): return False
