@@ -60,16 +60,16 @@ class TestSummarizer_operator(unittest.TestCase):
         self.obj1 = Summarizer(Summary = Sum)
         self.obj2 = Summarizer(Summary = Sum)
 
-        self.obj1._results  = {
+        self.obj1._results.update({
             (1, ): Sum(contents = np.array((4, ))),
             (2, ): Sum(contents = np.array((3, ))),
             (3, ): Sum(contents = np.array((2, ))),
-            }
+            })
 
-        self.obj2._results  = {
+        self.obj2._results.update({
             (2, ): Sum(contents = np.array((3.2, ))),
             (4, ): Sum(contents = np.array((2, ))),
-        }
+        })
 
         self.expected = {
             (1, ): Sum(contents = np.array((4, ))),
@@ -97,5 +97,11 @@ class TestSummarizer_operator(unittest.TestCase):
         self.assertIs(self.obj1, obj1)
         self.assertEqual(self.expected, self.obj1._results)
 
+    def test_copy(self):
+        copy1 = copy.copy(self.obj1)
+        self.assertEqual(self.obj1._results, copy1._results)
+        self.assertIsNot(self.obj1._results[(1, )], copy1._results[(1, )])
+        self.assertIsNot(self.obj1._results[(2, )], copy1._results[(2, )])
+        self.assertIsNot(self.obj1._results[(3, )], copy1._results[(3, )])
 
 ##__________________________________________________________________||
