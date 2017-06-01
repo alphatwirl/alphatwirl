@@ -44,5 +44,9 @@ class Count(object):
         if len(self.contents) != len(other.contents): return False
         return all([np.all(self.contents[i] == other.contents[i]) for i in range(len(self.contents))])
 
+    def __copy__(self):
+        contents = [np.copy(self.contents[0])]
+        return self.__class__(contents = contents)
+
 ##__________________________________________________________________||
 

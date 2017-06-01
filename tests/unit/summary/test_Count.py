@@ -1,4 +1,6 @@
 import unittest
+
+import copy
 import numpy as np
 
 from alphatwirl.summary import Count
@@ -52,5 +54,13 @@ class TestCount(unittest.TestCase):
     def test_radd_raise(self):
         obj1 = Count(contents = [np.array((10, 20))])
         self.assertRaises(TypeError, obj1.__radd__, 1)
+
+    def test_copy(self):
+        obj1 = Count(contents = [np.array((10, 20))])
+        copy1 = copy.copy(obj1)
+        self.assertEqual(obj1, copy1)
+        self.assertIsNot(obj1, copy1)
+        self.assertIsNot(obj1.contents, copy1.contents)
+        self.assertIsNot(obj1.contents[0], copy1.contents[0])
 
 ##__________________________________________________________________||
