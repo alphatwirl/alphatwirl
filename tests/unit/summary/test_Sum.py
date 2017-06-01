@@ -1,4 +1,6 @@
 import unittest
+
+import copy
 import numpy as np
 
 from alphatwirl.summary import Sum
@@ -57,5 +59,13 @@ class TestSum(unittest.TestCase):
         obj1 = Sum(contents = [np.array((10, 20))])
         self.assertIsNot(obj1, sum([obj1])) # will call 0 + obj1
         self.assertEqual(obj1, sum([obj1]))
+
+    def test_copy(self):
+        obj1 = Sum(contents = [np.array((10, 20))])
+        copy1 = copy.copy(obj1)
+        self.assertEqual(obj1, copy1)
+        self.assertIsNot(obj1, copy1)
+        self.assertIsNot(obj1.contents, copy1.contents)
+        self.assertIsNot(obj1.contents[0], copy1.contents[0])
 
 ##__________________________________________________________________||
