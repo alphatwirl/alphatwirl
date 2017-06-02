@@ -31,12 +31,15 @@ class EventReader(object):
         self.dataset_names = [ ]
 
     def __repr__(self):
-        return '{}(eventLoopRunner = {!r}, reader = {!r}, collector = {!r}, split_into_build_events = {!r})'.format(
+        name_value_pairs = (
+            ('eventLoopRunner',         self.eventLoopRunner),
+            ('reader',                  self.reader),
+            ('collector',               self.collector),
+            ('split_into_build_events', self.split_into_build_events),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.eventLoopRunner,
-            self.reader,
-            self.collector,
-            self.split_into_build_events
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def begin(self):
@@ -64,8 +67,7 @@ class EventReader(object):
                 ))
             return None
 
-        for d, r in zip(self.dataset_names, returned_readers):
-            self.collector.addReader(d, r)
-        return self.collector.collect()
+        dataset_reader_pairs = zip(self.dataset_names, returned_readers)
+        return self.collector.collect(dataset_reader_pairs)
 
 ##__________________________________________________________________||

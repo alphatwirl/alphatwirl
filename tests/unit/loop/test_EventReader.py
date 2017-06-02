@@ -20,10 +20,8 @@ class MockCollector(object):
 
         self.pairs = [ ]
 
-    def addReader(self, datasetName, reader):
-        self.pairs.append((datasetName, reader))
-
-    def collect(self):
+    def collect(self, dataset_reader_pairs):
+        self.pairs = dataset_reader_pairs
         self.collected = True
         return self.ret
 
