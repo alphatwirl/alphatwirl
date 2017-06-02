@@ -9,10 +9,7 @@ class CollectorDelegate(object):
     def __init__(self, collector):
         self.collector = collector
 
-    def addReader(self, datasetName, reader):
-        self.collector.addReader(datasetName, reader.reader)
-
-    def collect(self):
-        self.collector.collect()
+    def collect(self, dataset_reader_pairs):
+        return self.collector.collect(dataset_reader_pairs)
 
 ##__________________________________________________________________||

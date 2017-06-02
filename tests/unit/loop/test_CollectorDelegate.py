@@ -1,26 +1,22 @@
-from alphatwirl.loop import CollectorDelegate
 import unittest
+import collections
+
+from alphatwirl.loop import CollectorDelegate
 
 ##__________________________________________________________________||
 class MockCollector(object):
-    def __init__(self):
-        self._datasetReaderPairs = [ ]
-        self._collected = False
+    def __init__(self, ret = None):
+        self.ret = ret
 
-    def addReader(self, datasetName, reader):
-        self._datasetReaderPairs.append((datasetName, reader))
-
-    def collect(self):
-        self._collected = True
+    def collect(self, dataset_reader_pairs):
+        self.pairs = dataset_reader_pairs
+        return self.ret
 
 ##__________________________________________________________________||
-class MockReader(object):
-    pass
+MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
-class MockReaderDelegate(object):
-    def __init__(self, reader):
-        self.reader = reader
+MockPairs = collections.namedtuple('MockPairs', 'name')
 
 ##__________________________________________________________________||
 class TestCollectorDelegate(unittest.TestCase):
@@ -30,21 +26,13 @@ class TestCollectorDelegate(unittest.TestCase):
         1:delegate - 2:collector
 
         """
-        collector2 = MockCollector()
+        result = MockResult('result')
+        collector2 = MockCollector(ret = result)
         collector1 = CollectorDelegate(collector2)
 
-        reader2 = MockReader()
-        reader1 = MockReaderDelegate(reader2)
-
-        collector1.addReader('ds1', reader1)
-
-        self.assertEqual('ds1', collector2._datasetReaderPairs[0][0])
-        self.assertIs(reader2, collector2._datasetReaderPairs[0][1])
-
-
-        self.assertFalse(collector2._collected)
-        collector1.collect()
-        self.assertTrue(collector2._collected)
+        pairs = MockPairs('pairs')
+        self.assertIs(result, collector1.collect(pairs))
+        self.assertIs(pairs, collector2.pairs)
 
 ##__________________________________________________________________||
 
