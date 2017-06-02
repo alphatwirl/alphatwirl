@@ -70,8 +70,6 @@ class TesEventReader_build_01(unittest.TestCase):
 
         reader1_ds1 = copy.deepcopy(reader1)
         reader1_ds2 = copy.deepcopy(reader1)
-        collector1.addReader('ds1', reader1_ds1)
-        collector1.addReader('ds2', reader1_ds2)
 
         reader3_ds1 = reader1_ds1.readers[0]
         reader4_ds1 = reader3_ds1.readers[0]
@@ -112,28 +110,5 @@ class TesEventReader_build_01(unittest.TestCase):
         self.assertIsNot(reader5, reader5_ds2)
         self.assertIsNot(reader7, reader7_ds2)
         self.assertIsNot(reader8, reader8_ds2)
-
-        self.assertIs(2, len(collector4._datasetReaderPairs))
-        self.assertIs(2, len(collector5._datasetReaderPairs))
-        self.assertIs(2, len(collector7._datasetReaderPairs))
-        self.assertIs(2, len(collector8._datasetReaderPairs))
-
-        self.assertIs('ds1', collector4._datasetReaderPairs[0][0])
-        self.assertIs('ds1', collector5._datasetReaderPairs[0][0])
-        self.assertIs('ds1', collector7._datasetReaderPairs[0][0])
-        self.assertIs('ds1', collector8._datasetReaderPairs[0][0])
-        self.assertIs(reader4_ds1, collector4._datasetReaderPairs[0][1])
-        self.assertIs(reader5_ds1, collector5._datasetReaderPairs[0][1])
-        self.assertIs(reader7_ds1, collector7._datasetReaderPairs[0][1])
-        self.assertIs(reader8_ds1, collector8._datasetReaderPairs[0][1])
-
-        self.assertIs('ds2', collector4._datasetReaderPairs[1][0])
-        self.assertIs('ds2', collector5._datasetReaderPairs[1][0])
-        self.assertIs('ds2', collector7._datasetReaderPairs[1][0])
-        self.assertIs('ds2', collector8._datasetReaderPairs[1][0])
-        self.assertIs(reader4_ds2, collector4._datasetReaderPairs[1][1])
-        self.assertIs(reader5_ds2, collector5._datasetReaderPairs[1][1])
-        self.assertIs(reader7_ds2, collector7._datasetReaderPairs[1][1])
-        self.assertIs(reader8_ds2, collector8._datasetReaderPairs[1][1])
 
 ##__________________________________________________________________||
