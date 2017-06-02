@@ -4,7 +4,7 @@ import copy
 from .EventLoop import EventLoop
 
 ##__________________________________________________________________||
-class EventReader(object):
+class EventsInDatasetReader(object):
     """This class manages objects involved in reading data sets.
 
     On receiving a data set, this class calls the function

@@ -71,7 +71,7 @@ for r, c in reader_collector_pair:
     collector.add(c)
 eventLoopRunner = alphatwirl.loop.MPEventLoopRunner(alphaTwirl.communicationChannel)
 eventBuilder = alphatwirl.heppyresult.EventBuilder(analyzerName, fileName, treeName, args.nevents)
-eventReader = alphatwirl.loop.EventReader(eventBuilder, eventLoopRunner, reader, collector, args.max_events_per_process)
+eventReader = alphatwirl.loop.EventsInDatasetReader(eventBuilder, eventLoopRunner, reader, collector, args.max_events_per_process)
 alphaTwirl.addComponentReader(eventReader)
 
 alphaTwirl.run()

@@ -89,7 +89,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(alphatwirl.loop.EventLoop))
         self.assertTrue(inspect.isclass(alphatwirl.loop.EventLoopProgressReportWriter))
         self.assertTrue(inspect.isclass(alphatwirl.loop.EventLoopRunner))
-        self.assertTrue(inspect.isclass(alphatwirl.loop.EventReader))
+        self.assertTrue(inspect.isclass(alphatwirl.loop.EventsInDatasetReader))
         self.assertTrue(inspect.isclass(alphatwirl.loop.MPEventLoopRunner))
         self.assertTrue(inspect.isclass(alphatwirl.loop.NullCollector))
         self.assertTrue(inspect.isclass(alphatwirl.loop.ReaderComposite))

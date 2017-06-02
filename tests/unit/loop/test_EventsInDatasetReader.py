@@ -1,7 +1,7 @@
 import unittest
 import collections
 
-from alphatwirl.loop import EventReader
+from alphatwirl.loop import EventsInDatasetReader
 
 ##__________________________________________________________________||
 MockEventBuilder = collections.namedtuple('MockEventBuilder', 'events')
@@ -53,13 +53,13 @@ class MockEventLoopRunner(object):
         return [l.reader for l in self.eventLoops]
 
 ##__________________________________________________________________||
-class TestEventReader(unittest.TestCase):
+class TestEventsInDatasetReader(unittest.TestCase):
 
     def setUp(self):
         self.eventLoopRunner = MockEventLoopRunner()
         self.reader = MockReader()
         self.collector = MockCollector(MockCollectorReturn())
-        self.obj = EventReader(self.eventLoopRunner, self.reader, self.collector, mock_split_into_build_events)
+        self.obj = EventsInDatasetReader(self.eventLoopRunner, self.reader, self.collector, mock_split_into_build_events)
         self.obj.EventLoop = MockEventLoop
 
     def test_repr(self):

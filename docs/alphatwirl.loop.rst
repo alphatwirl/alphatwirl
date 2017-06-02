@@ -60,10 +60,10 @@ alphatwirl.loop.EventLoopRunner module
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.EventReader module
+alphatwirl.loop.EventsInDatasetReader module
 ----------------------------------
 
-.. automodule:: alphatwirl.loop.EventReader
+.. automodule:: alphatwirl.loop.EventsInDatasetReader
     :members:
     :undoc-members:
     :show-inheritance:

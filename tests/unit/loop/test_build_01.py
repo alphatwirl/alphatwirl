@@ -14,7 +14,7 @@ class MockResultsCombinationMethod(object):
     def combine(self, pairs) :pass
 
 ##__________________________________________________________________||
-class TesEventReader_build_01(unittest.TestCase):
+class TesEventsInDatasetReader_build_01(unittest.TestCase):
 
     def test_two(self):
         """
