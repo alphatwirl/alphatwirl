@@ -10,12 +10,11 @@ class Collector(object):
     instantiation.
 
     Readers are typically instances of the same class initialized in
-    the same way. Each reader reads a data set. A pair of the name of
-    a data set and the reader that reads the data set is given to this
-    class via the method ``addReader``.
+    the same way. Each reader reads a data set..
 
-    The method ``collect`` is called after the event loop. It returns
-    the combined results.
+    The method ``collect`` is called with a list of pairs of a data
+    set and a reader after the event loop. It returns the combined
+    results.
 
     """
 
@@ -23,21 +22,18 @@ class Collector(object):
         self.resultsCombinationMethod = resultsCombinationMethod
         self.deliveryMethod = deliveryMethod if deliveryMethod is not None else NullDeliveryMethod()
 
-        self._datasetReaderPairs = [ ]
-
     def __repr__(self):
-        return '{}(resultsCombinationMethod = {!r}, deliveryMethod = {!r}, datasetReaderPairs = {!r})'.format(
+        name_value_pairs = (
+            ('resultsCombinationMethod', self.resultsCombinationMethod),
+            ('deliveryMethod',           self.deliveryMethod),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.resultsCombinationMethod,
-            self.deliveryMethod,
-            self._datasetReaderPairs
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
-    def addReader(self, datasetName, reader):
-        self._datasetReaderPairs.append((datasetName, reader))
-
-    def collect(self):
-        results = self.resultsCombinationMethod.combine(self._datasetReaderPairs)
+    def collect(self, dataset_reader_pairs):
+        results = self.resultsCombinationMethod.combine(dataset_reader_pairs)
         self.deliveryMethod.deliver(results)
         return results
 

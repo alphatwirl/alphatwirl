@@ -1,52 +1,50 @@
-from alphatwirl.loop import Collector
 import unittest
 
-##__________________________________________________________________||
-class MockReader(object):
-    pass
+import collections
 
-##__________________________________________________________________||
-class MockMethod(object):
-    def __init__(self):
-        self.readers = None
-    def collect(self, readers):
-        self.readers = readers
+from alphatwirl.loop import Collector
 
 ##__________________________________________________________________||
 class MockResultsCombinationMethod(object):
-    def __init__(self):
-        self.readers = None
-    def combine(self, readers):
-        self.readers = readers
-        return 4234
+    def __init__(self, ret = None):
+        self.ret = ret
+
+    def combine(self, dataset_reader_pairs):
+        self.pairs = dataset_reader_pairs
+        return self.ret
 
 ##__________________________________________________________________||
 class MockDeliveryMethod(object):
     def __init__(self):
         self.results = None
+
     def deliver(self, results):
         self.results = results
 
 ##__________________________________________________________________||
+MockResult = collections.namedtuple('MockResult', 'name')
+
+##__________________________________________________________________||
+MockPairs = collections.namedtuple('MockPairs', 'name')
+
+##__________________________________________________________________||
 class TestCollector(unittest.TestCase):
 
+    def setUp(self):
+
+        self.result = MockResult('result1')
+        self.resultsCombinationMethod = MockResultsCombinationMethod(self.result)
+        self.deliveryMethod = MockDeliveryMethod()
+        self.obj = Collector(self.resultsCombinationMethod, self.deliveryMethod)
+
+    def test_repr(self):
+        repr(self.obj)
+
     def test_collect(self):
-        method = MockMethod()
-        resultsCombinationMethod = MockResultsCombinationMethod()
-        deliveryMethod = MockDeliveryMethod()
-        collector = Collector(resultsCombinationMethod, deliveryMethod)
 
-        reader1 = MockReader()
-        collector.addReader('data1', reader1)
-
-        reader2 = MockReader()
-        collector.addReader('data2', reader2)
-
-        self.assertIsNone(method.readers)
-        self.assertIsNone(deliveryMethod.results)
-        self.assertEqual(4234, collector.collect())
-        self.assertEqual([('data1', reader1), ('data2', reader2)], resultsCombinationMethod.readers)
-        self.assertEqual(4234, deliveryMethod.results)
-
+        pairs = MockPairs('pairs1')
+        self.assertIs(self.result, self.obj.collect(pairs))
+        self.assertIs(pairs, self.resultsCombinationMethod.pairs)
+        self.assertIs(self.result, self.deliveryMethod.results)
 
 ##__________________________________________________________________||
