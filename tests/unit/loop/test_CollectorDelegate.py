@@ -21,18 +21,23 @@ MockPairs = collections.namedtuple('MockPairs', 'name')
 ##__________________________________________________________________||
 class TestCollectorDelegate(unittest.TestCase):
 
-    def test_collect(self):
+    def setUp(self):
         """
         1:delegate - 2:collector
 
         """
-        result = MockResult('result')
-        collector2 = MockCollector(ret = result)
-        collector1 = CollectorDelegate(collector2)
+        self.result = MockResult('result')
+        self.collector = MockCollector(ret = self.result)
+        self.obj = CollectorDelegate(self.collector)
+
+    def test_repr(self):
+        repr(self.obj)
+
+    def test_collect(self):
 
         pairs = MockPairs('pairs')
-        self.assertIs(result, collector1.collect(pairs))
-        self.assertIs(pairs, collector2.pairs)
+        self.assertIs(self.result, self.obj.collect(pairs))
+        self.assertIs(pairs, self.collector.pairs)
 
 ##__________________________________________________________________||
 
