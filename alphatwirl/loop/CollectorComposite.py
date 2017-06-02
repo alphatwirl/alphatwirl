@@ -18,10 +18,13 @@ class CollectorComposite(object):
         self.progressReporter = progressReporter
 
     def __repr__(self):
-        return '{}(components = {!r}, progressReporter = {!r})'.format(
+        name_value_pairs = (
+            ('components',       self.components),
+            ('progressReporter', self.progressReporter),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.components,
-            self.progressReporter
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def add(self, collector):
