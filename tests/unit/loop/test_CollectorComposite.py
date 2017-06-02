@@ -1,21 +1,26 @@
-from alphatwirl.loop import CollectorComposite, ReaderComposite
 import unittest
+
+import copy
+import collections
+
+
+from alphatwirl.loop import CollectorComposite, ReaderComposite
 
 ##__________________________________________________________________||
 class MockCollector(object):
-    def __init__(self):
-        self._datasetReaderPairs = [ ]
-        self._collected = False
+    def __init__(self, ret = None):
+        self.collected = False
+        self.ret = ret
 
-    def addReader(self, datasetName, reader):
-        self._datasetReaderPairs.append((datasetName, reader))
+        self.pairs = [ ]
 
-    def collect(self):
-        self._collected = True
+    def collect(self, dataset_reader_pairs):
+        self.pairs = dataset_reader_pairs
+        self.collected = True
+        return self.ret
 
 ##__________________________________________________________________||
-class MockReader(object):
-    pass
+MockReader = collections.namedtuple('MockReader', 'name')
 
 ##__________________________________________________________________||
 class TestCollectorComposite(unittest.TestCase):
@@ -35,9 +40,9 @@ class TestCollectorComposite(unittest.TestCase):
         """
         collector1 = CollectorComposite()
         collector2 = CollectorComposite()
-        collector3 = MockCollector()
-        collector4 = MockCollector()
-        collector5 = MockCollector()
+        collector3 = MockCollector('result3')
+        collector4 = MockCollector('result4')
+        collector5 = MockCollector('result5')
 
         collector1.add(collector2)
         collector2.add(collector3)
@@ -46,34 +51,29 @@ class TestCollectorComposite(unittest.TestCase):
 
         reader1 = ReaderComposite()
         reader2 = ReaderComposite()
-        reader3 = MockReader()
-        reader4 = MockReader()
-        reader5 = MockReader()
+        reader3 = MockReader('name3')
+        reader4 = MockReader('name4')
+        reader5 = MockReader('name5')
 
         reader1.add(reader2)
         reader2.add(reader3)
         reader2.add(reader4)
         reader1.add(reader5)
 
-        collector1.addReader('ds1', reader1)
+        self.assertFalse(collector3.collected)
+        self.assertFalse(collector4.collected)
+        self.assertFalse(collector5.collected)
 
-        self.assertEqual('ds1', collector3._datasetReaderPairs[0][0])
-        self.assertEqual('ds1', collector4._datasetReaderPairs[0][0])
-        self.assertEqual('ds1', collector5._datasetReaderPairs[0][0])
+        self.assertEqual([['result3', 'result4'], 'result5'],
+                         collector1.collect([['ds1', reader1], ['ds2', copy.copy(reader1)]]))
 
-        self.assertIs(reader3, collector3._datasetReaderPairs[0][1])
-        self.assertIs(reader4, collector4._datasetReaderPairs[0][1])
-        self.assertIs(reader5, collector5._datasetReaderPairs[0][1])
+        self.assertEqual([('ds1', reader3), ('ds2', reader3)], collector3.pairs)
+        self.assertEqual([('ds1', reader4), ('ds2', reader4)], collector4.pairs)
+        self.assertEqual([('ds1', reader5), ('ds2', reader5)], collector5.pairs)
 
-        self.assertFalse(collector3._collected)
-        self.assertFalse(collector4._collected)
-        self.assertFalse(collector5._collected)
-
-        collector1.collect()
-
-        self.assertTrue(collector3._collected)
-        self.assertTrue(collector4._collected)
-        self.assertTrue(collector5._collected)
+        self.assertTrue(collector3.collected)
+        self.assertTrue(collector4.collected)
+        self.assertTrue(collector5.collected)
 
 ##__________________________________________________________________||
 
