@@ -91,23 +91,30 @@ class TestEventsInDatasetReader(unittest.TestCase):
 
     def test_standard(self):
 
-        # begin
+        ## begin
         self.obj.begin()
 
-        # read
+        ## create data sets
+        # dataset1 - 3 event builders
         build_events1 = MockEventBuilder('events1')
         build_events2 = MockEventBuilder('events2')
         build_events3 = MockEventBuilder('events3')
         dataset1 = MockDataset('dataset1', (build_events1, build_events2, build_events3))
-        self.obj.read(dataset1)
 
+        # dataset2 - no event builder
         dataset2 = MockDataset('dataset2', ( ))
-        self.obj.read(dataset2)
 
+        # dataset3 - 1 event builder
         build_events4 = MockEventBuilder('events4')
         dataset3 = MockDataset('dataset3', (build_events4, ))
+
+        ## read
+        self.obj.read(dataset1)
+        self.obj.read(dataset2)
         self.obj.read(dataset3)
 
+        # assert eventLoopRunner has received eventLoops with correct
+        # event builders and readers
         self.assertEqual(4, len(self.eventLoopRunner.eventLoops))
 
         eventLoop1 = self.eventLoopRunner.eventLoops[0]
@@ -130,7 +137,7 @@ class TestEventsInDatasetReader(unittest.TestCase):
         self.assertIs(build_events4, eventLoop4.build_events)
         self.assertIsInstance(eventLoop4.reader, MockReader)
 
-        # end
+        ## end
         self.assertFalse(self.eventLoopRunner.ended)
         self.assertFalse(self.collector.collected)
         self.assertIs(self.collector.ret, self.obj.end())
