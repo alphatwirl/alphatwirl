@@ -18,7 +18,7 @@ class CollectorDelegate(object):
             ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
-    def collect(self, dataset_reader_pairs):
-        return self.collector.collect(dataset_reader_pairs)
+    def collect(self, dataset_readers_list):
+        return self.collector.collect(dataset_readers_list)
 
 ##__________________________________________________________________||

@@ -8,15 +8,15 @@ class MockCollector(object):
     def __init__(self, ret = None):
         self.ret = ret
 
-    def collect(self, dataset_reader_pairs):
-        self.pairs = dataset_reader_pairs
+    def collect(self, dataset_readers_list):
+        self.args = dataset_readers_list
         return self.ret
 
 ##__________________________________________________________________||
 MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
-MockPairs = collections.namedtuple('MockPairs', 'name')
+MockArgs = collections.namedtuple('MockArgs', 'name')
 
 ##__________________________________________________________________||
 class TestCollectorDelegate(unittest.TestCase):
@@ -35,9 +35,9 @@ class TestCollectorDelegate(unittest.TestCase):
 
     def test_collect(self):
 
-        pairs = MockPairs('pairs')
-        self.assertIs(self.result, self.obj.collect(pairs))
-        self.assertIs(pairs, self.collector.pairs)
+        args = MockArgs('args')
+        self.assertIs(self.result, self.obj.collect(args))
+        self.assertIs(args, self.collector.args)
 
 ##__________________________________________________________________||
 
