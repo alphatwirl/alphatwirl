@@ -9,8 +9,8 @@ class MockResultsCombinationMethod(object):
     def __init__(self, ret = None):
         self.ret = ret
 
-    def combine(self, dataset_reader_pairs):
-        self.pairs = dataset_reader_pairs
+    def combine(self, dataset_readers_list):
+        self.args = dataset_readers_list
         return self.ret
 
 ##__________________________________________________________________||
@@ -25,7 +25,7 @@ class MockDeliveryMethod(object):
 MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
-MockPairs = collections.namedtuple('MockPairs', 'name')
+MockArgs = collections.namedtuple('MockArgs', 'name')
 
 ##__________________________________________________________________||
 class TestCollector(unittest.TestCase):
@@ -42,9 +42,9 @@ class TestCollector(unittest.TestCase):
 
     def test_collect(self):
 
-        pairs = MockPairs('pairs1')
-        self.assertIs(self.result, self.obj.collect(pairs))
-        self.assertIs(pairs, self.resultsCombinationMethod.pairs)
+        args = MockArgs('args1')
+        self.assertIs(self.result, self.obj.collect(args))
+        self.assertIs(args, self.resultsCombinationMethod.args)
         self.assertIs(self.result, self.deliveryMethod.results)
 
 ##__________________________________________________________________||

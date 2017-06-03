@@ -32,8 +32,8 @@ class Collector(object):
             ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
-    def collect(self, dataset_reader_pairs):
-        results = self.resultsCombinationMethod.combine(dataset_reader_pairs)
+    def collect(self, dataset_readers_list):
+        results = self.resultsCombinationMethod.combine(dataset_readers_list)
         self.deliveryMethod.deliver(results)
         return results
 
