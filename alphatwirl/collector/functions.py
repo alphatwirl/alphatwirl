@@ -1,18 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-import collections
 import itertools
-
-##__________________________________________________________________||
-def add_summarizers_for_the_same_dataset(dataset_summarizer_pairs):
-    ret = collections.OrderedDict()
-    for dataset, summarizer in dataset_summarizer_pairs:
-        if not summarizer: continue
-        if dataset in ret:
-            ## ret[dataset] = ret[dataset] + summarizer # this is slow
-            ret[dataset] += summarizer # faster. it modifies ret[dataset]
-        else:
-            ret[dataset] = summarizer
-    return ret.items()
 
 ##__________________________________________________________________||
 def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan'), sort = True):
