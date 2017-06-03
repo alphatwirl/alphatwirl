@@ -162,6 +162,21 @@ class Test_Count(unittest.TestCase):
             ],
             obj._results
         )
+
+    def test_to_tuple_list(self):
+        obj = Count()
+        obj._results[:] = [
+            [1, 'class1', 'name1', 6, 8],
+            [1, 'class1', 'name2', 3, 6],
+            [1, 'class2', 'name3', 1, 3],
+        ]
+        self.assertEqual(
+            [
+                (1, 'class1', 'name1', 6, 8),
+                (1, 'class1', 'name2', 3, 6),
+                (1, 'class2', 'name3', 1, 3)
+            ], obj.to_tuple_list())
+
 ##__________________________________________________________________||
 class TestCount_operator(unittest.TestCase):
 
