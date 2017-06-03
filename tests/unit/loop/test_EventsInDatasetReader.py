@@ -15,14 +15,11 @@ class MockCollectorReturn(object): pass
 ##__________________________________________________________________||
 class MockCollector(object):
     def __init__(self, ret = None):
-        self.collected = False
+        self.collected = None
         self.ret = ret
 
-        self.pairs = [ ]
-
-    def collect(self, dataset_reader_pairs):
-        self.pairs = dataset_reader_pairs
-        self.collected = True
+    def collect(self, dataset_readers_list):
+        self.collected = dataset_readers_list
         return self.ret
 
 ##__________________________________________________________________||
@@ -86,7 +83,9 @@ class TestEventsInDatasetReader(unittest.TestCase):
         self.eventLoopRunner.run(eventLoop1)
         self.eventLoopRunner.run(eventLoop2)
 
-        self.obj.dataset_names[:] = ['dataset1']
+        dataset1 = MockDataset('dataset1', (build_events1, build_events2))
+
+        self.obj.dataset_nreaders[:] = [(dataset1, 1)]
         self.assertIsNone(self.obj.end())
 
     def test_standard(self):
@@ -139,19 +138,16 @@ class TestEventsInDatasetReader(unittest.TestCase):
 
         ## end
         self.assertFalse(self.eventLoopRunner.ended)
-        self.assertFalse(self.collector.collected)
+        self.assertIsNone(self.collector.collected)
         self.assertIs(self.collector.ret, self.obj.end())
         self.assertTrue(self.eventLoopRunner.ended)
-        self.assertTrue(self.collector.collected)
 
         expected = [
-            ('dataset1', eventLoop1.reader),
-            ('dataset1', eventLoop2.reader),
-            ('dataset1', eventLoop3.reader),
-            ('dataset3', eventLoop4.reader),
-        ]
+            ('dataset1', (eventLoop1.reader, eventLoop2.reader, eventLoop3.reader), ),
+            ('dataset2', ( )),
+            ('dataset3', (eventLoop4.reader, )),
+            ]
 
         # this asserts the readers are the same python objects
-        self.assertEqual(expected, self.collector.pairs)
-
+        self.assertEqual(expected, self.collector.collected)
 ##__________________________________________________________________||

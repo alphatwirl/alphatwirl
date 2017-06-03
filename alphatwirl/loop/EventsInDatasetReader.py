@@ -28,7 +28,7 @@ class EventsInDatasetReader(object):
 
         self.EventLoop = EventLoop
 
-        self.dataset_names = [ ]
+        self.dataset_nreaders = [ ]
 
     def __repr__(self):
         name_value_pairs = (
@@ -44,12 +44,12 @@ class EventsInDatasetReader(object):
 
     def begin(self):
         self.eventLoopRunner.begin()
-        self.dataset_names = [ ]
+        self.dataset_nreaders = [ ]
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
+        self.dataset_nreaders.append((dataset, len(build_events_list)))
         for build_events in build_events_list:
-            self.dataset_names.append(dataset.name)
             reader = copy.deepcopy(self.reader)
             eventLoop = self.EventLoop(build_events, reader)
             self.eventLoopRunner.run(eventLoop)
@@ -57,17 +57,23 @@ class EventsInDatasetReader(object):
     def end(self):
         returned_readers = self.eventLoopRunner.end()
 
-        if len(self.dataset_names) != len(returned_readers):
+        nreaders_total = sum((n for _, n in self.dataset_nreaders))
+
+        if nreaders_total != len(returned_readers):
             import logging
             logger = logging.getLogger(__name__)
             logger.warning(
                 'the same number of the readers were not returned: {} readers sent, {} readers returned. cannot collect results'.format(
-                    len(self.dataset_names),
+                    nreaders_total,
                     len(returned_readers)
                 ))
             return None
 
-        dataset_reader_pairs = zip(self.dataset_names, returned_readers)
-        return self.collector.collect(dataset_reader_pairs)
+        dataset_readers_list = [ ]
+        i = 0
+        for dataset, nreaders in self.dataset_nreaders:
+            dataset_readers_list.append((dataset.name, tuple(returned_readers[i:(i + nreaders)])))
+            i += nreaders
+        return self.collector.collect(dataset_readers_list)
 
 ##__________________________________________________________________||
