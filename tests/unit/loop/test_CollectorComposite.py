@@ -9,18 +9,18 @@ from alphatwirl.loop import CollectorComposite, ReaderComposite
 ##__________________________________________________________________||
 class MockCollector(object):
     def __init__(self, ret = None):
-        self.collected = False
+        self.collected = None
         self.ret = ret
 
-        self.pairs = [ ]
-
-    def collect(self, dataset_reader_pairs):
-        self.pairs = dataset_reader_pairs
-        self.collected = True
+    def collect(self, dataset_readers_list):
+        self.collected = dataset_readers_list
         return self.ret
 
 ##__________________________________________________________________||
-MockReader = collections.namedtuple('MockReader', 'name')
+class MockReader(object): pass
+
+##__________________________________________________________________||
+class MockDataset(object): pass
 
 ##__________________________________________________________________||
 class TestCollectorComposite(unittest.TestCase):
@@ -38,6 +38,8 @@ class TestCollectorComposite(unittest.TestCase):
             |
             |- 5:leaf
         """
+
+        ## build collector
         collector1 = CollectorComposite()
         collector2 = CollectorComposite()
         collector3 = MockCollector('result3')
@@ -49,31 +51,61 @@ class TestCollectorComposite(unittest.TestCase):
         collector2.add(collector4)
         collector1.add(collector5)
 
+        ## build reader
         reader1 = ReaderComposite()
         reader2 = ReaderComposite()
-        reader3 = MockReader('name3')
-        reader4 = MockReader('name4')
-        reader5 = MockReader('name5')
+        reader3 = MockReader()
+        reader4 = MockReader()
+        reader5 = MockReader()
 
         reader1.add(reader2)
         reader2.add(reader3)
         reader2.add(reader4)
         reader1.add(reader5)
 
-        self.assertFalse(collector3.collected)
-        self.assertFalse(collector4.collected)
-        self.assertFalse(collector5.collected)
+        ## copy readers
+        reader1_copy1 = copy.deepcopy(reader1)
+        reader1_copy2 = copy.deepcopy(reader1)
+        reader1_copy3 = copy.deepcopy(reader1)
+        reader1_copy4 = copy.deepcopy(reader1)
+
+        ## build data set
+        dataset1 = MockDataset()
+        dataset2 = MockDataset()
+        dataset3 = MockDataset()
+
+        ##
+        self.assertIsNone(collector3.collected)
+        self.assertIsNone(collector4.collected)
+        self.assertIsNone(collector5.collected)
+
+        dataset_readers_list = [
+            (dataset1, (reader1_copy1, reader1_copy2, reader1_copy3)),
+            (dataset2, ( )),
+            (dataset3, (reader1_copy4, )),
+        ]
 
         self.assertEqual([['result3', 'result4'], 'result5'],
-                         collector1.collect([['ds1', reader1], ['ds2', copy.copy(reader1)]]))
+                         collector1.collect(dataset_readers_list))
 
-        self.assertEqual([('ds1', reader3), ('ds2', reader3)], collector3.pairs)
-        self.assertEqual([('ds1', reader4), ('ds2', reader4)], collector4.pairs)
-        self.assertEqual([('ds1', reader5), ('ds2', reader5)], collector5.pairs)
+        self.assertEqual([
+            (dataset1, (reader1_copy1.readers[0].readers[0], reader1_copy2.readers[0].readers[0], reader1_copy3.readers[0].readers[0])),
+            (dataset2, ( )),
+            (dataset3, (reader1_copy4.readers[0].readers[0], )),
+        ], collector3.collected)
 
-        self.assertTrue(collector3.collected)
-        self.assertTrue(collector4.collected)
-        self.assertTrue(collector5.collected)
+        self.assertEqual([
+            (dataset1, (reader1_copy1.readers[0].readers[1], reader1_copy2.readers[0].readers[1], reader1_copy3.readers[0].readers[1])),
+            (dataset2, ( )),
+            (dataset3, (reader1_copy4.readers[0].readers[1], )),
+        ], collector4.collected)
+
+        self.assertEqual([
+            (dataset1, (reader1_copy1.readers[1], reader1_copy2.readers[1], reader1_copy3.readers[1])),
+            (dataset2, ( )),
+            (dataset3, (reader1_copy4.readers[1], )),
+        ], collector5.collected)
+
 
 ##__________________________________________________________________||
 

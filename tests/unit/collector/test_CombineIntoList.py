@@ -35,12 +35,17 @@ class MockSummarizer(object):
 
     def __add__(self, other):
         res = copy.deepcopy(self._results)
+        if other == 0: # other is 0 when e.g. sum([obj1, obj2])
+            return self.__class__(res)
         for k, v in other._results.iteritems():
             if k not in res:
                 res[k] = copy.deepcopy(v)
             else:
                 res[k].contents[0] = res[k].contents[0] + v.contents[0]
         return self.__class__(res)
+
+    def __radd__(self, other):
+        return self.__add__(other)
 
 ##__________________________________________________________________||
 MockSummary = collections.namedtuple('MockSummary', 'contents')
@@ -97,11 +102,10 @@ class TestCombineIntoList(unittest.TestCase):
             )
         )
 
-        datasetReaderPairs = [
-            ('QCD', reader1),
-            ('QCD', reader2),
-            ('TTJets', reader3),
-            ('WJets', reader4),
+        dataset_readers_list = [
+            ('QCD', (reader1, reader2)),
+            ('TTJets', (reader3, )),
+            ('WJets', (reader4, )),
         ]
 
         expected = [
@@ -113,7 +117,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('TTJets', 300, 3, 15, 30)
         ]
 
-        actual = obj.combine(datasetReaderPairs)
+        actual = obj.combine(dataset_readers_list)
 
         self.assertEqual(expected, actual)
 
@@ -134,8 +138,8 @@ class TestCombineIntoList(unittest.TestCase):
             )
         )
 
-        datasetReaderPairs = [
-            ('QCD', reader1),
+        dataset_readers_list = [
+            ('QCD', (reader1, )),
         ]
 
         expected = [
@@ -144,7 +148,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('QCD', 300, 2, 310, 620),
         ]
 
-        actual = obj.combine(datasetReaderPairs)
+        actual = obj.combine(dataset_readers_list)
 
         self.assertEqual(expected, actual)
 
@@ -173,17 +177,16 @@ class TestCombineIntoList(unittest.TestCase):
             )
         )
 
-        datasetReaderPairs = [
-            ('QCD', reader1),
-            ('QCD', reader2),
-            ('TTJets', reader3),
+        dataset_readers_list = [
+            ('QCD', (reader1, reader2)),
+            ('TTJets', (reader3, )),
         ]
 
         expected = [
             ('dataset', 'htbin', 'njetbin', 'n', 'nvar'),
         ]
 
-        actual = obj.combine(datasetReaderPairs)
+        actual = obj.combine(dataset_readers_list)
 
         self.assertEqual(expected, actual)
 
@@ -195,11 +198,11 @@ class TestCombineIntoList(unittest.TestCase):
             datasetColumnName = 'dataset'
         )
 
-        datasetReaderPairs = [ ]
+        dataset_readers_list = [ ]
 
         expected = None
 
-        actual = obj.combine(datasetReaderPairs)
+        actual = obj.combine(dataset_readers_list)
 
         self.assertEqual(expected, actual)
 

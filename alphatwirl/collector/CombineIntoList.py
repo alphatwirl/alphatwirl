@@ -57,29 +57,32 @@ class CombineIntoList(object):
             self.datasetColumnName
         )
 
-    def combine(self, datasetReaderPairs):
+    def combine(self, dataset_readers_list):
 
-        if len(datasetReaderPairs) == 0: return None
+
+        if len(dataset_readers_list) == 0: return None
 
         # e.g.,
-        # datasetReaderPairs = [
-        #     ('QCD',    reader1),
-        #     ('QCD',    reader2),
-        #     ('TTJets', reader3),
-        #     ('WJets',  reader4),
+        # dataset_readers_list = [
+        #     ('QCD',    (reader1, reader2)),
+        #     ('TTJets', (reader3, )),
+        #     ('WJets',  (reader4, )),
+        #     ('ZJets',  ( )),
         # ]
 
+        # remove entries with no readers
+        dataset_readers_list = [l for l in dataset_readers_list if l[1]]
+        if len(dataset_readers_list) == 0: return None
 
-        dataset_summarizer_pairs = [(d, r.results()) for d, r in datasetReaderPairs]
+        dataset_summarizers_list = [(d, tuple(r.results() for r in rs)) for d, rs in dataset_readers_list]
         # e.g.,
-        # dataset_summarizer_pairs = [
-        #     ('QCD',    summarizer1),
-        #     ('QCD',    summarizer2),
-        #     ('TTJets', summarizer3),
-        #     ('WJets',  summarizer4),
+        # dataset_summarizers_list = [
+        #     ('QCD',    (summarizer1, summarizer2)),
+        #     ('TTJets', (summarizer3, ),
+        #     ('WJets',  (summarizer4, ),
         # ]
 
-        dataset_summarizer_pairs = add_summarizers_for_the_same_dataset(dataset_summarizer_pairs)
+        dataset_summarizer_pairs = [(d, sum(s)) for d, s in  dataset_summarizers_list]
         # e.g.,
         # dataset_summarizer_pairs = [
         #     ('QCD',    summarizer1 + summarizer2),

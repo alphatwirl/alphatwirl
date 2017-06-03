@@ -37,7 +37,7 @@ class CollectorComposite(object):
         """
         self.components.append(collector)
 
-    def collect(self, dataset_reader_pairs):
+    def collect(self, dataset_readers_list):
         """collect results
 
 
@@ -51,14 +51,13 @@ class CollectorComposite(object):
             if self.progressReporter is not None:
                 report = ProgressReport(name = 'collecting results', done = i + 1, total = len(self.components))
                 self.progressReporter.report(report)
-            ret.append(collector.collect([(dataset, readerComposite.readers[i])
-                                          for dataset, readerComposite in dataset_reader_pairs]))
-
+            ret.append(collector.collect([(dataset, tuple(r.readers[i] for r in readerComposites))
+                                          for dataset, readerComposites in dataset_readers_list]))
         return ret
 
-        # # in one line without the progress bar
-        # return [collector.collect([(dataset, readerComposite.readers[i])
-        #                            for dataset, readerComposite in dataset_reader_pairs])
-        #         for i, collector in enumerate(self.components)]
+        ## in one line without the progress bar
+        #return [collector.collect([(dataset, tuple(r.readers[i] for r in readerComposites))
+        #                           for dataset, readerComposites in dataset_readers_list])
+        #        for i, collector in enumerate(self.components)]
 
 ##__________________________________________________________________||
