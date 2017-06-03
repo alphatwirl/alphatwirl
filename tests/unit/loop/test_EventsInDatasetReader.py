@@ -144,18 +144,14 @@ class TestEventsInDatasetReader(unittest.TestCase):
         self.assertTrue(self.eventLoopRunner.ended)
         self.assertTrue(self.collector.collected)
 
-        self.assertEqual(4, len(self.collector.pairs))
+        expected = [
+            ('dataset1', eventLoop1.reader),
+            ('dataset1', eventLoop2.reader),
+            ('dataset1', eventLoop3.reader),
+            ('dataset3', eventLoop4.reader),
+        ]
 
-        self.assertEqual("dataset1", self.collector.pairs[0][0])
-        self.assertIs(eventLoop1.reader, self.collector.pairs[0][1])
-
-        self.assertEqual("dataset1", self.collector.pairs[1][0])
-        self.assertIs(eventLoop2.reader, self.collector.pairs[1][1])
-
-        self.assertEqual("dataset1", self.collector.pairs[2][0])
-        self.assertIs(eventLoop3.reader, self.collector.pairs[2][1])
-
-        self.assertEqual("dataset3", self.collector.pairs[3][0])
-        self.assertIs(eventLoop4.reader, self.collector.pairs[3][1])
+        # this asserts the readers are the same python objects
+        self.assertEqual(expected, self.collector.pairs)
 
 ##__________________________________________________________________||
