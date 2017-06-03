@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 import collections
 
-from alphatwirl.collector.functions import convert_key_vals_dict_to_tuple_list
+from alphatwirl.summary import convert_key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
@@ -31,23 +31,6 @@ class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
         expected = [ ]
 
         actual = convert_key_vals_dict_to_tuple_list(counts)
-        self.assertEqual(expected, actual)
-
-    def test_sort_off(self):
-
-        counts = collections.OrderedDict([
-            ((3, 12), [(5, 7), (2, 3)]),
-            ((1, 10), [(4, 6)]),
-            ((2, 11), [ ]),
-        ])
-
-        expected = [
-            (3, 12, 5, 7),
-            (3, 12, 2, 3),
-            (1, 10, 4, 6),
-        ]
-
-        actual = convert_key_vals_dict_to_tuple_list(counts, sort = False)
         self.assertEqual(expected, actual)
 
     def test_fill_nan(self):

@@ -25,8 +25,7 @@ def build_counter_collector_pair(tblcfg):
         nevents = tblcfg['nevents']
     )
     resultsCombinationMethod = CombineIntoList(
-        summaryColumnNames = tblcfg['keyOutColumnNames'] + tblcfg['valOutColumnNames'],
-        sort = tblcfg['sort']
+        summaryColumnNames = tblcfg['keyOutColumnNames'] + tblcfg['valOutColumnNames']
     )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None
     collector = Collector(resultsCombinationMethod, deliveryMethod)
