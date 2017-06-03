@@ -53,6 +53,18 @@ class TestSummarizer(unittest.TestCase):
         }
         self.assertEqual(expected, obj.results())
 
+    def test_to_tuple_list(self):
+        obj = Summarizer(Summary = Sum)
+        obj.add(('A', ), (12, ))
+        obj.add(('B', ), (20, ))
+        self.assertEqual([('A', 12), ('B', 20)], obj.to_tuple_list())
+
+    def test_to_tuple_list_key_not_tuple(self):
+        obj = Summarizer(Summary = Sum)
+        obj.add('A', (12, )) # the keys are not a tuple
+        obj.add(2, (20, ))   #
+        self.assertEqual([(2, 20), ('A', 12)], obj.to_tuple_list())
+
 ##__________________________________________________________________||
 class TestSummarizer_operator(unittest.TestCase):
 
