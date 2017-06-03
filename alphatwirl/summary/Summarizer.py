@@ -64,7 +64,12 @@ def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan')):
     vlen = max([len(vs) for vs in itertools.chain(*dict_.values())])
 
     for k, vs in dict_.iteritems():
-        d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+        try:
+            d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+        except TypeError:
+            # assume k is not a tuple
+            d.extend([(k, ) + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+
 
     return d
 
