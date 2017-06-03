@@ -2,18 +2,18 @@ import unittest
 import numpy as np
 import collections
 
-from alphatwirl.collector.functions import convert_key_vals_dict_to_tuple_list
+from alphatwirl.summary import convert_key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
 
     def test_example(self):
 
-        counts  = {
-            (1, 10): [(4, 6)],
-            (2, 11): [ ],
-            (3, 12): [(2, 3), (5, 7)],
-        }
+        counts  = collections.OrderedDict((
+            ((1, 10), [(4, 6)]),
+            ((2, 11), [ ]),
+            ((3, 12), [(2, 3), (5, 7)]),
+        ))
 
         expected = [
             (1, 10, 4, 6),
@@ -33,31 +33,14 @@ class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
         actual = convert_key_vals_dict_to_tuple_list(counts)
         self.assertEqual(expected, actual)
 
-    def test_sort_off(self):
-
-        counts = collections.OrderedDict([
-            ((3, 12), [(5, 7), (2, 3)]),
-            ((1, 10), [(4, 6)]),
-            ((2, 11), [ ]),
-        ])
-
-        expected = [
-            (3, 12, 5, 7),
-            (3, 12, 2, 3),
-            (1, 10, 4, 6),
-        ]
-
-        actual = convert_key_vals_dict_to_tuple_list(counts, sort = False)
-        self.assertEqual(expected, actual)
-
     def test_fill_nan(self):
 
-        counts  = {
-            (1, 10): [(4, 6, 2, 1)],
-            (2, 11): [ ],
-            (3, 12): [(2, 3, 4, 5), (5, 7)],
-            (4, 13): [( ), ( )]
-        }
+        counts  = collections.OrderedDict((
+            ((1, 10), [(4, 6, 2, 1)]),
+            ((2, 11), [ ]),
+            ((3, 12), [(2, 3, 4, 5), (5, 7)]),
+            ((4, 13), [( ), ( )])
+        ))
 
         expected = [
             (1, 10, 4, 6, 2, 1),
@@ -72,12 +55,12 @@ class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
 
     def test_fill_0(self):
 
-        counts  = {
-            (1, 10): [(4, 6, 2, 1)],
-            (2, 11): [ ],
-            (3, 12): [(2, 3, 4, 5), (5, 7)],
-            (4, 13): [( ), ( )]
-        }
+        counts  = collections.OrderedDict((
+            ((1, 10), [(4, 6, 2, 1)]),
+            ((2, 11), [ ]),
+            ((3, 12), [(2, 3, 4, 5), (5, 7)]),
+            ((4, 13), [( ), ( )])
+        ))
 
         expected = [
             (1, 10, 4, 6, 2, 1),
@@ -92,16 +75,33 @@ class Test_convert_key_vals_dict_to_tuple_list(unittest.TestCase):
 
     def test_numpy(self):
 
-        counts  = {
-            (1, 10): [np.array((4, 6))],
-            (2, 11): [ ],
-            (3, 12): [np.array((2, 3)), np.array((5, 7))],
-        }
+        counts  = collections.OrderedDict((
+            ((1, 10), [np.array((4, 6))]),
+            ((2, 11), [ ]),
+            ((3, 12), [np.array((2, 3)), np.array((5, 7))]),
+        ))
 
         expected = [
             (1, 10, 4, 6),
             (3, 12, 2, 3),
             (3, 12, 5, 7),
+        ]
+
+        actual = convert_key_vals_dict_to_tuple_list(counts)
+        self.assertEqual(expected, actual)
+
+    def test_key_not_tuple(self):
+
+        counts  = collections.OrderedDict((
+            ((1, ), [(4, 6)]),
+            (2, [ ]),
+            (3, [(2, 3), (5, 7)]),
+        ))
+
+        expected = [
+            (1, 4, 6),
+            (3, 2, 3),
+            (3, 5, 7),
         ]
 
         actual = convert_key_vals_dict_to_tuple_list(counts)

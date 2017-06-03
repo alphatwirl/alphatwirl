@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-##__________________________________________________________________||
 import collections
+import itertools
 import copy
 
 ##__________________________________________________________________||
@@ -29,9 +29,6 @@ class Summarizer(object):
     def keys(self):
         return self._results.keys()
 
-    def results(self):
-        return self._results
-
     def __copy__(self):
         ret = self.__class__(self.Summary)
         self._add_results_inplace(ret._results, self._results)
@@ -54,5 +51,49 @@ class Summarizer(object):
         # res1 += res2, modify res1
         for k, v in res2.iteritems():
             res1[k] += v
+
+    def results(self):
+        return self._results
+
+    def to_key_vals_dict(self):
+        keys_sorted = sorted(self._results.keys())
+        ret = collections.OrderedDict([(k, self._results[k].contents) for k in keys_sorted])
+        # e.g.,
+        # OrderedDict([
+        #     ((200, 2), [array([120, 240])]),
+        #     ((300, 2), [array([490, 980])]),
+        #     ((300, 3), [array([210, 420])])
+        # ])
+        return ret
+
+    def to_tuple_list(self):
+        key_vals_dict = self.to_key_vals_dict()
+        ret = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0)
+        # e.g.,
+        # [
+        #     (200, 2, 120, 240),
+        #     (300, 2, 490, 980),
+        #     (300, 3, 210, 420)
+        # ]
+        return ret
+
+##__________________________________________________________________||
+def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan')):
+
+    d = [ ]
+
+    if not dict_: return d
+
+    vlen = max([len(vs) for vs in itertools.chain(*dict_.values())])
+
+    for k, vs in dict_.iteritems():
+        try:
+            d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+        except TypeError:
+            # assume k is not a tuple
+            d.extend([(k, ) + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+
+
+    return d
 
 ##__________________________________________________________________||

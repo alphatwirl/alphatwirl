@@ -71,4 +71,7 @@ class Count(object):
             r1[IDX_PASS] += r2[IDX_PASS]
             r1[IDX_TOTAL] += r2[IDX_TOTAL]
 
+    def to_tuple_list(self):
+        return [tuple(e) for e in self._results]
+
 ##__________________________________________________________________||

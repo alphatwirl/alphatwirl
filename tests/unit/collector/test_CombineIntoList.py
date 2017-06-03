@@ -24,9 +24,6 @@ class MockSummarizer(object):
     def __init__(self, results):
         self._results = results
 
-    def results(self):
-        return self._results
-
     def __repr__(self):
         return '{}({!r})'.format(
             self.__class__.__name__,
@@ -34,78 +31,62 @@ class MockSummarizer(object):
         )
 
     def __add__(self, other):
-        res = copy.deepcopy(self._results)
-        if other == 0: # other is 0 when e.g. sum([obj1, obj2])
-            return self.__class__(res)
-        for k, v in other._results.iteritems():
-            if k not in res:
-                res[k] = copy.deepcopy(v)
-            else:
-                res[k].contents[0] = res[k].contents[0] + v.contents[0]
+        if other == 0:
+            res = copy.copy(self._results)
+        else:
+            res = copy.copy(self._results) + copy.copy(other._results)
         return self.__class__(res)
 
     def __radd__(self, other):
         return self.__add__(other)
 
-##__________________________________________________________________||
-MockSummary = collections.namedtuple('MockSummary', 'contents')
+    def to_tuple_list(self):
+        return self._results
 
 ##__________________________________________________________________||
 class TestCombineIntoList(unittest.TestCase):
 
-    def test_repr(self):
-        obj = CombineIntoList(
+    def setUp(self):
+        self.obj = CombineIntoList(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
-            sort = True,
             datasetColumnName = 'dataset'
         )
-        repr(obj)
+
+    def tearDown(self):
+        pass
+
+    def test_repr(self):
+        repr(self.obj)
 
     def test_example(self):
 
-        obj = CombineIntoList(
-            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
-            sort = True,
-            datasetColumnName = 'dataset'
-        )
-
         reader1 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([
-                    ((200, 2), MockSummary(contents = [np.array((120, 240))])),
-                    ((300, 2), MockSummary(contents = [np.array((310, 620))])),
-                ])
-            )
-        )
+                [
+                    (200, 2, 120, 240),
+                ]))
 
         reader2 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([
-                    ((300, 2), MockSummary(contents = [np.array((180, 360))])),
-                    ((300, 3), MockSummary(contents = [np.array((210, 420))])),
-                ])
-            )
-        )
+                [
+                    (300, 2, 490, 980),
+                    (300, 3, 210, 420),
+                ]))
 
         reader3 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([
-                    ((300, 2), MockSummary(contents = [np.array((20, 40))])),
-                    ((300, 3), MockSummary(contents = [np.array((15, 30))])),
-                ])
-            )
-        )
+                [
+                    (300, 2, 20, 40),
+                    (300, 3, 15, 30),
+                ]))
 
-        reader4 = MockReader(
-            MockSummarizer(
-                collections.OrderedDict([])
-            )
-        )
+        reader4 = MockReader(MockSummarizer([]))
 
         dataset_readers_list = [
             ('QCD', (reader1, reader2)),
             ('TTJets', (reader3, )),
             ('WJets', (reader4, )),
+            ('ZJets', ( )),
         ]
 
         expected = [
@@ -117,7 +98,7 @@ class TestCombineIntoList(unittest.TestCase):
             ('TTJets', 300, 3, 15, 30)
         ]
 
-        actual = obj.combine(dataset_readers_list)
+        actual = self.obj.combine(dataset_readers_list)
 
         self.assertEqual(expected, actual)
 
@@ -125,18 +106,15 @@ class TestCombineIntoList(unittest.TestCase):
 
         obj = CombineIntoList(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
-            sort = True,
             datasetColumnName = 'dataset'
         )
 
         reader1 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([
-                    ((200, 2), MockSummary(contents = [np.array((120, 240))])),
-                    ((300, 2), MockSummary(contents = [np.array((310, 620))])),
-                ])
-            )
-        )
+                [
+                    (200, 2, 120, 240),
+                    (300, 2, 310, 620),
+                ]))
 
         dataset_readers_list = [
             ('QCD', (reader1, )),
@@ -156,26 +134,20 @@ class TestCombineIntoList(unittest.TestCase):
 
         obj = CombineIntoList(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
-            sort = True,
             datasetColumnName = 'dataset'
         )
 
         reader1 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([])
-            )
-        )
+                [ ]))
 
         reader2 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([])
-            )
-        )
+                [ ]))
+
         reader3 = MockReader(
             MockSummarizer(
-                collections.OrderedDict([])
-            )
-        )
+                [ ]))
 
         dataset_readers_list = [
             ('QCD', (reader1, reader2)),
@@ -194,7 +166,6 @@ class TestCombineIntoList(unittest.TestCase):
 
         obj = CombineIntoList(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
-            sort = True,
             datasetColumnName = 'dataset'
         )
 
