@@ -90,6 +90,6 @@ class TableConfigCompleter(object):
                         prefix = 'tbl_{}'.format(ret['summaryClass'].__name__)
                     )
             if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
-            return ret
+        return ret
 
 ##__________________________________________________________________||
