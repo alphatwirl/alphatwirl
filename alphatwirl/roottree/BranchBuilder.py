@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import logging
+
 from Branch import Branch
 from BranchAddressManager import BranchAddressManager
 from BranchAddressManagerForVector import BranchAddressManagerForVector
@@ -19,12 +21,33 @@ class BranchBuilder(object):
 
     itsdict = { }
 
+    def __repr__(self):
+        name_value_pairs = (
+            ('itsdict', self.__class__.itsdict),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
+    def register_tree(self, tree):
+        if not tree in self.__class__.itsdict:
+            tree.SetBranchStatus('*', 0)
+            self.__class__.itsdict[tree] = { }
+
     def __call__(self, tree, name):
-        if (tree, name) in self.__class__.itsdict:
-            return self.__class__.itsdict[(tree, name)]
+
+        if not tree in self.__class__.itsdict:
+            logger = logging.getLogger(__name__)
+            logger.warning('tree is not registered: {}'.format(tree))
+            self.__class__.itsdict[tree] = { }
+
+        itsdict_tree = self.__class__.itsdict[tree]
+        if name in itsdict_tree:
+            return itsdict_tree[name]
 
         branch = self.imp(tree, name)
-        self.__class__.itsdict[(tree, name)] = branch
+        itsdict_tree[name] = branch
         return branch
 
     def imp(self, tree, name):

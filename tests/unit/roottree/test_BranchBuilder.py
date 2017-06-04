@@ -5,10 +5,12 @@ import unittest
 hasROOT = False
 try:
     import ROOT
-    from alphatwirl.roottree import BranchBuilder
     hasROOT = True
 except ImportError:
     pass
+
+if hasROOT:
+    from alphatwirl.roottree import BranchBuilder
 
 ##__________________________________________________________________||
 class MockFile(object):
@@ -132,6 +134,10 @@ class TestBranchBuilder(unittest.TestCase):
     def test_init(self):
         builder = BranchBuilder()
 
+    def test_repr(self):
+        builder = BranchBuilder()
+        repr(builder)
+
     def test_getattr(self):
         builder = BranchBuilder()
         tree = MockTree()
@@ -184,5 +190,14 @@ class TestBranchBuilder(unittest.TestCase):
         tree = MockTree()
 
         self.assertIsNone(builder(tree, 'EventAuxiliary'))
+
+    def test_register_tree(self):
+        builder = BranchBuilder()
+
+        tree = MockTree()
+
+        builder.register_tree(tree)
+
+        self.assertEqual([('*', 0)], tree.branchstatus)
 
 ##__________________________________________________________________||
