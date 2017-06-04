@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
-from ..collector import CombineIntoList
+from ..collector import ToTupleListWithDatasetColumn
 from ..collector import WriteListToFile
 from ..loop import Collector
 
@@ -24,7 +24,7 @@ def build_counter_collector_pair(tblcfg):
         weightCalculator = tblcfg['weight'],
         nevents = tblcfg['nevents']
     )
-    resultsCombinationMethod = CombineIntoList(
+    resultsCombinationMethod = ToTupleListWithDatasetColumn(
         summaryColumnNames = tblcfg['keyOutColumnNames'] + tblcfg['valOutColumnNames']
     )
     deliveryMethod = WriteListToFile(tblcfg['outFilePath']) if tblcfg['outFile'] else None

@@ -4,10 +4,10 @@ alphatwirl.collector package
 Submodules
 ----------
 
-alphatwirl.collector.CombineIntoList module
+alphatwirl.collector.ToTupleListWithDatasetColumn module
 -------------------------------------------
 
-.. automodule:: alphatwirl.collector.CombineIntoList
+.. automodule:: alphatwirl.collector.ToTupleListWithDatasetColumn
     :members:
     :undoc-members:
     :show-inheritance:

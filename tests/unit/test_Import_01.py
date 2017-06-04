@@ -51,7 +51,7 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(alphatwirl.binning.Round))
         self.assertTrue(inspect.isclass(alphatwirl.binning.RoundLog))
         self.assertTrue(inspect.isclass(alphatwirl.binning.Combine))
-        self.assertTrue(inspect.isclass(alphatwirl.collector.CombineIntoList))
+        self.assertTrue(inspect.isclass(alphatwirl.collector.ToTupleListWithDatasetColumn))
         self.assertTrue(inspect.isclass(alphatwirl.collector.WriteListToFile))
         self.assertTrue(inspect.isclass(alphatwirl.concurrently.CommunicationChannel))
         self.assertTrue(inspect.isclass(alphatwirl.concurrently.CommunicationChannel0))

@@ -3,7 +3,7 @@ import collections
 import copy
 import numpy as np
 
-from alphatwirl.collector import CombineIntoList
+from alphatwirl.collector import ToTupleListWithDatasetColumn
 
 ##__________________________________________________________________||
 class MockReader(object):
@@ -44,10 +44,10 @@ class MockSummarizer(object):
         return self._results
 
 ##__________________________________________________________________||
-class TestCombineIntoList(unittest.TestCase):
+class TestToTupleListWithDatasetColumn(unittest.TestCase):
 
     def setUp(self):
-        self.obj = CombineIntoList(
+        self.obj = ToTupleListWithDatasetColumn(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             datasetColumnName = 'dataset'
         )
@@ -104,7 +104,7 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_oneReader(self):
 
-        obj = CombineIntoList(
+        obj = ToTupleListWithDatasetColumn(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             datasetColumnName = 'dataset'
         )
@@ -132,7 +132,7 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_all_empty_contents(self):
 
-        obj = CombineIntoList(
+        obj = ToTupleListWithDatasetColumn(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             datasetColumnName = 'dataset'
         )
@@ -164,7 +164,7 @@ class TestCombineIntoList(unittest.TestCase):
 
     def test_combine_empty_pairs(self):
 
-        obj = CombineIntoList(
+        obj = ToTupleListWithDatasetColumn(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             datasetColumnName = 'dataset'
         )
