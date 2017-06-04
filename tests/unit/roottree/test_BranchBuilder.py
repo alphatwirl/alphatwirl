@@ -130,6 +130,7 @@ class TestBranchBuilder(unittest.TestCase):
         self.moduleBranchBuilder.branchAddressManager = self.org_branchAddressManager
         self.moduleBranchBuilder.branchAddressManagerForVector = self.org_branchAddressManagerForVector
         self.moduleBranchBuilder.Branch = self.org_Branch
+        BranchBuilder.itsdict.clear()
 
     def test_init(self):
         builder = BranchBuilder()
