@@ -1,4 +1,5 @@
-from CombineIntoList import CombineIntoList
+from ToTupleList import ToTupleList
+from ToTupleListWithDatasetColumn import ToTupleListWithDatasetColumn
 from WriteListToFile import WriteListToFile
 
 ##__________________________________________________________________||
@@ -10,7 +11,8 @@ except ImportError:
     pass
 
 if hasPandas:
-    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
+    from ToDataFrameWithDatasetColumn import ToDataFrameWithDatasetColumn
+    from ToDataFrame import ToDataFrame
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 
 ##__________________________________________________________________||

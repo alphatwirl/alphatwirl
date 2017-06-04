@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-class CombineIntoList(object):
+class ToTupleListWithDatasetColumn(object):
     def __init__(self, summaryColumnNames,
                  datasetColumnName = 'component'
                  ):
