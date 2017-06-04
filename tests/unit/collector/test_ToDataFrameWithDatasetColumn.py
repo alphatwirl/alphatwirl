@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 if hasPandas:
-    from alphatwirl.collector import CombineIntoPandasDataFrame
+    from alphatwirl.collector import ToDataFrameWithDatasetColumn
 
 from .mock import MockReader, MockSummarizer
 
@@ -20,11 +20,11 @@ def assertDataFrameEqual(df1, df2, **kwds):
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
-class TestCombineIntoPandasDataFrame(unittest.TestCase):
+class TestToDataFrameWithDatasetColumn(unittest.TestCase):
     def setUp(self):
         self.addTypeEqualityFunc(pd.core.frame.DataFrame, assertDataFrameEqual)
 
-        self.obj = CombineIntoPandasDataFrame(
+        self.obj = ToDataFrameWithDatasetColumn(
             summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar'),
             datasetColumnName = 'dataset'
         )

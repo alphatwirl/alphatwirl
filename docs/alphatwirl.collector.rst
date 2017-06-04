@@ -12,10 +12,10 @@ alphatwirl.collector.ToTupleListWithDatasetColumn module
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.collector.CombineIntoPandasDataFrame module
+alphatwirl.collector.ToDataFrameWithDatasetColumn module
 ------------------------------------------------------
 
-.. automodule:: alphatwirl.collector.CombineIntoPandasDataFrame
+.. automodule:: alphatwirl.collector.ToDataFrameWithDatasetColumn
     :members:
     :undoc-members:
     :show-inheritance:

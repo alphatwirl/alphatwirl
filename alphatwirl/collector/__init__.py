@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 if hasPandas:
-    from CombineIntoPandasDataFrame import CombineIntoPandasDataFrame
+    from ToDataFrameWithDatasetColumn import ToDataFrameWithDatasetColumn
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 
 ##__________________________________________________________________||

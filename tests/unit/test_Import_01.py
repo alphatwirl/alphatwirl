@@ -26,7 +26,7 @@ class TestImport_01(unittest.TestCase):
 
     @unittest.skipUnless(hasPandas, "has no pandas")
     def test_with_pandas(self):
-        self.assertTrue(inspect.isclass(alphatwirl.collector.CombineIntoPandasDataFrame))
+        self.assertTrue(inspect.isclass(alphatwirl.collector.ToDataFrameWithDatasetColumn))
         self.assertTrue(inspect.isclass(alphatwirl.collector.WritePandasDataFrameToFile))
 
     @unittest.skipUnless(hasROOT, "has no ROOT")
