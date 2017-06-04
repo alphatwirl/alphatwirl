@@ -61,7 +61,7 @@ alphatwirl.loop.EventLoopRunner module
     :show-inheritance:
 
 alphatwirl.loop.EventsInDatasetReader module
-----------------------------------
+--------------------------------------------
 
 .. automodule:: alphatwirl.loop.EventsInDatasetReader
     :members:
