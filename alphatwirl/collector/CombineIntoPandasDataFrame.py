@@ -1,24 +1,38 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
-import pandas
+import pandas as pd
 
-##__________________________________________________________________||
-def combinedToDataFrame(combined, columns):
-    l = combinedToList(combined, columns)
-    l = l[1:] # remove the column header
-    return pandas.DataFrame(l, columns = columns)
+from .ToTupleListWithDatasetColumn import ToTupleListWithDatasetColumn
 
 ##__________________________________________________________________||
 class CombineIntoPandasDataFrame(object):
-    def __init__(self, keyNames, valNames):
-        self.datasetColumnName = 'component'
-        self.keyNames = keyNames
-        self.valNames = valNames
+    def __init__(self, summaryColumnNames,
+                 datasetColumnName = 'component'
+                 ):
 
-    def combine(self, datasetReaderPairs):
-        if len(datasetReaderPairs) == 0: return None
-        combine = Combine()
-        combined = combine.combine(datasetReaderPairs)
-        return combinedToDataFrame(combined, (self.datasetColumnName, ) + self.keyNames + self.valNames)
+        self.summaryColumnNames = summaryColumnNames
+        self.datasetColumnName = datasetColumnName
+        self.to_tuple_list = ToTupleListWithDatasetColumn(
+            summaryColumnNames = summaryColumnNames,
+            datasetColumnName = datasetColumnName)
+
+    def __repr__(self):
+
+        name_value_pairs = (
+            ('summaryColumnNames', self.summaryColumnNames),
+            ('datasetColumnName',  self.datasetColumnName),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
+    def combine(self, dataset_readers_list):
+        tuple_list = self.to_tuple_list.combine(dataset_readers_list)
+        if tuple_list is None:
+            return None
+        header = tuple_list[0]
+        contents = tuple_list[1:]
+        return pd.DataFrame(contents, columns = header)
 
 ##__________________________________________________________________||
