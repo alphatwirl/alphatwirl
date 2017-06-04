@@ -29,6 +29,9 @@ class TestToDataFrameWithDatasetColumn(unittest.TestCase):
             datasetColumnName = 'dataset'
         )
 
+    def test_repr(self):
+        repr(self.obj)
+
     def test_example(self):
 
         reader1 = MockReader(
