@@ -12,6 +12,7 @@ except ImportError:
 
 if hasPandas:
     from ToDataFrameWithDatasetColumn import ToDataFrameWithDatasetColumn
+    from ToDataFrame import ToDataFrame
     from WritePandasDataFrameToFile import WritePandasDataFrameToFile
 
 ##__________________________________________________________________||
