@@ -6,9 +6,9 @@ from BranchBuilder import BranchBuilder
 class BEvents(Events):
     def __init__(self, tree, maxEvents = -1, start = 0):
         super(BEvents, self).__init__(tree, maxEvents, start)
-        tree.SetBranchStatus('*', 0)
         self.branches = { }
         self.buildBranch = BranchBuilder()
+        self.buildBranch.register_tree(tree)
 
     def __repr__(self):
         return '{}({}, branches = {!r})'.format(
