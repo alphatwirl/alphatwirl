@@ -76,6 +76,52 @@ class TestBEventsWithFileBranch(unittest.TestCase):
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
 # @unittest.skip("skip TestBEventsWithFile")
+class TestBEventsWithFileBranchTypes(unittest.TestCase):
+
+    def setUp(self):
+        inputFile = 'sample_03.root'
+        treeName = 'tree'
+        inputPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), inputFile)
+
+        self.inputFile = ROOT.TFile.Open(inputPath)
+        self.tree = self.inputFile.Get(treeName)
+        self.events = Events(self.tree)
+
+    def tearDown(self):
+        pass
+
+    def test_event(self):
+
+        event = self.events[0]
+        self.assertEqual(-125, event.bChar[0])
+        self.assertEqual(253, event.bUChar[0])
+        self.assertEqual(-10, event.bShort[0])
+        self.assertEqual(65530, event.bUShort[0])
+        self.assertEqual(-2147483626, event.bInt[0])
+        self.assertEqual(4294967290, event.bUInt[0])
+        self.assertAlmostEqual(-0.123, event.bFloat[0])
+        self.assertAlmostEqual(-2.345, event.bDouble[0])
+        self.assertEqual(-4611686018427387900, event.bLong64[0])
+        self.assertEqual(9223372036854775802, event.bULong64[0])
+        self.assertEqual(1, event.bBool[0])
+
+        event = self.events[1]
+        self.assertEqual(127, event.bChar[0])
+        self.assertEqual(4, event.bUChar[0])
+        self.assertEqual(32765, event.bShort[0])
+        self.assertEqual(8, event.bUShort[0])
+        self.assertEqual(2147483640, event.bInt[0])
+        self.assertEqual(12, event.bUInt[0])
+        self.assertAlmostEqual(0.244, event.bFloat[0])
+        self.assertAlmostEqual(3.122, event.bDouble[0])
+        self.assertEqual(9223372036854775733, event.bLong64[0])
+        self.assertEqual(123, event.bULong64[0])
+        self.assertEqual(0, event.bBool[0])
+
+
+##__________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
+# @unittest.skip("skip TestBEventsWithFile")
 class TestBEventsWithFileVector(unittest.TestCase):
 
     def test_vector(self):

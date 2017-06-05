@@ -79,11 +79,17 @@ def inspectLeaf(tree, bname):
     # https://root.cern.ch/root/html/RtypesCore.h
     # https://docs.python.org/2/library/array.html
     typedic = dict(
-        Bool_t = 'i',
-        Double_t = 'd',
+        Char_t = 'b',
+        UChar_t = 'B',
+        Short_t = 'h',
+        UShort_t = 'H',
         Int_t = 'i',
         UInt_t = 'I',
+        Float_t = 'f',
+        Double_t = 'd',
+        Long64_t = 'l',
         ULong64_t = 'L',
+        Bool_t = 'i',
     )
 
     leaf = tree.GetLeaf(bname)
