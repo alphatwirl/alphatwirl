@@ -42,29 +42,29 @@ void create_sample_03()
   // save 2 events
 
   // 1st event
-  bChar = -3;
-  bUChar = 2;
+  bChar = -125;
+  bUChar = 253;
   bShort = -10;
-  bUShort = 11;
-  bInt = -22;
-  bUInt = 32;
+  bUShort = 65530;
+  bInt = -2147483626;
+  bUInt = 4294967290;
   bFloat = -0.123;
   bDouble = -2.345;
-  bLong64 = -252;
-  bULong64 = 332;
+  bLong64 = -4611686018427387900;
+  bULong64 = 9223372036854775802;
   bBool = 1;
   t->Fill();
 
   // 2nd event
-  bChar = 8;
+  bChar = 127;
   bUChar = 4;
-  bShort = 15;
+  bShort = 32765;
   bUShort = 8;
-  bInt = 42;
+  bInt = 2147483640;
   bUInt = 12;
   bFloat = 0.244;
   bDouble = 3.122;
-  bLong64 = 512;
+  bLong64 = 9223372036854775733;
   bULong64 = 123;
   bBool = 0;
   t->Fill();
