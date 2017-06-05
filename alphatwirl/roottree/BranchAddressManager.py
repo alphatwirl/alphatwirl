@@ -76,9 +76,10 @@ def inspectLeaf(tree, bname):
 
 
     # This dict maps a ROOT type to a type code of the python array
-    # https://root.cern.ch/root/html/Rtypes.h
+    # https://root.cern.ch/root/html/RtypesCore.h
     # https://docs.python.org/2/library/array.html
     typedic = dict(
+        Bool_t = 'i',
         Double_t = 'd',
         Int_t = 'i',
         UInt_t = 'I',
