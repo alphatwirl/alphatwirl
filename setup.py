@@ -6,6 +6,6 @@ setup(
     description = 'A Python library for summarizing event data',
     author = 'Tai Sakuma',
     author_email = 'tai.sakuma@gmail.com',
-    url = 'https://github.com/TaiSakuma/AlphaTwirl',
+    url = 'https://github.com/alphatwirl/alphatwirl',
     packages = find_packages(exclude=['docs', 'images', 'tests']),
 )
