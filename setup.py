@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = 'AlphaTwirl',
+    name = 'alphatwirl',
     version= '0.9',
     description = 'A Python library for summarizing event data',
     author = 'Tai Sakuma',
