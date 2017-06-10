@@ -54,4 +54,5 @@ docs/_build/
 target/
 
 *~
+.*sw[op]
 tests/profile_*.txt
