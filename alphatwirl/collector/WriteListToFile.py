@@ -21,7 +21,9 @@ class WriteListToFile(object):
         self._close(f)
 
     def _open(self, path):
-        mkdir_p(os.path.dirname(path))
+        directory = os.path.dirname(path)
+        if directory:
+            mkdir_p(directory)
         return open(path, 'w')
 
     def _close(self, file): file.close()
