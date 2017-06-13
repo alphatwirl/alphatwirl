@@ -43,11 +43,6 @@ def run_tasks():
 
         result = run(package_path)
 
-        result_path = compose_result_path(package_path)
-        # e.g., '/a/b/c/d/results/task_00003/result.p.gz'
-
-        store_result(result, result_path)
-
 ##__________________________________________________________________||
 def print_logs(error):
     import socket
@@ -101,38 +96,6 @@ def run(package_path):
     package = pickle.load(f)
     result = package.task(*package.args, **package.kwargs)
     return result
-
-##__________________________________________________________________||
-def compose_result_path(package_path):
-
-    # e.g., package_path = 'c/d/task_00003.p.gz'
-
-    taskdir = os.path.dirname(os.path.abspath(package_path))
-    # e.g., '/a/b/c/d'
-
-    result_topdir = os.path.join(taskdir, 'results')
-    # e.g., '/a/b/c/d/results'
-
-    package_basename =  os.path.basename(package_path)
-    # e.g., 'task_00003.p.gz'
-
-    resultdir_basename = os.path.splitext(package_basename)[0]
-    resultdir_basename = os.path.splitext(resultdir_basename)[0]
-    # e.g., 'task_00003'
-
-    resultdir = os.path.join(result_topdir, resultdir_basename)
-    # e.g., '/a/b/c/d/results/task_00003'
-
-    result_path = os.path.join(resultdir, 'result.p.gz')
-    # e.g., '/a/b/c/d/results/task_00003/result.p.gz'
-
-    return result_path
-
-##__________________________________________________________________||
-def store_result(result, result_path):
-    mkdir_p(os.path.dirname(result_path))
-    f = gzip.open(result_path, 'wb')
-    pickle.dump(result, f, protocol = pickle.HIGHEST_PROTOCOL)
 
 ##__________________________________________________________________||
 def mkdir_p(path):
