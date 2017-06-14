@@ -123,8 +123,8 @@ class CommunicationChannel(object):
             logger.warning('the drop box is not open')
             return
 
-        results = self.dropbox.receive()
-        return results
+        results, path = self.dropbox.receive()
+        return results, path
 
     def end(self):
         if not self.isopen: return

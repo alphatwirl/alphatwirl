@@ -81,7 +81,6 @@ class SGEJobSubmitter(object):
         clusterids_finished = [i for i in self.clusterids_outstanding if i not in clusterids]
         self.clusterids_finished.extend(clusterids_finished)
         self.clusterids_outstanding[:] = clusterids
-        print "{} jobs remaining".format(len(clusterids))
 
         # logging
         counter = collections.Counter(statuses)
@@ -150,7 +149,7 @@ def try_executing_until_succeed(procargs):
             stderr = subprocess.PIPE
         )
         stdout, stderr =  proc.communicate()
-        success = not (proc.returncode or stderr)
+        success = not (proc.returncode or stderr) or "not exist" in stderr
 
         #
         if success: break
@@ -162,8 +161,7 @@ def try_executing_until_succeed(procargs):
         #
         time.sleep(sleep)
 
-
-    if "not exist" in stdout: return []
+    if "not exist" in stderr: return []
     elif "error state" in stdout: retval = "{} 1".format(procargs[-1])
     else: retval = "{} 2".format(procargs[-1])
     return [retval]

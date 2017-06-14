@@ -1,6 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import logging
 import time
+import os
+import glob
+import subprocess
 from operator import itemgetter
 
 from .WorkingArea import WorkingArea
@@ -79,11 +82,34 @@ class TaskPackageDropbox(object):
             logger.warning('received KeyboardInterrupt')
             self.dispatcher.terminate()
 
+        cwd = os.getcwd()
+        os.chdir(os.path.join(cwd, self.workingArea.path, "results"))
+        self.hadd_files()
+        os.chdir(cwd)
+
         # sort in the order of package_index
         pkgidx_result_pairs = sorted(pkgidx_result_pairs, key = itemgetter(0))
 
         results = [result for i, result in pkgidx_result_pairs]
-        return results
+        return results, self.workingArea.path
+
+    def hadd_files(self):
+        rootfiles = list(set(map(os.path.basename, glob.glob("*/*.root"))))
+        for rootfile in rootfiles:
+            files_to_hadd = glob.glob("*/{}".format(rootfile))
+            if len(files_to_hadd) == 1:
+                commands = ["cp", files_to_hadd[0], rootfile]
+            else:
+                commands = ["hadd", rootfile] + files_to_hadd
+
+            proc = subprocess.Popen(
+                commands,
+                stdout = subprocess.PIPE,
+                stderr = subprocess.PIPE,
+                )
+            logger = logging.getLogger(__name__)
+            logger.info(" ".join(commands))
+            out, err = proc.communicate()
 
     def close(self):
         self.dispatcher.terminate()

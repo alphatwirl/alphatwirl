@@ -94,7 +94,10 @@ def try_make_file(filename):
 def run(package_path):
     f = gzip.open(package_path, 'rb')
     package = pickle.load(f)
+    cwd = os.getcwd()
+    os.chdir(os.path.join(cwd, "results", package_path.replace(".p.gz","")))
     result = package.task(*package.args, **package.kwargs)
+    os.chdir(cwd)
     return result
 
 ##__________________________________________________________________||

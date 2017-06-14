@@ -8,6 +8,8 @@ import logging
 import tarfile
 import gzip
 
+from ..misc import mkdir_p
+
 try:
    import cPickle as pickle
 except:
@@ -63,18 +65,19 @@ class WorkingArea(object):
         dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
-        result_path = os.path.join(self.path, 'results', dirname, 'result.p.gz')
+        err_path = os.path.join(self.path, 'results', dirname, 'stderr.txt')
+        out_path = os.path.join(self.path, 'results', dirname, 'stdout.txt')
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
-        try:
-           f = gzip.open(result_path, 'rb')
-           result = pickle.load(f)
-        except (IOError, EOFError) as e:
-           logger = logging.getLogger(__name__)
-           logger.warning(e)
-           return None
+        with open(err_path, 'r') as f:
+            content = f.read().strip()
+            if len(content) > 0:
+                logger = logging.getLogger(__name__)
+                logger.error(content)
+                return None
 
-        return result
+        with open(out_path, 'r') as f:
+            return f.read()
 
     def close(self):
         self.path = None
@@ -85,6 +88,7 @@ class WorkingArea(object):
         prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
         # e.g., 'tpd_20161129_122841_'
 
+        mkdir_p(dir)
         path = tempfile.mkdtemp(prefix = prefix, dir = dir)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF'
 

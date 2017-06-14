@@ -86,7 +86,7 @@ class MPEventLoopRunner(object):
 
         """
 
-        results = self.communicationChannel.receive()
+        results, path = self.communicationChannel.receive()
 
         if self.nruns != len(results):
             import logging
@@ -98,6 +98,6 @@ class MPEventLoopRunner(object):
                     self.nruns
                 ))
 
-        return results
+        return results, path
 
 ##__________________________________________________________________||
