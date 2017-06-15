@@ -43,7 +43,7 @@ class SGEJobSubmitter(object):
             job_script = 'job_script.sh',
             out = os.path.join(resultdir, 'stdout.txt'),
             error = os.path.join(resultdir, 'stderr.txt'),
-            time = "3:0:0",
+            time = "1800",
         )
 
         os.system("echo \"python {job_script} {args}\" > job_script.sh".format(
