@@ -33,5 +33,6 @@ log_handler = logging.StreamHandler()
 log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 log_handler.setFormatter(log_formatter)
 logger.addHandler(log_handler)
+logger.propagate = False
 
 ##__________________________________________________________________||
