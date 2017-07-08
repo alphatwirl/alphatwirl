@@ -63,7 +63,6 @@ class TestImport_01(unittest.TestCase):
         self.assertTrue(inspect.isclass(alphatwirl.concurrently.HTCondorJobSubmitter))
         self.assertTrue(inspect.isclass(alphatwirl.configure.TableConfigCompleter))
         self.assertTrue(inspect.isclass(alphatwirl.configure.TableFileNameComposer))
-        self.assertTrue(inspect.isclass(alphatwirl.configure.TableFileNameComposer2))
         self.assertTrue(inspect.isclass(alphatwirl.roottree.Branch))
         self.assertTrue(inspect.isclass(alphatwirl.roottree.BranchAddressManager))
         self.assertTrue(inspect.isclass(alphatwirl.roottree.Events))

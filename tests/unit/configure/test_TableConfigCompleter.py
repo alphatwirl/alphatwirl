@@ -84,8 +84,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_n_component_met_pt.txt',
-            outFilePath = 'tmp/tbl_n_component_met_pt.txt',
+            outFileName = 'tbl_n_component.met_pt.txt',
+            outFilePath = 'tmp/tbl_n_component.met_pt.txt',
         )
 
         tblcfg = dict(
@@ -184,8 +184,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_MockSummary2_key1_key2.txt',
-            outFilePath = 'tmp/tbl_MockSummary2_key1_key2.txt',
+            outFileName = 'tbl_MockSummary2.key1.key2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.key1.key2.txt',
         )
 
         tblcfg = dict(
@@ -220,8 +220,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_MockSummary2_key1_key2_val1_val2.txt',
-            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_val1_val2.txt',
+            outFileName = 'tbl_MockSummary2.key1.key2.val1.val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.key1.key2.val1.val2.txt',
         )
 
         tblcfg = dict(
@@ -257,8 +257,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_MockSummary2_key1_key2_1_val1_val2.txt',
-            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_1_val1_val2.txt',
+            outFileName = 'tbl_MockSummary2.key1.key2-1.val1.val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.key1.key2-1.val1.val2.txt',
         )
 
         tblcfg = dict(
@@ -295,8 +295,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_MockSummary2_key1_key2_val1_2_val2.txt',
-            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_val1_2_val2.txt',
+            outFileName = 'tbl_MockSummary2.key1.key2.val1-2.val2.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.key1.key2.val1-2.val2.txt',
         )
 
         tblcfg = dict(
@@ -333,8 +333,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt',
-            outFilePath = 'tmp/tbl_MockSummary2_key1_key2_1_val1_2_val2_3.txt',
+            outFileName = 'tbl_MockSummary2.key1.key2-1.val1-2.val2-3.txt',
+            outFilePath = 'tmp/tbl_MockSummary2.key1.key2-1.val1-2.val2-3.txt',
         )
 
         tblcfg = dict(

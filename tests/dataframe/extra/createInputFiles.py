@@ -59,7 +59,7 @@ tblcfg = [
 tableConfigCompleter = alphatwirl.configure.TableConfigCompleter(
     defaultSummaryClass = alphatwirl.summary.Count,
     defaultOutDir = args.outDir,
-    createOutFileName = alphatwirl.configure.TableFileNameComposer2()
+    createOutFileName = alphatwirl.configure.TableFileNameComposer()
 )
 tblcfg = [tableConfigCompleter.complete(c) for c in tblcfg]
 
