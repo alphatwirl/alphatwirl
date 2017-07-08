@@ -11,7 +11,7 @@ class TableFileNameComposer(object):
 
     """
     def __init__(self,
-                 default_prefix = 'tbl_n_component',
+                 default_prefix = 'tbl_n',
                  default_suffix = 'txt',
                  default_var_separator = '.',
                  default_idx_separator = '-',

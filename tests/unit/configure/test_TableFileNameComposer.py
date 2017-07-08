@@ -9,7 +9,7 @@ class TestTableFileNameComposer(unittest.TestCase):
         actual = obj(
             columnNames = ('var1', 'var2', 'var3'),
         )
-        self.assertEqual("tbl_n_component.var1.var2.var3.txt", actual)
+        self.assertEqual("tbl_n.var1.var2.var3.txt", actual)
 
     def test_simple(self):
         obj = TableFileNameComposer()
@@ -17,7 +17,7 @@ class TestTableFileNameComposer(unittest.TestCase):
             columnNames = ('var1', 'var2', 'var3'),
             indices = (1, None, 2)
         )
-        self.assertEqual("tbl_n_component.var1-1.var2.var3-2.txt", actual)
+        self.assertEqual("tbl_n.var1-1.var2.var3-2.txt", actual)
 
     def test_default_prefix(self):
         obj = TableFileNameComposer(default_prefix = 'tbl_Sum')
@@ -33,7 +33,7 @@ class TestTableFileNameComposer(unittest.TestCase):
             columnNames = ('var1', 'var2', 'var3'),
             indices = (1, None, 2)
         )
-        self.assertEqual("tbl_n_component.var1-1.var2.var3-2.hdf5", actual)
+        self.assertEqual("tbl_n.var1-1.var2.var3-2.hdf5", actual)
 
     def test_empty(self):
         obj = TableFileNameComposer()
@@ -41,7 +41,7 @@ class TestTableFileNameComposer(unittest.TestCase):
             columnNames = ( ),
             indices = ( )
         )
-        self.assertEqual("tbl_n_component.txt", actual)
+        self.assertEqual("tbl_n.txt", actual)
 
     def test_star(self):
         obj = TableFileNameComposer()
@@ -49,7 +49,7 @@ class TestTableFileNameComposer(unittest.TestCase):
             columnNames = ('var1', 'var2', 'var3'),
             indices = (1, None, '*')
         )
-        self.assertEqual("tbl_n_component.var1-1.var2.var3-w.txt", actual)
+        self.assertEqual("tbl_n.var1-1.var2.var3-w.txt", actual)
 
     def test_backref(self):
         obj = TableFileNameComposer()
@@ -57,6 +57,6 @@ class TestTableFileNameComposer(unittest.TestCase):
             columnNames = ('var1', 'var2', 'var3', 'var4', 'var5'),
             indices = (1, None, '*', '(*)', '\\1')
         )
-        self.assertEqual("tbl_n_component.var1-1.var2.var3-w.var4-wp.var5-b1.txt", actual)
+        self.assertEqual("tbl_n.var1-1.var2.var3-w.var4-wp.var5-b1.txt", actual)
 
 ##__________________________________________________________________||

@@ -55,8 +55,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_n_component.txt',
-            outFilePath = 'tmp/tbl_n_component.txt',
+            outFileName = 'tbl_n.txt',
+            outFilePath = 'tmp/tbl_n.txt',
         )
 
         tblcfg = dict()
@@ -84,8 +84,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_n_component.met_pt.txt',
-            outFilePath = 'tmp/tbl_n_component.met_pt.txt',
+            outFileName = 'tbl_n.met_pt.txt',
+            outFilePath = 'tmp/tbl_n.met_pt.txt',
         )
 
         tblcfg = dict(
@@ -116,8 +116,8 @@ class TestTableConfigCompleter(unittest.TestCase):
             sort = True,
             nevents = None,
             outFile = True,
-            outFileName = 'tbl_n_component.txt',
-            outFilePath = 'tmp/tbl_n_component.txt',
+            outFileName = 'tbl_n.txt',
+            outFilePath = 'tmp/tbl_n.txt',
         )
 
         tblcfg = dict(
