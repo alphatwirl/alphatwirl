@@ -7,4 +7,4 @@ python:
 script: python -m unittest discover -s ./tests/unit/ -t ./
 branches:
   only:
-    - v0.9.x-20170803-01-travis-ci
+    - v0.9.x
