@@ -16,6 +16,8 @@ class TestRoundLog(unittest.TestCase):
 
     def test_next(self):
         obj = RoundLog()
+        print obj
+        print obj._round
         self.assertAlmostEqual( 2.51188643150958, obj.next(2.23872113856834))
         self.assertAlmostEqual( 25.11886431509581, obj.next(22.3872113856834))
         self.assertAlmostEqual( 251.18864315095848, obj.next(223.872113856834))
