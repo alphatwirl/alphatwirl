@@ -34,6 +34,21 @@ class RoundLog(object):
 
     def __call__(self, val):
 
+        val = self._valid_underflow_overflow(val)
+
+        if val in (None, 0, self.underflow_bin, self.overflow_bin):
+            return val
+
+        val = math.log10(val)
+        val = self._round(val)
+
+        if val is None:
+            return None
+
+        return 10**val
+
+    def _valid_underflow_overflow(self, val):
+
         if not self.valid(val):
             return None
 
@@ -51,17 +66,11 @@ class RoundLog(object):
             if not val < self.max:
                 return self.overflow_bin
 
-        val = math.log10(val)
-        val = self._round(val)
-
-        if val is None:
-            return None
-
-        return 10**val
+        return val
 
     def next(self, bin):
 
-        bin = self.__call__(bin)
+        bin = self._valid_underflow_overflow(bin)
 
         if bin is None:
             return None
@@ -76,6 +85,11 @@ class RoundLog(object):
             return self.overflow_bin
 
         bin = math.log10(bin)
+        bin = self._round(bin)
+
+        if bin is None:
+            return None
+
         return 10**self._round.next(bin)
 
 ##__________________________________________________________________||
