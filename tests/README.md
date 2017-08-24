@@ -26,3 +26,21 @@ from the top directory of alphatwirl (one directory up from this directory):
 ```
 python -m unittest tests.unit.examples.test_test_example.TestExample1.test_example
 ```
+
+##### Run all tests with coverage
+
+from the top directory of alphatwirl (one directory up from this directory):
+```
+coverage run -m unittest discover -s ./tests/unit/ -t ./
+```
+
+print report
+```
+coverage report -m
+```
+
+show report on browser
+```
+coverage html
+open htmlcov/index.html
+```
