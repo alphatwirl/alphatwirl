@@ -27,7 +27,7 @@ class TblBrilCalc(object):
 
         try:
             csvfile = filter(lambda row: row[0]!='#', open(path))
-        except IOError, e:
+        except IOError as e:
             import logging
             logging.warning(e)
             return

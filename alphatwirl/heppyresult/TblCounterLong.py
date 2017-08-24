@@ -36,7 +36,7 @@ class TblCounterLong(object):
     def read(self, component):
         try:
             path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
-        except AttributeError, e:
+        except AttributeError as e:
             import logging
             logging.warning(e)
             return
