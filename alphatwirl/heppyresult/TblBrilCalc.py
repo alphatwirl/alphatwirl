@@ -2,7 +2,7 @@
 from ..misc import mkdir_p
 from ..misc import listToAlignedText
 import os
-from ReadCounter import ReadCounter
+from .ReadCounter import ReadCounter
 
 ##__________________________________________________________________||
 class TblBrilCalc(object):
@@ -27,7 +27,7 @@ class TblBrilCalc(object):
 
         try:
             csvfile = filter(lambda row: row[0]!='#', open(path))
-        except IOError, e:
+        except IOError as e:
             import logging
             logging.warning(e)
             return

@@ -9,21 +9,21 @@ except ImportError:
 
 ##__________________________________________________________________||
 
-import binning
-import collector
-import concurrently
-import configure
-import roottree
-import selection
-import heppyresult
-import loop
-import progressbar
-import summary
-import delphes
-import cmsedm
-from misc import mkdir_p
-from misc import listToAlignedText
-from misc import quote_string
+from . import binning
+from . import collector
+from . import concurrently
+from . import configure
+from . import roottree
+from . import selection
+from . import heppyresult
+from . import loop
+from . import progressbar
+from . import summary
+from . import delphes
+from . import cmsedm
+from .misc import mkdir_p
+from .misc import listToAlignedText
+from .misc import quote_string
 
 ##__________________________________________________________________||
 import logging

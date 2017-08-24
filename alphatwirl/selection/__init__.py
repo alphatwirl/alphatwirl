@@ -1,2 +1,2 @@
-from funcs import build_selection
-import modules
+from .funcs import build_selection
+from . import modules

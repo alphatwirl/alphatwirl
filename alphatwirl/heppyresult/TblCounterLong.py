@@ -1,8 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import os
+
 from ..misc import mkdir_p
 from ..misc import listToAlignedText
-import os
-from ReadCounter import ReadCounter
+from .ReadCounter import ReadCounter
 
 ##__________________________________________________________________||
 class TblCounterLong(object):
@@ -35,7 +36,7 @@ class TblCounterLong(object):
     def read(self, component):
         try:
             path = os.path.join(getattr(component, self.analyzerName).path, self.fileName)
-        except AttributeError, e:
+        except AttributeError as e:
             import logging
             logging.warning(e)
             return

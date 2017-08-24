@@ -3,8 +3,8 @@
 ##__________________________________________________________________||
 import os
 import re
-from Component import Component
-from ReadVersionInfo import ReadVersionInfo
+from .Component import Component
+from .ReadVersionInfo import ReadVersionInfo
 
 ##__________________________________________________________________||
 DEFAULT_EXCLUDE_LIST = ['Chunks', 'failed']
