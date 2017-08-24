@@ -6,8 +6,8 @@ matrix:
     include:
         - python: 2.7
           env: PYTHON=2.7 ROOT=6.04
-        - python: 3.4
-          env: PYTHON=3.4 ROOT=6.04
+        - python: 3.5
+          env: PYTHON=3.5 ROOT=6.04
 install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
