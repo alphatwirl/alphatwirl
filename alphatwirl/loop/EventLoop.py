@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from EventLoopProgressReportWriter import EventLoopProgressReportWriter
+from .EventLoopProgressReportWriter import EventLoopProgressReportWriter
 import uuid
 
 ##__________________________________________________________________||

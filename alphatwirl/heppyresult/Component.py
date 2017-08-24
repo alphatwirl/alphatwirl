@@ -2,8 +2,8 @@
 
 ##__________________________________________________________________||
 import os
-from ReadComponentConfig import ReadComponentConfig
-from Analyzer import Analyzer
+from .ReadComponentConfig import ReadComponentConfig
+from .Analyzer import Analyzer
 
 ##__________________________________________________________________||
 class Component(object):

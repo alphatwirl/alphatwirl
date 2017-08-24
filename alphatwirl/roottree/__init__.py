@@ -1,7 +1,7 @@
-from Events import Events
-from BranchAddressManager import BranchAddressManager
-from Branch import Branch
-from EventBuilderConfig import EventBuilderConfig
+from .Events import Events
+from .BranchAddressManager import BranchAddressManager
+from .Branch import Branch
+from .EventBuilderConfig import EventBuilderConfig
 
 hasROOT = False
 try:
@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 if hasROOT:
-    from BEvents import BEvents
-    from BEventBuilder import BEventBuilder
-    from BranchBuilder import BranchBuilder
-    from BranchAddressManagerForVector import BranchAddressManagerForVector
+    from .BEvents import BEvents
+    from .BEventBuilder import BEventBuilder
+    from .BranchBuilder import BranchBuilder
+    from .BranchAddressManagerForVector import BranchAddressManagerForVector

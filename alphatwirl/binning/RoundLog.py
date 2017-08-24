@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from Round import Round
 import math
 
+from .Round import Round
 from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||

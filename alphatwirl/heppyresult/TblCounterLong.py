@@ -1,8 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
+import os
+
 from ..misc import mkdir_p
 from ..misc import listToAlignedText
-import os
-from ReadCounter import ReadCounter
+from .ReadCounter import ReadCounter
 
 ##__________________________________________________________________||
 class TblCounterLong(object):

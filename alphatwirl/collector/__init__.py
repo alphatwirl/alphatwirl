@@ -1,6 +1,6 @@
-from ToTupleList import ToTupleList
-from ToTupleListWithDatasetColumn import ToTupleListWithDatasetColumn
-from WriteListToFile import WriteListToFile
+from .ToTupleList import ToTupleList
+from .ToTupleListWithDatasetColumn import ToTupleListWithDatasetColumn
+from .WriteListToFile import WriteListToFile
 
 ##__________________________________________________________________||
 hasPandas = False
@@ -11,8 +11,8 @@ except ImportError:
     pass
 
 if hasPandas:
-    from ToDataFrameWithDatasetColumn import ToDataFrameWithDatasetColumn
-    from ToDataFrame import ToDataFrame
-    from WritePandasDataFrameToFile import WritePandasDataFrameToFile
+    from .ToDataFrameWithDatasetColumn import ToDataFrameWithDatasetColumn
+    from .ToDataFrame import ToDataFrame
+    from .WritePandasDataFrameToFile import WritePandasDataFrameToFile
 
 ##__________________________________________________________________||

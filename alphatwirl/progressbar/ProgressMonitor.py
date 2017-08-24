@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ProgressReporter import ProgressReporter
+from .ProgressReporter import ProgressReporter
 
 ##__________________________________________________________________||
 class Queue(object):
