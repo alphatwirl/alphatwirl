@@ -30,6 +30,6 @@ after_success:
   - codecov
 
 cache: apt
-branches:
-  only:
-    - v0.9.x
+# branches:
+#   only:
+#     - v0.9.x
