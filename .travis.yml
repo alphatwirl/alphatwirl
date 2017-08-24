@@ -1,10 +1,31 @@
+#sudo: false
+# travis-ci.org build & test configuration
 language: python
-python:
-  - "2.7"
-# command to install dependencies
-# install: "pip install -r requirements.txt"
-# command to run tests
+
+matrix:
+    include:
+        - python: 2.7
+          env: PYTHON=2.7 ROOT=6.04
+        - python: 3.4
+          env: PYTHON=3.4 ROOT=6.04
+install:
+  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
+  
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+  - conda config --add channels http://conda.anaconda.org/NLeSC  
+  - conda config --set show_channel_urls yes
+  - conda create -q -n testenv python=${PYTHON} root=${ROOT} sphinx pandas numpy
+  - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
+  - source activate testenv
+
 script: python -m unittest discover -s ./tests/unit/ -t ./
+cache: apt
 branches:
   only:
     - v0.9.x
