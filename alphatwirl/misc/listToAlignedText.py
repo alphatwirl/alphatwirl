@@ -27,6 +27,19 @@ def listToAlignedText(src, formatDict = None):
         #     ['n', 40, 3.3, 1e-07, 300909234, 323432.2234],
         #     ]
 
+        if formatDict is not None:
+        # formatDict = dict(n = '{:10.2f}')
+
+                for column in transposed:
+
+                        colum_name = column[0]
+                        if colum_name not in formatDict:
+                                continue
+
+                        colum_format = formatDict[colum_name]
+                        column[:] = [column[0]] + [colum_format.format(c) for c in column[1:]]
+                        # e.g., .['n', '40.00', '3.30', '0.00', '300909234.00', '323432.22']
+
         transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
         transposed = [[str(e) for e in r] for r in transposed]
 
@@ -37,21 +50,6 @@ def listToAlignedText(src, formatDict = None):
 
         formatList = ['{:>' + str(e) + 's}' for e in columnWidths]
         # e.g., formatList = ['{:>9s}', '{:>4s}', '{:>4s}', '{:>11s}']
-
-        if formatDict is not None:
-                # e.g., formatDict = {'n': '{}'}
-
-                columnNames = src[0]
-                # e.g., columnNames = ('component', 'v1', 'nvar', 'n')
-
-                formatDict0 = dict(zip(columnNames, formatList))
-                # e.g., formatDict0 = {'component':'{:>9s}', 'v1':'{:>4s}', 'nvar':'{:>4s}', 'n':'{:>11s}'}
-
-                formatDict0.update(formatDict)
-                # e.g., formatDict0 = {'component':'{:>9s}', 'v1':'{:>4s}', 'nvar':'{:>4s}', 'n':'{}'}
-
-                formatList = [formatDict0[c] for c in columnNames]
-                # e.g., formatList = ['{:>9s}', '{:>4s}', '{:>4s}', '{}']
 
         format = " " + " ".join(formatList)
         # e.g., format = "{:>9s} {:>4s} {:>4s} {:>11s}"
