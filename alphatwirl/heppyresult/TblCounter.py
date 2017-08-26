@@ -2,7 +2,7 @@
 import os
 
 from ..misc import mkdir_p
-from ..misc import listToAlignedText
+from ..misc import list_to_aligned_text
 from .ReadCounter import ReadCounter
 
 ##__________________________________________________________________||
@@ -54,7 +54,7 @@ class TblCounter(object):
             self._rows = [['component']]
 
         f = self._open(self._outPath)
-        f.write(listToAlignedText(self._rows))
+        f.write(list_to_aligned_text(self._rows))
         self._close(f)
 
     def _determine_columnNames_start_rows(self):

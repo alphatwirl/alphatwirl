@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..misc import mkdir_p
-from ..misc import listToAlignedText
+from ..misc import list_to_aligned_text
 import os
 import ROOT
 
@@ -43,7 +43,7 @@ class TblTree(object):
 
     def end(self):
         f = self._open(self.outPath)
-        f.write(listToAlignedText(self._rows))
+        f.write(list_to_aligned_text(self._rows))
         self._close(f)
 
     def _open(self, path):

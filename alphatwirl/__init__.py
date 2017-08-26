@@ -22,8 +22,11 @@ from . import summary
 from . import delphes
 from . import cmsedm
 from .misc import mkdir_p
-from .misc import listToAlignedText
+from .misc import list_to_aligned_text
 from .misc import quote_string
+
+# to be deleted
+from .misc import listToAlignedText
 
 ##__________________________________________________________________||
 import logging

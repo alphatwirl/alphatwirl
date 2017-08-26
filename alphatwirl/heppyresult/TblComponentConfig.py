@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..misc import mkdir_p
-from ..misc import listToAlignedText
+from ..misc import list_to_aligned_text
 import os
 
 ##__________________________________________________________________||
@@ -26,7 +26,7 @@ class TblComponentConfig(object):
         if len(self._rows) == 1: return
 
         f = self._open(self._outPath)
-        f.write(listToAlignedText(self._rows))
+        f.write(list_to_aligned_text(self._rows))
         self._close(f)
 
     def _open(self, path):

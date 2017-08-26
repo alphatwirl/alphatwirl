@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 from ..misc import mkdir_p
-from ..misc import listToAlignedText
+from ..misc import list_to_aligned_text
 import os
 from operator import itemgetter
 import ROOT
@@ -97,20 +97,20 @@ class TblBranch(object):
 
         results.insert(0, columns)
 
-        formatDict = { }
+        format_dict = { }
         if self.addSize:
-            formatDict.update({
+            format_dict.update({
                 'size':'{:.6f}',
                 'uncompressed_size':'{:.6f}',
                 'compression_factor':'{:.2f}'
             })
 
-        leftAlignLastColumn = False
+        left_align_last_column = False
         if self.addTitle:
-            leftAlignLastColumn = True
+            left_align_last_column = True
 
         f = self._open(self.outPath)
-        f.write(listToAlignedText(results, formatDict, leftAlignLastColumn))
+        f.write(list_to_aligned_text(results, format_dict, left_align_last_column))
         self._close(f)
 
     def _open(self, path):

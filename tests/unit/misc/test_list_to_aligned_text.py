@@ -1,4 +1,4 @@
-from alphatwirl import listToAlignedText
+from alphatwirl import list_to_aligned_text
 import unittest
 
 ##__________________________________________________________________||
@@ -15,7 +15,7 @@ class TestListToAlignedText(unittest.TestCase):
             ('data2',   11, 2.0, 323432.2234),
         ]
 
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
 
         expected = """\
  component   v1 nvar           n
@@ -39,7 +39,7 @@ class TestListToAlignedText(unittest.TestCase):
             ('data2',       11, 'xyz'),
         ]
 
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
 
         expected = r""" component   v1                    v2
      data1  100                    ""
@@ -61,9 +61,9 @@ class TestListToAlignedText(unittest.TestCase):
             ('data2',   11, 2.0, 323432.2234),
         ]
 
-        formatDict = dict(n = '{:.2f}')
+        format_dict = dict(n = '{:.2f}')
 
-        actual = listToAlignedText(src, formatDict)
+        actual = list_to_aligned_text(src, format_dict)
 
         expected = """\
  component   v1 nvar            n
@@ -76,7 +76,7 @@ class TestListToAlignedText(unittest.TestCase):
 
         self.assertEqual(expected, actual)
 
-    def test_formatDict_leftAlignLastColumn(self):
+    def test_formatDict_left_align_last_column(self):
 
         src = [
             ('component', 'v1', 'nvar', 'n'),
@@ -87,9 +87,9 @@ class TestListToAlignedText(unittest.TestCase):
             ('data2',   11, 2.0, 323432.2234),
         ]
 
-        formatDict = dict(n = '{}')
+        format_dict = dict(n = '{}')
 
-        actual = listToAlignedText(src, formatDict, leftAlignLastColumn = True)
+        actual = list_to_aligned_text(src, format_dict, left_align_last_column = True)
 
         expected = """\
  component   v1 nvar n
@@ -108,26 +108,26 @@ class TestListToAlignedText(unittest.TestCase):
             ('component', 'v1', 'nvar', 'n'),
         ]
 
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
 
         expected = " component v1 nvar n\n"
         self.assertEqual(expected, actual)
 
     def test_empty_one(self):
         src = [ ]
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
         expected = ""
         self.assertEqual(expected, actual)
 
     def test_empty_two(self):
         src = [()]
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
         expected = ""
         self.assertEqual(expected, actual)
 
     def test_empty_three(self):
         src = [(), (), ()]
-        actual = listToAlignedText(src)
+        actual = list_to_aligned_text(src)
         expected = ""
         self.assertEqual(expected, actual)
 
