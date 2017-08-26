@@ -80,11 +80,11 @@ class TblBranch(object):
                 row.append(bentry['isarray'])
                 row.append(bentry['countname'])
             if self.addSize:
-                row.append('{:10.6f}'.format(size))
-                row.append('{:10.6f}'.format(usize))
-                row.append('{:10.2f}'.format(cf))
+                row.append(size)
+                row.append(usize)
+                row.append(cf)
             if self.addTitle:
-                row.append('"{}"'.format(bentry['title']))
+                row.append(bentry['title'])
             results.append(row)
 
         columns = ['name']
@@ -98,11 +98,19 @@ class TblBranch(object):
         results.insert(0, columns)
 
         formatDict = { }
+        if self.addSize:
+            formatDict.update({
+                'size':'{:.6f}',
+                'uncompressed_size':'{:.6f}',
+                'compression_factor':'{:.2f}'
+            })
+
+        leftAlignLastColumn = False
         if self.addTitle:
-            formatDict.update({'title':'{}'})
+            leftAlignLastColumn = True
 
         f = self._open(self.outPath)
-        f.write(listToAlignedText(results, formatDict))
+        f.write(listToAlignedText(results, formatDict, leftAlignLastColumn))
         self._close(f)
 
     def _open(self, path):
