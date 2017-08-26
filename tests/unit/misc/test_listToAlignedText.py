@@ -17,7 +17,8 @@ class TestListToAlignedText(unittest.TestCase):
 
         actual = listToAlignedText(src)
 
-        expected = """ component   v1 nvar           n
+        expected = """\
+ component   v1 nvar           n
      data1  100    6          40
      data1    2    9         3.3
      data1 3124    3       1e-07
@@ -64,7 +65,8 @@ class TestListToAlignedText(unittest.TestCase):
 
         actual = listToAlignedText(src, formatDict)
 
-        expected = """ component   v1 nvar n
+        expected = """\
+ component   v1 nvar n
      data1  100    6 40
      data1    2    9 3.3
      data1 3124    3 1e-07
