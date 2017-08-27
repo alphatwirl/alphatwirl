@@ -46,13 +46,8 @@ class TblBranch(object):
                 self.branchOrder.append(branchName)
                 branch_entry = self._read_branch_entry(leaf)
                 self.branchDict[branchName] = branch_entry
-            component_entry = { }
-            zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
-            totalsize = leaf.GetBranch().GetTotalSize()/1024.0/1024.0 # MB
+            component_entry = self._read_component_entry(leaf)
             component_entry['name'] = component.name
-            component_entry['size'] = zipbytes
-            component_entry['uncompressed_size'] = totalsize
-            component_entry['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
             self.branchDict[branchName]['components'].append(component_entry)
 
     def _read_branch_entry(self, leaf):
@@ -66,6 +61,15 @@ class TblBranch(object):
         branch_entry['components'] = [ ]
         branch_entry['title'] = leaf.GetBranch().GetTitle()
         return branch_entry
+
+    def _read_component_entry(self, leaf):
+        component_entry = { }
+        zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
+        totalsize = leaf.GetBranch().GetTotalSize()/1024.0/1024.0 # MB
+        component_entry['size'] = zipbytes
+        component_entry['uncompressed_size'] = totalsize
+        component_entry['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
+        return component_entry
 
     def end(self):
 
