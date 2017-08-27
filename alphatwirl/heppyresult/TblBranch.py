@@ -41,18 +41,10 @@ class TblBranch(object):
         tree = file.Get(self.treeName)
 
         for leaf in tree.GetListOfLeaves():
-            leafcount = leaf.GetLeafCount()
-            isArray = not IsROOTNullPointer(leafcount)
             branchName = leaf.GetName()
             if not branchName in self.branchDict:
                 self.branchOrder.append(branchName)
-                branch_entry = { }
-                branch_entry['name'] = branchName
-                branch_entry['type'] = leaf.GetTypeName()
-                branch_entry['isarray'] = '1' if isArray else '0'
-                branch_entry['countname'] = leafcount.GetName() if isArray else None
-                branch_entry['components'] = [ ]
-                branch_entry['title'] = leaf.GetBranch().GetTitle()
+                branch_entry = self._read_branch_entry(leaf)
                 self.branchDict[branchName] = branch_entry
             component_entry = { }
             zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
@@ -62,6 +54,18 @@ class TblBranch(object):
             component_entry['uncompressed_size'] = totalsize
             component_entry['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
             self.branchDict[branchName]['components'].append(component_entry)
+
+    def _read_branch_entry(self, leaf):
+        leafcount = leaf.GetLeafCount()
+        isArray = not IsROOTNullPointer(leafcount)
+        branch_entry = { }
+        branch_entry['name'] = leaf.GetName()
+        branch_entry['type'] = leaf.GetTypeName()
+        branch_entry['isarray'] = '1' if isArray else '0'
+        branch_entry['countname'] = leafcount.GetName() if isArray else None
+        branch_entry['components'] = [ ]
+        branch_entry['title'] = leaf.GetBranch().GetTitle()
+        return branch_entry
 
     def end(self):
 
