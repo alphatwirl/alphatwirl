@@ -1,17 +1,11 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from ..misc import mkdir_p
-from ..misc import list_to_aligned_text
 import os
 from operator import itemgetter
 import ROOT
 
-##__________________________________________________________________||
-def IsROOTNullPointer(tobject):
-    try:
-        tobject.GetName()
-        return False
-    except ReferenceError:
-        return True
+from ..misc import mkdir_p
+from ..misc import list_to_aligned_text
+from ..roottree import inspect_tree
 
 ##__________________________________________________________________||
 class TblBranch(object):
@@ -40,8 +34,7 @@ class TblBranch(object):
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self.treeName)
 
-
-        tree_info = self._inspect_tree(tree)
+        tree_info = inspect_tree(tree)
 
         for leaf_info in tree_info['leaves']:
             leaf_def = {k:leaf_info[k] for k in ('name', 'type', 'isarray', 'countname', 'title')}
@@ -53,37 +46,6 @@ class TblBranch(object):
             leaf_size = {k:leaf_info[k] for k in ('size', 'uncompressed_size', 'compression_factor')}
             leaf_size['name'] = component.name
             self.branchDict[branchName]['components'].append(leaf_size)
-
-    def _inspect_tree(self, tree):
-        ret = {  }
-        ret['leaves'] = [self._inspect_leaf(leaf) for leaf in tree.GetListOfLeaves()]
-        return ret
-
-    def _inspect_leaf(self, leaf):
-        ret = { }
-        ret.update(self._inspect_leaf_definition(leaf))
-        ret.update(self._inspect_leaf_size(leaf))
-        return ret
-
-    def _inspect_leaf_definition(self, leaf):
-        leafcount = leaf.GetLeafCount()
-        isArray = not IsROOTNullPointer(leafcount)
-        ret = { }
-        ret['name'] = leaf.GetName()
-        ret['type'] = leaf.GetTypeName()
-        ret['isarray'] = '1' if isArray else '0'
-        ret['countname'] = leafcount.GetName() if isArray else None
-        ret['title'] = leaf.GetBranch().GetTitle()
-        return ret
-
-    def _inspect_leaf_size(self, leaf):
-        ret = { }
-        zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
-        totalsize = leaf.GetBranch().GetTotalSize()/1024.0/1024.0 # MB
-        ret['size'] = zipbytes
-        ret['uncompressed_size'] = totalsize
-        ret['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
-        return ret
 
     def end(self):
 

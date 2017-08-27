@@ -15,3 +15,4 @@ if hasROOT:
     from .BEventBuilder import BEventBuilder
     from .BranchBuilder import BranchBuilder
     from .BranchAddressManagerForVector import BranchAddressManagerForVector
+    from .inspect import inspect_tree
