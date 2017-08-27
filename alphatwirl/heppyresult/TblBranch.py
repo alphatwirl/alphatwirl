@@ -41,35 +41,42 @@ class TblBranch(object):
         tree = file.Get(self.treeName)
 
         for leaf in tree.GetListOfLeaves():
-            branch_entry = self._inspect_leaf_definition(leaf)
-            branchName = branch_entry['name']
+            leaf_info = self._inspect_leaf(leaf)
+            leaf_def = {k:leaf_info[k] for k in ('name', 'type', 'isarray', 'countname', 'title')}
+            branchName = leaf_def['name']
             if not branchName in self.branchDict:
                 self.branchOrder.append(branchName)
-                self.branchDict[branchName] = branch_entry
-            component_entry = self._inspect_leaf_size(leaf)
-            component_entry['name'] = component.name
-            self.branchDict[branchName]['components'].append(component_entry)
+                leaf_def['components'] = [ ]
+                self.branchDict[branchName] = leaf_def
+            leaf_size = {k:leaf_info[k] for k in ('size', 'uncompressed_size', 'compression_factor')}
+            leaf_size['name'] = component.name
+            self.branchDict[branchName]['components'].append(leaf_size)
+
+    def _inspect_leaf(self, leaf):
+        ret = { }
+        ret.update(self._inspect_leaf_definition(leaf))
+        ret.update(self._inspect_leaf_size(leaf))
+        return ret
 
     def _inspect_leaf_definition(self, leaf):
         leafcount = leaf.GetLeafCount()
         isArray = not IsROOTNullPointer(leafcount)
-        branch_entry = { }
-        branch_entry['name'] = leaf.GetName()
-        branch_entry['type'] = leaf.GetTypeName()
-        branch_entry['isarray'] = '1' if isArray else '0'
-        branch_entry['countname'] = leafcount.GetName() if isArray else None
-        branch_entry['components'] = [ ]
-        branch_entry['title'] = leaf.GetBranch().GetTitle()
-        return branch_entry
+        ret = { }
+        ret['name'] = leaf.GetName()
+        ret['type'] = leaf.GetTypeName()
+        ret['isarray'] = '1' if isArray else '0'
+        ret['countname'] = leafcount.GetName() if isArray else None
+        ret['title'] = leaf.GetBranch().GetTitle()
+        return ret
 
     def _inspect_leaf_size(self, leaf):
-        component_entry = { }
+        ret = { }
         zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
         totalsize = leaf.GetBranch().GetTotalSize()/1024.0/1024.0 # MB
-        component_entry['size'] = zipbytes
-        component_entry['uncompressed_size'] = totalsize
-        component_entry['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
-        return component_entry
+        ret['size'] = zipbytes
+        ret['uncompressed_size'] = totalsize
+        ret['compression_factor'] = totalsize/zipbytes if zipbytes > 0 else 0
+        return ret
 
     def end(self):
 
