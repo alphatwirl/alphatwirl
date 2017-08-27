@@ -41,10 +41,10 @@ class TblBranch(object):
         tree = file.Get(self.treeName)
 
         for leaf in tree.GetListOfLeaves():
-            branchName = leaf.GetName()
+            branch_entry = self._read_branch_entry(leaf)
+            branchName = branch_entry['name']
             if not branchName in self.branchDict:
                 self.branchOrder.append(branchName)
-                branch_entry = self._read_branch_entry(leaf)
                 self.branchDict[branchName] = branch_entry
             component_entry = self._read_component_entry(leaf)
             component_entry['name'] = component.name
