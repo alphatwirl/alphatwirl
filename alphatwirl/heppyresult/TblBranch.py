@@ -41,16 +41,16 @@ class TblBranch(object):
         tree = file.Get(self.treeName)
 
         for leaf in tree.GetListOfLeaves():
-            branch_entry = self._read_branch_entry(leaf)
+            branch_entry = self._inspect_leaf_definition(leaf)
             branchName = branch_entry['name']
             if not branchName in self.branchDict:
                 self.branchOrder.append(branchName)
                 self.branchDict[branchName] = branch_entry
-            component_entry = self._read_component_entry(leaf)
+            component_entry = self._inspect_leaf_size(leaf)
             component_entry['name'] = component.name
             self.branchDict[branchName]['components'].append(component_entry)
 
-    def _read_branch_entry(self, leaf):
+    def _inspect_leaf_definition(self, leaf):
         leafcount = leaf.GetLeafCount()
         isArray = not IsROOTNullPointer(leafcount)
         branch_entry = { }
@@ -62,7 +62,7 @@ class TblBranch(object):
         branch_entry['title'] = leaf.GetBranch().GetTitle()
         return branch_entry
 
-    def _read_component_entry(self, leaf):
+    def _inspect_leaf_size(self, leaf):
         component_entry = { }
         zipbytes = leaf.GetBranch().GetZipBytes()/1024.0/1024.0 # MB
         totalsize = leaf.GetBranch().GetTotalSize()/1024.0/1024.0 # MB
