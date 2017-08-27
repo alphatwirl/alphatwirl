@@ -40,8 +40,10 @@ class TblBranch(object):
         file = ROOT.TFile.Open(inputPath)
         tree = file.Get(self.treeName)
 
-        for leaf in tree.GetListOfLeaves():
-            leaf_info = self._inspect_leaf(leaf)
+
+        tree_info = self._inspect_tree(tree)
+
+        for leaf_info in tree_info['leaves']:
             leaf_def = {k:leaf_info[k] for k in ('name', 'type', 'isarray', 'countname', 'title')}
             branchName = leaf_def['name']
             if not branchName in self.branchDict:
@@ -51,6 +53,11 @@ class TblBranch(object):
             leaf_size = {k:leaf_info[k] for k in ('size', 'uncompressed_size', 'compression_factor')}
             leaf_size['name'] = component.name
             self.branchDict[branchName]['components'].append(leaf_size)
+
+    def _inspect_tree(self, tree):
+        ret = {  }
+        ret['leaves'] = [self._inspect_leaf(leaf) for leaf in tree.GetListOfLeaves()]
+        return ret
 
     def _inspect_leaf(self, leaf):
         ret = { }
