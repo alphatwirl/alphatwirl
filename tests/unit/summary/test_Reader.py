@@ -1,5 +1,6 @@
 import unittest
 import collections
+import logging
 
 import alphatwirl.summary as summary
 
@@ -42,6 +43,17 @@ class MockKeyValueComposer(object):
         return [(k, v) for k, v in zip(event.keys, event.vals)]
 
 ##__________________________________________________________________||
+class MockKeyValueComposerRaise(object):
+    def __init__(self):
+        pass
+
+    def begin(self, event):
+        pass
+
+    def __call__(self, event):
+        raise StandardError('raised by MockKeyValueComposerRaise')
+
+##__________________________________________________________________||
 class MockNextKeyComposer(object):
     def __init__(self, nextdic):
         self.nextdic = nextdic
@@ -52,6 +64,18 @@ class MockNextKeyComposer(object):
 ##__________________________________________________________________||
 class TestReader(unittest.TestCase):
 
+    def setUp(self):
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        logging.disable(logging.NOTSET)
+
+    def test_repr(self):
+        keyvalcomposer = MockKeyValueComposer()
+        summarizer = MockSummarizer()
+        obj = summary.Reader(keyvalcomposer, summarizer)
+        repr(obj)
+
     def test_begin(self):
         keyvalcomposer = MockKeyValueComposer()
         summarizer = MockSummarizer()
@@ -60,6 +84,16 @@ class TestReader(unittest.TestCase):
         event = MockEvent(event = 'event1', keys = (), vals = ())
         obj.begin(event)
         self.assertEqual(event, keyvalcomposer.began_with)
+
+    def test_event_raise(self):
+        keyvalcomposer = MockKeyValueComposerRaise()
+        summarizer = MockSummarizer()
+        weightCalculator = MockWeightCalculator()
+        obj = summary.Reader(keyvalcomposer, summarizer, weightCalculator = weightCalculator)
+
+        event = MockEvent(event = 'event1', keys = (), vals = ())
+
+        self.assertRaises(StandardError, obj.event, event)
 
     def test_event(self):
         keyvalcomposer = MockKeyValueComposer()
