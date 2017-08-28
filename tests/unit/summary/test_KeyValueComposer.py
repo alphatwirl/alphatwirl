@@ -1,7 +1,8 @@
-import alphatwirl.summary as summary
 import unittest
 import logging
 import math
+
+import alphatwirl.summary as summary
 
 ##__________________________________________________________________||
 class MockEvent(object):
@@ -32,13 +33,25 @@ class MockArrayReader(object):
         return self.ret
 
 ##__________________________________________________________________||
+class MockArrayReaderRaise(object):
+    def __init__(self, arrays = None, idxs_conf = None, backref_idxs = None):
+        pass
+
+    def read(self):
+        raise StandardError('raised by MockArrayReaderRaise')
+
+##__________________________________________________________________||
 class TestKeyValueComposer(unittest.TestCase):
 
     def setUp(self):
-        pass
+        logging.disable(logging.CRITICAL)
 
     def tearDown(self):
-        pass
+        logging.disable(logging.NOTSET)
+
+    def test_repr(self):
+        obj = summary.KeyValueComposer()
+        repr(obj)
 
     def test_init_raise_wrong_key_length(self):
         self.assertRaises(
@@ -77,6 +90,16 @@ class TestKeyValueComposer(unittest.TestCase):
         self.assertIs(event.var2, arrays[1])
         self.assertIs(event.var3, arrays[2])
 
+    def test_collect_arrays_error(self):
+        obj = summary.KeyValueComposer()
+
+        event = MockEvent()
+        event.var1 = [ ]
+        event.var2 = [ ]
+        attr_names = ('var1', 'var2', 'var3') # var3 doesn't exist
+        arrays = obj._collect_arrays(event, attr_names)
+        self.assertIsNone(arrays)
+
     @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
     def test_logging_nonexistent_var(self):
         obj = summary.KeyValueComposer(
@@ -99,6 +122,16 @@ class TestKeyValueComposer(unittest.TestCase):
 
         event = MockEvent()
         self.assertEqual((), obj(event))
+
+    def test_call_raise(self):
+        obj = summary.KeyValueComposer()
+        obj.active = True
+
+        array_reader = MockArrayReaderRaise()
+        obj._array_reader = array_reader
+
+        event = MockEvent()
+        self.assertRaises(StandardError, obj, event)
 
     def test_call_NoneKey_NoneVal(self):
         obj = summary.KeyValueComposer()
