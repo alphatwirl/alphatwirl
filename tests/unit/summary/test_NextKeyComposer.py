@@ -28,6 +28,11 @@ class MockBinningSameNext(object):
 ##__________________________________________________________________||
 class TestNextKeyComposer(unittest.TestCase):
 
+    def test_repr(self):
+        binnings = (MockBinningPlusOneNext(), MockBinningPlusOneNext(), MockBinningPlusOneNext())
+        keyComposer = summary.NextKeyComposer(binnings)
+        repr(keyComposer)
+
     def test_call(self):
         binnings = (MockBinningPlusOneNext(), MockBinningPlusOneNext(), MockBinningPlusOneNext())
         keyComposer = summary.NextKeyComposer(binnings)
