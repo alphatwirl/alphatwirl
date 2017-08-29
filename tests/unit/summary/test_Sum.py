@@ -61,6 +61,10 @@ class TestSum(unittest.TestCase):
         self.assertIsNot(obj1, sum([obj1])) # will call 0 + obj1
         self.assertEqual(obj1, sum([obj1]))
 
+    def test_radd_raise(self):
+        obj1 = Sum(contents = [np.array((10, 20))])
+        self.assertRaises(TypeError, obj1.__radd__, 1 ) # 1 + obj1
+
     def test_copy(self):
         obj1 = Sum(contents = [np.array((10, 20))])
         copy1 = copy.copy(obj1)
