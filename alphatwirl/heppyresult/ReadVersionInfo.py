@@ -15,7 +15,8 @@ class ReadVersionInfo(object):
         # versionInfo.txt is written as
         # https://github.com/CMSRA1/cmg-cmssw-private/blob/RA1cmg_v2.4_patch1/CMGTools/Production/scripts/heppyBatchAlphaT.py#L91
         # the second line will be the tag
-        tag = full.split('\n')[1]
+        tag = full.split(b'\n')[1]
+        print(tag)
         return dict(full = full, tag = tag)
 
 ##__________________________________________________________________||

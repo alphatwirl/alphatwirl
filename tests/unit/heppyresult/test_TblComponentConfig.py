@@ -32,7 +32,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -58,6 +58,7 @@ class TestTblComponentConfig(unittest.TestCase):
             '            TTJets    809.1',
             ' TBarToLeptons_sch  1.34784',
             ' TBarToLeptons_tch 26.23428']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -68,7 +69,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('Column1', 'Column2')
         )
 
-        out = io.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -94,6 +95,7 @@ class TestTblComponentConfig(unittest.TestCase):
             '            TTJets   20  130',
             ' TBarToLeptons_sch   30  140',
             ' TBarToLeptons_tch   40  150']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -104,7 +106,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.StringIO()
+        out = io.BytesIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose
@@ -121,7 +123,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
  
-        out = io.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -145,6 +147,7 @@ class TestTblComponentConfig(unittest.TestCase):
             '         component     xsec',
             '   QCD_HT_100To250 28730000',
             ' TBarToLeptons_sch  1.34784']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -155,7 +158,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.StringIO()
+        out = io.BytesIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose

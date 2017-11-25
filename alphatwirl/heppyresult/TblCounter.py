@@ -54,7 +54,7 @@ class TblCounter(object):
             self._rows = [['component']]
 
         f = self._open(self._outPath)
-        f.write(list_to_aligned_text(self._rows))
+        f.write(list_to_aligned_text(self._rows).encode())
         self._close(f)
 
     def _determine_columnNames_start_rows(self):
