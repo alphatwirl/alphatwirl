@@ -56,7 +56,7 @@ class Summarizer(object):
         return self._results
 
     def to_key_vals_dict(self):
-        keys_sorted = sorted(self._results.keys(), key = lambda x: str(x))
+        keys_sorted = sorted(self._results.keys())
         ret = collections.OrderedDict([(k, self._results[k].contents) for k in keys_sorted])
         # e.g.,
         # OrderedDict([
