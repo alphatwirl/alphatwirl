@@ -24,6 +24,7 @@ tbl_01_txt = r"""
 """
 tbl_01_txt = tbl_01_txt[tbl_01_txt.find('\n') + 1:] # remove 1st line
 tbl_01_txt = textwrap.dedent(tbl_01_txt)
+tbl_01_txt = tbl_01_txt.encode()
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
