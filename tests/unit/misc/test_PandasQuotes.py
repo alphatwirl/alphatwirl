@@ -1,6 +1,6 @@
 import unittest
 
-import cStringIO
+import io
 import textwrap
 
 ##__________________________________________________________________||
@@ -24,13 +24,14 @@ tbl_01_txt = r"""
 """
 tbl_01_txt = tbl_01_txt[tbl_01_txt.find('\n') + 1:] # remove 1st line
 tbl_01_txt = textwrap.dedent(tbl_01_txt)
+tbl_01_txt = tbl_01_txt.encode()
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasPandas, "has no pandas")
 class TestPandasQuotes(unittest.TestCase):
 
     def test_one(self):
-        input = cStringIO.StringIO(tbl_01_txt)
+        input = io.BytesIO(tbl_01_txt)
         tbl = pd.read_table(input, delim_whitespace = True, escapechar = '\\')
 
         expected = [

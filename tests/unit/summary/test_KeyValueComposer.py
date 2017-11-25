@@ -38,7 +38,7 @@ class MockArrayReaderRaise(object):
         pass
 
     def read(self):
-        raise StandardError('raised by MockArrayReaderRaise')
+        raise Exception('raised by MockArrayReaderRaise')
 
 ##__________________________________________________________________||
 class TestKeyValueComposer(unittest.TestCase):
@@ -131,7 +131,7 @@ class TestKeyValueComposer(unittest.TestCase):
         obj._array_reader = array_reader
 
         event = MockEvent()
-        self.assertRaises(StandardError, obj, event)
+        self.assertRaises(Exception, obj, event)
 
     def test_call_NoneKey_NoneVal(self):
         obj = summary.KeyValueComposer()

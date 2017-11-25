@@ -53,7 +53,7 @@ class AllwCount(object):
         ret = self.count.copy()
 
         # reversed enumerate
-        for i, s in itertools.izip(reversed(xrange(len(self.selections))), reversed(self.selections)):
+        for i, s in zip(reversed(range(len(self.selections))), reversed(self.selections)):
             if hasattr(s, 'results'):
                 ret.insert(i, s.results(increment = True))
 
@@ -112,7 +112,7 @@ class AnywCount(object):
         ret = self.count.copy()
 
         # reversed enumerate
-        for i, s in itertools.izip(reversed(xrange(len(self.selections))), reversed(self.selections)):
+        for i, s in zip(reversed(range(len(self.selections))), reversed(self.selections)):
             if hasattr(s, 'results'):
                 ret.insert(i, s.results(increment = True))
 

@@ -94,7 +94,7 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
             i += 1 # to next run
 
     # print files, nevents, start, length
-    ret = zip(files, start, length)
+    ret = list(zip(files, start, length))
 
     return ret
 
@@ -104,7 +104,8 @@ def _start_length_pairs_for_split_lists(ntotal, max_per_list):
 
     if max_per_list < 0: return [(0, ntotal)]
 
-    nlists = ntotal/max_per_list
+    nlists = ntotal//max_per_list
+    # https://stackoverflow.com/questions/1282945/python-integer-division-yields-float
     # nlists = 3
 
     ret = [(i*max_per_list, max_per_list) for i in range(nlists)]

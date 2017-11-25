@@ -1,6 +1,6 @@
 from alphatwirl.heppyresult import TblCounter
 import unittest
-import cStringIO
+import io
 import collections
 
 ##__________________________________________________________________||
@@ -37,7 +37,7 @@ class TestTblCounter(unittest.TestCase):
             columnNames = ('nevt', 'nevt_sumw')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -78,6 +78,7 @@ class TestTblCounter(unittest.TestCase):
             '            TTJets 25446993      25446993',
             ' TBarToLeptons_sch   250000 320855.887262',
             ' TBarToLeptons_tch  1999800 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -90,7 +91,7 @@ class TestTblCounter(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -131,6 +132,7 @@ class TestTblCounter(unittest.TestCase):
             '            TTJets     25446993      25446993',
             ' TBarToLeptons_sch       250000 320855.887262',
             ' TBarToLeptons_tch      1999800 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -142,7 +144,7 @@ class TestTblCounter(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -183,6 +185,7 @@ class TestTblCounter(unittest.TestCase):
             '            TTJets     25446993      25446993',
             ' TBarToLeptons_sch       250000 320855.887262',
             ' TBarToLeptons_tch      1999800 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -196,7 +199,7 @@ class TestTblCounter(unittest.TestCase):
             columnNames = ('nevt', 'nevt_sumw')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -204,6 +207,7 @@ class TestTblCounter(unittest.TestCase):
         tblnevt.end()
 
         expected = ' component nevt nevt_sumw\n'
+        expected = expected.encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_read_empty_default_columnNames(self):
@@ -214,7 +218,7 @@ class TestTblCounter(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -222,6 +226,7 @@ class TestTblCounter(unittest.TestCase):
         tblnevt.end()
 
         expected = ' component "All Events" "Sum Weights"\n'
+        expected = expected.encode()
         self.assertEqual(expected, out.getvalue())
 
 
@@ -232,7 +237,7 @@ class TestTblCounter(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -240,6 +245,7 @@ class TestTblCounter(unittest.TestCase):
         tblnevt.end()
 
         expected = ' component\n'
+        expected = expected.encode()
         self.assertEqual(expected, out.getvalue())
 
 

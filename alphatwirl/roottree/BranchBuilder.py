@@ -1,9 +1,9 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import logging
 
-from Branch import Branch
-from BranchAddressManager import BranchAddressManager
-from BranchAddressManagerForVector import BranchAddressManagerForVector
+from .Branch import Branch
+from .BranchAddressManager import BranchAddressManager
+from .BranchAddressManagerForVector import BranchAddressManagerForVector
 
 ##__________________________________________________________________||
 branchAddressManager = BranchAddressManager()

@@ -1,6 +1,6 @@
 from alphatwirl.heppyresult import TblCounterLong
 import unittest
-import cStringIO
+import io
 import collections
 
 ##__________________________________________________________________||
@@ -37,7 +37,7 @@ class TestTblCounterLong(unittest.TestCase):
             columnNames = ('component', 'type', 'n')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -82,6 +82,7 @@ class TestTblCounterLong(unittest.TestCase):
             ' TBarToLeptons_sch "Sum Weights" 320855.887262',
             ' TBarToLeptons_tch  "All Events"       1999800',
             ' TBarToLeptons_tch "Sum Weights" 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -94,7 +95,7 @@ class TestTblCounterLong(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -139,6 +140,7 @@ class TestTblCounterLong(unittest.TestCase):
             ' TBarToLeptons_sch "Sum Weights" 320855.887262',
             ' TBarToLeptons_tch  "All Events"       1999800',
             ' TBarToLeptons_tch "Sum Weights" 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -150,7 +152,7 @@ class TestTblCounterLong(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -195,6 +197,7 @@ class TestTblCounterLong(unittest.TestCase):
             ' TBarToLeptons_sch "Sum Weights" 320855.887262',
             ' TBarToLeptons_tch  "All Events"       1999800',
             ' TBarToLeptons_tch "Sum Weights" 50734279.1235']) + '\n'
+        expected = expected.encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -206,14 +209,14 @@ class TestTblCounterLong(unittest.TestCase):
             outPath = "t.txt",
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
         tblnevt.begin()
         tblnevt.end()
 
-        expected = ' component level count\n'
+        expected = ' component level count\n'.encode()
         self.assertEqual(expected, out.getvalue())
 
 ##__________________________________________________________________||

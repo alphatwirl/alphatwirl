@@ -51,7 +51,7 @@ class MockKeyValueComposerRaise(object):
         pass
 
     def __call__(self, event):
-        raise StandardError('raised by MockKeyValueComposerRaise')
+        raise Exception('raised by MockKeyValueComposerRaise')
 
 ##__________________________________________________________________||
 class MockNextKeyComposer(object):
@@ -93,7 +93,7 @@ class TestReader(unittest.TestCase):
 
         event = MockEvent(event = 'event1', keys = (), vals = ())
 
-        self.assertRaises(StandardError, obj.event, event)
+        self.assertRaises(Exception, obj.event, event)
 
     def test_event(self):
         keyvalcomposer = MockKeyValueComposer()

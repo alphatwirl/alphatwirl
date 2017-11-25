@@ -1,10 +1,10 @@
 from alphatwirl.heppyresult import ReadComponentConfig
 import unittest
-import cStringIO
+import io
 import os
 
 ##__________________________________________________________________||
-sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
+sample_cmp_cfg = b"""MCComponent: QCD_HT_100To250_Chunk0
 	addWeight      :   1.0
 	efficiency     :   CFG: eff
 	triggers       :   []
@@ -18,8 +18,8 @@ def mock_isfile(path): return False
 class TestReadComponentConfig(unittest.TestCase):
     def test_read(self):
         readConfig = ReadComponentConfig()
-        file = cStringIO.StringIO(sample_cmp_cfg)
-        expected = {'addWeight': 1.0, 'efficiency': 'CFG: eff', 'triggers': [], 'xSection': 28730000}
+        file = io.BytesIO(sample_cmp_cfg)
+        expected = {b'addWeight': 1.0, b'efficiency': b'CFG: eff', b'triggers': [], b'xSection': 28730000}
         self.assertEqual(expected, readConfig._readImp(file))
 
     @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")

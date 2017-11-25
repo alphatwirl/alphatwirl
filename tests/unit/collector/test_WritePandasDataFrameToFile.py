@@ -1,5 +1,5 @@
 import unittest
-import cStringIO
+import io
 
 ##__________________________________________________________________||
 hasPandas = False
@@ -29,7 +29,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
     def test_deliver(self):
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -44,14 +44,14 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3\n"
+        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3\n".encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_empty_dataframe(self):
 
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -66,14 +66,14 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = "v1 n nvar\n"
+        expected = "v1 n nvar\n".encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_None_results(self):
 
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
