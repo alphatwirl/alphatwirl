@@ -17,7 +17,7 @@ class WriteListToFile(object):
     def deliver(self, results):
         if results is None: return
         f = self._open(self._outPath)
-        f.write(list_to_aligned_text(results))
+        f.write(list_to_aligned_text(results).encode())
         self._close(f)
 
     def _open(self, path):

@@ -11,10 +11,14 @@ class WritePandasDataFrameToFile(object):
         if results is None: return
         f = self._open(self._outPath)
         if len(results.index) == 0:
-            f.write(" ".join([i for i in results.columns]) + "\n")
+            towrite = " ".join([i for i in results.columns]) + "\n"
+            towrite = towrite.encode()
+            f.write(towrite)
         else:
-            results.to_string(f, index = False)
-            f.write("\n")
+            ## results.to_string(f, index = False)
+            towrite = results.to_string(index = False) + "\n"
+            towrite = towrite.encode()
+            f.write(towrite)
         self._close(f)
 
     def _open(self, path):

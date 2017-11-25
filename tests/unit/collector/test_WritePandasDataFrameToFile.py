@@ -44,7 +44,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3\n"
+        expected = " v1  n  nvar\n  1  4     6\n  2  3     9\n  3  2     3\n".encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_empty_dataframe(self):
@@ -66,7 +66,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = "v1 n nvar\n"
+        expected = "v1 n nvar\n".encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_None_results(self):

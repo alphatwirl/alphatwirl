@@ -1,4 +1,5 @@
 import unittest
+# import cStringIO
 import io
 
 from alphatwirl.collector import WriteListToFile
@@ -42,7 +43,7 @@ class TestWriteListToFile(unittest.TestCase):
      data1 3124    3       1e-07
      data2  333    6   300909234
      data2   11    2 323432.2234
-"""
+""".encode()
 
         self.assertEqual(expected, out.getvalue())
 
@@ -60,14 +61,14 @@ class TestWriteListToFile(unittest.TestCase):
 
         delivery.deliver(results)
 
-        expected = " component v1 nvar n\n"
+        expected = " component v1 nvar n\n".encode()
         self.assertEqual(expected, out.getvalue())
 
     def test_deliver_None_results(self):
 
         delivery = WriteListToFile("tbl.txt")
 
-        out = io.BytesIO()
+        out = io.BytesIO
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
