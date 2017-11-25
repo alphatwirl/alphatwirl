@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from Events import Events
-from BranchBuilder import BranchBuilder
+from .Events import Events
+from .BranchBuilder import BranchBuilder
 
 ##__________________________________________________________________||
 class BEvents(Events):
