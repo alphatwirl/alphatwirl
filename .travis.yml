@@ -26,10 +26,12 @@ install:
   - conda create -q -n testenv python=${PYTHON} root=${ROOT} sphinx pandas numpy
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
+  - pip install pytest
   - pip install codecov
+  - pip install pytest-cov
 
 script:
-  - coverage run -m unittest discover -s ./tests/unit/ -t ./
+  - pytest --cov
 
 after_success:
   - codecov
