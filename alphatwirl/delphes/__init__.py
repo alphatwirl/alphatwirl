@@ -6,6 +6,6 @@ except ImportError:
     pass
 
 if hasROOT:
-    from DelphesEvents import DelphesEvents
-    from DelphesEventBuilder import DelphesEventBuilder
-    from EventBuilderConfigMaker import EventBuilderConfigMaker
+    from .DelphesEvents import DelphesEvents
+    from .DelphesEventBuilder import DelphesEventBuilder
+    from .EventBuilderConfigMaker import EventBuilderConfigMaker
