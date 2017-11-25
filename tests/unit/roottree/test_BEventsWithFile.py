@@ -1,5 +1,6 @@
 import unittest
 import os
+import sys
 
 ##__________________________________________________________________||
 hasROOT = False
@@ -121,7 +122,7 @@ class TestBEventsWithFileBranchTypes(unittest.TestCase):
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")
-# @unittest.skip("skip TestBEventsWithFile")
+@unittest.skipUnless(sys.version_info[0] == 2, "skip for Python 3")
 class TestBEventsWithFileVector(unittest.TestCase):
 
     def test_vector(self):
