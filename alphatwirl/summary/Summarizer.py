@@ -49,7 +49,7 @@ class Summarizer(object):
 
     def _add_results_inplace(self, res1, res2):
         # res1 += res2, modify res1
-        for k, v in res2.iteritems():
+        for k, v in res2.items():
             res1[k] += v
 
     def results(self):
@@ -86,7 +86,7 @@ def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan')):
 
     vlen = max([len(vs) for vs in itertools.chain(*dict_.values())])
 
-    for k, vs in dict_.iteritems():
+    for k, vs in dict_.items():
         try:
             d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
         except TypeError:
