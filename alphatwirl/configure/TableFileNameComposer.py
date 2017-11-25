@@ -58,7 +58,7 @@ class TableFileNameComposer(object):
         idx_str = ['wp' if i == '(*)' else i for i in idx_str]
         # e.g., [1, None, 'w', 'wp', '\\1']
 
-        idx_str = ['b{}'.format(i[1:]) if isinstance(i, basestring) and i.startswith('\\') else i for i in idx_str]
+        idx_str = ['b{}'.format(i[1:]) if isinstance(i, str) and i.startswith('\\') else i for i in idx_str]
         # e.g., [1, None, 'w', 'wp', 'b1']
 
         idx_str = ['' if i is None else '{}{}'.format(idx_separator, i) for i in idx_str]
