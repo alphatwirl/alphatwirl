@@ -13,7 +13,7 @@ def parse_indices_config(indices):
 
     # search for elements in parentheses, e.g. '(*)'
     # at the momentum, only the asterisk '*' can be in the parentheses
-    idxRefs = [re.search(r'^\((.*)\)$', i) if isinstance(i, basestring) else None for i in indices]
+    idxRefs = [re.search(r'^\((.*)\)$', i) if isinstance(i, str) else None for i in indices]
     # e.g., [None, None, <Match object>, <Match object>, None, None]
 
     # remove parentheses
@@ -27,7 +27,7 @@ def parse_indices_config(indices):
             ref += 1
     # e.g., idxRefs  = [None, None, 1, 2, None, None]
 
-    backrefIdxs = [int(i[1:]) if isinstance(i, basestring) and i.startswith('\\') else None for i in indices]
+    backrefIdxs = [int(i[1:]) if isinstance(i, str) and i.startswith('\\') else None for i in indices]
     # e.g., [None, None, None, None, 1, 2] # the original refs
 
     backrefIdxs = [None if i is None else idxRefs.index(i) for i in backrefIdxs]

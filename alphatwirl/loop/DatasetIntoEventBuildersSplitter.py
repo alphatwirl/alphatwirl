@@ -53,7 +53,7 @@ class DatasetIntoEventBuildersSplitter(object):
                 return [(files, 0, -1)]
             if maxFilesPerRun == 0:
                 return [ ]
-            return [(files[i:(i + maxFilesPerRun)], 0, -1) for i in xrange(0, len(files), maxFilesPerRun)]
+            return [(files[i:(i + maxFilesPerRun)], 0, -1) for i in range(0, len(files), maxFilesPerRun)]
 
         # this can be slow
         file_nevents_list = self._file_nevents_list_for(
