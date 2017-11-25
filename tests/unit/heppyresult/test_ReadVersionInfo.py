@@ -25,7 +25,7 @@ def mock_isfile(path): return False
 class TestReadVersionInfo(unittest.TestCase):
     def test_read(self):
         readInfo = ReadVersionInfo()
-        file = io.BytesIO(sample_versionInfo_txt)
+        file = io.StringIO(sample_versionInfo_txt)
         expected = {'full': sample_versionInfo_txt, 'tag': 'RA1cmg_v2.3'}
         self.assertEqual(expected, readInfo._readImp(file))
 

@@ -18,7 +18,7 @@ def mock_isfile(path): return False
 class TestReadComponentConfig(unittest.TestCase):
     def test_read(self):
         readConfig = ReadComponentConfig()
-        file = io.BytesIO(sample_cmp_cfg)
+        file = io.StringIO(sample_cmp_cfg)
         expected = {'addWeight': 1.0, 'efficiency': 'CFG: eff', 'triggers': [], 'xSection': 28730000}
         self.assertEqual(expected, readConfig._readImp(file))
 

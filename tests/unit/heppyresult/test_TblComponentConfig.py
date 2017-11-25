@@ -32,7 +32,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -68,7 +68,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('Column1', 'Column2')
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -104,7 +104,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose
@@ -121,7 +121,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
  
-        out = io.BytesIO()
+        out = io.StringIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -155,7 +155,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose

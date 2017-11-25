@@ -37,7 +37,7 @@ class TestTblCounter(unittest.TestCase):
             columnNames = ('nevt', 'nevt_sumw')
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -90,7 +90,7 @@ class TestTblCounter(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -142,7 +142,7 @@ class TestTblCounter(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -196,7 +196,7 @@ class TestTblCounter(unittest.TestCase):
             columnNames = ('nevt', 'nevt_sumw')
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -214,7 +214,7 @@ class TestTblCounter(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -232,7 +232,7 @@ class TestTblCounter(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = io.BytesIO()
+        out = io.StringIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
