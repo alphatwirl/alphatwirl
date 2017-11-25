@@ -1,7 +1,7 @@
 from alphatwirl.heppyresult import ReadVersionInfo
 import os
 import unittest
-import cStringIO
+import io
 
 ##__________________________________________________________________||
 sample_versionInfo_txt = """Tag for production: 
@@ -25,7 +25,7 @@ def mock_isfile(path): return False
 class TestReadVersionInfo(unittest.TestCase):
     def test_read(self):
         readInfo = ReadVersionInfo()
-        file = cStringIO.StringIO(sample_versionInfo_txt)
+        file = io.BytesIO(sample_versionInfo_txt)
         expected = {'full': sample_versionInfo_txt, 'tag': 'RA1cmg_v2.3'}
         self.assertEqual(expected, readInfo._readImp(file))
 

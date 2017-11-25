@@ -1,5 +1,5 @@
 import unittest
-import cStringIO
+import io
 
 ##__________________________________________________________________||
 hasPandas = False
@@ -29,7 +29,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
     def test_deliver(self):
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -51,7 +51,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -73,7 +73,7 @@ class TestWritePandasDataFrameToFile(unittest.TestCase):
 
         delivery = WritePandasDataFrameToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 

@@ -1,6 +1,6 @@
 from alphatwirl.heppyresult import TblCounterLong
 import unittest
-import cStringIO
+import io
 import collections
 
 ##__________________________________________________________________||
@@ -37,7 +37,7 @@ class TestTblCounterLong(unittest.TestCase):
             columnNames = ('component', 'type', 'n')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -94,7 +94,7 @@ class TestTblCounterLong(unittest.TestCase):
             levels = ('All Events', 'Sum Weights')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -150,7 +150,7 @@ class TestTblCounterLong(unittest.TestCase):
             outPath = "t.txt"
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 
@@ -206,7 +206,7 @@ class TestTblCounterLong(unittest.TestCase):
             outPath = "t.txt",
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tblnevt._open = MockOpen(out)
         tblnevt._close = mockClose
 

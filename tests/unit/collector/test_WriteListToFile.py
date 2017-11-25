@@ -1,6 +1,7 @@
-from alphatwirl.collector import WriteListToFile
 import unittest
-import cStringIO
+import io
+
+from alphatwirl.collector import WriteListToFile
 
 ##__________________________________________________________________||
 class MockOpen(object):
@@ -20,7 +21,7 @@ class TestWriteListToFile(unittest.TestCase):
     def test_deliver(self):
         delivery = WriteListToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -49,7 +50,7 @@ class TestWriteListToFile(unittest.TestCase):
 
         delivery = WriteListToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 
@@ -66,7 +67,7 @@ class TestWriteListToFile(unittest.TestCase):
 
         delivery = WriteListToFile("tbl.txt")
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         delivery._open = MockOpen(out)
         delivery._close = mockClose
 

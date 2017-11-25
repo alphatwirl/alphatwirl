@@ -1,6 +1,6 @@
 import unittest
 
-import cStringIO
+import io
 import textwrap
 
 ##__________________________________________________________________||
@@ -30,7 +30,7 @@ tbl_01_txt = textwrap.dedent(tbl_01_txt)
 class TestPandasQuotes(unittest.TestCase):
 
     def test_one(self):
-        input = cStringIO.StringIO(tbl_01_txt)
+        input = io.BytesIO(tbl_01_txt)
         tbl = pd.read_table(input, delim_whitespace = True, escapechar = '\\')
 
         expected = [

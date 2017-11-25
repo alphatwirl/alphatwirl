@@ -1,6 +1,6 @@
 from alphatwirl.heppyresult import TblComponentConfig
 import unittest
-import cStringIO
+import io
 
 ##__________________________________________________________________||
 class MockOpen(object):
@@ -32,7 +32,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -68,7 +68,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('Column1', 'Column2')
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -104,7 +104,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose
@@ -121,7 +121,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
  
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         tbl_cfg._open = MockOpen(out)
         tbl_cfg._close = mockClose
 
@@ -155,7 +155,7 @@ class TestTblComponentConfig(unittest.TestCase):
             keys = ('xSection', )
         )
 
-        out = cStringIO.StringIO()
+        out = io.BytesIO()
         mockOpen = MockOpen(out)
         tbl_cfg._open = mockOpen
         tbl_cfg._close = mockClose

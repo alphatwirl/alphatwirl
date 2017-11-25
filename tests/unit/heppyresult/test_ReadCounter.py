@@ -1,7 +1,7 @@
 from alphatwirl.heppyresult import ReadCounter
 import unittest
 import collections
-import cStringIO
+import io
 import os
 
 ##__________________________________________________________________||
@@ -20,7 +20,7 @@ class TestReadCounter(unittest.TestCase):
 
     def test_read_file(self):
         readCounter = ReadCounter()
-        file = cStringIO.StringIO(sample_counts_txt)
+        file = io.BytesIO(sample_counts_txt)
         expected = collections.OrderedDict([('All Events', {'count': 500000.0, 'eff2': 1.0, 'eff1': 1.0}), ('Sum Weights', {'count': 1042218.60703, 'eff2': 2.0844, 'eff1': 2.08})])
         self.assertEqual(expected, readCounter._readImp(file))
 
