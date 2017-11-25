@@ -56,7 +56,7 @@ class TestSummarizer(unittest.TestCase):
     def test_key(self):
         obj = Summarizer(Summary = Sum)
         obj.add_key('A')
-        self.assertEqual(['A'], obj.keys())
+        self.assertEqual(['A'], list(obj.keys()))
 
     def test_to_tuple_list(self):
         obj = Summarizer(Summary = Sum)
