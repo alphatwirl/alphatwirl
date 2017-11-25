@@ -1,8 +1,18 @@
 import unittest
 
-from alphatwirl.heppyresult import TblBranch
+##__________________________________________________________________||
+hasROOT = False
+try:
+    import ROOT
+    hasROOT = True
+except ImportError:
+    pass
+
+if hasROOT:
+    from alphatwirl.heppyresult import TblBranch
 
 ##__________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
 class TestTblBranch(unittest.TestCase):
 
     def setUp(self):
