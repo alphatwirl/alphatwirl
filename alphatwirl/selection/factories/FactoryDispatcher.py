@@ -23,7 +23,7 @@ def FactoryDispatcher(path_cfg, **kargs):
 ##__________________________________________________________________||
 def expand_path_cfg(path_cfg, aliasDict = None, overriding_kargs = dict()):
 
-    if isinstance(path_cfg, basestring):
+    if isinstance(path_cfg, str):
         if aliasDict is not None and path_cfg in aliasDict:
             new_overriding_kargs = dict(alias = path_cfg)
             new_overriding_kargs.update(overriding_kargs)
@@ -40,7 +40,7 @@ def expand_path_cfg(path_cfg, aliasDict = None, overriding_kargs = dict()):
 
     if not isinstance(path_cfg, dict):
         # assume tuple or list
-        if isinstance(path_cfg[0], basestring) and isinstance(path_cfg[1], dict):
+        if isinstance(path_cfg[0], str) and isinstance(path_cfg[1], dict):
             new_overriding_kargs = path_cfg[1].copy()
             new_overriding_kargs.update(overriding_kargs)
             return expand_path_cfg(path_cfg[0], overriding_kargs = new_overriding_kargs, aliasDict = aliasDict)
