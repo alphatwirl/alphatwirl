@@ -35,7 +35,7 @@ class Reader(object):
 
         try:
             keyvals = self.keyValComposer(event)
-        except StandardError as e:
+        except Exception as e:
             logger = logging.getLogger(__name__)
             logger.error(e)
             logger.error(self)
