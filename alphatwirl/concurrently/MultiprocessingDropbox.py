@@ -41,7 +41,7 @@ class MultiprocessingDropbox(object):
             return
 
         # start workers
-        for i in xrange(self.n_workers, self.n_max_workers):
+        for i in range(self.n_workers, self.n_max_workers):
             worker = Worker(
                 task_queue = self.task_queue,
                 result_queue = self.result_queue,
@@ -71,7 +71,7 @@ class MultiprocessingDropbox(object):
         return results
 
     def close(self):
-        for i in xrange(self.n_workers):
+        for i in range(self.n_workers):
             self.task_queue.put(None) # end workers
         self.task_queue.join()
         self.n_workers = 0

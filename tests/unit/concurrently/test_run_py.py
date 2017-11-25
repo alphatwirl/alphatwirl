@@ -91,7 +91,7 @@ class TestRunPy(unittest.TestCase):
             env = self.env
         )
         stdout, stderr = proc.communicate()
-        self.assertIn('Exception:', stderr)
+        self.assertIn('Exception:'.encode(), stderr)
 
 ##__________________________________________________________________||
 
