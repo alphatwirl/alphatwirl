@@ -1,4 +1,4 @@
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 import logging
 
 from .WeightCalculatorOne import WeightCalculatorOne

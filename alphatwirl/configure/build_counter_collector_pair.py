@@ -1,4 +1,4 @@
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 from ..summary import Reader, Summarizer, NextKeyComposer, KeyValueComposer
 from ..collector import ToTupleListWithDatasetColumn
 from ..collector import WriteListToFile

@@ -1,4 +1,4 @@
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
 def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, max_events_total = -1, max_files_per_run = 1):

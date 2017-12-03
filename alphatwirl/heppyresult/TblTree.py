@@ -1,4 +1,4 @@
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 from ..misc import mkdir_p
 from ..misc import list_to_aligned_text
 import os

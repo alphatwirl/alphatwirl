@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
 import argparse

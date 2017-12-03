@@ -1,4 +1,4 @@
-# Tai Sakuma <tai.sakuma@cern.ch>
+# Tai Sakuma <tai.sakuma@gmail.com>
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
 import unittest
 

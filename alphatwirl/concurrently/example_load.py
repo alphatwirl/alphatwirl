@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Tai Sakuma <sakuma@fnal.gov>
+# Tai Sakuma <tai.sakuma@gmail.com>
 import os, sys
 import argparse
 import gzip
