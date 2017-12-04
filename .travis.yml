@@ -34,6 +34,7 @@ script:
   - pytest --cov
 
 after_success:
+  - coverage combine
   - codecov
 
 cache: apt
