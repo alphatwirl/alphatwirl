@@ -20,6 +20,11 @@ class CommunicationChannel0(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.results = [ ]
 
+    def __repr__(self):
+        return '{}()'.format(
+            self.__class__.__name__,
+        )
+
     def begin(self):
         self.progressReporter = self.progressMonitor.createReporter()
 
