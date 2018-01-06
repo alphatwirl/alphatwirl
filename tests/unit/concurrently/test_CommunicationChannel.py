@@ -15,13 +15,9 @@ from alphatwirl.concurrently import CommunicationChannel, TaskPackage
 MockTask = collections.namedtuple('MockTask', 'name')
 MockResult = collections.namedtuple('MockResult', 'name')
 
-##__________________________________________________________________||
-class MockDropbox(object):
-    pass
-
 @pytest.fixture()
 def dropbox():
-    ret = MockDropbox()
+    ret = mock.MagicMock()
     ret.open = mock.MagicMock()
     ret.close = mock.MagicMock()
     ret.put = mock.MagicMock()
