@@ -1,7 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import collections
 import logging
-
 import pytest
 
 try:
@@ -12,9 +10,6 @@ except ImportError:
 from alphatwirl.concurrently import CommunicationChannel, TaskPackage
 
 ##__________________________________________________________________||
-MockTask = collections.namedtuple('MockTask', 'name')
-MockResult = collections.namedtuple('MockResult', 'name')
-
 @pytest.fixture()
 def dropbox():
     return mock.MagicMock()
@@ -56,10 +51,10 @@ def test_put(obj, dropbox):
 
     obj.begin()
 
-    task1 = MockTask('task1')
+    task1 = mock.MagicMock(name = 'task1')
     obj.put(task1)
 
-    task2 = MockTask('task2')
+    task2 = mock.MagicMock(name = 'task2')
     obj.put(task2, 123, 'ABC', A = 34)
 
     expected = [
@@ -74,7 +69,7 @@ def test_receive(obj, dropbox):
 
     obj.begin()
 
-    result1 = MockResult('result1')
+    result1 = mock.MagicMock(name = 'result1')
     dropbox.receive = mock.MagicMock(return_value = result1)
 
     assert result1 == obj.receive()
@@ -83,7 +78,7 @@ def test_receive(obj, dropbox):
 
 def test_put_when_closed(obj, dropbox, caplog):
 
-    task1 = MockTask('task1')
+    task1 = mock.MagicMock(name = 'task1')
 
     with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
         obj.put(task1)
@@ -97,7 +92,7 @@ def test_put_when_closed(obj, dropbox, caplog):
 
 def test_receive_when_closed(obj, dropbox, caplog):
 
-    result1 = MockResult('result1')
+    result1 = mock.MagicMock(name = 'result1')
     dropbox.receive = mock.MagicMock(return_value = result1)
 
     with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
