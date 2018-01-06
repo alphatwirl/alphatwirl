@@ -16,19 +16,6 @@ MockTask = collections.namedtuple('MockTask', 'name')
 MockResult = collections.namedtuple('MockResult', 'name')
 
 ##__________________________________________________________________||
-class MockProgressReporter(object): pass
-
-##__________________________________________________________________||
-class MockProgressMonitor(object):
-    def __init__(self):
-        self.reporters = [ ]
-
-    def createReporter(self):
-        reporter = MockProgressReporter()
-        self.reporters.append(reporter)
-        return reporter
-
-##__________________________________________________________________||
 class MockDropbox(object):
     pass
 
