@@ -1,14 +1,13 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-
 import pytest
 import time
 
-from alphatwirl.concurrently import CommunicationChannel0
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
-##__________________________________________________________________||
-class MockResult(object):
-    def __init__(self, data = None):
-        self.data = data
+from alphatwirl.concurrently import CommunicationChannel0
 
 ##__________________________________________________________________||
 class MockTask(object):
@@ -45,11 +44,11 @@ def test_begin_begin_end(obj):
 def test_put(obj):
     obj.begin()
 
-    result1 = MockResult('task1')
+    result1 = mock.MagicMock(name = 'task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = MockResult('task2')
+    result2 = mock.MagicMock(name = 'task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
@@ -59,16 +58,15 @@ def test_put(obj):
 def test_put_receive(obj):
     obj.begin()
 
-    result1 = MockResult('task1')
+    result1 = mock.MagicMock(name = 'task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = MockResult('task2')
+    result2 = mock.MagicMock(name = 'task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
-    actual = [r.data for r in obj.receive()]
-    assert set(['task1', 'task2']) == set(actual)
+    assert set([result1, result2]) == set(obj.receive())
 
     obj.end()
 
@@ -79,20 +77,19 @@ def test_receive_order(obj):
 
     obj.begin()
 
-    result1 = MockResult('task1')
+    result1 = mock.MagicMock(name = 'task1')
     task1 = MockTask(result1, 0.010)
     obj.put(task1)
 
-    result2 = MockResult('task2')
+    result2 = mock.MagicMock(name = 'task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
-    result3 = MockResult('task3')
+    result3 = mock.MagicMock(name = 'task3')
     task3 = MockTask(result3, 0.005)
     obj.put(task3)
 
-    actual = [r.data for r in obj.receive()]
-    assert ['task1', 'task2', 'task3'] == actual
+    assert [result1, result2, result3] == obj.receive()
 
     obj.end()
 
@@ -100,27 +97,25 @@ def test_receive_order(obj):
 def test_put_receive_repeat(obj):
     obj.begin()
 
-    result1 = MockResult('task1')
+    result1 = mock.MagicMock(name = 'task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = MockResult('task2')
+    result2 = mock.MagicMock(name = 'task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
-    actual = [r.data for r in obj.receive()]
-    assert set(['task1', 'task2']) == set(actual)
+    assert set([result1, result2]) == set(obj.receive())
 
-    result3 = MockResult('task3')
+    result3 = mock.MagicMock(name = 'task3')
     task3 = MockTask(result3, 0.002)
     obj.put(task3)
 
-    result4 = MockResult('task4')
+    result4 = mock.MagicMock(name = 'task4')
     task4 = MockTask(result4, 0.002)
     obj.put(task4)
 
-    actual = [r.data for r in obj.receive()]
-    assert set(['task3', 'task4']) == set(actual)
+    assert set([result3, result4]) == set(obj.receive())
 
     obj.end()
 
@@ -129,7 +124,7 @@ def test_begin_put_recive_end_repeat(obj):
 
     obj.begin()
 
-    result = MockResult('task1')
+    result = mock.MagicMock(name = 'task1')
     task = MockTask(result, 0.003)
     obj.put(task)
 
@@ -139,7 +134,7 @@ def test_begin_put_recive_end_repeat(obj):
 
     obj.begin()
 
-    result = MockResult('task2')
+    result = mock.MagicMock(name = 'task2')
     task = MockTask(result, 0.003)
     obj.put(task)
 
