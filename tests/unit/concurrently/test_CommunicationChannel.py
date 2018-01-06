@@ -102,20 +102,34 @@ def test_receive(obj, dropbox):
 
     obj.end()
 
-def test_put_when_closed(obj, dropbox):
+def test_put_when_closed(obj, dropbox, caplog):
 
-    # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
     task1 = MockTask('task1')
-    obj.put(task1)
+
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        obj.put(task1)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'CommunicationChannel' in caplog.records[0].name
+    assert 'the drop box is not open' in caplog.records[0].msg
 
     dropbox.put.assert_not_called()
 
-def test_receive_when_closed(obj, dropbox):
+def test_receive_when_closed(obj, dropbox, caplog):
 
-    # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
     result1 = MockResult('result1')
     dropbox.receive = mock.MagicMock(return_value = result1)
-    assert obj.receive() is None
+
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        result = obj.receive()
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'CommunicationChannel' in caplog.records[0].name
+    assert 'the drop box is not open' in caplog.records[0].msg
+
+    assert result is None
 
     obj.end()
 
