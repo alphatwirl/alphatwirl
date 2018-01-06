@@ -17,11 +17,7 @@ MockResult = collections.namedtuple('MockResult', 'name')
 
 @pytest.fixture()
 def dropbox():
-    ret = mock.MagicMock()
-    ret.open = mock.MagicMock()
-    ret.close = mock.MagicMock()
-    ret.put = mock.MagicMock()
-    return ret
+    return mock.MagicMock()
 
 @pytest.fixture()
 def obj(dropbox):
