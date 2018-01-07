@@ -8,7 +8,7 @@ class ProgressReportPickup(multiprocessing.Process):
         multiprocessing.Process.__init__(self)
         self.queue = queue
         self.presentation = presentation
-        self.lastWaitTime = 1.0 # [second]
+        self.last_wait_time = 1.0 # [second]
 
     def run(self):
         self._run_until_the_end_order_arrives()
@@ -26,16 +26,16 @@ class ProgressReportPickup(multiprocessing.Process):
             if end_order_arrived: break
 
     def _run_until_reports_stop_coming(self):
-        self._readTime()
+        self._read_time()
         while self.presentation.nreports() > 0:
-            if self._time() - self.lastTime > self.lastWaitTime: break
+            if self._time() - self.last_time > self.last_wait_time: break
             while not self.queue.empty():
                 report = self.queue.get()
                 if report is None: continue
-                self._readTime()
+                self._read_time()
                 self.presentation.present(report)
 
     def _time(self): return time.time()
-    def _readTime(self): self.lastTime = self._time()
+    def _read_time(self): self.last_time = self._time()
 
 ##__________________________________________________________________||
