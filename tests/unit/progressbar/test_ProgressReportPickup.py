@@ -11,15 +11,11 @@ except ImportError:
 from alphatwirl.progressbar import ProgressReportPickup
 
 ##__________________________________________________________________||
-class MockPresentation(object):
-    def __init__(self): self.reports = [ ]
-    def present(self, report): self.reports.append(report)
-    def nreports(self): return 0
-
 @pytest.fixture()
 def presentation():
-    return MockPresentation()
+    return mock.MagicMock()
 
+##__________________________________________________________________||
 @pytest.fixture()
 def queue():
     return multiprocessing.Queue()
@@ -29,12 +25,65 @@ def pickup(queue, presentation):
     return ProgressReportPickup(queue, presentation)
 
 ##__________________________________________________________________||
-class MockReport(object): pass
-
-##__________________________________________________________________||
 def test_start_join(pickup, queue, presentation):
     pickup.start()
     queue.put(None)
     pickup.join()
+
+##__________________________________________________________________||
+@pytest.fixture()
+def mock_queue():
+    return mock.MagicMock()
+
+@pytest.fixture()
+def pickup0(mock_queue, presentation):
+    return ProgressReportPickup(mock_queue, presentation)
+
+##__________________________________________________________________||
+def test_run_until_the_end_order_arrives_no_report(pickup0, mock_queue, presentation):
+
+    mock_queue.empty.side_effect = [False, True]
+    mock_queue.get.side_effect = [None]
+    pickup0._run_until_the_end_order_arrives()
+
+    assert [] == presentation.mock_calls
+
+def test_run_until_the_end_order_arrives_one_report(pickup0, mock_queue, presentation):
+
+    report = mock.MagicMock()
+    mock_queue.empty.side_effect = [False, False, True]
+    mock_queue.get.side_effect = [report, None]
+    pickup0._run_until_the_end_order_arrives()
+
+    assert [mock.call.present(report)] == presentation.mock_calls
+
+##__________________________________________________________________||
+@pytest.fixture()
+def mocktime(monkeypatch):
+    ret = mock.MagicMock(return_value = 1000.0)
+    monkeypatch.setattr(time, 'time', ret)
+    return ret
+
+def test_run_until_reports_stop_coming_no_report(pickup0, mock_queue, presentation, mocktime):
+    presentation.nreports.side_effect = [0]
+    pickup0._run_until_reports_stop_coming()
+    assert [] == presentation.present.mock_calls
+
+def test_run_until_reports_stop_coming_one_report(pickup0, mock_queue, presentation, mocktime):
+    presentation.nreports.side_effect = [1, 0]
+    report = mock.MagicMock()
+    mock_queue.empty.side_effect = [False, False, True]
+    mock_queue.get.side_effect = [report, None]
+    pickup0._run_until_reports_stop_coming()
+    assert [mock.call(report)] == presentation.present.mock_calls
+
+def test_run_until_reports_stop_coming_one_report_timeout(pickup0, mock_queue, presentation, mocktime):
+    presentation.nreports.return_value = 1
+    report = mock.MagicMock()
+    mock_queue.empty.return_value = True
+    mock_queue.get.side_effect = [report, None]
+    mocktime.side_effect = [1000.0, 1003.0]
+    pickup0._run_until_reports_stop_coming()
+    assert [ ] == presentation.present.mock_calls
 
 ##__________________________________________________________________||
