@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
+import time
 
 try:
     import unittest.mock as mock
@@ -14,22 +15,35 @@ def queue():
     return mock.MagicMock()
 
 @pytest.fixture()
-def reporter(queue):
-    return ProgressReporter(queue)
+def mocktime():
+    return mock.MagicMock(return_value = 1000.0)
+
+@pytest.fixture()
+def reporter(queue, mocktime, monkeypatch):
+    monkeypatch.setattr(time, 'time', mocktime)
+    ret = ProgressReporter(queue)
+    return ret
+
+@pytest.fixture()
+def report():
+    return mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
+
+@pytest.fixture()
+def report_last():
+    return mock.MagicMock(**{'last.return_value': True, 'first.return_value': False})
+
+@pytest.fixture()
+def report_first():
+    return mock.MagicMock(**{'last.return_value': False, 'first.return_value': True})
 
 ##__________________________________________________________________||
 def test_repr(reporter):
     repr(reporter)
 
-def test_report(reporter, queue, monkeypatch):
+def test_report(reporter, queue, mocktime, report):
 
-    mocktime = mock.MagicMock(return_value = 1000.0)
-    monkeypatch.setattr(reporter, '_time', mocktime)
-
-    reporter._readTime()
     assert 1000.0 == reporter.lastTime
 
-    report = mock.MagicMock(name = "dataset1", done = 124, total = 1552)
     mocktime.return_value = 1000.2
     reporter._report(report)
 
@@ -37,37 +51,28 @@ def test_report(reporter, queue, monkeypatch):
 
     assert 1000.2 == reporter.lastTime
 
-def test_needToReport(reporter, queue, monkeypatch):
+def test_needToReport(reporter, queue, mocktime, report, report_last,
+                      report_first):
 
     interval = reporter.interval
     assert 0.1 == interval
 
-    mocktime = mock.MagicMock(return_value = 1000.0)
-    monkeypatch.setattr(reporter, '_time', mocktime)
-
-    reporter._readTime()
     assert 1000.0 == reporter.lastTime
 
     # before the interval passes
     mocktime.return_value += 0.1*interval
-    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
     assert not reporter._needToReport(report)
-    assert 1000.0 == reporter.lastTime
 
     # the first report before the interval passes
-    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': True})
-    assert reporter._needToReport(report)
-    assert 1000.0 == reporter.lastTime
+    assert reporter._needToReport(report_first)
 
     # the last report before the interval passes
-    report = mock.MagicMock(**{'last.return_value': True, 'first.return_value': False})
-    assert reporter._needToReport(report)
-    assert 1000.0 == reporter.lastTime
+    assert reporter._needToReport(report_last)
 
     # after the interval passes
     mocktime.return_value += 1.2*interval
-    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
     assert reporter._needToReport(report)
+
     assert 1000.0 == reporter.lastTime
 
 ##__________________________________________________________________||
