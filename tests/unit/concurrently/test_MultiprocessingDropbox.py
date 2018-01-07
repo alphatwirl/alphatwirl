@@ -30,27 +30,32 @@ class MockResult(object):
 ##__________________________________________________________________||
 @pytest.fixture()
 def obj():
-    return MultiprocessingDropbox()
+    ret = MultiprocessingDropbox()
+    ret.open()
+    yield ret
+    ret.close()
 
 ##__________________________________________________________________||
-def test_repr(obj):
+def test_repr():
+    obj = MultiprocessingDropbox()
     repr(obj)
 
 def test_init_raise():
     with pytest.raises(ValueError):
         MultiprocessingDropbox(nprocesses = 0)
 
-def test_open_close(obj):
+def test_open_close():
+    obj = MultiprocessingDropbox()
     obj.open()
     obj.close()
 
-def test_open_open_close(obj):
+def test_open_open_close():
+    obj = MultiprocessingDropbox()
     obj.open()
     obj.open() # don't create workers again
     obj.close()
 
 def test_put(obj):
-    obj.open()
 
     result1 = MockResult('task1')
     task1 = MockTask(result1, 0.003)
@@ -62,11 +67,7 @@ def test_put(obj):
     package2 = TaskPackage(task = task2, args = (), kwargs = {})
     obj.put(package2)
 
-    obj.close()
-
 def test_put_receive(obj):
-
-    obj.open()
 
     result1 = MockResult('task1')
     task1 = MockTask(result1, 0.003)
@@ -81,13 +82,9 @@ def test_put_receive(obj):
     actual = [r.data for r in obj.receive()]
     assert set(['task1', 'task2']) == set(actual)
 
-    obj.close()
-
 def test_receive_order(obj):
     # results of tasks are sorted in the order in which the tasks
     # are put.
-
-    obj.open()
 
     result1 = MockResult('task1')
     task1 = MockTask(result1, 0.010)
@@ -107,11 +104,7 @@ def test_receive_order(obj):
     actual = [r.data for r in obj.receive()]
     assert ['task1', 'task2', 'task3'] == actual
 
-    obj.close()
-
 def test_put_receive_repeat(obj):
-
-    obj.open()
 
     result1 = MockResult('task1')
     task1 = MockTask(result1, 0.003)
@@ -139,11 +132,7 @@ def test_put_receive_repeat(obj):
     actual = [r.data for r in obj.receive()]
     assert set(['task3', 'task4']) == set(actual)
 
-    obj.close()
-
 def test_begin_put_recive_end_repeat(obj):
-
-    obj.open()
 
     result = MockResult('task1')
     task = MockTask(result, 0.003)
@@ -163,14 +152,8 @@ def test_begin_put_recive_end_repeat(obj):
 
     obj.receive()
 
-    obj.close()
-
 def test_receive_without_put(obj):
-    obj.open()
-
     assert [ ] == obj.receive()
-
-    obj.close()
 
 ##__________________________________________________________________||
 class MockTaskWithProgressReporter(object):
@@ -248,7 +231,7 @@ class MockTaskWithArgumentsAndProgressReporter(object):
         return self.result
 
 ##__________________________________________________________________||
-def test_task_without_ProgressReporterno(obj):
+def test_task_without_ProgressReporterno():
     progressMonitor = MockProgressMonitor()
     obj = MultiprocessingDropbox(nprocesses = 3, progressMonitor = progressMonitor)
     obj.open()
