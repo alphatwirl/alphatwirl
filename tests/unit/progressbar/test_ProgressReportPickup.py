@@ -1,6 +1,14 @@
-from alphatwirl.progressbar import ProgressReportPickup
-import unittest
+# Tai Sakuma <tai.sakuma@gmail.com>
+import pytest
+import time
 import multiprocessing
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
+from alphatwirl.progressbar import ProgressReportPickup
 
 ##__________________________________________________________________||
 class MockPresentation(object):
@@ -12,14 +20,12 @@ class MockPresentation(object):
 class MockReport(object): pass
 
 ##__________________________________________________________________||
-class TestProgressReportPickup(unittest.TestCase):
-
-    def test_start_join(self):
-        queue = multiprocessing.Queue()
-        presentation = MockPresentation()
-        pickup = ProgressReportPickup(queue, presentation)
-        pickup.start()
-        queue.put(None)
-        pickup.join()
+def test_start_join():
+    queue = multiprocessing.Queue()
+    presentation = MockPresentation()
+    pickup = ProgressReportPickup(queue, presentation)
+    pickup.start()
+    queue.put(None)
+    pickup.join()
 
 ##__________________________________________________________________||
