@@ -42,37 +42,37 @@ def test_repr(reporter):
 
 def test_report(reporter, queue, mocktime, report):
 
-    assert 1000.0 == reporter.lastTime
+    assert 1000.0 == reporter.last_time
 
     mocktime.return_value = 1000.2
     reporter._report(report)
 
     assert [mock.call(report)] == queue.put.call_args_list
 
-    assert 1000.2 == reporter.lastTime
+    assert 1000.2 == reporter.last_time
 
-def test_needToReport(reporter, queue, mocktime, report, report_last,
+def test_need_to_report(reporter, queue, mocktime, report, report_last,
                       report_first):
 
     interval = reporter.interval
     assert 0.1 == interval
 
-    assert 1000.0 == reporter.lastTime
+    assert 1000.0 == reporter.last_time
 
     # before the interval passes
     mocktime.return_value += 0.1*interval
-    assert not reporter._needToReport(report)
+    assert not reporter._need_to_report(report)
 
     # the first report before the interval passes
-    assert reporter._needToReport(report_first)
+    assert reporter._need_to_report(report_first)
 
     # the last report before the interval passes
-    assert reporter._needToReport(report_last)
+    assert reporter._need_to_report(report_last)
 
     # after the interval passes
     mocktime.return_value += 1.2*interval
-    assert reporter._needToReport(report)
+    assert reporter._need_to_report(report)
 
-    assert 1000.0 == reporter.lastTime
+    assert 1000.0 == reporter.last_time
 
 ##__________________________________________________________________||
