@@ -4,17 +4,18 @@ import os
 import collections
 import gzip
 
+import pytest
+
 try:
     import cPickle as pickle
 except:
     import pickle
 
-import pytest
-
 from alphatwirl.concurrently import WorkingArea
 from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||
+## cannot be replaced with MagicMock because MagicMock is not picklable
 MockPackage = collections.namedtuple('MockPackage', 'name')
 MockResult = collections.namedtuple('MockResult', 'name')
 
