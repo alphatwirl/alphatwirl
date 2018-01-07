@@ -15,15 +15,19 @@ class MockQueue(object):
     def get(self): return self.queue.pop(0)
     def empty(self): return len(self.queue) == 0
 
-##__________________________________________________________________||
-def test_repr():
-    queue = MockQueue()
-    obj = ProgressReporter(queue)
-    repr(obj)
+@pytest.fixture()
+def queue():
+    return MockQueue()
 
-def test_report(monkeypatch):
-    queue = MockQueue()
-    reporter = ProgressReporter(queue)
+@pytest.fixture()
+def reporter(queue):
+    return ProgressReporter(queue)
+
+##__________________________________________________________________||
+def test_repr(reporter):
+    repr(reporter)
+
+def test_report(reporter, queue, monkeypatch):
 
     mocktime = mock.MagicMock(return_value = 1000.0)
     monkeypatch.setattr(reporter, '_time', mocktime)
@@ -41,9 +45,7 @@ def test_report(monkeypatch):
 
     assert 1000.2 == reporter.lastTime
 
-def test_needToReport(monkeypatch):
-    queue = MockQueue()
-    reporter = ProgressReporter(queue)
+def test_needToReport(reporter, queue, monkeypatch):
 
     interval = reporter.interval
     assert 0.1 == interval
