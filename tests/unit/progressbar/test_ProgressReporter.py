@@ -6,18 +6,12 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.progressbar import ProgressReporter, ProgressReport
+from alphatwirl.progressbar import ProgressReporter
 
 ##__________________________________________________________________||
-class MockQueue(object):
-    def __init__(self): self.queue = [ ]
-    def put(self, report): self.queue.append(report)
-    def get(self): return self.queue.pop(0)
-    def empty(self): return len(self.queue) == 0
-
 @pytest.fixture()
 def queue():
-    return MockQueue()
+    return mock.MagicMock()
 
 @pytest.fixture()
 def reporter(queue):
@@ -35,13 +29,11 @@ def test_report(reporter, queue, monkeypatch):
     reporter._readTime()
     assert 1000.0 == reporter.lastTime
 
+    report = mock.MagicMock(name = "dataset1", done = 124, total = 1552)
     mocktime.return_value = 1000.2
-    reporter._report(ProgressReport(name = "dataset1", done = 124, total = 1552))
+    reporter._report(report)
 
-    report = queue.get()
-    assert "dataset1" == report.name
-    assert 124 == report.done
-    assert 1552 == report.total
+    assert [mock.call(report)] == queue.put.call_args_list
 
     assert 1000.2 == reporter.lastTime
 
@@ -58,18 +50,18 @@ def test_needToReport(reporter, queue, monkeypatch):
 
     # before the interval passes
     mocktime.return_value += 0.1*interval
-    report = ProgressReport(name = "dataset1", done = 124, total = 1552)
+    report = mock.MagicMock(name = "dataset1", done = 124, total = 1552)
     assert not reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
     # the last report before the interval passes
-    report = ProgressReport(name = "dataset1", done = 1552, total = 1552)
+    report = mock.MagicMock(name = "dataset1", done = 1552, total = 1552)
     assert reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
     # after the interval passes
     mocktime.return_value += 1.2*interval
-    report = ProgressReport(name = "dataset2", done = 1022, total = 4000)
+    report = mock.MagicMock(name = "dataset2", done = 1022, total = 4000)
     assert reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
