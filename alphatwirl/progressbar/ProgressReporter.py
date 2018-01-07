@@ -63,8 +63,8 @@ class ProgressReporter(object):
 
     def _needToReport(self, report):
         if self._time() - self.lastTime > self.interval: return True
-        if report.done == report.total: return True
-        if report.done == 0: return True
+        if report.last(): return True
+        if report.first(): return True
         return False
 
     def _readTime(self): self.lastTime = self._time()

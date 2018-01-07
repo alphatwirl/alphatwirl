@@ -50,18 +50,23 @@ def test_needToReport(reporter, queue, monkeypatch):
 
     # before the interval passes
     mocktime.return_value += 0.1*interval
-    report = mock.MagicMock(name = "dataset1", done = 124, total = 1552)
+    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
     assert not reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
+    # the first report before the interval passes
+    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': True})
+    assert reporter._needToReport(report)
+    assert 1000.0 == reporter.lastTime
+
     # the last report before the interval passes
-    report = mock.MagicMock(name = "dataset1", done = 1552, total = 1552)
+    report = mock.MagicMock(**{'last.return_value': True, 'first.return_value': False})
     assert reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
     # after the interval passes
     mocktime.return_value += 1.2*interval
-    report = mock.MagicMock(name = "dataset2", done = 1022, total = 4000)
+    report = mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
     assert reporter._needToReport(report)
     assert 1000.0 == reporter.lastTime
 
