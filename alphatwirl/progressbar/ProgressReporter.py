@@ -67,7 +67,8 @@ class ProgressReporter(object):
         if report.done == 0: return True
         return False
 
-    def _time(self): return time.time()
     def _readTime(self): self.lastTime = self._time()
+
+    def _time(self): return time.time()
 
 ##__________________________________________________________________||
