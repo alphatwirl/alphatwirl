@@ -16,14 +16,23 @@ class MockPresentation(object):
     def present(self, report): self.reports.append(report)
     def nreports(self): return 0
 
+@pytest.fixture()
+def presentation():
+    return MockPresentation()
+
+@pytest.fixture()
+def queue():
+    return multiprocessing.Queue()
+
+@pytest.fixture()
+def pickup(queue, presentation):
+    return ProgressReportPickup(queue, presentation)
+
 ##__________________________________________________________________||
 class MockReport(object): pass
 
 ##__________________________________________________________________||
-def test_start_join():
-    queue = multiprocessing.Queue()
-    presentation = MockPresentation()
-    pickup = ProgressReportPickup(queue, presentation)
+def test_start_join(pickup, queue, presentation):
     pickup.start()
     queue.put(None)
     pickup.join()
