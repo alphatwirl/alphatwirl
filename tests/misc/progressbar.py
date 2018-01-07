@@ -3,7 +3,7 @@
 from alphatwirl.progressbar import ProgressReport, BProgressMonitor
 from alphatwirl.progressbar import ProgressBar
 from alphatwirl.progressbar import ProgressPrint
-from alphatwirl.concurrently import CommunicationChannel
+from alphatwirl.concurrently import CommunicationChannel, MultiprocessingDropbox
 import sys
 import time, random
 import uuid
@@ -16,7 +16,7 @@ class Task(object):
         n = random.randint(5, 1000000)
         taskid = uuid.uuid4()
         time.sleep(random.randint(0, 3))
-        for i in xrange(n):
+        for i in range(n):
             time.sleep(0.0001)
             report = ProgressReport(name = self.name, done = i + 1, total = n, taskid = taskid)
             progressReporter.report(report)
@@ -27,7 +27,8 @@ progressBar = ProgressBar() if sys.stdout.isatty() else ProgressPrint()
 
 ##__________________________________________________________________||
 progressMonitor = BProgressMonitor(presentation = progressBar)
-channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
+dropbox = MultiprocessingDropbox(nprocesses = 10, progressMonitor = progressMonitor)
+channel = CommunicationChannel(dropbox)
 progressMonitor.begin()
 channel.begin()
 channel.put(Task("loop"))
