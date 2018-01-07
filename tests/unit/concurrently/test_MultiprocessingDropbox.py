@@ -35,6 +35,30 @@ def obj():
     yield ret
     ret.close()
 
+@pytest.fixture()
+def package1():
+    result1 = MockResult('task1')
+    task1 = MockTask(result1, 0.010)
+    return TaskPackage(task = task1, args = (), kwargs = {})
+
+@pytest.fixture()
+def package2():
+    result2 = MockResult('task2')
+    task2 = MockTask(result2, 0.001)
+    return TaskPackage(task = task2, args = (), kwargs = {})
+
+@pytest.fixture()
+def package3():
+    result3 = MockResult('task3')
+    task3 = MockTask(result3, 0.005)
+    return TaskPackage(task = task3, args = (), kwargs = {})
+
+@pytest.fixture()
+def package4():
+    result4 = MockResult('task4')
+    task4 = MockTask(result4, 0.002)
+    return TaskPackage(task = task4, args = (), kwargs = {})
+
 ##__________________________________________________________________||
 def test_repr():
     obj = MultiprocessingDropbox()
@@ -55,101 +79,44 @@ def test_open_open_close():
     obj.open() # don't create workers again
     obj.close()
 
-def test_put(obj):
-
-    result1 = MockResult('task1')
-    task1 = MockTask(result1, 0.003)
-    package1 = TaskPackage(task = task1, args = (), kwargs = {})
+def test_put(obj, package1, package2):
     obj.put(package1)
-
-    result2 = MockResult('task2')
-    task2 = MockTask(result2, 0.001)
-    package2 = TaskPackage(task = task2, args = (), kwargs = {})
     obj.put(package2)
 
-def test_put_receive(obj):
-
-    result1 = MockResult('task1')
-    task1 = MockTask(result1, 0.003)
-    package1 = TaskPackage(task = task1, args = (), kwargs = {})
+def test_put_receive(obj, package1, package2):
     obj.put(package1)
-
-    result2 = MockResult('task2')
-    task2 = MockTask(result2, 0.001)
-    package2 = TaskPackage(task = task2, args = (), kwargs = {})
     obj.put(package2)
-
     actual = [r.data for r in obj.receive()]
     assert set(['task1', 'task2']) == set(actual)
 
-def test_receive_order(obj):
-    # results of tasks are sorted in the order in which the tasks
-    # are put.
-
-    result1 = MockResult('task1')
-    task1 = MockTask(result1, 0.010)
-    package1 = TaskPackage(task = task1, args = (), kwargs = {})
+def test_receive_order(obj, package1, package2, package3):
+    # results of tasks are sorted in the order in which the tasks are
+    # put.
     obj.put(package1)
-
-    result2 = MockResult('task2')
-    task2 = MockTask(result2, 0.001)
-    package2 = TaskPackage(task = task2, args = (), kwargs = {})
     obj.put(package2)
-
-    result3 = MockResult('task3')
-    task3 = MockTask(result3, 0.005)
-    package3 = TaskPackage(task = task3, args = (), kwargs = {})
     obj.put(package3)
-
     actual = [r.data for r in obj.receive()]
     assert ['task1', 'task2', 'task3'] == actual
 
-def test_put_receive_repeat(obj):
+def test_put_receive_repeat(obj, package1, package2, package3, package4):
 
-    result1 = MockResult('task1')
-    task1 = MockTask(result1, 0.003)
-    package1 = TaskPackage(task = task1, args = (), kwargs = {})
     obj.put(package1)
-
-    result2 = MockResult('task2')
-    task2 = MockTask(result2, 0.001)
-    package2 = TaskPackage(task = task2, args = (), kwargs = {})
     obj.put(package2)
-
     actual = [r.data for r in obj.receive()]
     assert set(['task1', 'task2']) == set(actual)
 
-    result3 = MockResult('task3')
-    task3 = MockTask(result3, 0.002)
-    package3 = TaskPackage(task = task3, args = (), kwargs = {})
     obj.put(package3)
-
-    result4 = MockResult('task4')
-    task4 = MockTask(result4, 0.002)
-    package4 = TaskPackage(task = task4, args = (), kwargs = {})
     obj.put(package4)
-
     actual = [r.data for r in obj.receive()]
     assert set(['task3', 'task4']) == set(actual)
 
-def test_begin_put_recive_end_repeat(obj):
+def test_begin_put_recive_end_repeat(obj, package1, package2):
 
-    result = MockResult('task1')
-    task = MockTask(result, 0.003)
-    package = TaskPackage(task = task, args = (), kwargs = {})
-    obj.put(package)
-
+    obj.put(package1)
     obj.receive()
-
     obj.close()
-
     obj.open()
-
-    result = MockResult('task2')
-    task = MockTask(result, 0.003)
-    package = TaskPackage(task = task, args = (), kwargs = {})
-    obj.put(package)
-
+    obj.put(package2)
     obj.receive()
 
 def test_receive_without_put(obj):
