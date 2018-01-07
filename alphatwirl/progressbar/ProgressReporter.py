@@ -1,6 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import time
-from .ProgressReport import ProgressReport
 
 ##__________________________________________________________________||
 class ProgressReporter(object):
