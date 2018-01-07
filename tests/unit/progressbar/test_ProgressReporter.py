@@ -21,12 +21,12 @@ def test_repr():
     obj = ProgressReporter(queue)
     repr(obj)
 
-def test_report():
+def test_report(monkeypatch):
     queue = MockQueue()
     reporter = ProgressReporter(queue)
 
     mocktime = mock.MagicMock(return_value = 1000.0)
-    reporter._time = mocktime
+    monkeypatch.setattr(reporter, '_time', mocktime)
 
     reporter._readTime()
     assert 1000.0 == reporter.lastTime
@@ -41,7 +41,7 @@ def test_report():
 
     assert 1000.2 == reporter.lastTime
 
-def test_needToReport():
+def test_needToReport(monkeypatch):
     queue = MockQueue()
     reporter = ProgressReporter(queue)
 
@@ -49,7 +49,7 @@ def test_needToReport():
     assert 0.1 == interval
 
     mocktime = mock.MagicMock(return_value = 1000.0)
-    reporter._time = mocktime
+    monkeypatch.setattr(reporter, '_time', mocktime)
 
     reporter._readTime()
     assert 1000.0 == reporter.lastTime
