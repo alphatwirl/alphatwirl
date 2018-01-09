@@ -40,7 +40,35 @@ def report_first():
 def test_repr(reporter):
     repr(reporter)
 
-def test_report(reporter, queue, mocktime, report):
+##__________________________________________________________________||
+def test_report_no_need_to_report(reporter, monkeypatch, report):
+
+    mock_report = mock.MagicMock()
+    monkeypatch.setattr(reporter, '_report', mock_report)
+
+    mock_need_to_report = mock.MagicMock()
+    mock_need_to_report.return_value = False
+    monkeypatch.setattr(reporter, '_need_to_report', mock_need_to_report)
+
+    reporter.report(report)
+
+    mock_report.assert_not_called()
+
+def test_report_need_to_report(reporter, monkeypatch, report):
+
+    mock_report = mock.MagicMock()
+    monkeypatch.setattr(reporter, '_report', mock_report)
+
+    mock_need_to_report = mock.MagicMock()
+    mock_need_to_report.return_value = True
+    monkeypatch.setattr(reporter, '_need_to_report', mock_need_to_report)
+
+    reporter.report(report)
+
+    mock_report.assert_called_once_with(report)
+
+##__________________________________________________________________||
+def test__report(reporter, queue, mocktime, report):
 
     assert 1000.0 == reporter.last_time
 
