@@ -1,5 +1,11 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.progressbar import ProgressReporter, Queue, ProgressMonitor
-import unittest
 
 ##__________________________________________________________________||
 class MockPresentation(object):
@@ -10,27 +16,23 @@ class MockPresentation(object):
 class MockReport(object): pass
 
 ##__________________________________________________________________||
-class TestQueue(unittest.TestCase):
-
-    def test_put(self):
-        presentation = MockPresentation()
-        queue = Queue(presentation)
-        report = MockReport()
-        queue.put(report)
-        self.assertEqual([report, ], presentation.reports)
+def test_queue_put():
+    presentation = MockPresentation()
+    queue = Queue(presentation)
+    report = MockReport()
+    queue.put(report)
+    assert [report, ] == presentation.reports
 
 ##__________________________________________________________________||
-class TestProgressMonitor(unittest.TestCase):
+def test_begin_end():
+    presentation = MockPresentation()
+    monitor = ProgressMonitor(presentation)
+    monitor.begin()
+    monitor.end()
 
-    def test_begin_end(self):
-        presentation = MockPresentation()
-        monitor = ProgressMonitor(presentation)
-        monitor.begin()
-        monitor.end()
-
-    def test_createReporter(self):
-        presentation = MockPresentation()
-        monitor = ProgressMonitor(presentation)
-        self.assertIsInstance(monitor.createReporter(), ProgressReporter)
+def test_createReporter():
+    presentation = MockPresentation()
+    monitor = ProgressMonitor(presentation)
+    assert isinstance(monitor.createReporter(), ProgressReporter)
 
 ##__________________________________________________________________||
