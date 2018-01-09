@@ -8,30 +8,22 @@ except ImportError:
 from alphatwirl.progressbar import ProgressReporter, Queue, ProgressMonitor
 
 ##__________________________________________________________________||
-class MockPresentation(object):
-    def __init__(self): self.reports = [ ]
-    def present(self, report): self.reports.append(report)
-
-##__________________________________________________________________||
-class MockReport(object): pass
-
-##__________________________________________________________________||
 def test_queue_put():
-    presentation = MockPresentation()
+    presentation = mock.MagicMock()
     queue = Queue(presentation)
-    report = MockReport()
+    report = mock.MagicMock()
     queue.put(report)
-    assert [report, ] == presentation.reports
+    presentation.present.assert_called_once_with(report)
 
 ##__________________________________________________________________||
 def test_begin_end():
-    presentation = MockPresentation()
+    presentation = mock.MagicMock()
     monitor = ProgressMonitor(presentation)
     monitor.begin()
     monitor.end()
 
 def test_createReporter():
-    presentation = MockPresentation()
+    presentation = mock.MagicMock()
     monitor = ProgressMonitor(presentation)
     assert isinstance(monitor.createReporter(), ProgressReporter)
 
