@@ -57,6 +57,26 @@ def test_run_until_the_end_order_arrives_one_report(pickup0, mock_queue, present
 
     assert [mock.call.present(report)] == presentation.mock_calls
 
+def test_run_until_the_end_order_arrives_one_report_once_empty(pickup0, mock_queue, presentation):
+
+    report1 = mock.MagicMock()
+    mock_queue.empty.side_effect = [False, True, False, True] # it becomes empty once
+    mock_queue.get.side_effect = [report1, None]
+    pickup0._run_until_the_end_order_arrives()
+
+    assert [mock.call.present(report1)] == presentation.mock_calls
+
+def test_run_until_the_end_order_arrives_two_reports(pickup0, mock_queue, presentation):
+
+    report1 = mock.MagicMock()
+    report2 = mock.MagicMock()
+    mock_queue.empty.side_effect = [False, False, False, True]
+    mock_queue.get.side_effect = [report1, None, report2] # report2 arrives
+                                                          # after the end_order
+    pickup0._run_until_the_end_order_arrives()
+
+    assert [mock.call.present(report1), mock.call.present(report2)] == presentation.mock_calls
+
 ##__________________________________________________________________||
 @pytest.fixture()
 def mocktime(monkeypatch):
