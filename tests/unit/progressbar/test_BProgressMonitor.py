@@ -1,32 +1,34 @@
-from alphatwirl.progressbar import ProgressReporter, BProgressMonitor
-import unittest
+# Tai Sakuma <tai.sakuma@gmail.com>
+import sys
+
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
+from alphatwirl.progressbar import BProgressMonitor, ProgressReporter
 
 ##__________________________________________________________________||
-class MockPresentation(object):
-    def __init__(self): self.reports = [ ]
-    def present(self, report): self.reports.append(report)
-    def nreports(self): return 0
+@pytest.fixture()
+def presentation():
+    return mock.MagicMock()
+
+@pytest.fixture()
+def monitor(presentation):
+    return BProgressMonitor(presentation)
+
 
 ##__________________________________________________________________||
-class MockReport(object): pass
+def test_repr(monitor):
+    repr(monitor)
 
-##__________________________________________________________________||
-class TestBProgressMonitor(unittest.TestCase):
+def test_begin_end(monitor):
+    monitor.begin()
+    monitor.end()
 
-    def test_repr(self):
-        presentation = MockPresentation()
-        monitor = BProgressMonitor(presentation)
-        repr(monitor)
-
-    def test_begin_end(self):
-        presentation = MockPresentation()
-        monitor = BProgressMonitor(presentation)
-        monitor.begin()
-        monitor.end()
-
-    def test_createReporter(self):
-        presentation = MockPresentation()
-        monitor = BProgressMonitor(presentation)
-        self.assertIsInstance(monitor.createReporter(), ProgressReporter)
+def test_createReporter(monitor):
+    assert isinstance(monitor.createReporter(), ProgressReporter)
 
 ##__________________________________________________________________||
