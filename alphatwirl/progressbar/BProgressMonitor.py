@@ -79,6 +79,6 @@ class BProgressMonitor(object):
         self.pickup.join()
 
     def createReporter(self):
-        return ProgressReporter(self.queue)
+        return ProgressReporter(queue = self.queue)
 
 ##__________________________________________________________________||
