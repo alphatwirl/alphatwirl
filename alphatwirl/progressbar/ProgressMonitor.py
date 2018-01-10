@@ -20,7 +20,7 @@ class ProgressMonitor(object):
     def end(self): pass
 
     def createReporter(self):
-        reporter = ProgressReporter(self.queue)
+        reporter = ProgressReporter(queue = self.queue)
         return reporter
 
 ##__________________________________________________________________||
