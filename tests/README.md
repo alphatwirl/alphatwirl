@@ -3,35 +3,16 @@
 
 ##### Run all tests
 
-The arguments depend on where you are.
-
-from this direcotry:
 ```
-python -m unittest discover -s ./unit/ -t ../
-```
-
-from the top directory of alphatwirl (one directory up from this directory):
-```
-python -m unittest discover -s ./tests/unit/ -t ./
-```
-
-from further up:
-```
-python -m unittest discover -s ./alphatwirl/tests/unit -t ./alphatwirl/
-```
-
-##### Run a particular test
-
-from the top directory of alphatwirl (one directory up from this directory):
-```
-python -m unittest tests.unit.examples.test_test_example.TestExample1.test_example
+pytest
 ```
 
 ##### Run all tests with coverage
 
-from the top directory of alphatwirl (one directory up from this directory):
 ```
-coverage run -m unittest discover -s ./tests/unit/ -t ./
+pytest --cov
+coverage combine
+
 ```
 
 print report
@@ -42,5 +23,5 @@ coverage report -m
 show report on browser
 ```
 coverage html
-open htmlcov/index.html
+open coverage_html_report/index.html
 ```
