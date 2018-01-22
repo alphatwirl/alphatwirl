@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
 import pytest
 
 try:
@@ -114,7 +115,7 @@ def test_finished_in_steps(obj, workingarea, dispatcher):
     obj.close()
     assert 1 == dispatcher.terminate.call_count
 
-def test_rerun(obj, workingarea, dispatcher):
+def test_rerun(obj, workingarea, dispatcher, caplog):
 
     ## open
     obj.open()
@@ -152,7 +153,18 @@ def test_rerun(obj, workingarea, dispatcher):
     }[x]()
 
     assert 0 == dispatcher.poll.call_count
-    assert [result0, result1, result2] == obj.receive()
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        received = obj.receive()
+
+    assert len(caplog.records) == 2
+    assert caplog.records[0].levelname == 'WARNING'
+    assert caplog.records[1].levelname == 'WARNING'
+    assert 'TaskPackageDropbox' in caplog.records[0].name
+    assert 'TaskPackageDropbox' in caplog.records[1].name
+    assert 'resubmitting' in caplog.records[0].msg
+    assert 'resubmitting' in caplog.records[1].msg
+
+    assert [result0, result1, result2] == received
     assert 4 == dispatcher.poll.call_count
 
     assert [mock.call([1003]), mock.call([]), mock.call([1004]), mock.call([])] == dispatcher.failed_runids.call_args_list
