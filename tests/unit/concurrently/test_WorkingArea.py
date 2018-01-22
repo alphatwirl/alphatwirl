@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import unittest
 import os
 import collections
 import gzip
