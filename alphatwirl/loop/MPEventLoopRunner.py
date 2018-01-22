@@ -93,7 +93,7 @@ class MPEventLoopRunner(object):
             logger = logging.getLogger(__name__)
             # logger.setLevel(logging.DEBUG)
             logger.warning(
-                'too fee results received: {} results received, {} expected'.format(
+                'too few results received: {} results received, {} expected'.format(
                     len(results),
                     self.nruns
                 ))
