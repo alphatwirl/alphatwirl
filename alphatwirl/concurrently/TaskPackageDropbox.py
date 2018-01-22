@@ -13,17 +13,19 @@ class TaskPackageDropbox(object):
     that execute the tasks.
 
     """
-    def __init__(self, workingArea, dispatcher, sleep = 5):
+    def __init__(self, workingArea, dispatcher, sleep=5):
         self.workingArea = workingArea
         self.dispatcher = dispatcher
         self.sleep = sleep
 
     def __repr__(self):
-        return '{}(workingArea = {!r}, dispatcher = {!r}, sleep = {!r})'.format(
+        name_value_pairs = (
+            ('workingArea', self.workingArea),
+            ('dispatcher', self.dispatcher),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.workingArea,
-            self.dispatcher,
-            self.sleep
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def open(self):
