@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import os
+import logging
 import subprocess
 import collections
 
@@ -44,6 +45,11 @@ class SubprocessRunner(object):
             ## self.pipe = True. Otherwise they are (None, None)
 
         finished_pids = [p.pid for p in  finished_procs]
+
+        logger = logging.getLogger(__name__)
+        messages = 'Running: {}, Finished: {}'.format(len(self.running_procs), len(finished_pids))
+        logger.info(messages)
+
         return finished_pids # as runids
 
     def wait(self):
