@@ -1,249 +1,165 @@
-import unittest
-import logging
-import collections
+# Tai Sakuma <tai.sakuma@gmail.com>
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
 from alphatwirl.concurrently import TaskPackageDropbox
-from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||
-MockPackage = collections.namedtuple('MockPackage', 'idx name path')
-MockResult = collections.namedtuple('MockResult', 'name')
+@pytest.fixture()
+def workingarea():
+    return mock.MagicMock()
+
+@pytest.fixture()
+def dispatcher():
+    return mock.MagicMock()
+
+@pytest.fixture()
+def obj(workingarea, dispatcher):
+    return TaskPackageDropbox(workingArea=workingarea, dispatcher=dispatcher, sleep=0.01)
 
 ##__________________________________________________________________||
-class MockWorkingArea(object):
-    def __init__(self):
-        self.nopened = 0
-        self.nclosed = 0
-        self.packages = [ ]
-        self.results = collections.defaultdict(collections.deque)
-        self.package_path_dict = { }
+def test_repr(obj):
+    repr(obj)
 
-    def open(self):
-        self.nopened += 1
+def test_open_close(obj, workingarea, dispatcher):
 
-    def close(self):
-        self.nclosed += 1
+    assert 0 == workingarea.open.call_count
+    assert 0 == workingarea.close.call_count
+    assert 0 == dispatcher.terminate.call_count
 
-    def put_package(self, package):
-        self.packages.append(package)
-        self.package_path_dict[package.idx] = package.path
-        return package.idx
+    obj.open()
+    assert 1 == workingarea.open.call_count
+    assert 0 == workingarea.close.call_count
+    assert 0 == dispatcher.terminate.call_count
 
-    def package_path(self, package_index):
-        return self.package_path_dict[package_index]
+    obj.close()
+    assert 1 == workingarea.open.call_count
+    assert 1 == workingarea.close.call_count
+    assert 1 == dispatcher.terminate.call_count
 
-    def collect_result(self, idx):
-        return self.results[idx].popleft()
+def test_all_finished_once(obj, workingarea, dispatcher):
 
-##__________________________________________________________________||
-class MockDispatcher(object):
-    def __init__(self):
-        self.runargs = [ ]
-        self.nterminated = 0
-        self.npolled = 0
-        self.run_returns = collections.deque()
-        self.poll_returns = collections.deque()
-        self.failed_runids_args = [ ]
+    ## open
+    obj.open()
 
-    def run(self, workingArea, package_index):
-        self.runargs.append([workingArea, package_index])
-        return self.run_returns.popleft()
+    ## put
+    workingarea.put_package.side_effect = [0, 1]
+    dispatcher.run.side_effect = [1001, 1002]
 
-    def poll(self):
-        self.npolled += 1
-        return self.poll_returns.popleft()
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
 
-    def failed_runids(self, runids):
-        self.failed_runids_args.append(runids)
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
 
-    def terminate(self):
-        self.nterminated += 1
+    assert [mock.call(package0), mock.call(package1)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, 0), mock.call(workingarea, 1)] == dispatcher.run.call_args_list
 
-##__________________________________________________________________||
-class TestTaskPackageDropbox(unittest.TestCase):
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1002]]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1}[x]
 
-    def test_repr(self):
-        workingArea = MockWorkingArea()
-        dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher, sleep = 0.01)
-        repr(obj)
+    assert 0 == dispatcher.poll.call_count
+    assert [result0, result1] == obj.receive()
+    assert 1 == dispatcher.poll.call_count
+    assert [mock.call([])] == dispatcher.failed_runids.call_args_list
 
-    def test_open_close(self):
-        workingArea = MockWorkingArea()
-        dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher, sleep = 0.01)
+    ## close
+    assert 0 == dispatcher.terminate.call_count
+    obj.close()
+    assert 1 == dispatcher.terminate.call_count
 
-        self.assertEqual(0, workingArea.nopened)
-        self.assertEqual(0, workingArea.nclosed)
-        self.assertEqual(0, dispatcher.nterminated)
+def test_finished_in_steps(obj, workingarea, dispatcher):
 
-        obj.open()
-        self.assertEqual(1, workingArea.nopened)
-        self.assertEqual(0, workingArea.nclosed)
-        self.assertEqual(0, dispatcher.nterminated)
+    ## open
+    obj.open()
 
-        obj.close()
-        self.assertEqual(1, workingArea.nopened)
-        self.assertEqual(1, workingArea.nclosed)
-        self.assertEqual(1, dispatcher.nterminated)
+    ## put
+    workingarea.put_package.side_effect = [0, 1, 2]
+    dispatcher.run.side_effect = [1001, 1002, 1003]
 
-    def test_all_finished_once(self):
-        workingArea = MockWorkingArea()
-        dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher, sleep = 0.01)
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
 
-        #
-        # open
-        #
-        obj.open()
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
 
-        #
-        # put
-        #
-        dispatcher.run_returns.extend([1001, 1002])
+    package2 = mock.MagicMock(name='package2')
+    obj.put(package2)
 
-        package0 = MockPackage(idx = 0, name = 'package0', path = 'c/d/0')
-        obj.put(package0)
+    assert [mock.call(package0), mock.call(package1), mock.call(package2)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, 0), mock.call(workingarea, 1), mock.call(workingarea, 2)] == dispatcher.run.call_args_list
 
-        package1 = MockPackage(idx = 1, name = 'package1', path = 'c/d/1')
-        obj.put(package1)
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1003], [ ], [1002]]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    result2 = mock.MagicMock(name='result2')
+    workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1, 2: result2}[x]
 
-        self.assertEqual([package0, package1], workingArea.packages)
-        self.assertEqual(2, len(dispatcher.runargs))
-        self.assertEqual([workingArea, 0], dispatcher.runargs[0])
-        self.assertEqual([workingArea, 1], dispatcher.runargs[1])
+    assert 0 == dispatcher.poll.call_count
+    assert [result0, result1, result2] == obj.receive()
+    assert 3 == dispatcher.poll.call_count
 
-        #
-        # receive
-        #
-        dispatcher.poll_returns.extend([[1001, 1002]])
+    assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
 
-        result0 = MockResult(name = 'result0')
-        result1 = MockResult(name = 'result1')
-        workingArea.results[0].extend([result0])
-        workingArea.results[1].extend([result1])
-        self.assertEqual(0, dispatcher.npolled)
-        self.assertEqual([result0, result1], obj.receive())
-        self.assertEqual(1, dispatcher.npolled)
-        self.assertEqual([[ ]], dispatcher.failed_runids_args)
+    ## close
+    assert 0 == dispatcher.terminate.call_count
+    obj.close()
+    assert 1 == dispatcher.terminate.call_count
 
-        #
-        # close
-        #
-        self.assertEqual(0, dispatcher.nterminated)
-        obj.close()
-        self.assertEqual(1, dispatcher.nterminated)
+def test_rerun(obj, workingarea, dispatcher):
 
-    def test_finished_in_steps(self):
-        workingArea = MockWorkingArea()
-        dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher, sleep = 0.01)
+    ## open
+    obj.open()
 
-        #
-        # open
-        #
-        obj.open()
+    ## put
+    workingarea.put_package.side_effect = [0, 1, 2]
+    dispatcher.run.side_effect = [1001, 1002, 1003]
 
-        #
-        # put
-        #
-        dispatcher.run_returns.extend([1001, 1002, 1003])
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
 
-        package0 = MockPackage(idx = 0, name = 'package0', path = 'c/d/0')
-        obj.put(package0)
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
 
-        package1 = MockPackage(idx = 1, name = 'package1', path = 'c/d/1')
-        obj.put(package1)
+    package2 = mock.MagicMock(name='package2')
+    obj.put(package2)
 
-        package2 = MockPackage(idx = 2, name = 'package2', path = 'c/d/2')
-        obj.put(package2)
+    assert [mock.call(package0), mock.call(package1), mock.call(package2)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, 0), mock.call(workingarea, 1), mock.call(workingarea, 2)] == dispatcher.run.call_args_list
 
-        self.assertEqual([package0, package1, package2], workingArea.packages)
-        self.assertEqual(3, len(dispatcher.runargs))
-        self.assertEqual([workingArea, 0], dispatcher.runargs[0])
-        self.assertEqual([workingArea, 1], dispatcher.runargs[1])
-        self.assertEqual([workingArea, 2], dispatcher.runargs[2])
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1003], [ ], [1002, 1004], [1005]]
+    dispatcher.run.side_effect = [1004, 1005]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    result2 = mock.MagicMock(name='result2')
 
-        #
-        # receive
-        #
-        dispatcher.poll_returns.extend([[1001, 1003], [ ], [1002]])
+    return_result0 = mock.MagicMock(side_effect=[result0])
+    return_result1 = mock.MagicMock(side_effect=[result1])
+    return_result2 = mock.MagicMock(side_effect=[None, None, result2]) # fail twice before success
+    workingarea.collect_result.side_effect = lambda x : {
+        0: return_result0,
+        1: return_result1,
+        2: return_result2,
+    }[x]()
 
-        result0 = MockResult(name = 'result0')
-        result1 = MockResult(name = 'result1')
-        result2 = MockResult(name = 'result2')
-        workingArea.results[0].extend([result0])
-        workingArea.results[1].extend([result1])
-        workingArea.results[2].extend([result2])
-        self.assertEqual(0, dispatcher.npolled)
-        self.assertEqual([result0, result1, result2], obj.receive())
-        self.assertEqual(3, dispatcher.npolled)
-        self.assertEqual([[ ], [ ], [ ]], dispatcher.failed_runids_args)
+    assert 0 == dispatcher.poll.call_count
+    assert [result0, result1, result2] == obj.receive()
+    assert 4 == dispatcher.poll.call_count
 
-        #
-        # close
-        #
-        self.assertEqual(0, dispatcher.nterminated)
-        obj.close()
-        self.assertEqual(1, dispatcher.nterminated)
+    assert [mock.call([1003]), mock.call([]), mock.call([1004]), mock.call([])] == dispatcher.failed_runids.call_args_list
 
-    def test_rerun(self):
-        workingArea = MockWorkingArea()
-        dispatcher = MockDispatcher()
-        obj = TaskPackageDropbox(workingArea = workingArea, dispatcher = dispatcher, sleep = 0.01)
-
-        #
-        # open
-        #
-        obj.open()
-
-        #
-        # put
-        #
-        dispatcher.run_returns.extend([1001, 1002, 1003])
-
-        package0 = MockPackage(idx = 0, name = 'package0', path = 'c/d/0')
-        obj.put(package0)
-
-        package1 = MockPackage(idx = 1, name = 'package1', path = 'c/d/1')
-        obj.put(package1)
-
-        package2 = MockPackage(idx = 2, name = 'package2', path = 'c/d/2')
-        obj.put(package2)
-
-        self.assertEqual([package0, package1, package2], workingArea.packages)
-        self.assertEqual(3, len(dispatcher.runargs))
-        self.assertEqual([workingArea, 0], dispatcher.runargs[0])
-        self.assertEqual([workingArea, 1], dispatcher.runargs[1])
-        self.assertEqual([workingArea, 2], dispatcher.runargs[2])
-
-        #
-        # receive
-        #
-        dispatcher.poll_returns.extend([[1001, 1003], [ ], [1002, 1004], [1005]])
-        dispatcher.run_returns.extend([1004, 1005])
-
-        result0 = MockResult(name = 'result0')
-        result1 = MockResult(name = 'result1')
-        result2 = MockResult(name = 'result2')
-        workingArea.results[0].extend([result0])
-        workingArea.results[1].extend([result1])
-        workingArea.results[2].extend([None, None, result2]) # fail twice before success
-        self.assertEqual(0, dispatcher.npolled)
-
-        ## logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
-
-        self.assertEqual([result0, result1, result2], obj.receive())
-
-        self.assertEqual(4, dispatcher.npolled)
-
-        self.assertEqual([[1003], [ ], [1004], [ ]], dispatcher.failed_runids_args)
-
-        #
-        # close
-        #
-        self.assertEqual(0, dispatcher.nterminated)
-        obj.close()
-        self.assertEqual(1, dispatcher.nterminated)
+    ## close
+    assert 0 == dispatcher.terminate.call_count
+    obj.close()
+    assert 1 == dispatcher.terminate.call_count
 
 ##__________________________________________________________________||
