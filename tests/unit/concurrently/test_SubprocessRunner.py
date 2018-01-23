@@ -35,32 +35,35 @@ def taskdir(tmpdir_factory):
         os.chmod(path_run_py, os.stat(path_run_py).st_mode | stat.S_IXUSR)
     return ret
 
+def create_package(taskdir, package_path, sleep_time):
+    os.makedirs(os.path.join(taskdir, package_path))
+    with open(os.path.join(taskdir, package_path, 'sleep.txt'), 'w') as f:
+            f.write(sleep_time)
+
 @pytest.fixture()
 def package0(taskdir):
-    os.makedirs(os.path.join(taskdir, 'aaa'))
-    with open(os.path.join(taskdir, 'aaa', 'sleep.txt'), 'w') as f:
-            f.write('0.20')
+    create_package(taskdir=taskdir, package_path='aaa', sleep_time='0.20')
 
 @pytest.fixture()
 def package1(taskdir):
-    os.makedirs(os.path.join(taskdir, 'bbb'))
-    with open(os.path.join(taskdir, 'bbb', 'sleep.txt'), 'w') as f:
-            f.write('0.02')
+    create_package(taskdir=taskdir, package_path='bbb', sleep_time='0.02')
 
 @pytest.fixture()
 def package2(taskdir):
-    os.makedirs(os.path.join(taskdir, 'ccc'))
-    with open(os.path.join(taskdir, 'ccc', 'sleep.txt'), 'w') as f:
-            f.write('0.15')
+    create_package(taskdir=taskdir, package_path='ccc', sleep_time='0.15')
 
 @pytest.fixture()
-def workingarea(taskdir, package0, package1, package2):
+def package3(taskdir):
+    create_package(taskdir=taskdir, package_path='ddd', sleep_time='100.000')
+
+@pytest.fixture()
+def workingarea(taskdir, package0, package1, package2, package3):
     ret = mock.MagicMock(path=taskdir)
-    package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc'}
+    package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc', 3:'ddd'}
     ret.package_path.side_effect = lambda x: package_path_dict[x]
     return ret
 
-def test_MockWorkingArea(workingarea):
+def test_mockworkingarea(workingarea):
     assert 'aaa' == workingarea.package_path(0)
     assert 'bbb' == workingarea.package_path(1)
     assert 'ccc' == workingarea.package_path(2)
@@ -106,5 +109,11 @@ def test_run_terminate(obj, workingarea):
 def test_wait_terminate(obj):
     assert [ ] == obj.wait()
     obj.terminate()
+
+def test_terminate_long_task(obj, workingarea):
+    pid = obj.run(workingarea, 3)
+    obj.terminate()
+    result_path = os.path.join(workingarea.path, 'ddd', 'result.txt')
+    assert not os.path.isfile(result_path)
 
 ##__________________________________________________________________||
