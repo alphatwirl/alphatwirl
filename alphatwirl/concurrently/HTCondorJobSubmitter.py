@@ -27,7 +27,7 @@ HTCONDOR_JOBSTATUS = {
 
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
-    def __init__(self, job_desc_extra = [ ]):
+    def __init__(self, job_desc_extra=[ ]):
 
         self.job_desc_template = """
         Executable = {job_script}
@@ -71,14 +71,14 @@ class HTCondorJobSubmitter(object):
         input_files = [f for f in input_files if os.path.exists(f)]
 
         job_desc = self.job_desc_template.format(
-            job_script = 'run.py',
-            out = os.path.join(resultdir, 'stdout.txt'),
-            error = os.path.join(resultdir, 'stderr.txt'),
-            log = os.path.join(resultdir, 'log.txt'),
-            args = 'Arguments = {}'.format(package_path),
-            input_files = ', '.join(input_files),
-            output_files = 'results',
-            initialdir = 'to be determined',
+            job_script='run.py',
+            out=os.path.join(resultdir, 'stdout.txt'),
+            error=os.path.join(resultdir, 'stderr.txt'),
+            log=os.path.join(resultdir, 'log.txt'),
+            args='Arguments = {}'.format(package_path),
+            input_files=', '.join(input_files),
+            output_files='results',
+            initialdir='to be determined',
         )
 
         procargs = [
@@ -88,9 +88,9 @@ class HTCondorJobSubmitter(object):
         ]
         proc = subprocess.Popen(
             procargs,
-            stdin = subprocess.PIPE,
-            stdout = subprocess.PIPE,
-            stderr = subprocess.PIPE
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
 
         stdout, stderr = proc.communicate(job_desc)
@@ -187,7 +187,8 @@ def try_executing_until_succeed(procargs):
         #
         proc = subprocess.Popen(
             procargs,
-            stdout = subprocess.PIPE, stderr = subprocess.PIPE
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
         )
         stdout, stderr =  proc.communicate()
         success = not (proc.returncode or stderr)
@@ -227,7 +228,7 @@ def query_status_for(ids):
     return ret
 
 ##__________________________________________________________________||
-def change_job_priority(ids, priority = 10):
+def change_job_priority(ids, priority=10):
 
     # http://research.cs.wisc.edu/htcondor/manual/v7.8/2_6Managing_Job.html#sec:job-prio
 
@@ -238,7 +239,7 @@ def change_job_priority(ids, priority = 10):
         try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
-def sample_ids(n = -1):
+def sample_ids(n=-1):
     # to be deleted
 
     procargs = ['condor_q', '-format', '%-2s\n', 'ClusterId']
