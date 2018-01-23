@@ -92,9 +92,9 @@ def test_run_wait_terminate(obj, workingarea):
     obj.terminate()
 
 def test_run_poll_terminate():
-    # don't explicitly test poll() because the finished jobs are
-    # not deterministic. poll() is used by wait() and is
-    # indirectly tested through wait().
+    # don't explicitly test poll() because the finished tasks are not
+    # deterministic. poll() is used by wait() and is indirectly tested
+    # through wait().
     pass
 
 def test_run_terminate(obj, workingarea):
