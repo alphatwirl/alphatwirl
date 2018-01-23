@@ -1,41 +1,17 @@
-import unittest
-import sys
+# Tai Sakuma <tai.sakuma@gmail.com>
 import os
-import tempfile
-import shutil
+import sys
+import logging
 import textwrap
 
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.concurrently import HTCondorJobSubmitter
-
-##__________________________________________________________________||
-class MockWorkingArea(object):
-    def open(self):
-        self.path = tempfile.mkdtemp()
-
-    def close(self):
-        shutil.rmtree(self.path)
-        self.path = None
-
-    def package_path(self, package_index):
-        return ''
-
-##__________________________________________________________________||
-class MockPopen(object):
-    def communicate(self, *args, **kwargs):
-        self.returncode = 0
-        return 'submitted to cluster 1012.', ''
-
-##__________________________________________________________________||
-class MockPIPE(object):
-    pass
-
-##__________________________________________________________________||
-class MockSubprocess(object):
-    def __init__(self):
-        self.PIPE = MockPIPE
-
-    def Popen(self, *args, **kwargs):
-        return MockPopen()
 
 ##__________________________________________________________________||
 default_job_desc_template = """
@@ -77,31 +53,43 @@ queue 1
 job_desc_template_with_extra = textwrap.dedent(job_desc_template_with_extra).strip()
 
 ##__________________________________________________________________||
-class TestHTCondorJobSubmitter(unittest.TestCase):
+@pytest.fixture()
+def subprocess():
+    proc_submit = mock.MagicMock(name='proc_condor_submit')
+    proc_submit.communicate.return_value = ('submitted to cluster 1012.', '')
 
-    def setUp(self):
-        self.module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-        self.org_subprocess = self.module.subprocess
-        self.module.subprocess = MockSubprocess()
-        self.cwd = os.getcwd()
+    proc_prio = mock.MagicMock(name='proc_condor_prio')
+    proc_prio.communicate.return_value = ('', '')
+    proc_prio.returncode = 0
 
-        self.workingArea = MockWorkingArea()
-        self.workingArea.open()
+    ret = mock.MagicMock(name='subprocess')
+    ret.Popen.side_effect = [proc_submit, proc_prio]
+    return ret
 
-    def tearDown(self):
-        self.module.subprocess = self.org_subprocess
-        os.chdir(self.cwd)
+@pytest.fixture()
+def chdir():
+    return mock.MagicMock()
 
-        self.workingArea.close()
+@pytest.fixture()
+def obj(monkeypatch, subprocess, chdir):
+    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
+    monkeypatch.setattr(module, 'subprocess', subprocess)
+    # monkeypatch.setattr(module.os, 'chdir', chdir)
+    return HTCondorJobSubmitter()
 
-    def test_init_job_desc_extra(self):
-        job_desc_extra = ['request_memory = 900']
-        obj = HTCondorJobSubmitter(job_desc_extra = job_desc_extra)
-        self.assertEqual(job_desc_template_with_extra, obj.job_desc_template)
+def test_repr(obj):
+    repr(obj)
 
-    def test_run(self):
-        obj = HTCondorJobSubmitter()
-        obj.run(workingArea = self.workingArea, package_index = 0)
+def test_init_job_desc_extra(obj):
+    job_desc_extra = ['request_memory = 900']
+    obj = HTCondorJobSubmitter(job_desc_extra=job_desc_extra)
+    assert job_desc_template_with_extra == obj.job_desc_template
+
+def test_run(obj, tmpdir_factory, caplog):
+    workingarea = mock.MagicMock()
+    workingarea.path = str(tmpdir_factory.mktemp(''))
+    workingarea.package_path.return_value = 'aaa'
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        obj.run(workingArea=workingarea, package_index=0)
 
 ##__________________________________________________________________||
-
