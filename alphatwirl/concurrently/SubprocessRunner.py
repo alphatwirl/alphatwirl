@@ -6,7 +6,7 @@ import collections
 
 ##__________________________________________________________________||
 class SubprocessRunner(object):
-    def __init__(self, pipe = False):
+    def __init__(self, pipe=False):
         self.running_procs = collections.deque()
         self.pipe = pipe
 
@@ -33,9 +33,9 @@ class SubprocessRunner(object):
         args = [run_script, package_path]
         proc = subprocess.Popen(
             args,
-            stdout = subprocess.PIPE if self.pipe else None,
-            stderr = subprocess.PIPE if self.pipe else None,
-            cwd = taskdir
+            stdout=subprocess.PIPE if self.pipe else None,
+            stderr=subprocess.PIPE if self.pipe else None,
+            cwd=taskdir
         )
         self.running_procs.append(proc)
         return proc.pid # as runid
