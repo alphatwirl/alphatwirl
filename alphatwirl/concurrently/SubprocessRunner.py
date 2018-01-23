@@ -10,6 +10,15 @@ class SubprocessRunner(object):
         self.running_procs = collections.deque()
         self.pipe = pipe
 
+    def __repr__(self):
+        name_value_pairs = (
+            ('pipe', self.pipe),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
     def run(self, workingArea, package_index):
 
         taskdir = workingArea.path
