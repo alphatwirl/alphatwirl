@@ -46,7 +46,7 @@ class SubprocessRunner(object):
 
         """
         finished_procs = [p for p in self.running_procs if p.poll() is not None]
-        self.running_procs = [p for p in self.running_procs if p not in finished_procs]
+        self.running_procs = collections.deque([p for p in self.running_procs if p not in finished_procs])
 
         for proc in finished_procs:
             stdout, stderr = proc.communicate()

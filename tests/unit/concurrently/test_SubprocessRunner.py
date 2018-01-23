@@ -94,11 +94,12 @@ def test_run_wait_terminate(obj, workingarea):
 
     obj.terminate()
 
-def test_run_poll_terminate():
-    # don't explicitly test poll() because the finished tasks are not
-    # deterministic. poll() is used by wait() and is indirectly tested
-    # through wait().
-    pass
+def test_run_poll_terminate(obj, workingarea):
+    pid1 = obj.run(workingarea, 0)
+    pid2 = obj.run(workingarea, 1)
+    pid3 = obj.run(workingarea, 2)
+    obj.poll()
+    obj.terminate()
 
 def test_run_terminate(obj, workingarea):
     pid1 = obj.run(workingarea, 0)
@@ -109,6 +110,13 @@ def test_run_terminate(obj, workingarea):
 def test_wait_terminate(obj):
     assert [ ] == obj.wait()
     obj.terminate()
+
+def test_poll_terminate_long_task(obj, workingarea):
+    pid = obj.run(workingarea, 3)
+    obj.poll()
+    obj.terminate()
+    result_path = os.path.join(workingarea.path, 'ddd', 'result.txt')
+    assert not os.path.isfile(result_path)
 
 def test_terminate_long_task(obj, workingarea):
     pid = obj.run(workingarea, 3)
