@@ -6,6 +6,7 @@ import os, sys
 import errno
 import argparse
 import tarfile
+import signal
 import gzip
 
 try:
@@ -17,6 +18,9 @@ except:
 parser = argparse.ArgumentParser()
 parser.add_argument('paths', nargs = argparse.REMAINDER, help = 'paths to task packages')
 args = parser.parse_args()
+
+##__________________________________________________________________||
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 ##__________________________________________________________________||
 def main():
