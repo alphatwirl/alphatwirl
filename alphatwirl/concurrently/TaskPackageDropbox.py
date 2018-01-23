@@ -33,7 +33,12 @@ class TaskPackageDropbox(object):
         self.runid_package_index_map = { }
 
     def put(self, package):
+
         package_index = self.workingArea.put_package(package)
+
+        logger = logging.getLogger(__name__)
+        logger.info('submitting {}'.format(self.workingArea.package_path(package_index)))
+
         runid = self.dispatcher.run(self.workingArea, package_index)
         self.runid_package_index_map[runid] = package_index
 
