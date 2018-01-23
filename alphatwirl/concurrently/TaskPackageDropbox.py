@@ -13,15 +13,18 @@ class TaskPackageDropbox(object):
     that execute the tasks.
 
     """
-    def __init__(self, workingArea, dispatcher, sleep=5):
+    def __init__(self, workingArea, dispatcher, sleep=5,
+                 terminate_dispatcher_at_close=True):
         self.workingArea = workingArea
         self.dispatcher = dispatcher
         self.sleep = sleep
+        self.terminate_dispatcher_at_close = terminate_dispatcher_at_close
 
     def __repr__(self):
         name_value_pairs = (
             ('workingArea', self.workingArea),
             ('dispatcher', self.dispatcher),
+            ('terminate_dispatcher_at_close', self.terminate_dispatcher_at_close),
         )
         return '{}({})'.format(
             self.__class__.__name__,
@@ -87,7 +90,8 @@ class TaskPackageDropbox(object):
         return results
 
     def close(self):
-        self.dispatcher.terminate()
+        if self.terminate_dispatcher_at_close:
+            self.dispatcher.terminate()
         self.workingArea.close()
 
 ##__________________________________________________________________||

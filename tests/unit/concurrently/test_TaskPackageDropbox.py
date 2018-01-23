@@ -175,3 +175,21 @@ def test_rerun(obj, workingarea, dispatcher, caplog):
     assert 1 == dispatcher.terminate.call_count
 
 ##__________________________________________________________________||
+def test_terminate_dispatcher_at_close(workingarea, dispatcher):
+    obj = TaskPackageDropbox(
+        workingArea=workingarea,
+        dispatcher=dispatcher,
+        sleep=0.01,
+        terminate_dispatcher_at_close=False
+    )
+
+    assert 0 == dispatcher.terminate.call_count
+
+    obj.open()
+    assert 0 == dispatcher.terminate.call_count
+
+    obj.close()
+    assert 0 == dispatcher.terminate.call_count
+
+##__________________________________________________________________||
+
