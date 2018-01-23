@@ -76,7 +76,7 @@ class TaskPackageDropbox(object):
             time.sleep(self.sleep)
 
         # sort in the order of package_index
-        pkgidx_result_pairs = sorted(pkgidx_result_pairs, key = itemgetter(0))
+        pkgidx_result_pairs = sorted(pkgidx_result_pairs, key=itemgetter(0))
 
         results = [result for i, result in pkgidx_result_pairs]
         return results
