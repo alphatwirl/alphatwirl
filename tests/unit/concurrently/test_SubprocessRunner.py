@@ -11,7 +11,7 @@ except ImportError:
 from alphatwirl.concurrently import SubprocessRunner
 
 ##__________________________________________________________________||
-run_py = """
+run_py_content = """
 #!/usr/bin/env python
 import time
 import sys
@@ -22,51 +22,43 @@ time.sleep(float(secs))
 with open(os.path.join(sys.argv[1], 'result.txt'), 'w') as f:
     f.write('{} {} {}'.format(os.getpid(), sys.argv[1], secs))
 """
-run_py = run_py.lstrip()
-
-##__________________________________________________________________||
-class MockWorkingArea(object):
-    def __init__(self, path):
-        self.path = path
-
-    def open(self):
-        self._prepare_dir(path=self.path)
-        self._setup_packages()
-
-    def close(self):
-        pass
-
-    def package_path(self, package_index):
-        return self.package_path_dict[package_index]
-
-    def _prepare_dir(self, path):
-        path_run_py = os.path.join(path, 'run.py')
-        with open(path_run_py, 'w') as f:
-            f.write(run_py)
-        os.chmod(path_run_py, os.stat(path_run_py).st_mode | stat.S_IXUSR)
-
-    def _setup_packages(self):
-        os.makedirs(os.path.join(self.path, 'aaa'))
-        os.makedirs(os.path.join(self.path, 'bbb'))
-        os.makedirs(os.path.join(self.path, 'ccc'))
-        with open(os.path.join(self.path, 'aaa', 'sleep.txt'), 'w') as f:
-            f.write('0.20')
-        with open(os.path.join(self.path, 'bbb', 'sleep.txt'), 'w') as f:
-            f.write('0.02')
-        with open(os.path.join(self.path, 'ccc', 'sleep.txt'), 'w') as f:
-            f.write('0.15')
-
-        self.package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc'}
+run_py_content = run_py_content.lstrip()
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def workingarea(tmpdir_factory):
-    path = tmpdir_factory.mktemp('')
-    path = str(path)
-    ret = MockWorkingArea(path=path)
-    ret.open()
-    yield ret
-    ret.close()
+def taskdir(tmpdir_factory):
+    ret = tmpdir_factory.mktemp('')
+    ret = str(ret)
+    path_run_py = os.path.join(ret, 'run.py')
+    with open(path_run_py, 'w') as f:
+        f.write(run_py_content)
+        os.chmod(path_run_py, os.stat(path_run_py).st_mode | stat.S_IXUSR)
+    return ret
+
+@pytest.fixture()
+def package0(taskdir):
+    os.makedirs(os.path.join(taskdir, 'aaa'))
+    with open(os.path.join(taskdir, 'aaa', 'sleep.txt'), 'w') as f:
+            f.write('0.20')
+
+@pytest.fixture()
+def package1(taskdir):
+    os.makedirs(os.path.join(taskdir, 'bbb'))
+    with open(os.path.join(taskdir, 'bbb', 'sleep.txt'), 'w') as f:
+            f.write('0.02')
+
+@pytest.fixture()
+def package2(taskdir):
+    os.makedirs(os.path.join(taskdir, 'ccc'))
+    with open(os.path.join(taskdir, 'ccc', 'sleep.txt'), 'w') as f:
+            f.write('0.15')
+
+@pytest.fixture()
+def workingarea(taskdir, package0, package1, package2):
+    ret = mock.MagicMock(path=taskdir)
+    package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc'}
+    ret.package_path.side_effect = lambda x: package_path_dict[x]
+    return ret
 
 def test_MockWorkingArea(workingarea):
     assert 'aaa' == workingarea.package_path(0)
@@ -78,6 +70,7 @@ def test_MockWorkingArea(workingarea):
 def obj():
     return SubprocessRunner()
 
+##__________________________________________________________________||
 def test_repr(obj):
     repr(obj)
 
