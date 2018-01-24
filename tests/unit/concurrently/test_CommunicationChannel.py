@@ -16,7 +16,7 @@ def dropbox():
 
 @pytest.fixture()
 def obj(dropbox):
-    return CommunicationChannel(dropbox = dropbox)
+    return CommunicationChannel(dropbox=dropbox)
 
 ##__________________________________________________________________||
 def test_repr(obj):
@@ -51,15 +51,15 @@ def test_put(obj, dropbox):
 
     obj.begin()
 
-    task1 = mock.MagicMock(name = 'task1')
+    task1 = mock.MagicMock(name='task1')
     obj.put(task1)
 
-    task2 = mock.MagicMock(name = 'task2')
-    obj.put(task2, 123, 'ABC', A = 34)
+    task2 = mock.MagicMock(name='task2')
+    obj.put(task2, 123, 'ABC', A=34)
 
     expected = [
-        mock.call(TaskPackage(task = task1, args = (), kwargs = {})),
-        mock.call(TaskPackage(task = task2, args = (123, 'ABC'), kwargs = {'A': 34})),
+        mock.call(TaskPackage(task=task1, args=(), kwargs={})),
+        mock.call(TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34})),
     ]
     dropbox.put.assert_has_calls(expected)
 
@@ -69,8 +69,8 @@ def test_receive(obj, dropbox):
 
     obj.begin()
 
-    result1 = mock.MagicMock(name = 'result1')
-    dropbox.receive = mock.MagicMock(return_value = result1)
+    result1 = mock.MagicMock(name='result1')
+    dropbox.receive = mock.MagicMock(return_value=result1)
 
     assert result1 == obj.receive()
 
@@ -78,9 +78,9 @@ def test_receive(obj, dropbox):
 
 def test_put_when_closed(obj, dropbox, caplog):
 
-    task1 = mock.MagicMock(name = 'task1')
+    task1 = mock.MagicMock(name='task1')
 
-    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         obj.put(task1)
 
     assert len(caplog.records) == 1
@@ -92,10 +92,10 @@ def test_put_when_closed(obj, dropbox, caplog):
 
 def test_receive_when_closed(obj, dropbox, caplog):
 
-    result1 = mock.MagicMock(name = 'result1')
-    dropbox.receive = mock.MagicMock(return_value = result1)
+    result1 = mock.MagicMock(name='result1')
+    dropbox.receive = mock.MagicMock(return_value=result1)
 
-    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         result = obj.receive()
 
     assert len(caplog.records) == 1
