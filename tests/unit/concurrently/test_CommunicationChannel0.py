@@ -41,6 +41,12 @@ def test_begin_begin_end(obj):
     obj.end()
 
 ##__________________________________________________________________||
+def test_begin_begin_terminate_end(obj):
+    obj.begin()
+    obj.terminate()
+    obj.end()
+
+##__________________________________________________________________||
 def test_put(obj):
     obj.begin()
 

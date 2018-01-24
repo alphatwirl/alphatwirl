@@ -47,6 +47,14 @@ def test_begin_end(obj, dropbox):
     assert 2 == dropbox.open.call_count # can open again
     dropbox.close.assert_called_once()
 
+def test_begin_terminate_end(obj, dropbox):
+
+    obj.begin()
+    assert 0 == dropbox.terminate.call_count
+    obj.terminate()
+    assert 1 == dropbox.terminate.call_count
+    obj.end()
+
 def test_put(obj, dropbox):
 
     obj.begin()

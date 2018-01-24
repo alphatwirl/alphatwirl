@@ -126,6 +126,9 @@ class CommunicationChannel(object):
         results = self.dropbox.receive()
         return results
 
+    def terminate(self):
+        self.dropbox.terminate()
+
     def end(self):
         if not self.isopen: return
         self.dropbox.close()

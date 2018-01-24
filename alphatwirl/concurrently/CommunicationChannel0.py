@@ -40,6 +40,8 @@ class CommunicationChannel0(object):
         del self.results[:]
         return ret
 
+    def terminate(self): pass
+
     def end(self): pass
 
 ##__________________________________________________________________||
