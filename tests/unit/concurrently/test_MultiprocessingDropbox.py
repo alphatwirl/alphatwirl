@@ -119,6 +119,12 @@ def test_begin_put_recive_end_repeat(obj, package1, package2):
     obj.put(package2)
     obj.receive()
 
+def test_terminate(obj, package1, package2):
+
+    obj.put(package1)
+    obj.put(package2)
+    obj.terminate()
+
 def test_receive_without_put(obj):
     assert [ ] == obj.receive()
 

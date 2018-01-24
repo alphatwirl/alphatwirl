@@ -70,6 +70,9 @@ class MultiprocessingDropbox(object):
         results = [result for task_idx, result in messages]
         return results
 
+    def terminate(self):
+        pass
+
     def close(self):
         for i in range(self.n_workers):
             self.task_queue.put(None) # end workers
