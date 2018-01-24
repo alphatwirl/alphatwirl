@@ -20,7 +20,7 @@ class CommunicationChannel(object):
 
         progressBar = ProgressBar()
         progressMonitor = BProgressMonitor(progressBar)
-        channel = CommunicationChannel(nprocesses = 10, progressMonitor = progressMonitor)
+        channel = CommunicationChannel(nprocesses=10, progressMonitor=progressMonitor)
 
     Workers will be created when ``begin()`` is called::
 
@@ -38,9 +38,9 @@ class CommunicationChannel(object):
     instance of ``EventLoop`` can be a task. You can send a task with
     the method ``put``::
 
-        channel.put(task1, 10, 20, A = 30)
+        channel.put(task1, 10, 20, A=30)
 
-    Here, 10, 20, A = 30 are the arguments to the task.
+    Here, 10, 20, A=30 are the arguments to the task.
 
     This class sends the task to a worker. The worker which receives
     the task will first try to call the task with the
@@ -52,7 +52,7 @@ class CommunicationChannel(object):
 
         channel.put(task2)
         channel.put(task3, 100, 200)
-        channel.put(task4, A = 'abc')
+        channel.put(task4, A='abc')
         channel.put(task5)
 
     They will be executed by workers.
@@ -93,7 +93,7 @@ class CommunicationChannel(object):
         self.isopen = False
 
     def __repr__(self):
-        return '{}(dropbox = {!r}, isopen = {!r})'.format(
+        return '{}(dropbox={!r}, isopen={!r})'.format(
             self.__class__.__name__,
             self.dropbox,
             self.isopen
@@ -111,9 +111,9 @@ class CommunicationChannel(object):
             return
 
         package = TaskPackage(
-            task = task,
-            args = args,
-            kwargs =  kwargs
+            task=task,
+            args=args,
+            kwargs= kwargs
         )
         self.dropbox.put(package)
 
