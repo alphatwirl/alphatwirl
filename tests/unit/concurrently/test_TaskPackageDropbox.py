@@ -26,7 +26,7 @@ def obj(workingarea, dispatcher):
 def test_repr(obj):
     repr(obj)
 
-def test_open_close(obj, workingarea, dispatcher):
+def test_open_terminate_close(obj, workingarea, dispatcher):
 
     assert 0 == workingarea.open.call_count
     assert 0 == workingarea.close.call_count
@@ -36,6 +36,11 @@ def test_open_close(obj, workingarea, dispatcher):
     assert 1 == workingarea.open.call_count
     assert 0 == workingarea.close.call_count
     assert 0 == dispatcher.terminate.call_count
+
+    obj.terminate()
+    assert 1 == workingarea.open.call_count
+    assert 0 == workingarea.close.call_count
+    assert 1 == dispatcher.terminate.call_count
 
     obj.close()
     assert 1 == workingarea.open.call_count
@@ -73,6 +78,7 @@ def test_all_finished_once(obj, workingarea, dispatcher):
 
     ## close
     assert 0 == dispatcher.terminate.call_count
+    obj.terminate()
     obj.close()
     assert 1 == dispatcher.terminate.call_count
 
@@ -112,6 +118,7 @@ def test_finished_in_steps(obj, workingarea, dispatcher):
 
     ## close
     assert 0 == dispatcher.terminate.call_count
+    obj.terminate()
     obj.close()
     assert 1 == dispatcher.terminate.call_count
 
@@ -171,25 +178,8 @@ def test_rerun(obj, workingarea, dispatcher, caplog):
 
     ## close
     assert 0 == dispatcher.terminate.call_count
+    obj.terminate()
     obj.close()
     assert 1 == dispatcher.terminate.call_count
 
 ##__________________________________________________________________||
-def test_terminate_dispatcher_at_close(workingarea, dispatcher):
-    obj = TaskPackageDropbox(
-        workingArea=workingarea,
-        dispatcher=dispatcher,
-        sleep=0.01,
-        terminate_dispatcher_at_close=False
-    )
-
-    assert 0 == dispatcher.terminate.call_count
-
-    obj.open()
-    assert 0 == dispatcher.terminate.call_count
-
-    obj.close()
-    assert 0 == dispatcher.terminate.call_count
-
-##__________________________________________________________________||
-
