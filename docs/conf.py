@@ -73,6 +73,9 @@ author = u'Tai Sakuma'
 # The short X.Y version.
 import alphatwirl
 version = '{}'.format(alphatwirl.__version__)
+if version.endswith('.dirty'):
+    version = version[:-len('.dirty')]
+
 # The full version, including alpha/beta/rc tags.
 release = version
 
