@@ -1,99 +1,99 @@
-alphatwirl.loop package
-=======================
+alphatwirl\.loop package
+========================
 
 Submodules
 ----------
 
-alphatwirl.loop.Collector module
---------------------------------
+alphatwirl\.loop\.Collector module
+----------------------------------
 
 .. automodule:: alphatwirl.loop.Collector
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.CollectorComposite module
------------------------------------------
+alphatwirl\.loop\.CollectorComposite module
+-------------------------------------------
 
 .. automodule:: alphatwirl.loop.CollectorComposite
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.CollectorDelegate module
-----------------------------------------
+alphatwirl\.loop\.CollectorDelegate module
+------------------------------------------
 
 .. automodule:: alphatwirl.loop.CollectorDelegate
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.DatasetIntoEventBuildersSplitter module
--------------------------------------------------------
+alphatwirl\.loop\.DatasetIntoEventBuildersSplitter module
+---------------------------------------------------------
 
 .. automodule:: alphatwirl.loop.DatasetIntoEventBuildersSplitter
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.EventLoop module
---------------------------------
+alphatwirl\.loop\.EventLoop module
+----------------------------------
 
 .. automodule:: alphatwirl.loop.EventLoop
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.EventLoopProgressReportWriter module
-----------------------------------------------------
+alphatwirl\.loop\.EventLoopProgressReportWriter module
+------------------------------------------------------
 
 .. automodule:: alphatwirl.loop.EventLoopProgressReportWriter
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.EventLoopRunner module
---------------------------------------
+alphatwirl\.loop\.EventLoopRunner module
+----------------------------------------
 
 .. automodule:: alphatwirl.loop.EventLoopRunner
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.EventsInDatasetReader module
---------------------------------------------
+alphatwirl\.loop\.EventsInDatasetReader module
+----------------------------------------------
 
 .. automodule:: alphatwirl.loop.EventsInDatasetReader
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.MPEventLoopRunner module
-----------------------------------------
+alphatwirl\.loop\.MPEventLoopRunner module
+------------------------------------------
 
 .. automodule:: alphatwirl.loop.MPEventLoopRunner
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.NullCollector module
-------------------------------------
+alphatwirl\.loop\.NullCollector module
+--------------------------------------
 
 .. automodule:: alphatwirl.loop.NullCollector
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.ReaderComposite module
---------------------------------------
+alphatwirl\.loop\.ReaderComposite module
+----------------------------------------
 
 .. automodule:: alphatwirl.loop.ReaderComposite
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.loop.splitfuncs module
----------------------------------
+alphatwirl\.loop\.splitfuncs module
+-----------------------------------
 
 .. automodule:: alphatwirl.loop.splitfuncs
     :members:

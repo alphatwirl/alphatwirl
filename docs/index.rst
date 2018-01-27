@@ -12,18 +12,21 @@
 
 |
 
-The library contains a set of Python classes which can be used to loop over
-event data, summarize them, and store the results for further analysis or
-visualization. Event data here are defined as any data with one row (or entry)
-for one event; for example, data in `ROOT <https://root.cern.ch/>`_
-`TTrees <https://root.cern.ch/doc/master/classTTree.html>`_ are event data when
-they have one entry for one proton-proton collision event. Outputs of this
-library are typically not event data but multi-dimensional categorical data,
-which have one row for one category. Therefore, the outputs can be imported into
-`R <https://www.r-project.org/>`_ or `pandas <http://pandas.pydata.org/>`_ as
-data frames. Then, users can continue a multi-dimensional categorical analysis
-with R, pandas, and other modern data analysis tools.
-
+*AlphaTwirl* is a python library that loops over event data and summarizes them
+into multi-dimensional categorical data as data frames. Event data, input to
+AlphaTwirl, are data with one entry (or row) for one event: for example, data in
+`ROOT <https://root.cern.ch/>`_ `TTrees
+<https://root.cern.ch/doc/master/classTTree.html>`_ with one entry per collision
+event of an `LHC <https://home.cern/topics/large-hadron-collider>`_ experiment
+at `CERN <http://home.cern/>`_. Event data are often large---too large to be
+loaded in memory---because they have as many entries as events.
+Multi-dimensional categorical data, the output of AlphaTwirl, have one row for
+one category. They are usually small---small enough to be loaded in
+memory---because they only have as many rows as categories. Users can, for
+example, import them as data frames into `R <https://www.r-project.org/>`_ and
+`pandas <http://pandas.pydata.org/>`_, which usually load all data in memory,
+and can perform categorical data analyses with a rich set of data operations
+available in R and pandas.
 
 Contents:
 

@@ -1,43 +1,35 @@
-alphatwirl.configure package
-============================
+alphatwirl\.configure package
+=============================
 
 Submodules
 ----------
 
-alphatwirl.configure.TableConfigCompleter module
-------------------------------------------------
+alphatwirl\.configure\.TableConfigCompleter module
+--------------------------------------------------
 
 .. automodule:: alphatwirl.configure.TableConfigCompleter
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.configure.TableFileNameComposer module
--------------------------------------------------
+alphatwirl\.configure\.TableFileNameComposer module
+---------------------------------------------------
 
 .. automodule:: alphatwirl.configure.TableFileNameComposer
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.configure.TableFileNameComposer2 module
---------------------------------------------------
-
-.. automodule:: alphatwirl.configure.TableFileNameComposer2
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-alphatwirl.configure.build_counter_collector_pair module
---------------------------------------------------------
+alphatwirl\.configure\.build\_counter\_collector\_pair module
+-------------------------------------------------------------
 
 .. automodule:: alphatwirl.configure.build_counter_collector_pair
     :members:
     :undoc-members:
     :show-inheritance:
 
-alphatwirl.configure.build_progressMonitor_communicationChannel module
-----------------------------------------------------------------------
+alphatwirl\.configure\.build\_progressMonitor\_communicationChannel module
+--------------------------------------------------------------------------
 
 .. automodule:: alphatwirl.configure.build_progressMonitor_communicationChannel
     :members:
