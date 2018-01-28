@@ -5,16 +5,20 @@ language: python
 matrix:
     include:
         - python: 2.7
-          env: PYTHON=2.7 ROOT=6.04
+          env: ROOT=6.04 PANDAS=0.22
+        - python: 2.7
+          env: ROOT=None PANDAS=None
         - python: 3.6
-          env: PYTHON=3.6 ROOT=6.05
+          env: ROOT=6.05 PANDAS=0.22
+        - python: 3.6
+          env: ROOT=None PANDAS=None
     allow_failures:
         # - python: 3.6
         
 install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
-  
+
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
@@ -23,7 +27,7 @@ install:
   - conda info -a
   - conda config --add channels http://conda.anaconda.org/NLeSC  
   - conda config --set show_channel_urls yes
-  - conda create -q -n testenv python=${PYTHON} root=${ROOT} sphinx pandas numpy
+  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION} $([ "$ROOT" != "None" ] && echo "root=${ROOT}") $([ "$PANDAS" != "None" ] && echo " pandas=${PANDAS}") sphinx numpy
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
   - pip install pytest
