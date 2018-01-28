@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@gmail.com>
+from __future__ import print_function
 import os, sys
 import argparse
 import tarfile
@@ -35,6 +36,6 @@ sys.path.insert(0, dirname)
 f = gzip.open(pickle_path, 'rb')
 package = pickle.load(f)
 
-print package
+print(package)
 
 ##__________________________________________________________________||

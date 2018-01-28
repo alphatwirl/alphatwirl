@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <sakuma@cern.ch>
+from __future__ import print_function
 import os
 import argparse
 
@@ -29,7 +30,7 @@ def main():
     try:
         jobrunner.wait()
     except KeyboardInterrupt:
-        print 'received KeyboardInterrupt'
+        print('received KeyboardInterrupt')
         jobrunner.terminate()
 
 ##__________________________________________________________________||
