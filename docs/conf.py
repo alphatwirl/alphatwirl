@@ -70,6 +70,7 @@ author = u'Tai Sakuma'
 # The short X.Y version.
 import alphatwirl
 version = '{}'.format(alphatwirl.__version__)
+version = version.split('+')[0]
 if version.endswith('.dirty'):
     version = version[:-len('.dirty')]
 
@@ -109,6 +110,10 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # documentation.
 #
 # html_theme_options = {}
+html_theme_options = {
+    # 'bootswatch_theme': "United",
+    'bootswatch_theme': "Simplex",
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
