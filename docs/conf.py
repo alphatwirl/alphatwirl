@@ -111,8 +111,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 # html_theme_options = {}
 html_theme_options = {
-    # 'bootswatch_theme': "United",
-    'bootswatch_theme': "Simplex",
+    'bootswatch_theme': "simplex",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
