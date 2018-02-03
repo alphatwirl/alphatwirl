@@ -10,17 +10,8 @@ def try_executing_until_succeed(procargs, sleep=2):
 
     while True:
 
-        # logging
-        ellipsis = '...(({} letters))...'
-        nfirst = 50
-        nlast = 50
-        command_display = '{} {}'.format(procargs[0], ' '.join([repr(a) for a in procargs[1:]]))
-        if len(command_display) > nfirst + len(ellipsis) + nlast:
-            command_display = '{}...(({} letters))...{}'.format(
-                command_display[:nfirst],
-                len(command_display) - (nfirst + nlast),
-                command_display[-nlast:]
-            )
+        #
+        command_display = compose_shortened_command_for_logging(procargs)
         logger.debug('execute: {}'.format(command_display))
 
         #
@@ -46,3 +37,15 @@ def try_executing_until_succeed(procargs, sleep=2):
     return stdout.rstrip().split(b'\n')
 
 ##__________________________________________________________________||
+def compose_shortened_command_for_logging(procargs):
+    ellipsis = '...(({} letters))...'
+    nfirst = 50
+    nlast = 50
+    command_display = '{} {}'.format(procargs[0], ' '.join([repr(a) for a in procargs[1:]]))
+    if len(command_display) > nfirst + len(ellipsis) + nlast:
+        command_display = '{}...(({} letters))...{}'.format(
+            command_display[:nfirst],
+            len(command_display) - (nfirst + nlast),
+            command_display[-nlast:]
+        )
+    return command_display

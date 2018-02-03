@@ -8,7 +8,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.exec_util import try_executing_until_succeed
+from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
 def test_without_monkeypatch_subproces(caplog):
@@ -51,3 +51,11 @@ def test_fail_success(subprocess, caplog):
         assert [b'aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
 
 ##__________________________________________________________________||
+def test_compose_shortened_command_for_logging():
+    procargs = ['condor_q', '3158110', '3158111', '3158112', '3158113',
+                '3158114', '3158115', '3158116', '3158117', '3158118', '3158119',
+                '3158120', '3158121', '3158122', '3158123', '3158124', '3158125',
+                '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']
+    expected = r"condor_q '3158110' '3158111' '3158112' '3158113' '...((129 letters))...'%-2s ' 'ClusterId' '-format' '%-2s\n' 'JobStatus'"
+    actual = compose_shortened_command_for_logging(procargs)
+    assert expected == actual
