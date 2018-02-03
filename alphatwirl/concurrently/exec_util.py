@@ -12,7 +12,7 @@ def try_executing_until_succeed(procargs, sleep=2):
 
         #
         command_display = compose_shortened_command_for_logging(procargs)
-        logger.debug('execute: {}'.format(command_display))
+        logger.debug('execute: {!r}'.format(command_display))
 
         #
         proc = subprocess.Popen(
@@ -20,7 +20,7 @@ def try_executing_until_succeed(procargs, sleep=2):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
-        stdout, stderr =  proc.communicate()
+        stdout, stderr = proc.communicate()
         success = not (proc.returncode or stderr)
 
         #
@@ -28,7 +28,7 @@ def try_executing_until_succeed(procargs, sleep=2):
 
         #
         if stderr: logger.warning(stderr.strip())
-        logger.warning('the command failed: {}. will try again in {} seconds'.format(command_display, sleep))
+        logger.warning('the command failed: {!r}. will try again in {} seconds'.format(command_display, sleep))
 
         #
         time.sleep(sleep)

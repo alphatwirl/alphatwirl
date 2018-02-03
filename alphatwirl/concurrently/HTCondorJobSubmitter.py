@@ -11,7 +11,7 @@ import logging
 
 import alphatwirl
 
-from .exec_util import try_executing_until_succeed
+from .exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
 # https://htcondor-wiki.cs.wisc.edu/index.cgi/wiki?p=MagicNumbers
@@ -162,7 +162,15 @@ class HTCondorJobSubmitter(object):
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
-            stdout = try_executing_until_succeed(procargs)
+            command_display = compose_shortened_command_for_logging(procargs)
+            logger = logging.getLogger(__name__)
+            logger.debug('execute: {}'.format(command_display))
+            proc = subprocess.Popen(
+                procargs,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            stdout, stderr = proc.communicate()
 
 ##__________________________________________________________________||
 def query_status_for(ids):
