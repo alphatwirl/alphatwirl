@@ -87,6 +87,11 @@ class HTCondorJobSubmitter(object):
             '-append', 'accounting_group=group_physics.hep',
             '-append', 'accounting_group_user={}'.format(getpass.getuser()),
         ]
+
+        logger = logging.getLogger(__name__)
+        command_display = compose_shortened_command_for_logging(procargs)
+        logger.debug('execute: {!r}'.format(command_display))
+
         proc = subprocess.Popen(
             procargs,
             stdin=subprocess.PIPE,
@@ -95,6 +100,10 @@ class HTCondorJobSubmitter(object):
         )
 
         stdout, stderr = proc.communicate(job_desc)
+
+        for l in stdout.rstrip().split(b'\n'):
+            logger.debug(l)
+
         regex = re.compile("submitted to cluster (\d*)", re.MULTILINE)
         clusterid = regex.search(stdout).groups()[0]
 
