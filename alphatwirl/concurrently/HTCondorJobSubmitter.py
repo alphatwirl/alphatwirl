@@ -173,10 +173,9 @@ class HTCondorJobSubmitter(object):
             stdout, stderr = proc.communicate()
 
 ##__________________________________________________________________||
-def query_status_for(ids):
+def query_status_for(ids, n_at_a_time=500):
 
-    n_at_a_time = 500
-    ids_split = [ids[i:(i + n_at_a_time)] for i in range(0, len(ids), n_at_a_time)]
+    ids_split = split_ids(ids, n=n_at_a_time)
     stdout = [ ]
     for ids_sub in ids_split:
         procargs = ['condor_q'] + ids_sub + ['-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']
@@ -194,14 +193,21 @@ def query_status_for(ids):
     return ret
 
 ##__________________________________________________________________||
-def change_job_priority(ids, priority=10):
+def change_job_priority(ids, priority=10, n_at_a_time=500):
 
     # http://research.cs.wisc.edu/htcondor/manual/v7.8/2_6Managing_Job.html#sec:job-prio
 
-    n_at_a_time = 500
-    ids_split = [ids[i:(i + n_at_a_time)] for i in range(0, len(ids), n_at_a_time)]
+    ids_split = split_ids(ids, n=n_at_a_time)
     for ids_sub in ids_split:
         procargs = ['condor_prio', '-p', str(priority)] + ids_sub
         try_executing_until_succeed(procargs)
+
+##__________________________________________________________________||
+def split_ids(ids, n=500):
+    # e.g.,
+    # ids = [3158174', '3158175', '3158176', '3158177', '3158178']
+    # n = 2
+    # return [[3158174', '3158175'], ['3158176', '3158177'], ['3158178']]
+    return [ids[i:(i + n)] for i in range(0, len(ids), n)]
 
 ##__________________________________________________________________||
