@@ -197,17 +197,3 @@ def change_job_priority(ids, priority=10):
         try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
-def sample_ids(n=-1):
-    # to be deleted
-
-    procargs = ['condor_q', '-format', '%-2s\n', 'ClusterId']
-    stdout = try_executing_until_succeed(procargs)
-    sample_ids = [l.strip() for l in stdout]
-
-    if n == -1:
-        return sample_ids
-
-    sample_ids = sample_ids[0:n] if len(sample_ids) >= n else sample_ids
-    return sample_ids
-
-##__________________________________________________________________||
