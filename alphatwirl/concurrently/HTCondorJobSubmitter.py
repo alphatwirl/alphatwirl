@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <sakuma@cern.ch>
 import os, sys
-import argparse
 import subprocess
 import collections
 import time
