@@ -104,8 +104,9 @@ class HTCondorJobSubmitter(object):
         for l in stdout.rstrip().split(b'\n'):
             logger.debug(l)
 
-        regex = re.compile("submitted to cluster (\d*)", re.MULTILINE)
-        clusterid = regex.search(stdout).groups()[0]
+        regex = re.compile(b"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
+        njobs = int(regex.search(stdout).groups()[0])
+        clusterid = regex.search(stdout).groups()[1]
 
         self.clusterids_outstanding.append(clusterid)
 
