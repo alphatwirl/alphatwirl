@@ -67,14 +67,9 @@ def subprocess():
     return ret
 
 @pytest.fixture()
-def chdir():
-    return mock.MagicMock()
-
-@pytest.fixture()
-def obj(monkeypatch, subprocess, chdir):
+def obj(monkeypatch, subprocess):
     module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
     monkeypatch.setattr(module, 'subprocess', subprocess)
-    # monkeypatch.setattr(module.os, 'chdir', chdir)
     return HTCondorJobSubmitter()
 
 def test_repr(obj):
@@ -90,6 +85,6 @@ def test_run(obj, tmpdir_factory, caplog):
     workingarea.path = str(tmpdir_factory.mktemp(''))
     workingarea.package_path.return_value = 'aaa'
     with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
-        obj.run(workingArea=workingarea, package_index=0)
+        assert '1012' == obj.run(workingArea=workingarea, package_index=0)
 
 ##__________________________________________________________________||
