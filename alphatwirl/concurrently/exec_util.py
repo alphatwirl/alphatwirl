@@ -4,9 +4,8 @@ import subprocess
 import time
 
 ##__________________________________________________________________||
-def try_executing_until_succeed(procargs):
+def try_executing_until_succeed(procargs, sleep=2):
 
-    sleep = 2
     logger = logging.getLogger(__name__)
 
     while True:

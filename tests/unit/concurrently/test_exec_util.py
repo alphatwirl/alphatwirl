@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import sys
+import logging
 import pytest
 
 try:
@@ -10,9 +11,10 @@ except ImportError:
 from alphatwirl.concurrently.exec_util import try_executing_until_succeed
 
 ##__________________________________________________________________||
-def test_without_monkeypatch_subproces():
+def test_without_monkeypatch_subproces(caplog):
     procargs = ['ls']
-    try_executing_until_succeed(procargs)
+    with caplog.at_level(logging.DEBUG, logger = 'alphatwirl'):
+        try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -32,7 +34,7 @@ def test_success(subprocess):
 
     assert [b'aaa bbb'] == try_executing_until_succeed(procargs)
 
-def test_fail_success(subprocess):
+def test_fail_success(subprocess, caplog):
     procargs = ['ls']
 
     proc0 = mock.MagicMock(name='ls')
@@ -45,6 +47,7 @@ def test_fail_success(subprocess):
 
     subprocess.Popen.side_effect = [proc0, proc1]
 
-    assert [b'aaa bbb'] == try_executing_until_succeed(procargs)
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        assert [b'aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
 
 ##__________________________________________________________________||
