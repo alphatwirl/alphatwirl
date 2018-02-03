@@ -56,6 +56,8 @@ def test_compose_shortened_command_for_logging():
                 '3158114', '3158115', '3158116', '3158117', '3158118', '3158119',
                 '3158120', '3158121', '3158122', '3158123', '3158124', '3158125',
                 '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']
-    expected = r"condor_q '3158110' '3158111' '3158112' '3158113' '...((129 letters))...'%-2s ' 'ClusterId' '-format' '%-2s\n' 'JobStatus'"
+    expected = 'condor_q 3158110 3158111 3158112 3158113 3158114 3...((86 letters))... -format "%-2s " ClusterId -format %-2s\n JobStatus'
     actual = compose_shortened_command_for_logging(procargs)
     assert expected == actual
+
+##__________________________________________________________________||

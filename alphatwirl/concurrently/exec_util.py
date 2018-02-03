@@ -41,7 +41,7 @@ def compose_shortened_command_for_logging(procargs):
     ellipsis = '...(({} letters))...'
     nfirst = 50
     nlast = 50
-    command_display = '{} {}'.format(procargs[0], ' '.join([repr(a) for a in procargs[1:]]))
+    command_display = subprocess.list2cmdline(procargs)
     if len(command_display) > nfirst + len(ellipsis) + nlast:
         command_display = '{}...(({} letters))...{}'.format(
             command_display[:nfirst],
@@ -49,3 +49,5 @@ def compose_shortened_command_for_logging(procargs):
             command_display[-nlast:]
         )
     return command_display
+
+##__________________________________________________________________||
