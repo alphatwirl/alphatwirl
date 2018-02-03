@@ -44,6 +44,6 @@ def try_executing_until_succeed(procargs):
         time.sleep(sleep)
 
     if not stdout: return [ ]
-    return stdout.rstrip().split('\n')
+    return stdout.rstrip().split(b'\n')
 
 ##__________________________________________________________________||

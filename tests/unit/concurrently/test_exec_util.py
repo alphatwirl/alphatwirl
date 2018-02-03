@@ -26,25 +26,25 @@ def test_success(subprocess):
     procargs = ['ls']
 
     proc = mock.MagicMock(name='ls')
-    proc.communicate.return_value = ('aaa bbb', '')
+    proc.communicate.return_value = (b'aaa bbb', b'')
     proc.returncode = 0
     subprocess.Popen.side_effect = [proc]
 
-    assert ['aaa bbb'] == try_executing_until_succeed(procargs)
+    assert [b'aaa bbb'] == try_executing_until_succeed(procargs)
 
 def test_fail_success(subprocess):
     procargs = ['ls']
 
     proc0 = mock.MagicMock(name='ls')
-    proc0.communicate.return_value = ('', '')
+    proc0.communicate.return_value = (b'', b'')
     proc0.returncode = 1
 
     proc1 = mock.MagicMock(name='ls')
-    proc1.communicate.return_value = ('aaa bbb', '')
+    proc1.communicate.return_value = (b'aaa bbb', b'')
     proc1.returncode = 0
 
     subprocess.Popen.side_effect = [proc0, proc1]
 
-    assert ['aaa bbb'] == try_executing_until_succeed(procargs)
+    assert [b'aaa bbb'] == try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
