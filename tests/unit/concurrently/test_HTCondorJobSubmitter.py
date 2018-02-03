@@ -70,6 +70,8 @@ def subprocess():
 def obj(monkeypatch, subprocess):
     module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
     monkeypatch.setattr(module, 'subprocess', subprocess)
+    module = sys.modules['alphatwirl.concurrently.exec_util']
+    monkeypatch.setattr(module, 'subprocess', subprocess)
     return HTCondorJobSubmitter()
 
 def test_repr(obj):
