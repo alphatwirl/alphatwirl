@@ -80,31 +80,35 @@ def test_standard(obj, eventLoopRunner, reader, collector,
     obj.read(dataset2)
     obj.read(dataset3)
 
-    assert 4 == eventLoopRunner.run.call_count
+    assert 0 == eventLoopRunner.run.call_count
+    assert 3 == eventLoopRunner.run_multiple.call_count
 
-    call1 = eventLoopRunner.run.call_args_list[0]
-    eventLoop1 = call1[0][0]
+    call1 = eventLoopRunner.run_multiple.call_args_list[0]
+
+    eventLoop1 = call1[0][0][0]
     assert isinstance(eventLoop1, EventLoop)
     assert build_events1 is eventLoop1.build_events
     assert reader is not eventLoop1.reader
     assert 'reader' == eventLoop1.reader.name
 
-    call2 = eventLoopRunner.run.call_args_list[1]
-    eventLoop2 = call2[0][0]
+    eventLoop2 = call1[0][0][1]
     assert isinstance(eventLoop2, EventLoop)
     assert build_events2 is eventLoop2.build_events
     assert reader is not eventLoop2.reader
     assert 'reader' == eventLoop2.reader.name
 
-    call3 = eventLoopRunner.run.call_args_list[2]
-    eventLoop3 = call3[0][0]
+    eventLoop3 = call1[0][0][2]
     assert isinstance(eventLoop3, EventLoop)
     assert build_events3 is eventLoop3.build_events
     assert reader is not eventLoop3.reader
     assert 'reader' == eventLoop3.reader.name
 
-    call4 = eventLoopRunner.run.call_args_list[3]
-    eventLoop4 = call4[0][0]
+    call2 = eventLoopRunner.run_multiple.call_args_list[1]
+    assert mock.call([ ]) == call2
+
+    call3 = eventLoopRunner.run_multiple.call_args_list[2]
+
+    eventLoop4 = call3[0][0][0]
     assert isinstance(eventLoop4, EventLoop)
     assert build_events4 is eventLoop4.build_events
     assert reader is not eventLoop4.reader
