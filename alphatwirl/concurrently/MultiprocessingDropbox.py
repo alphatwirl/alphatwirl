@@ -56,6 +56,10 @@ class MultiprocessingDropbox(object):
         self.task_queue.put((self.task_idx, package))
         self.n_ongoing_tasks += 1
 
+    def put_multiple(self, packages):
+        for package in packages:
+            self.put(package)
+
     def receive(self):
         messages = [ ] # a list of (task_idx, result)
         while self.n_ongoing_tasks >= 1:

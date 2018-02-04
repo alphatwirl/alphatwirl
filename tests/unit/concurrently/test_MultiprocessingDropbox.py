@@ -83,6 +83,9 @@ def test_put(obj, package1, package2):
     obj.put(package1)
     obj.put(package2)
 
+def test_put_multiple(obj, package1, package2):
+    obj.put_multiple([package1, package2])
+
 def test_put_receive(obj, package1, package2):
     obj.put(package1)
     obj.put(package2)
