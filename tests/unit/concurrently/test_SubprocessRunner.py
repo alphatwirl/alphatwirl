@@ -125,3 +125,19 @@ def test_terminate_long_task(obj, workingarea):
     assert not os.path.isfile(result_path)
 
 ##__________________________________________________________________||
+def test_run_multiple_wait_terminate(obj, workingarea):
+
+    pids = obj.run_multiple(workingarea, [0, 1, 2])
+
+    assert set(pids) == set(obj.wait())
+    # obj.wait() returns a list of finished pids, unsorted
+
+    assert '{} aaa 0.20'.format(pids[0]) == open(os.path.join(workingarea.path, 'aaa', 'result.txt')).read()
+    assert '{} bbb 0.02'.format(pids[1]) == open(os.path.join(workingarea.path, 'bbb', 'result.txt')).read()
+    assert '{} ccc 0.15'.format(pids[2]) == open(os.path.join(workingarea.path, 'ccc', 'result.txt')).read()
+
+    obj.failed_runids([])
+
+    obj.terminate()
+
+##__________________________________________________________________||

@@ -41,6 +41,12 @@ class SubprocessRunner(object):
         self.running_procs.append(proc)
         return proc.pid # as runid
 
+    def run_multiple(self, workingArea, package_indices):
+        pids = [ ]
+        for pkgidx in package_indices:
+            pids.append(self.run(workingArea, pkgidx))
+        return pids
+
     def poll(self):
         """check if the jobs are running and return a list of pids for
         finished jobs
