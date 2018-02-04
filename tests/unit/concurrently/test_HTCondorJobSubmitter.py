@@ -67,6 +67,6 @@ def test_run(obj, tmpdir_factory, caplog):
     workingarea.path = str(tmpdir_factory.mktemp(''))
     workingarea.package_path.return_value = 'aaa'
     with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
-        assert b'1012.0' == obj.run(workingArea=workingarea, package_index=0)
+        assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
 
 ##__________________________________________________________________||

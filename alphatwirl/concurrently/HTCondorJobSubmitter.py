@@ -52,8 +52,8 @@ class HTCondorJobSubmitter(object):
             lines[-1:-1] = job_desc_extra
             self.job_desc_template = '\n'.join(lines)
 
-        self.clusterids_outstanding = [ ]
-        self.clusterids_finished = [ ]
+        self.clusterprocids_outstanding = [ ]
+        self.clusterprocids_finished = [ ]
 
     def run(self, workingArea, package_index):
         return self.run_multiple(workingArea, [package_index])[0]
@@ -109,16 +109,21 @@ class HTCondorJobSubmitter(object):
         regex = re.compile("(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
         njobs = int(regex.search(stdout).groups()[0])
         clusterid = regex.search(stdout).groups()[1]
+        # e.g., '3158626'
 
-        clusterids = ['{}.{}'.format(clusterid, i) for i in range(njobs)]
+        procid = ['{}'.format(i) for i in range(njobs)]
+        # e.g., ['0', '1', '2', '3']
 
-        self.clusterids_outstanding.extend(clusterids)
+        clusterprocids = ['{}.{}'.format(clusterid, i) for i in procid]
+        # e.g., ['3158626.0', '3158626.1', '3158626.2', '3158626.3']
 
-        change_job_priority(clusterids, 10) ## need to make configurable
+        self.clusterprocids_outstanding.extend(clusterprocids)
+
+        change_job_priority(clusterprocids, 10) ## need to make configurable
 
         os.chdir(cwd)
 
-        return clusterids
+        return clusterprocids
 
     def poll(self):
         """check if the jobs are running and return a list of cluster IDs for
@@ -126,53 +131,53 @@ class HTCondorJobSubmitter(object):
 
         """
 
-        clusterid_status_list = query_status_for(self.clusterids_outstanding)
+        clusterprocid_status_list = query_status_for(self.clusterprocids_outstanding)
         # e.g., [['1730126', 2], ['1730127', 2], ['1730129', 1], ['1730130', 1]]
 
 
-        if clusterid_status_list:
-            clusterids, statuses = zip(*clusterid_status_list)
+        if clusterprocid_status_list:
+            clusterprocids, statuses = zip(*clusterprocid_status_list)
         else:
-            clusterids, statuses = (), ()
+            clusterprocids, statuses = (), ()
 
-        clusterids_finished = [i for i in self.clusterids_outstanding if i not in clusterids]
-        self.clusterids_finished.extend(clusterids_finished)
-        self.clusterids_outstanding[:] = clusterids
+        clusterprocids_finished = [i for i in self.clusterprocids_outstanding if i not in clusterprocids]
+        self.clusterprocids_finished.extend(clusterprocids_finished)
+        self.clusterprocids_outstanding[:] = clusterprocids
 
         # logging
         counter = collections.Counter(statuses)
         messages = [ ]
         if counter:
             messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
-        if self.clusterids_finished:
-            messages.append('Finished {}'.format(len(self.clusterids_finished)))
+        if self.clusterprocids_finished:
+            messages.append('Finished {}'.format(len(self.clusterprocids_finished)))
         logger = logging.getLogger(__name__)
         logger.info(', '.join(messages))
 
-        return clusterids_finished
+        return clusterprocids_finished
 
     def wait(self):
         """wait until all jobs finish and return a list of cluster IDs
         """
         sleep = 5
-        while self.clusterids_outstanding:
+        while self.clusterprocids_outstanding:
             self.poll()
             time.sleep(sleep)
-        return self.clusterids_finished
+        return self.clusterprocids_finished
 
     def failed_runids(self, runids):
-        # remove failed clusterids from self.clusterids_finished
-        # so that len(self.clusterids_finished)) becomes the number
+        # remove failed clusterprocids from self.clusterprocids_finished
+        # so that len(self.clusterprocids_finished)) becomes the number
         # of the successfully finished jobs
         for i in runids:
             try:
-                self.clusterids_finished.remove(i)
+                self.clusterprocids_finished.remove(i)
             except ValueError:
                 pass
 
     def terminate(self):
         n_at_a_time = 500
-        ids_split = [self.clusterids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterids_outstanding), n_at_a_time)]
+        ids_split = [self.clusterprocids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterprocids_outstanding), n_at_a_time)]
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
@@ -201,7 +206,7 @@ def query_status_for(ids, n_at_a_time=500):
     # e.g., [['688244', '1'], ['688245', '1'], ['688246', '2']]
 
     ret = [[e[0], int(e[1])] for e in ret]
-    # a list of [clusterid, status]
+    # a list of [clusterprocid, status]
     # e.g., [['688244', 1], ['688245', 1], ['688246', 2]]
 
     return ret
