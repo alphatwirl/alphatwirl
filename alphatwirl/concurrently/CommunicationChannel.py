@@ -109,12 +109,7 @@ class CommunicationChannel(object):
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
             return
-
-        package = TaskPackage(
-            task=task,
-            args=args,
-            kwargs= kwargs
-        )
+        package = TaskPackage(task=task, args=args, kwargs=kwargs)
         self.dropbox.put(package)
 
     def receive(self):
