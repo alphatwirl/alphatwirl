@@ -27,7 +27,7 @@ def test_begin_end(obj, communicationChannel):
     communicationChannel.receive.return_value = [ ]
     obj.end()
 
-def test_begin_run_end(obj, communicationChannel):
+def test_run(obj, communicationChannel):
     obj.begin()
 
     eventLoop1 = mock.Mock(name='eventLoop1')
@@ -38,12 +38,21 @@ def test_begin_run_end(obj, communicationChannel):
 
     assert [mock.call(eventLoop1), mock.call(eventLoop2)] == communicationChannel.put.call_args_list
 
+def test_end(obj, communicationChannel):
+    obj.begin()
+
+    eventLoop1 = mock.Mock(name='eventLoop1')
+    obj.run(eventLoop1)
+
+    eventLoop2 = mock.Mock(name='eventLoop2')
+    obj.run(eventLoop2)
+
     result1 = mock.Mock(name='result1')
     result2 = mock.Mock(name='result2')
     communicationChannel.receive.return_value = [result1, result2]
     assert [result1, result2] == obj.end()
 
-def test_wrong_number_or_results(obj, communicationChannel, caplog):
+def test_end_logging_wrong_number_or_results(obj, communicationChannel, caplog):
     obj.begin()
 
     eventLoop1 = mock.Mock(name='eventLoop1')
