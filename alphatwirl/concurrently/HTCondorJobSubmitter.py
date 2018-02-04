@@ -31,62 +31,68 @@ class HTCondorJobSubmitter(object):
     def __init__(self, job_desc_extra=[ ]):
 
         self.job_desc_template = """
-        Executable = {job_script}
-        output = {out}
-        error = {error}
-        log = {log}
-        {args}
+        Executable = run.py
+        output = results/$(resultdir)/stdout.txt
+        error = results/$(resultdir)/stderr.txt
+        log = results/$(resultdir)/log.txt
+        Arguments = $(resultdir).p.gz
         should_transfer_files = YES
         when_to_transfer_output = ON_EXIT
         transfer_input_files = {input_files}
-        transfer_output_files = {output_files}
+        transfer_output_files = results
         Universe = vanilla
         notification = Error
-        # Initialdir = {initialdir}
         getenv = True
-        queue 1
+        queue resultdir in {resultdirs}
         """
         self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
 
         if job_desc_extra:
-            job_desc_list = self.job_desc_template.split('\n')
-            job_desc_list[-1:-1] = job_desc_extra
-            self.job_desc_template = '\n'.join(job_desc_list)
+            lines = self.job_desc_template.split('\n')
+            lines[-1:-1] = job_desc_extra
+            self.job_desc_template = '\n'.join(lines)
 
-        self.clusterids_outstanding = [ ]
-        self.clusterids_finished = [ ]
+        self.clusterprocids_outstanding = [ ]
+        self.clusterprocids_finished = [ ]
 
     def run(self, workingArea, package_index):
+        return self.run_multiple(workingArea, [package_index])[0]
+
+    def run_multiple(self, workingArea, package_indices):
+
+        if not package_indices:
+            return [ ]
 
         cwd = os.getcwd()
         os.chdir(workingArea.path)
 
-        package_path = workingArea.package_path(package_index)
+        package_paths = [workingArea.package_path(i) for i in package_indices]
+        resultdir_basenames = [os.path.splitext(p)[0] for p in package_paths]
+        resultdir_basenames = [os.path.splitext(n)[0] for n in resultdir_basenames]
+        resultdirs = [os.path.join('results', n) for n in resultdir_basenames]
 
-        resultdir_basename = os.path.splitext(package_path)[0]
-        resultdir_basename = os.path.splitext(resultdir_basename)[0]
-        resultdir = os.path.join('results', resultdir_basename)
-        alphatwirl.mkdir_p(resultdir)
+        for d in resultdirs:
+            alphatwirl.mkdir_p(d)
 
-        input_files = [package_path, 'python_modules.tar.gz']
-        input_files = [f for f in input_files if os.path.exists(f)]
+        extra_input_files = ['python_modules.tar.gz']
+        extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
 
         job_desc = self.job_desc_template.format(
-            job_script='run.py',
-            out=os.path.join(resultdir, 'stdout.txt'),
-            error=os.path.join(resultdir, 'stderr.txt'),
-            log=os.path.join(resultdir, 'log.txt'),
-            args='Arguments = {}'.format(package_path),
-            input_files=', '.join(input_files),
-            output_files='results',
-            initialdir='to be determined',
+            input_files = ', '.join(['$(resultdir).p.gz'] + extra_input_files),
+            resultdirs = ', '.join(resultdir_basenames)
         )
 
-        procargs = [
-            '/usr/bin/condor_submit',
-            '-append', 'accounting_group=group_physics.hep',
-            '-append', 'accounting_group_user={}'.format(getpass.getuser()),
-        ]
+        procargs = ['condor_submit']
+
+        # FIXME: Bristol specific code. need to be removed <>
+        import socket
+        hostname = socket.gethostname()
+        if 'soolin.dice.priv' in hostname:
+            procargs = [
+                '/usr/bin/condor_submit',
+                '-append', 'accounting_group=group_physics.hep',
+                '-append', 'accounting_group_user={}'.format(getpass.getuser()),
+            ]
 
         logger = logging.getLogger(__name__)
         command_display = compose_shortened_command_for_logging(procargs)
@@ -100,21 +106,30 @@ class HTCondorJobSubmitter(object):
         )
 
         stdout, stderr = proc.communicate(job_desc)
+        stdout = stdout.decode()
+        stderr = stderr.decode()
 
-        for l in stdout.rstrip().split(b'\n'):
+        for l in stdout.rstrip().split('\n'):
             logger.debug(l)
 
-        regex = re.compile(b"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
+        regex = re.compile("(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
         njobs = int(regex.search(stdout).groups()[0])
         clusterid = regex.search(stdout).groups()[1]
-
-        self.clusterids_outstanding.append(clusterid)
+        # e.g., '3158626'
 
         change_job_priority([clusterid], 10) ## need to make configurable
 
+        procid = ['{}'.format(i) for i in range(njobs)]
+        # e.g., ['0', '1', '2', '3']
+
+        clusterprocids = ['{}.{}'.format(clusterid, i) for i in procid]
+        # e.g., ['3158626.0', '3158626.1', '3158626.2', '3158626.3']
+
+        self.clusterprocids_outstanding.extend(clusterprocids)
+
         os.chdir(cwd)
 
-        return clusterid
+        return clusterprocids
 
     def poll(self):
         """check if the jobs are running and return a list of cluster IDs for
@@ -122,53 +137,54 @@ class HTCondorJobSubmitter(object):
 
         """
 
-        clusterid_status_list = query_status_for(self.clusterids_outstanding)
-        # e.g., [['1730126', 2], ['1730127', 2], ['1730129', 1], ['1730130', 1]]
+        clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
+        clusterprocid_status_list = query_status_for(clusterids)
+        # e.g., [['1730126.0', 2], ['1730127.0', 2], ['1730129.1', 1], ['1730130.0', 1]]
 
 
-        if clusterid_status_list:
-            clusterids, statuses = zip(*clusterid_status_list)
+        if clusterprocid_status_list:
+            clusterprocids, statuses = zip(*clusterprocid_status_list)
         else:
-            clusterids, statuses = (), ()
+            clusterprocids, statuses = (), ()
 
-        clusterids_finished = [i for i in self.clusterids_outstanding if i not in clusterids]
-        self.clusterids_finished.extend(clusterids_finished)
-        self.clusterids_outstanding[:] = clusterids
+        clusterprocids_finished = [i for i in self.clusterprocids_outstanding if i not in clusterprocids]
+        self.clusterprocids_finished.extend(clusterprocids_finished)
+        self.clusterprocids_outstanding[:] = clusterprocids
 
         # logging
         counter = collections.Counter(statuses)
         messages = [ ]
         if counter:
             messages.append(', '.join(['{}: {}'.format(HTCONDOR_JOBSTATUS[k], counter[k]) for k in counter.keys()]))
-        if self.clusterids_finished:
-            messages.append('Finished {}'.format(len(self.clusterids_finished)))
+        if self.clusterprocids_finished:
+            messages.append('Finished {}'.format(len(self.clusterprocids_finished)))
         logger = logging.getLogger(__name__)
         logger.info(', '.join(messages))
 
-        return clusterids_finished
+        return clusterprocids_finished
 
     def wait(self):
         """wait until all jobs finish and return a list of cluster IDs
         """
         sleep = 5
-        while self.clusterids_outstanding:
+        while self.clusterprocids_outstanding:
             self.poll()
             time.sleep(sleep)
-        return self.clusterids_finished
+        return self.clusterprocids_finished
 
     def failed_runids(self, runids):
-        # remove failed clusterids from self.clusterids_finished
-        # so that len(self.clusterids_finished)) becomes the number
+        # remove failed clusterprocids from self.clusterprocids_finished
+        # so that len(self.clusterprocids_finished)) becomes the number
         # of the successfully finished jobs
         for i in runids:
             try:
-                self.clusterids_finished.remove(i)
+                self.clusterprocids_finished.remove(i)
             except ValueError:
                 pass
 
     def terminate(self):
-        n_at_a_time = 500
-        ids_split = [self.clusterids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterids_outstanding), n_at_a_time)]
+        clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
+        ids_split = split_ids(clusterids)
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
@@ -183,22 +199,26 @@ class HTCondorJobSubmitter(object):
             stdout, stderr = proc.communicate()
 
 ##__________________________________________________________________||
+def clusterprocids2clusterids(clusterprocids):
+    return list(set([i.split('.')[0] for i in clusterprocids]))
+
+##__________________________________________________________________||
 def query_status_for(ids, n_at_a_time=500):
 
     ids_split = split_ids(ids, n=n_at_a_time)
     stdout = [ ]
     for ids_sub in ids_split:
-        procargs = ['condor_q'] + ids_sub + ['-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']
+        procargs = ['condor_q'] + ids_sub + ['-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
         stdout.extend(try_executing_until_succeed(procargs))
 
-    # e.g., stdout = ['688244 1 ', '688245 1 ', '688246 2 ']
+    # e.g., stdout = ['688244.0 1 ', '688245.0 1 ', '688246.0 2 ']
 
     ret = [l.strip().split() for l in stdout]
-    # e.g., [['688244', '1'], ['688245', '1'], ['688246', '2']]
+    # e.g., [['688244.0', '1'], ['688245.0', '1'], ['688246.0', '2']]
 
     ret = [[e[0], int(e[1])] for e in ret]
-    # a list of [clusterid, status]
-    # e.g., [['688244', 1], ['688245', 1], ['688246', 2]]
+    # a list of [clusterprocid, status]
+    # e.g., [['688244.0', 1], ['688245.0', 1], ['688246.0', 2]]
 
     return ret
 

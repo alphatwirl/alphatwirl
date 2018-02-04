@@ -49,10 +49,12 @@ class EventsInDatasetReader(object):
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
         self.dataset_nreaders.append((dataset, len(build_events_list)))
+        eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
             eventLoop = self.EventLoop(build_events, reader)
-            self.eventLoopRunner.run(eventLoop)
+            eventLoops.append(eventLoop)
+        self.eventLoopRunner.run_multiple(eventLoops)
 
     def end(self):
         returned_readers = self.eventLoopRunner.end()

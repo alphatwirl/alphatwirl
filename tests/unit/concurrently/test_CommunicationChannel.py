@@ -90,12 +90,14 @@ def test_put_multiple(obj, dropbox):
     ])
 
     expected = [
-        mock.call(TaskPackage(task=task1, args=(), kwargs={})),
-        mock.call(TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34})),
-        mock.call(TaskPackage(task=task3, args=(), kwargs={'B': 123})),
-        mock.call(TaskPackage(task=task4, args=(222, 'def'), kwargs={})),
+        mock.call([
+            TaskPackage(task=task1, args=(), kwargs={}),
+            TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
+            TaskPackage(task=task3, args=(), kwargs={'B': 123}),
+            TaskPackage(task=task4, args=(222, 'def'), kwargs={}),
+        ])
     ]
-    assert expected == dropbox.put.call_args_list
+    assert expected == dropbox.put_multiple.call_args_list
 
     obj.end()
 

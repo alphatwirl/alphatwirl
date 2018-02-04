@@ -118,6 +118,7 @@ class CommunicationChannel(object):
             logger.warning('the drop box is not open')
             return
 
+        packages = [ ]
         for t in task_args_kwargs_list:
             try:
                 task = t['task']
@@ -126,7 +127,8 @@ class CommunicationChannel(object):
                 package = TaskPackage(task=task, args=args, kwargs=kwargs)
             except TypeError:
                 package = TaskPackage(task=t, args=(), kwargs={})
-            self.dropbox.put(package)
+            packages.append(package)
+        self.dropbox.put_multiple(packages)
 
     def receive(self):
         if not self.isopen:

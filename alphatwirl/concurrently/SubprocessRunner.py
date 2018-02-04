@@ -9,6 +9,7 @@ class SubprocessRunner(object):
     def __init__(self, pipe=False):
         self.running_procs = collections.deque()
         self.pipe = pipe
+        self.finished_pids = [ ]
 
     def __repr__(self):
         name_value_pairs = (
@@ -40,6 +41,12 @@ class SubprocessRunner(object):
         self.running_procs.append(proc)
         return proc.pid # as runid
 
+    def run_multiple(self, workingArea, package_indices):
+        pids = [ ]
+        for pkgidx in package_indices:
+            pids.append(self.run(workingArea, pkgidx))
+        return pids
+
     def poll(self):
         """check if the jobs are running and return a list of pids for
         finished jobs
@@ -53,10 +60,11 @@ class SubprocessRunner(object):
             ## proc.communicate() returns (stdout, stderr) when
             ## self.pipe = True. Otherwise they are (None, None)
 
-        finished_pids = [p.pid for p in  finished_procs]
+        finished_pids = [p.pid for p in finished_procs]
+        self.finished_pids.extend(finished_pids)
 
         logger = logging.getLogger(__name__)
-        messages = 'Running: {}, Finished: {}'.format(len(self.running_procs), len(finished_pids))
+        messages = 'Running: {}, Finished: {}'.format(len(self.running_procs), len(self.finished_pids))
         logger.info(messages)
 
         return finished_pids # as runids
