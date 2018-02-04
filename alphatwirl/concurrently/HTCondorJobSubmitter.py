@@ -111,6 +111,8 @@ class HTCondorJobSubmitter(object):
         clusterid = regex.search(stdout).groups()[1]
         # e.g., '3158626'
 
+        change_job_priority([clusterid], 10) ## need to make configurable
+
         procid = ['{}'.format(i) for i in range(njobs)]
         # e.g., ['0', '1', '2', '3']
 
@@ -118,8 +120,6 @@ class HTCondorJobSubmitter(object):
         # e.g., ['3158626.0', '3158626.1', '3158626.2', '3158626.3']
 
         self.clusterprocids_outstanding.extend(clusterprocids)
-
-        change_job_priority(clusterprocids, 10) ## need to make configurable
 
         os.chdir(cwd)
 
@@ -131,7 +131,8 @@ class HTCondorJobSubmitter(object):
 
         """
 
-        clusterprocid_status_list = query_status_for(self.clusterprocids_outstanding)
+        clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
+        clusterprocid_status_list = query_status_for(clusterids)
         # e.g., [['1730126.0', 2], ['1730127.0', 2], ['1730129.1', 1], ['1730130.0', 1]]
 
 
@@ -176,8 +177,8 @@ class HTCondorJobSubmitter(object):
                 pass
 
     def terminate(self):
-        n_at_a_time = 500
-        ids_split = [self.clusterprocids_outstanding[i:(i + n_at_a_time)] for i in range(0, len(self.clusterprocids_outstanding), n_at_a_time)]
+        clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
+        ids_split = split_ids(clusterids)
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
@@ -190,6 +191,10 @@ class HTCondorJobSubmitter(object):
                 stderr=subprocess.PIPE
             )
             stdout, stderr = proc.communicate()
+
+##__________________________________________________________________||
+def clusterprocids2clusterids(clusterprocids):
+    return list(set([i.split('.')[0] for i in clusterprocids]))
 
 ##__________________________________________________________________||
 def query_status_for(ids, n_at_a_time=500):

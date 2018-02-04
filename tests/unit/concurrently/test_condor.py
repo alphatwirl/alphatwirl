@@ -8,7 +8,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.HTCondorJobSubmitter import split_ids, query_status_for, change_job_priority
+from alphatwirl.concurrently.HTCondorJobSubmitter import split_ids, query_status_for, change_job_priority, clusterprocids2clusterids
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -17,6 +17,16 @@ def mock_try_executing_until_succeed(monkeypatch):
     module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
     monkeypatch.setattr(module, 'try_executing_until_succeed', ret)
     return ret
+
+def test_clusterprocids2clusterids():
+    clusterprocids = [
+        '3158642.0', '3158642.1', '3158642.2', '3158642.3', '3158643.0',
+        '3158643.1', '3158643.2', '3158643.3', '3158644.0', '3158644.1',
+        '3158644.2', '3158644.3', '3158645.0', '3158645.1', '3158645.2',
+        '3158645.3'
+    ]
+    expected = ['3158642', '3158643', '3158644', '3158645']
+    assert set(expected) == set(clusterprocids2clusterids(clusterprocids))
 
 def test_split_ids():
     ids = ['3158174', '3158175', '3158176', '3158177', '3158178', '3158179', '3158180', '3158181', '3158182', '3158183', '3158184', '3158185', '3158186', '3158187', '3158188', '3158189']
