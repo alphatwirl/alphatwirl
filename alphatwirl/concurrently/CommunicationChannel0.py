@@ -16,7 +16,7 @@ class CommunicationChannel0(object):
 
     """
 
-    def __init__(self, progressMonitor = None):
+    def __init__(self, progressMonitor=None):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.results = [ ]
 
@@ -30,7 +30,7 @@ class CommunicationChannel0(object):
 
     def put(self, task, *args, **kwargs):
         try:
-            result = task(progressReporter = self.progressReporter, *args, **kwargs)
+            result = task(progressReporter=self.progressReporter, *args, **kwargs)
         except TypeError:
             result = task(*args, **kwargs)
         self.results.append(result)

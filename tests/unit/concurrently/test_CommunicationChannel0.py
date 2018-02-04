@@ -50,11 +50,11 @@ def test_begin_begin_terminate_end(obj):
 def test_put(obj):
     obj.begin()
 
-    result1 = mock.MagicMock(name = 'task1')
+    result1 = mock.MagicMock(name='task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = mock.MagicMock(name = 'task2')
+    result2 = mock.MagicMock(name='task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
@@ -64,11 +64,11 @@ def test_put(obj):
 def test_put_receive(obj):
     obj.begin()
 
-    result1 = mock.MagicMock(name = 'task1')
+    result1 = mock.MagicMock(name='task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = mock.MagicMock(name = 'task2')
+    result2 = mock.MagicMock(name='task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
@@ -83,15 +83,15 @@ def test_receive_order(obj):
 
     obj.begin()
 
-    result1 = mock.MagicMock(name = 'task1')
+    result1 = mock.MagicMock(name='task1')
     task1 = MockTask(result1, 0.010)
     obj.put(task1)
 
-    result2 = mock.MagicMock(name = 'task2')
+    result2 = mock.MagicMock(name='task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
-    result3 = mock.MagicMock(name = 'task3')
+    result3 = mock.MagicMock(name='task3')
     task3 = MockTask(result3, 0.005)
     obj.put(task3)
 
@@ -103,21 +103,21 @@ def test_receive_order(obj):
 def test_put_receive_repeat(obj):
     obj.begin()
 
-    result1 = mock.MagicMock(name = 'task1')
+    result1 = mock.MagicMock(name='task1')
     task1 = MockTask(result1, 0.003)
     obj.put(task1)
 
-    result2 = mock.MagicMock(name = 'task2')
+    result2 = mock.MagicMock(name='task2')
     task2 = MockTask(result2, 0.001)
     obj.put(task2)
 
     assert set([result1, result2]) == set(obj.receive())
 
-    result3 = mock.MagicMock(name = 'task3')
+    result3 = mock.MagicMock(name='task3')
     task3 = MockTask(result3, 0.002)
     obj.put(task3)
 
-    result4 = mock.MagicMock(name = 'task4')
+    result4 = mock.MagicMock(name='task4')
     task4 = MockTask(result4, 0.002)
     obj.put(task4)
 
@@ -130,7 +130,7 @@ def test_begin_put_recive_end_repeat(obj):
 
     obj.begin()
 
-    result = mock.MagicMock(name = 'task1')
+    result = mock.MagicMock(name='task1')
     task = MockTask(result, 0.003)
     obj.put(task)
 
@@ -140,7 +140,7 @@ def test_begin_put_recive_end_repeat(obj):
 
     obj.begin()
 
-    result = mock.MagicMock(name = 'task2')
+    result = mock.MagicMock(name='task2')
     task = MockTask(result, 0.003)
     obj.put(task)
 
