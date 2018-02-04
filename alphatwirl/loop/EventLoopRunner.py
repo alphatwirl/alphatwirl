@@ -7,13 +7,13 @@ class EventLoopRunner(object):
     will return the results when `end()` is called.
 
     """
-    def __init__(self, progressMonitor = None):
+    def __init__(self, progressMonitor=None):
         if progressMonitor is None: progressMonitor = NullProgressMonitor()
         self.progressReporter = progressMonitor.createReporter()
         self.results = [ ]
 
     def __repr__(self):
-        return '{}(progressReporter = {!r}, results = {!r})'.format(
+        return '{}(progressReporter={!r}, results={!r})'.format(
             self.__class__.__name__,
             self.progressReporter,
             self.results
