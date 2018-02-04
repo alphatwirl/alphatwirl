@@ -54,7 +54,10 @@ class HTCondorJobSubmitter(object):
         for d in resultdirs:
             alphatwirl.mkdir_p(d)
 
-        job_desc = """
+        extra_input_files = ['python_modules.tar.gz']
+        extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
+
+        self.job_desc_template = """
         Executable = run.py
         output = results/$(resultdir)/stdout.txt
         error = results/$(resultdir)/stderr.txt
@@ -62,21 +65,25 @@ class HTCondorJobSubmitter(object):
         Arguments = $(resultdir).p.gz
         should_transfer_files = YES
         when_to_transfer_output = ON_EXIT
-        transfer_input_files = $(resultdir).p.gz, python_modules.tar.gz
+        transfer_input_files = {input_files}
         transfer_output_files = results
         Universe = vanilla
         notification = Error
         getenv = True
         queue resultdir in {resultdirs}
-        """.format(
-            resultdirs = ', '.join(resultdir_basenames)
-        )
-        job_desc = textwrap.dedent(job_desc).strip()
+        """
+        self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
 
         if self.job_desc_extra:
-            job_desc_list = job_desc.split('\n')
-            job_desc_list[-1:-1] = self.job_desc_extra
-            job_desc = '\n'.join(job_desc_list)
+            lines = self.job_desc_template.split('\n')
+            lines[-1:-1] = self.job_desc_extra
+            self.job_desc_template = '\n'.join(lines)
+
+        job_desc = self.job_desc_template.format(
+            input_files = ', '.join(['$(resultdir).p.gz'] + extra_input_files),
+            resultdirs = ', '.join(resultdir_basenames)
+        )
+
 
         procargs = [
             '/usr/bin/condor_submit',
