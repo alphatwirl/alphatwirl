@@ -1,153 +1,152 @@
-import unittest
-import collections
+# Tai Sakuma <tai.sakuma@gmail.com>
+import copy
+import logging
+import pytest
 
-from alphatwirl.loop import EventsInDatasetReader
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
-##__________________________________________________________________||
-MockEventBuilder = collections.namedtuple('MockEventBuilder', 'events')
-
-##__________________________________________________________________||
-class MockReader(object): pass
-
-##__________________________________________________________________||
-class MockCollectorReturn(object): pass
+from alphatwirl.loop import EventsInDatasetReader, EventLoop
 
 ##__________________________________________________________________||
-class MockCollector(object):
-    def __init__(self, ret = None):
-        self.collected = None
-        self.ret = ret
+@pytest.fixture()
+def eventLoopRunner():
+    return mock.Mock(name='eventLoopRunner')
 
-    def collect(self, dataset_readers_list):
-        self.collected = dataset_readers_list
-        return self.ret
+@pytest.fixture()
+def reader():
+    ret = mock.Mock(name='reader')
+    ret.configure_mock(name='reader')
+    return ret
 
-##__________________________________________________________________||
-MockDataset = collections.namedtuple('MockDataset', 'name build_events')
+@pytest.fixture()
+def collector():
+    return mock.Mock(name='collector')
 
-##__________________________________________________________________||
-MockEventLoop = collections.namedtuple('MockEventLoop', 'build_events reader')
+@pytest.fixture()
+def split_into_build_events():
+    return mock.Mock(name='split_into_build_events')
 
-##__________________________________________________________________||
-def mock_split_into_build_events(dataset):
-    return dataset.build_events
-
-##__________________________________________________________________||
-class MockEventLoopRunner(object):
-    def __init__(self):
-        self.began = False
-        self.ended = False
-        self.eventLoops = [ ]
-
-    def begin(self):
-        self.began = True
-
-    def run(self, eventLoop):
-        self.eventLoops.append(eventLoop)
-
-    def end(self):
-        self.ended = True
-        return [l.reader for l in self.eventLoops]
+@pytest.fixture()
+def obj(eventLoopRunner, reader, collector, split_into_build_events):
+    return EventsInDatasetReader(eventLoopRunner, reader, collector,
+                                 split_into_build_events)
 
 ##__________________________________________________________________||
-class TestEventsInDatasetReader(unittest.TestCase):
+def test_repr(obj):
+   repr(obj)
 
-    def setUp(self):
-        self.eventLoopRunner = MockEventLoopRunner()
-        self.reader = MockReader()
-        self.collector = MockCollector(MockCollectorReturn())
-        self.obj = EventsInDatasetReader(self.eventLoopRunner, self.reader, self.collector, mock_split_into_build_events)
-        self.obj.EventLoop = MockEventLoop
+def test_begin(obj, eventLoopRunner):
+    assert 0 == eventLoopRunner.begin.call_count
+    obj.begin()
+    assert 1 == eventLoopRunner.begin.call_count
 
-    def test_repr(self):
-        repr(self.obj)
+def test_begin_end(obj, eventLoopRunner, collector):
+    obj.begin()
+    eventLoopRunner.end.return_value = [ ]
+    end = obj.end()
+    assert [mock.call([ ])] == collector.collect.call_args_list
+    assert collector.collect() == end
 
-    def test_begin(self):
-        self.assertFalse(self.eventLoopRunner.began)
-        self.obj.begin()
-        self.assertTrue(self.eventLoopRunner.began)
+def test_standard(obj, eventLoopRunner, reader, collector,
+                  split_into_build_events, caplog):
 
-    def test_end(self):
-        self.obj.begin()
-        self.obj.end()
+    ## begin
+    obj.begin()
 
-    def test_end_without_begin(self):
-        self.obj.end()
+    ## create data sets
+    # dataset1 - 3 event builders
+    build_events1 = mock.Mock(name='build_events1')
+    build_events2 = mock.Mock(name='build_events2')
+    build_events3 = mock.Mock(name='build_events3')
+    dataset1 = mock.Mock(name='dataset1', build_events=[build_events1, build_events2, build_events3])
+    dataset1.configure_mock(name='dataset1')
 
-    def test_wrong_number_of_results(self):
+    # dataset2 - no event builder
+    dataset2 = mock.Mock(name='dataset2', build_events=[ ])
+    dataset2.configure_mock(name='dataset2')
 
-        build_events1 = MockEventBuilder('events1')
-        eventLoop1 = MockEventLoop(build_events1, MockReader())
-        build_events2 = MockEventBuilder('events2')
-        eventLoop2 = MockEventLoop(build_events2, MockReader())
-        self.eventLoopRunner.run(eventLoop1)
-        self.eventLoopRunner.run(eventLoop2)
+    # dataset3 - 1 event builder
+    build_events4 = mock.Mock(name='build_events4')
+    dataset3 = mock.Mock(name='dataset3', build_events=[build_events4])
+    dataset3.configure_mock(name='dataset3')
 
-        dataset1 = MockDataset('dataset1', (build_events1, build_events2))
+    split_into_build_events.side_effect = lambda dataset: dataset.build_events
 
-        self.obj.dataset_nreaders[:] = [(dataset1, 1)]
-        self.assertIsNone(self.obj.end())
+    ## read
+    obj.read(dataset1)
+    obj.read(dataset2)
+    obj.read(dataset3)
 
-    def test_standard(self):
+    assert 4 == eventLoopRunner.run.call_count
 
-        ## begin
-        self.obj.begin()
+    call1 = eventLoopRunner.run.call_args_list[0]
+    eventLoop1 = call1[0][0]
+    assert isinstance(eventLoop1, EventLoop)
+    assert build_events1 is eventLoop1.build_events
+    assert reader is not eventLoop1.reader
+    assert 'reader' == eventLoop1.reader.name
 
-        ## create data sets
-        # dataset1 - 3 event builders
-        build_events1 = MockEventBuilder('events1')
-        build_events2 = MockEventBuilder('events2')
-        build_events3 = MockEventBuilder('events3')
-        dataset1 = MockDataset('dataset1', (build_events1, build_events2, build_events3))
+    call2 = eventLoopRunner.run.call_args_list[1]
+    eventLoop2 = call2[0][0]
+    assert isinstance(eventLoop2, EventLoop)
+    assert build_events2 is eventLoop2.build_events
+    assert reader is not eventLoop2.reader
+    assert 'reader' == eventLoop2.reader.name
 
-        # dataset2 - no event builder
-        dataset2 = MockDataset('dataset2', ( ))
+    call3 = eventLoopRunner.run.call_args_list[2]
+    eventLoop3 = call3[0][0]
+    assert isinstance(eventLoop3, EventLoop)
+    assert build_events3 is eventLoop3.build_events
+    assert reader is not eventLoop3.reader
+    assert 'reader' == eventLoop3.reader.name
 
-        # dataset3 - 1 event builder
-        build_events4 = MockEventBuilder('events4')
-        dataset3 = MockDataset('dataset3', (build_events4, ))
+    call4 = eventLoopRunner.run.call_args_list[3]
+    eventLoop4 = call4[0][0]
+    assert isinstance(eventLoop4, EventLoop)
+    assert build_events4 is eventLoop4.build_events
+    assert reader is not eventLoop4.reader
+    assert 'reader' == eventLoop4.reader.name
 
-        ## read
-        self.obj.read(dataset1)
-        self.obj.read(dataset2)
-        self.obj.read(dataset3)
+    ## end
+    eventLoopRunner.end.return_value = [
+        eventLoop1.reader, eventLoop2.reader, eventLoop3.reader, eventLoop4.reader
+    ]
+    collector.collect.side_effect = lambda x: x
+    assert 0 == eventLoopRunner.end.call_count
+    assert 0 == collector.collect.call_count
+    results = obj.end()
+    assert 1 == eventLoopRunner.end.call_count
+    assert 1 == collector.collect.call_count
+    expected = [
+        ('dataset1', (eventLoop1.reader, eventLoop2.reader, eventLoop3.reader), ),
+        ('dataset2', ( )),
+        ('dataset3', (eventLoop4.reader, )),
+    ]
+    assert expected == results
+    assert [mock.call(expected)] == collector.collect.call_args_list
 
-        # assert eventLoopRunner has received eventLoops with correct
-        # event builders and readers
-        self.assertEqual(4, len(self.eventLoopRunner.eventLoops))
+def test_wrong_number_of_results(obj, eventLoopRunner, reader,
+                                 collector, split_into_build_events,
+                                 caplog):
 
-        eventLoop1 = self.eventLoopRunner.eventLoops[0]
-        self.assertIsInstance(eventLoop1, MockEventLoop)
-        self.assertIs(build_events1, eventLoop1.build_events)
-        self.assertIsInstance(eventLoop1.reader, MockReader)
+    reader1 = mock.Mock(name='reader1')
+    reader2 = mock.Mock(name='reader2')
+    eventLoopRunner.end.return_value = [reader1, reader2]
 
-        eventLoop2 = self.eventLoopRunner.eventLoops[1]
-        self.assertIsInstance(eventLoop2, MockEventLoop)
-        self.assertIs(build_events2, eventLoop2.build_events)
-        self.assertIsInstance(eventLoop2.reader, MockReader)
+    dataset1 = mock.Mock(name='dataset1')
+    obj.dataset_nreaders[:] = [(dataset1, 1)]
 
-        eventLoop3 = self.eventLoopRunner.eventLoops[2]
-        self.assertIsInstance(eventLoop3, MockEventLoop)
-        self.assertIs(build_events3, eventLoop3.build_events)
-        self.assertIsInstance(eventLoop3.reader, MockReader)
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        results = obj.end()
 
-        eventLoop4 = self.eventLoopRunner.eventLoops[3]
-        self.assertIsInstance(eventLoop4, MockEventLoop)
-        self.assertIs(build_events4, eventLoop4.build_events)
-        self.assertIsInstance(eventLoop4.reader, MockReader)
+    assert results is None
 
-        ## end
-        self.assertFalse(self.eventLoopRunner.ended)
-        self.assertIsNone(self.collector.collected)
-        self.assertIs(self.collector.ret, self.obj.end())
-        self.assertTrue(self.eventLoopRunner.ended)
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'EventsInDatasetReader' in caplog.records[0].name
+    assert 'the same number of' in caplog.records[0].msg
 
-        expected = [
-            ('dataset1', (eventLoop1.reader, eventLoop2.reader, eventLoop3.reader), ),
-            ('dataset2', ( )),
-            ('dataset3', (eventLoop4.reader, )),
-            ]
-
-        # this asserts the readers are the same python objects
-        self.assertEqual(expected, self.collector.collected)
 ##__________________________________________________________________||
