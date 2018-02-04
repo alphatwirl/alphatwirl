@@ -132,7 +132,7 @@ class HTCondorJobSubmitter(object):
         """
 
         clusterprocid_status_list = query_status_for(self.clusterprocids_outstanding)
-        # e.g., [['1730126', 2], ['1730127', 2], ['1730129', 1], ['1730130', 1]]
+        # e.g., [['1730126.0', 2], ['1730127.0', 2], ['1730129.1', 1], ['1730130.0', 1]]
 
 
         if clusterprocid_status_list:
@@ -200,14 +200,14 @@ def query_status_for(ids, n_at_a_time=500):
         procargs = ['condor_q'] + ids_sub + ['-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
         stdout.extend(try_executing_until_succeed(procargs))
 
-    # e.g., stdout = ['688244 1 ', '688245 1 ', '688246 2 ']
+    # e.g., stdout = ['688244.0 1 ', '688245.0 1 ', '688246.0 2 ']
 
     ret = [l.strip().split() for l in stdout]
-    # e.g., [['688244', '1'], ['688245', '1'], ['688246', '2']]
+    # e.g., [['688244.0', '1'], ['688245.0', '1'], ['688246.0', '2']]
 
     ret = [[e[0], int(e[1])] for e in ret]
     # a list of [clusterprocid, status]
-    # e.g., [['688244', 1], ['688245', 1], ['688246', 2]]
+    # e.g., [['688244.0', 1], ['688245.0', 1], ['688246.0', 2]]
 
     return ret
 
