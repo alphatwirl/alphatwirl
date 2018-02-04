@@ -25,6 +25,10 @@ class EventLoopRunner(object):
     def run(self, eventLoop):
         self.results.append(eventLoop(progressReporter=self.progressReporter))
 
+    def run_multiple(self, eventLoops):
+        for eventLoop in eventLoops:
+            self.run(eventLoop)
+
     def end(self):
         return self.results
 

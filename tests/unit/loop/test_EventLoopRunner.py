@@ -54,5 +54,23 @@ def test_run(obj, progressReporter):
 
     assert [result1, result2] == obj.end()
 
+def test_run_multiple(obj, progressReporter):
+    obj.begin()
+
+    result1 = mock.Mock(name='result1')
+    eventLoop1 = mock.Mock(name='eventLoop1')
+    eventLoop1.return_value = result1
+
+    result2 = mock.Mock(name='result2')
+    eventLoop2 = mock.Mock(name='eventLoop2')
+    eventLoop2.return_value = result2
+
+    obj.run_multiple([eventLoop1, eventLoop2])
+
+    assert [mock.call(progressReporter=progressReporter)] == eventLoop1.call_args_list
+    assert [mock.call(progressReporter=progressReporter)] == eventLoop2.call_args_list
+
+    assert [result1, result2] == obj.end()
+
 ##__________________________________________________________________||
 
