@@ -116,6 +116,12 @@ class HTCondorJobSubmitter(object):
 
         return clusterid
 
+    def run_multiple(self, workingArea, package_indices):
+        runids = [ ]
+        for pkgidx in package_indices:
+            runids.append(self.run(workingArea, pkgidx))
+        return runids
+
     def poll(self):
         """check if the jobs are running and return a list of cluster IDs for
         finished jobs
