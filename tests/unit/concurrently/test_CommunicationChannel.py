@@ -69,7 +69,33 @@ def test_put(obj, dropbox):
         mock.call(TaskPackage(task=task1, args=(), kwargs={})),
         mock.call(TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34})),
     ]
-    dropbox.put.assert_has_calls(expected)
+    assert expected == dropbox.put.call_args_list
+
+    obj.end()
+
+def test_put_multiple(obj, dropbox):
+
+    obj.begin()
+
+    task1 = mock.Mock(name='task1')
+    task2 = mock.Mock(name='task2')
+    task3 = mock.Mock(name='task3')
+    task4 = mock.Mock(name='task4')
+
+    obj.put_multiple([
+        task1,
+        dict(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
+        dict(task=task3, kwargs={'B': 123}),
+        dict(task=task4, args=(222, 'def')),
+    ])
+
+    expected = [
+        mock.call(TaskPackage(task=task1, args=(), kwargs={})),
+        mock.call(TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34})),
+        mock.call(TaskPackage(task=task3, args=(), kwargs={'B': 123})),
+        mock.call(TaskPackage(task=task4, args=(222, 'def'), kwargs={})),
+    ]
+    assert expected == dropbox.put.call_args_list
 
     obj.end()
 
