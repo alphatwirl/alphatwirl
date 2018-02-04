@@ -30,7 +30,27 @@ HTCONDOR_JOBSTATUS = {
 class HTCondorJobSubmitter(object):
     def __init__(self, job_desc_extra=[ ]):
 
-        self.job_desc_extra = job_desc_extra
+        self.job_desc_template = """
+        Executable = run.py
+        output = results/$(resultdir)/stdout.txt
+        error = results/$(resultdir)/stderr.txt
+        log = results/$(resultdir)/log.txt
+        Arguments = $(resultdir).p.gz
+        should_transfer_files = YES
+        when_to_transfer_output = ON_EXIT
+        transfer_input_files = {input_files}
+        transfer_output_files = results
+        Universe = vanilla
+        notification = Error
+        getenv = True
+        queue resultdir in {resultdirs}
+        """
+        self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
+
+        if job_desc_extra:
+            lines = self.job_desc_template.split('\n')
+            lines[-1:-1] = job_desc_extra
+            self.job_desc_template = '\n'.join(lines)
 
         self.clusterids_outstanding = [ ]
         self.clusterids_finished = [ ]
@@ -57,33 +77,10 @@ class HTCondorJobSubmitter(object):
         extra_input_files = ['python_modules.tar.gz']
         extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
 
-        self.job_desc_template = """
-        Executable = run.py
-        output = results/$(resultdir)/stdout.txt
-        error = results/$(resultdir)/stderr.txt
-        log = results/$(resultdir)/log.txt
-        Arguments = $(resultdir).p.gz
-        should_transfer_files = YES
-        when_to_transfer_output = ON_EXIT
-        transfer_input_files = {input_files}
-        transfer_output_files = results
-        Universe = vanilla
-        notification = Error
-        getenv = True
-        queue resultdir in {resultdirs}
-        """
-        self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
-
-        if self.job_desc_extra:
-            lines = self.job_desc_template.split('\n')
-            lines[-1:-1] = self.job_desc_extra
-            self.job_desc_template = '\n'.join(lines)
-
         job_desc = self.job_desc_template.format(
             input_files = ', '.join(['$(resultdir).p.gz'] + extra_input_files),
             resultdirs = ', '.join(resultdir_basenames)
         )
-
 
         procargs = [
             '/usr/bin/condor_submit',
