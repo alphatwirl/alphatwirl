@@ -30,28 +30,28 @@ class TaskPackageDropbox(object):
 
     def open(self):
         self.workingArea.open()
-        self.runid_package_index_map = { }
+        self.runid_pkgidx_map = { }
 
     def put(self, package):
 
-        package_index = self.workingArea.put_package(package)
+        pkgidx = self.workingArea.put_package(package)
 
         logger = logging.getLogger(__name__)
-        logger.info('submitting {}'.format(self.workingArea.package_path(package_index)))
+        logger.info('submitting {}'.format(self.workingArea.package_path(pkgidx)))
 
-        runid = self.dispatcher.run(self.workingArea, package_index)
-        self.runid_package_index_map[runid] = package_index
+        runid = self.dispatcher.run(self.workingArea, pkgidx)
+        self.runid_pkgidx_map[runid] = pkgidx
 
     def receive(self):
-        pkgidx_result_pairs = [ ] # a list of (package_index, _result)
-        while self.runid_package_index_map:
+        pkgidx_result_pairs = [ ] # a list of (pkgidx, _result)
+        while self.runid_pkgidx_map:
 
             pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
             pkgidx_result_pairs.extend(pairs)
 
             time.sleep(self.sleep)
 
-        # sort in the order of package_index
+        # sort in the order of pkgidx
         pkgidx_result_pairs = sorted(pkgidx_result_pairs, key=itemgetter(0))
 
         results = [result for i, result in pkgidx_result_pairs]
@@ -62,7 +62,7 @@ class TaskPackageDropbox(object):
         finished_runid = self.dispatcher.poll()
         # e.g., [1001, 1003]
 
-        runid_pkgidx = [(i, self.runid_package_index_map.pop(i)) for i in finished_runid]
+        runid_pkgidx = [(i, self.runid_pkgidx_map.pop(i)) for i in finished_runid]
         # e.g., [(1001, 0), (1003, 2)]
 
         runid_pkgidx_result = [(ri, pi, self.workingArea.collect_result(pi)) for ri, pi in runid_pkgidx]
@@ -84,7 +84,7 @@ class TaskPackageDropbox(object):
             logger.warning('resubmitting {}'.format(self.workingArea.package_path(pkgidx)))
 
             runid = self.dispatcher.run(self.workingArea, pkgidx)
-            self.runid_package_index_map[runid] = pkgidx
+            self.runid_pkgidx_map[runid] = pkgidx
 
         pairs = [(pkgidx, result) for runid, pkgidx, result in succeeded]
         # e.g., [(0, result0)] # only successful ones
