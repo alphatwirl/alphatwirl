@@ -35,6 +35,16 @@ class CommunicationChannel0(object):
             result = task(*args, **kwargs)
         self.results.append(result)
 
+    def put_multiple(self, task_args_kwargs_list):
+        for t in task_args_kwargs_list:
+            try:
+                task = t['task']
+                args = t.get('args', ())
+                kwargs = t.get('kwargs', {})
+                self.put(task, *args, **kwargs)
+            except TypeError:
+                self.put(t)
+
     def receive(self):
         ret = self.results[:]
         del self.results[:]

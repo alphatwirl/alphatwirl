@@ -146,3 +146,38 @@ def test_receive_without_put(obj):
     obj.end()
 
 ##__________________________________________________________________||
+def test_put_multiple(obj):
+    obj.begin()
+
+    result1 = mock.Mock(name='result1')
+    task1 = mock.Mock(name='task1')
+    task1.return_value = result1
+
+    result2 = mock.Mock(name='result2')
+    task2 = mock.Mock(name='task2')
+    task2.return_value = result2
+
+    result3 = mock.Mock(name='result3')
+    task3 = mock.Mock(name='task3')
+    task3.side_effect = [TypeError, result3]
+
+    result4 = mock.Mock(name='result4')
+    task4 = mock.Mock(name='task4')
+    task4.return_value = result4
+
+    obj.put_multiple([
+        task1,
+        dict(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
+        dict(task=task3, kwargs={'B': 123}),
+        dict(task=task4, args=(222, 'def')),
+    ])
+
+    assert [mock.call(progressReporter=None)] == task1.call_args_list
+    assert [mock.call(123, 'ABC', A=34, progressReporter=None)] == task2.call_args_list
+    assert [mock.call(B=123, progressReporter=None), mock.call(B=123)] == task3.call_args_list
+    assert [mock.call(222, 'def', progressReporter=None)] == task4.call_args_list
+    assert [result1, result2, result3, result4] == obj.receive()
+
+    obj.end()
+
+##__________________________________________________________________||
