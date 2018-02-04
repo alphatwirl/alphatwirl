@@ -65,6 +65,23 @@ def test_put(obj, workingarea, dispatcher):
     assert [mock.call(package0), mock.call(package1)] == workingarea.put_package.call_args_list
     assert [mock.call(workingarea, 0), mock.call(workingarea, 1)] == dispatcher.run.call_args_list
 
+def test_put_multiple(obj, workingarea, dispatcher):
+
+    ## open
+    obj.open()
+
+    ## put
+    workingarea.put_package.side_effect = [0, 1] # pkgidx
+    dispatcher.run.side_effect = [1001, 1002] # runid
+
+    package0 = mock.MagicMock(name='package0')
+    package1 = mock.MagicMock(name='package1')
+
+    obj.put_multiple([package0, package1])
+
+    assert [mock.call(package0), mock.call(package1)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, 0), mock.call(workingarea, 1)] == dispatcher.run.call_args_list
+
 def test_receive_all_finished_once(obj, workingarea, dispatcher):
 
     ## open
