@@ -3,8 +3,6 @@ import sys
 
 import pytest
 
-pytestmark = pytest.mark.skip
-
 try:
     import unittest.mock as mock
 except ImportError:
@@ -30,10 +28,10 @@ def test_query_status_for(mock_try_executing_until_succeed):
     n_at_a_time = 5
     query_status_for(ids, n_at_a_time=5)
     expected = [
-        mock.call(['condor_q', '3158174', '3158175', '3158176', '3158177', '3158178', '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']),
-        mock.call(['condor_q', '3158179', '3158180', '3158181', '3158182', '3158183', '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']),
-        mock.call(['condor_q', '3158184', '3158185', '3158186', '3158187', '3158188', '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus']),
-        mock.call(['condor_q', '3158189', '-format', '%-2s ', 'ClusterId', '-format', '%-2s\n', 'JobStatus'])
+        mock.call(['condor_q', '3158174', '3158175', '3158176', '3158177', '3158178', '-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']),
+        mock.call(['condor_q', '3158179', '3158180', '3158181', '3158182', '3158183', '-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']),
+        mock.call(['condor_q', '3158184', '3158185', '3158186', '3158187', '3158188', '-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']),
+        mock.call(['condor_q', '3158189', '-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus'])
     ]
     assert expected == mock_try_executing_until_succeed.call_args_list
 
