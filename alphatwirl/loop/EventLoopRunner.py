@@ -23,7 +23,7 @@ class EventLoopRunner(object):
         self.results = [ ]
 
     def run(self, eventLoop):
-        self.results.append(eventLoop(self.progressReporter))
+        self.results.append(eventLoop(progressReporter=self.progressReporter))
 
     def end(self):
         return self.results
