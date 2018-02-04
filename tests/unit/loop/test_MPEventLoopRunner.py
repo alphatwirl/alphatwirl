@@ -1,77 +1,69 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.loop import MPEventLoopRunner
-import unittest
-import os
 
 ##__________________________________________________________________||
-class MockCommunicationChannel(object):
-    def __init__(self):
-        self.eventLoops = [ ]
-        self.resultsToReceive = [ ]
+@pytest.fixture()
+def communicationChannel():
+    return mock.Mock(name='communicationChannel')
 
-    def put(self, task):
-        eventLoop = task
-        self.eventLoops.append(eventLoop)
-
-    def receive(self):
-        return self.resultsToReceive
+@pytest.fixture()
+def obj(communicationChannel):
+    return MPEventLoopRunner(communicationChannel)
 
 ##__________________________________________________________________||
-class MockResult(object): pass
+def test_repr(obj):
+    repr(obj)
 
-##__________________________________________________________________||
-class MockEventLoop(object): pass
+def test_begin_end(obj, communicationChannel):
+    obj.begin()
+    communicationChannel.receive.return_value = [ ]
+    obj.end()
 
-##__________________________________________________________________||
-class TestMPEventLoopRunner(unittest.TestCase):
+def test_begin_run_end(obj, communicationChannel):
+    obj.begin()
 
-    def test_repr(self):
-        communicationChannel = MockCommunicationChannel()
-        obj = MPEventLoopRunner(communicationChannel)
-        repr(obj)
+    eventLoop1 = mock.Mock(name='eventLoop1')
+    obj.run(eventLoop1)
 
-    def test_begin_end(self):
-        communicationChannel = MockCommunicationChannel()
-        obj = MPEventLoopRunner(communicationChannel)
-        obj.begin()
-        obj.end()
+    eventLoop2 = mock.Mock(name='eventLoop2')
+    obj.run(eventLoop2)
 
-    def test_bgin_run_end(self):
-        communicationChannel = MockCommunicationChannel()
-        obj = MPEventLoopRunner(communicationChannel)
-        obj.begin()
+    assert [mock.call(eventLoop1), mock.call(eventLoop2)] == communicationChannel.put.call_args_list
 
-        eventLoop1 = MockEventLoop()
-        obj.run(eventLoop1)
+    result1 = mock.Mock(name='result1')
+    result2 = mock.Mock(name='result2')
+    communicationChannel.receive.return_value = [result1, result2]
+    assert [result1, result2] == obj.end()
 
-        eventLoop2 = MockEventLoop()
-        obj.run(eventLoop2)
+def test_wrong_number_or_results(obj, communicationChannel, caplog):
+    obj.begin()
 
-        self.assertEqual([eventLoop1, eventLoop2], communicationChannel.eventLoops)
+    eventLoop1 = mock.Mock(name='eventLoop1')
+    obj.run(eventLoop1)
 
-        result1 = MockResult()
-        result2 = MockResult()
-        communicationChannel.resultsToReceive = [result1, result2]
+    eventLoop2 = mock.Mock(name='eventLoop2')
+    obj.run(eventLoop2)
 
-        self.assertEqual([result1, result2], obj.end())
+    result1 = mock.Mock(name='result1')
+    result2 = mock.Mock(name='result2')
+    communicationChannel.receive.return_value = [result1]
 
-    # @unittest.skip("skip because of logging. assertLogs can be used here for Python 3.4")
-    def test_wrong_number_or_results(self):
-        communicationChannel = MockCommunicationChannel()
-        obj = MPEventLoopRunner(communicationChannel)
-        obj.begin()
+    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+        results = obj.end()
 
-        eventLoop1 = MockEventLoop()
-        obj.run(eventLoop1)
+    assert [result1] == results
 
-        eventLoop2 = MockEventLoop()
-        obj.run(eventLoop2)
-
-        self.assertEqual([eventLoop1, eventLoop2], communicationChannel.eventLoops)
-
-        result1 = MockResult()
-        result2 = MockResult()
-        communicationChannel.resultsToReceive = [result1]
-
-        self.assertEqual([result1], obj.end())
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'MPEventLoopRunner' in caplog.records[0].name
+    assert 'too few results received' in caplog.records[0].msg
 
 ##__________________________________________________________________||
