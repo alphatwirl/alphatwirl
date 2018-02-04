@@ -81,6 +81,17 @@ class MPEventLoopRunner(object):
         self.communicationChannel.put(eventLoop)
         self.nruns += 1
 
+    def run_multiple(self, eventLoops):
+        """run the event loops in the background.
+
+        Args:
+            eventLoops (list): a list of event loops to run
+
+        """
+
+        self.communicationChannel.put_multiple(eventLoops)
+        self.nruns += len(eventLoops)
+
     def end(self):
         """wait until all event loops end and returns the results.
 
