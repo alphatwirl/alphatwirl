@@ -1,7 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/alphatwirl.svg)](https://badge.fury.io/py/alphatwirl) [![DOI](https://zenodo.org/badge/30841569.svg)](https://zenodo.org/badge/latestdoi/30841569) [![Build Status](https://travis-ci.org/alphatwirl/alphatwirl.svg?branch=master)](https://travis-ci.org/alphatwirl/alphatwirl) [![codecov](https://codecov.io/gh/alphatwirl/alphatwirl/branch/master/graph/badge.svg)](https://codecov.io/gh/alphatwirl/alphatwirl)
 
 
-[<img src="images/AlphaTwirl.png" width="500">](images/AlphaTwirl.png?raw=true)
+[<img src="images/AlphaTwirl_logo_black.png" width="500">](images/AlphaTwirl_logo_black.png?raw=true)
 
 ---
 

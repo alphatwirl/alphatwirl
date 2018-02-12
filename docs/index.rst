@@ -6,7 +6,7 @@
 |
 |
 
-.. image:: ../images/AlphaTwirl.png
+.. image:: ../images/AlphaTwirl_logo_black.png
     :width: 300px
     :alt: alphatwirl
 

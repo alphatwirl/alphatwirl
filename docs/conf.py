@@ -65,10 +65,12 @@ html_theme_options = {
     'sticky_navigation': False,
     'navigation_depth': 4,
     # 'includehidden': True,
-    # 'logo_only':
+    'logo_only': True,
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
 }
+
+html_logo = '../images/AlphaTwirl_logo_white.png'
 
 html_static_path = ['_static']
 
