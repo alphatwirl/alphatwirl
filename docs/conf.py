@@ -3,7 +3,6 @@
 ##__________________________________________________________________||
 import os
 import sys
-import sphinx_bootstrap_theme
 cwd = os.path.abspath('.')
 sys.path.insert(0, cwd)
 sys.path.insert(0, os.path.dirname(cwd))
@@ -55,22 +54,23 @@ todo_include_todos = True
 autodoc_mock_imports = ['ROOT']
 
 ##__________________________________________________________________||
-html_theme = 'bootstrap'
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+html_theme = "sphinx_rtd_theme"
+html_theme_path = ["_themes", ]
 
 html_theme_options = {
-    'bootswatch_theme': "simplex",
+    # 'typekit_id': hiw1hhg,
+    # 'canonical_url':
+    # 'analytics_id':
+    'collapse_navigation': False,
+    'sticky_navigation': False,
+    'navigation_depth': 4,
+    # 'includehidden': True,
+    # 'logo_only':
+    'display_version': True,
+    'prev_next_buttons_location': 'bottom',
 }
 
 html_static_path = ['_static']
-
-html_sidebars = {
-    '**': [
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-    ]
-}
-
 
 ##__________________________________________________________________||
 htmlhelp_basename = 'AlphaTwirldoc'
