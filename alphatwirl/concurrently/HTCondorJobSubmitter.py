@@ -84,16 +84,6 @@ class HTCondorJobSubmitter(object):
 
         procargs = ['condor_submit']
 
-        # FIXME: Bristol specific code. need to be removed <>
-        import socket
-        hostname = socket.gethostname()
-        if 'soolin.dice.priv' in hostname:
-            procargs = [
-                '/usr/bin/condor_submit',
-                '-append', 'accounting_group=group_physics.hep',
-                '-append', 'accounting_group_user={}'.format(getpass.getuser()),
-            ]
-
         logger = logging.getLogger(__name__)
         command_display = compose_shortened_command_for_logging(procargs)
         logger.debug('execute: {!r}'.format(command_display))
