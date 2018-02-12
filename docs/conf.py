@@ -18,7 +18,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.napoleon',
 ]
 
 templates_path = ['_templates']
@@ -36,12 +38,11 @@ copyright = u'2018, Tai Sakuma'
 author = u'Tai Sakuma'
 
 import alphatwirl
-version = '{}'.format(alphatwirl.__version__)
-version = version.split('+')[0]
-if version.endswith('.dirty'):
-    version = version[:-len('.dirty')]
+version = '.'.join(alphatwirl.__version__.split('.')[0:2])
+# e.g., '0.11'
 
-release = version
+release = '.'.join(alphatwirl.__version__.split('+')[0:1])
+# e.g., '0.11.0.dev'
 
 language = None
 
@@ -97,5 +98,17 @@ texinfo_documents = [
      author, 'AlphaTwirl', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+##__________________________________________________________________||
+from recommonmark.transform import AutoStructify
+# http://recommonmark.readthedocs.io/en/latest/auto_structify.html
+github_doc_root = 'https://github.com/alphatwirl/alphatwirl/tree/master/docs/'
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url,
+            'auto_toc_tree_section': 'Contents',
+            }, True)
+    app.add_transform(AutoStructify)
 
 ##__________________________________________________________________||
