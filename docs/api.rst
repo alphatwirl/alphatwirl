@@ -6,7 +6,11 @@ API reference
 .. autosummary::
    :toctree: generated
 
-   binning.Binning
-   binning.Round
-   binning.RoundLog
-   binning.Echo
+   loop.Collector
+   loop.CollectorComposite
+   loop.EventLoop
+   loop.EventLoopProgressReportWriter
+   loop.EventLoopRunner
+   loop.EventsInDatasetReader
+   loop.MPEventLoopRunner
+   loop.ReaderComposite
