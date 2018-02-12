@@ -3,14 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-|
-|
+Home
+****
 
 .. image:: ../images/AlphaTwirl_logo_black.png
     :width: 300px
     :alt: alphatwirl
-
-|
 
 *AlphaTwirl* is a python library that loops over event data and summarizes them
 into multi-dimensional categorical data as data frames. Event data, input to
