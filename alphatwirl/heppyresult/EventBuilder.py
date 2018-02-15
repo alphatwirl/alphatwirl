@@ -4,7 +4,7 @@ from ..roottree import BEventBuilder as BaseEventBuilder
 ##__________________________________________________________________||
 class EventBuilder(object):
     def __init__(self, config):
-        self.baseBuilder = BaseEventBuilder(config.base)
+        self.baseBuilder = BaseEventBuilder(config)
         self.config = config
 
     def __repr__(self):
