@@ -14,4 +14,7 @@ def test_deprecated(caplog):
     assert 'listToAlignedText' in caplog.records[0].name
     assert 'renamed' in caplog.records[0].msg
 
+def test_name():
+    assert  'listToAlignedText' == listToAlignedText.__name__
+
 ##__________________________________________________________________||
