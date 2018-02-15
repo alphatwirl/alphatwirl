@@ -16,7 +16,6 @@ class EventBuilder(object):
 
     def __call__(self):
         events = self.baseBuilder()
-        events.component = self.config.component
         return events
 
 ##__________________________________________________________________||
