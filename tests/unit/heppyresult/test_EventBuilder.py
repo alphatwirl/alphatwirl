@@ -1,69 +1,42 @@
-import unittest
+# Tai Sakuma <tai.sakuma@gmail.com>
 import sys
+import pytest
 
-from alphatwirl.heppyresult import EventBuilderConfig
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
-##__________________________________________________________________||
-hasROOT = False
+has_no_ROOT = False
 try:
     import ROOT
-    hasROOT = True
 except ImportError:
-    pass
+    has_no_ROOT = True
 
-if hasROOT:
-    from alphatwirl.heppyresult.EventBuilder import EventBuilder
-    # depends on ROOT through roottree.BEventBuilder
-
-##__________________________________________________________________||
-class MockEvents(object):
-    def __init__(self, config):
-        self.config = config
+if not has_no_ROOT:
+    from alphatwirl.heppyresult import EventBuilder
 
 ##__________________________________________________________________||
-class MockComponent(object):
-    pass
+pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
-class MockBaseEventBuilder(object):
-
-    def __init__(self, config):
-        self.config = config
-
-    def __call__(self):
-        return MockEvents(self.config)
-
-##__________________________________________________________________||
-class MockBaseConfig(object):
-    pass
+@pytest.fixture()
+def mockBaseEventBuilder(monkeypatch):
+    ret = mock.Mock()
+    module = sys.modules['alphatwirl.heppyresult.EventBuilder']
+    monkeypatch.setattr(module, 'BaseEventBuilder', ret)
+    return ret
 
 ##__________________________________________________________________||
-@unittest.skipUnless(hasROOT, "has no ROOT")
-class TestEventBuilder(unittest.TestCase):
+def test_repr(mockBaseEventBuilder):
+    config = mock.Mock()
+    obj = EventBuilder(config)
+    repr(obj)
 
-    def setUp(self):
-        self.module = sys.modules['alphatwirl.heppyresult.EventBuilder']
-        self.org_BaseEventBuilder = self.module.BaseEventBuilder
-        self.module.BaseEventBuilder = MockBaseEventBuilder
-
-    def tearDown(self):
-        self.module.BaseEventBuilder = self.org_BaseEventBuilder
-
-    def test_build(self):
-
-        base_config = MockBaseConfig
-        component = MockComponent()
-
-        config = EventBuilderConfig(
-            base = base_config,
-            component = component,
-        )
-
-        obj = EventBuilder(config)
-
-        events = obj()
-
-        self.assertIs(base_config, events.config)
-        self.assertIs(component, events.component)
+def test_build(mockBaseEventBuilder):
+    config = mock.Mock()
+    obj = EventBuilder(config)
+    events = obj()
+    assert mockBaseEventBuilder()() is events
 
 ##__________________________________________________________________||
