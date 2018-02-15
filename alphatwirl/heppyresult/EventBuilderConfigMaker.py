@@ -8,10 +8,20 @@ from .EventBuilderConfig import EventBuilderConfig as HeppyEventBuilderConfig
 ##__________________________________________________________________||
 class EventBuilderConfigMaker(object):
     def __init__(self, analyzerName, fileName, treeName):
-
         self.analyzerName = analyzerName
         self.fileName = fileName
         self.treeName = treeName
+
+    def __repr__(self):
+        name_value_pairs = (
+            ('analyzerName', self.analyzerName),
+            ('fileName', self.fileName),
+            ('treeName', self.treeName)
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
 
     def create_config_for(self, dataset, files, start, length):
         config = HeppyEventBuilderConfig(

@@ -29,6 +29,14 @@ def component(analyzer):
     return ret
 
 ##__________________________________________________________________||
+def test_repr():
+    obj = EventBuilderConfigMaker(
+        analyzerName='treeProducerSusyAlphaT',
+        fileName='tree.root',
+        treeName='tree'
+    )
+    print obj
+
 @pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 def test_create_config_for(component):
     obj = EventBuilderConfigMaker(
