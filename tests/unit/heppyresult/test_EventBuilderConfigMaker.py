@@ -1,121 +1,85 @@
-import sys
-import unittest
+# Tai Sakuma <tai.sakuma@gmail.com>
+import pytest
 
-from alphatwirl.roottree import EventBuilderConfig as BaseEventBuilderConfig
-from alphatwirl.heppyresult import EventBuilderConfig
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
-##__________________________________________________________________||
-hasROOT = False
+has_no_ROOT = False
 try:
     import ROOT
-    hasROOT = True
 except ImportError:
-    pass
+    has_no_ROOT = True
 
-if hasROOT:
+from alphatwirl.heppyresult import EventBuilderConfig
+
+if not has_no_ROOT:
     from alphatwirl.heppyresult import EventBuilderConfigMaker
 
 ##__________________________________________________________________||
-class MockAnalyzer(object):
-    def __init__(self):
-        self.path = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT'
+@pytest.fixture()
+def analyzer():
+    return mock.Mock(path = '/heppyresult/dir/TTJets/treeProducerSusyAlphaT')
+
+@pytest.fixture()
+def component(analyzer):
+    ret = mock.Mock(treeProducerSusyAlphaT=analyzer)
+    ret.configure_mock(name='TTJets')
+    return ret
 
 ##__________________________________________________________________||
-class MockComponent(object):
-    def __init__(self):
-        self.treeProducerSusyAlphaT = MockAnalyzer()
-        self.name = 'TTJets'
+@pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
+def test_create_config_for(component):
+    obj = EventBuilderConfigMaker(
+        analyzerName='treeProducerSusyAlphaT',
+        fileName='tree.root',
+        treeName='tree'
+    )
 
-##__________________________________________________________________||
-class MockTObject(object):
-    def __init__(self, name):
-        self.name = name
-
-    def GetEntries(self):
-        return 2500
-
-##__________________________________________________________________||
-class MockTFile(object):
-    def Open(self, path):
-        self.path = path
-        return self
-    def Get(self, name):
-        return MockTObject(name)
-
-##__________________________________________________________________||
-class MockROOT(object):
-    def __init__(self): self.TFile = MockTFile()
+    expected = EventBuilderConfig(
+        inputPaths=['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
+        treeName='tree',
+        maxEvents=30,
+        start=20,
+        name='TTJets',
+        component = component,
+    )
 
 
-##__________________________________________________________________||
-@unittest.skipUnless(hasROOT, "has no ROOT")
-class TestEventBuilderConfigMaker(unittest.TestCase):
+    actual = obj.create_config_for(
+        component,
+        files=['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
+        start=20,
+        length=30
+    )
 
-    def setUp(self):
-        self.moduleEventBuilderConfigMaker = sys.modules['alphatwirl.heppyresult.EventBuilderConfigMaker']
-        self.orgROOT = self.moduleEventBuilderConfigMaker.ROOT
-        self.moduleEventBuilderConfigMaker.ROOT = MockROOT()
+    assert expected == actual
 
-    def tearDown(self):
-        self.moduleEventBuilderConfigMaker.ROOT = self.orgROOT
+def test_file_list_in(component):
+    obj = EventBuilderConfigMaker(
+        analyzerName='treeProducerSusyAlphaT',
+        fileName='tree.root',
+        treeName='tree'
+    )
 
-    def test_create_config_for(self):
-        obj = EventBuilderConfigMaker(
-            analyzerName = 'treeProducerSusyAlphaT',
-            fileName = 'tree.root',
-            treeName = 'tree'
-        )
+    expected = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root']
 
-        component = MockComponent()
+    actual = obj.file_list_in(component)
 
-        expected = EventBuilderConfig(
-            base = BaseEventBuilderConfig(
-                inputPaths = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
-                treeName = 'tree',
-                maxEvents = 30,
-                start = 20,
-                name = 'TTJets'
-                ),
-            component = component,
-        )
+    assert expected == actual
 
-        actual = obj.create_config_for(
-            component,
-            files = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
-            start = 20,
-            length = 30
-        )
+def test_file_list_in_maxFiles(component):
+    obj = EventBuilderConfigMaker(
+        analyzerName='treeProducerSusyAlphaT',
+        fileName='tree.root',
+        treeName='tree'
+    )
 
-        self.assertEqual(expected, actual)
+    expected = [ ]
 
-    def test_file_list_in(self):
-        obj = EventBuilderConfigMaker(
-            analyzerName = 'treeProducerSusyAlphaT',
-            fileName = 'tree.root',
-            treeName = 'tree'
-        )
+    actual = obj.file_list_in(component, maxFiles=0)
 
-        component = MockComponent()
-
-        expected = ['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root']
-
-        actual = obj.file_list_in(component)
-
-        self.assertEqual(expected, actual)
-
-    def test_file_list_in_maxFiles(self):
-        obj = EventBuilderConfigMaker(
-            analyzerName = 'treeProducerSusyAlphaT',
-            fileName = 'tree.root',
-            treeName = 'tree'
-        )
-
-        component = MockComponent()
-
-        expected = [ ]
-
-        actual = obj.file_list_in(component, maxFiles = 0)
-
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
 ##__________________________________________________________________||
