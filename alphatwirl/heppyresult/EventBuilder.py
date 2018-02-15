@@ -8,7 +8,7 @@ class EventBuilder(object):
         self.config = config
 
     def __repr__(self):
-        return '{}(baseBuilder = {!r}, config = {!r})'.format(
+        return '{}(baseBuilder={!r}, config={!r})'.format(
             self.__class__.__name__,
             self.baseBuilder,
             self.config
