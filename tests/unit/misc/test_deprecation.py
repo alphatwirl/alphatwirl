@@ -23,7 +23,7 @@ def test_func_logging(caplog):
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'test_deprecation' in caplog.records[0].name
-    assert 'func() is deprecated. extra message' == caplog.records[0].msg
+    assert 'func() is deprecated. extra message' in caplog.records[0].msg
 
 def test_func_name():
     assert  'func' == func.__name__
@@ -49,7 +49,7 @@ def test_class_logging(Class, caplog):
     assert caplog.records[0].levelname == 'WARNING'
     assert 'test_deprecation' in caplog.records[0].name
     expected = '{} is deprecated. extra message'.format(Class.__name__)
-    assert expected == caplog.records[0].msg
+    assert expected in caplog.records[0].msg
 
 @pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
 def test_class_pickle(Class):

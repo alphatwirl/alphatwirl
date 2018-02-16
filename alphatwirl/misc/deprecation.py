@@ -16,7 +16,8 @@ def atdeprecated(msg):
 def _decorate_class(c, msg):
     module_name = c.__module__
     logger = logging.getLogger(module_name)
-    name = c.__name__
+    class_name = c.__name__
+    name = '{}.{}'.format(module_name, class_name)
     text = '{} is deprecated.'.format(name)
     if msg:
         text += ' ' + msg
@@ -35,6 +36,7 @@ def _decorate_func(f, msg):
     module_name = f.__module__
     logger = logging.getLogger(module_name)
     name = f.__name__
+    name = '{}.{}'.format(module_name, name)
     text = '{}() is deprecated.'.format(name)
     if msg:
         text += ' ' + msg
