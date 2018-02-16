@@ -16,6 +16,7 @@ from . import configure
 from . import roottree
 from . import selection
 from . import heppyresult
+from . import datasetloop
 from . import loop
 from . import progressbar
 from . import summary

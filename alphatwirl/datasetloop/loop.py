@@ -1,20 +1,16 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
-from alphatwirl.datasetloop import DatasetLoop
-
 ##__________________________________________________________________||
-class ComponentLoop(object):
+class DatasetLoop(object):
 
-    def __init__(self, heppyResult, reader):
+    def __init__(self, datasets, reader):
+        self.datasets = datasets
         self.reader = reader
-        self.heppyResult = heppyResult
-        self.components = self.heppyResult.components()
-        self.datasetloop = DatasetLoop(datasets=self.components, reader=self.reader)
 
     def __repr__(self):
         name_value_pairs = (
-            ('reader',      self.reader),
-            ('heppyResult', self.heppyResult),
+            ('datasets', self.datasets),
+            ('reader', self.reader),
         )
         return '{}({})'.format(
             self.__class__.__name__,
@@ -22,6 +18,9 @@ class ComponentLoop(object):
         )
 
     def __call__(self):
-        return self.datasetloop()
+        self.reader.begin()
+        for dataset in self.datasets:
+            self.reader.read(dataset)
+        return self.reader.end()
 
 ##__________________________________________________________________||
