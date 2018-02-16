@@ -1,48 +1,43 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+import sys
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.heppyresult import ComponentLoop
-import unittest
 
 ##__________________________________________________________________||
-class MockReader:
-    def __init__(self):
-        self.beginCalled = False
-        self.readComponents = [ ]
-        self.endCalled = False
-    def begin(self): self.beginCalled = True
-    def read(self, component): self.readComponents.append(component)
-    def end(self):
-        self.endCalled = True
-        return 2232
+@pytest.fixture()
+def reader():
+    return mock.Mock()
 
-##__________________________________________________________________||
-class MockHeppyResult:
-    def __init__(self, components):
-        self._components = components
-    def components(self): return self._components
+@pytest.fixture()
+def components():
+    component1 = mock.Mock()
+    component2 = mock.Mock()
+    return [component1, component2]
 
-##__________________________________________________________________||
-class MockComponent: pass
+@pytest.fixture()
+def heppyresult(components):
+    ret = mock.Mock()
+    ret.components.return_value = components
+    return ret
 
-##__________________________________________________________________||
-class TestComponentLoop(unittest.TestCase):
+@pytest.fixture()
+def obj(heppyresult, reader):
+    return ComponentLoop(heppyresult, reader)
 
-    def test_read(self):
-        reader = MockReader()
+def test_repr(obj):
+    repr(obj)
 
-        self.assertFalse(reader.beginCalled)
-        self.assertEqual([ ], reader.readComponents)
-        self.assertFalse(reader.endCalled)
-
-        component1 = MockComponent()
-        component2 = MockComponent()
-        components = [component1, component2]
-        heppyResult = MockHeppyResult(components)
-
-        componentLoop = ComponentLoop(heppyResult, reader)
-
-        self.assertEqual(2232, componentLoop())
-
-        self.assertTrue(reader.beginCalled)
-        self.assertEqual(components, reader.readComponents)
-        self.assertTrue(reader.endCalled)
+def test_call(obj, reader, components, heppyresult):
+    result = obj()
+    assert [mock.call()] == reader.begin.call_args_list
+    assert [mock.call()] == heppyresult.components.call_args_list
+    assert [mock.call(c) for c in components] == reader.read.call_args_list
+    assert reader.end() is result
 
 ##__________________________________________________________________||
