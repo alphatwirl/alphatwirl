@@ -48,8 +48,8 @@ def obj(mockroot, mockevents):
     return BEventBuilder(config)
 
 ##__________________________________________________________________||
-def test_repr(mockroot, mockevents):
-    pass
+def test_repr(obj):
+    repr(obj)
 
 def test_build(obj, mockroot, mockevents):
     events = obj()
