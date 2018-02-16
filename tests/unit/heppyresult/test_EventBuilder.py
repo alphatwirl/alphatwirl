@@ -24,7 +24,7 @@ pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 def mockBaseEventBuilder(monkeypatch):
     ret = mock.Mock()
     module = sys.modules['alphatwirl.heppyresult.EventBuilder']
-    monkeypatch.setattr(module, 'BaseEventBuilder', ret)
+    monkeypatch.setattr(module, 'BEventBuilder', ret)
     return ret
 
 ##__________________________________________________________________||
