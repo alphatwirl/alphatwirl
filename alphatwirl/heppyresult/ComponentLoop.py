@@ -6,6 +6,7 @@ class ComponentLoop(object):
     def __init__(self, heppyResult, reader):
         self.reader = reader
         self.heppyResult = heppyResult
+        self.components = self.heppyResult.components()
 
     def __repr__(self):
         name_value_pairs = (
@@ -19,7 +20,7 @@ class ComponentLoop(object):
 
     def __call__(self):
         self.reader.begin()
-        for component in self.heppyResult.components():
+        for component in self.components:
             self.reader.read(component)
         return self.reader.end()
 
