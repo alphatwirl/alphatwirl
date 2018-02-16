@@ -1,5 +1,13 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+from __future__ import print_function
 import logging
+
+import pytest
+
+try:
+   import cPickle as pickle
+except:
+   import pickle
 
 from alphatwirl.misc.deprecation import atdeprecated
 
@@ -8,7 +16,6 @@ from alphatwirl.misc.deprecation import atdeprecated
 def func():
     pass
 
-##__________________________________________________________________||
 def test_func_logging(caplog):
     with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         func()
@@ -20,5 +27,33 @@ def test_func_logging(caplog):
 
 def test_func_name():
     assert  'func' == func.__name__
+
+def test_func_pickle():
+    pickle.dumps(func)
+
+##__________________________________________________________________||
+@atdeprecated(msg='extra message')
+class ClassWithInit(object):
+    def __init__(self):
+        pass
+
+@atdeprecated(msg='extra message')
+class ClassWithoutInit(object):
+    pass
+
+@pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
+def test_class_logging(Class, caplog):
+    with caplog.at_level(logging.WARNING):
+        c = Class()
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'test_deprecation' in caplog.records[0].name
+    expected = '{} is deprecated. extra message'.format(Class.__name__)
+    assert expected == caplog.records[0].msg
+
+@pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
+def test_class_pickle(Class):
+    c = Class()
+    pickle.dumps(c)
 
 ##__________________________________________________________________||
