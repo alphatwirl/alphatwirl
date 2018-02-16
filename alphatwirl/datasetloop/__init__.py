@@ -1,2 +1,1 @@
-from .loop import DatasetLoop
-
+from .loop import DatasetLoop, ResumableDatasetLoop
