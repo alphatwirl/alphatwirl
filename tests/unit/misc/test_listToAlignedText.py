@@ -12,7 +12,7 @@ def test_deprecated(caplog):
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'listToAlignedText' in caplog.records[0].name
-    assert 'renamed' in caplog.records[0].msg
+    assert 'deprecated' in caplog.records[0].msg
 
 def test_name():
     assert  'listToAlignedText' == listToAlignedText.__name__
