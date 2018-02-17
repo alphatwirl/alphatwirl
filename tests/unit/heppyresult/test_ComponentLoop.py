@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import sys
+import logging
 import pytest
 
 try:
@@ -39,5 +40,14 @@ def test_call(obj, reader, components, heppyresult):
     assert [mock.call()] == heppyresult.components.call_args_list
     assert [mock.call(c) for c in components] == reader.read.call_args_list
     assert reader.end() is result
+
+def test_deprecated(caplog, heppyresult, reader):
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
+        ComponentLoop(heppyresult, reader)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'ComponentLoop' in caplog.records[0].name
+    assert 'deprecated' in caplog.records[0].msg
 
 ##__________________________________________________________________||

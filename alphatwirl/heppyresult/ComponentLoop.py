@@ -1,8 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 from alphatwirl.datasetloop import DatasetLoop
+from alphatwirl.misc.deprecation import atdeprecated
 
 ##__________________________________________________________________||
+@atdeprecated(msg='use alphatwirl.datasetloop.DatasetLoop instead.')
 class ComponentLoop(object):
 
     def __init__(self, heppyResult, reader):
