@@ -13,7 +13,8 @@ class Queue(object):
 ##__________________________________________________________________||
 class ProgressMonitor(object):
     def __init__(self, presentation):
-        self.queue = Queue(presentation = presentation)
+        self.presentation = presentation
+        self.queue = Queue(presentation=presentation)
 
     def begin(self): pass
 
