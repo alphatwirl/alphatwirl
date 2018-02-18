@@ -17,10 +17,11 @@ def isatty(request, monkeypatch):
     ret = request.param
     org_stdout = sys.stdout
     f = mock.Mock(**{
-        'isatty.return_value': ret,
-        'write.side_effect': lambda x : org_stdout.write(x)
+        'stdout.isatty.return_value': ret,
+        'stdout.write.side_effect': lambda x : org_stdout.write(x)
     })
-    monkeypatch.setattr(sys, 'stdout', f)
+    module = sys.modules['alphatwirl.parallel.build']
+    monkeypatch.setattr(module, 'sys', f)
     return ret
 
 ##__________________________________________________________________||
