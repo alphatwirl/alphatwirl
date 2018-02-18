@@ -1,23 +1,11 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+from alphatwirl.datasetloop import DatasetReaderComposite
+from alphatwirl.misc.deprecation import atdeprecated
 
 ##__________________________________________________________________||
-class ComponentReaderComposite(object):
-
+@atdeprecated(msg='use alphatwirl.datasetloop.DatasetReaderComposite instead.')
+class ComponentReaderComposite(DatasetReaderComposite):
     def __init__(self):
-        self.readers = [ ]
-
-    def add(self, reader):
-        self.readers.append(reader)
-
-    def begin(self):
-        for reader in self.readers:
-            reader.begin()
-
-    def read(self, component):
-        for reader in self.readers:
-            reader.read(component)
-
-    def end(self):
-        return [reader.end() for reader in self.readers]
+        super(ComponentReaderComposite, self).__init__()
 
 ##__________________________________________________________________||
