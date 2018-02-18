@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import sys
 import logging
 import alphatwirl
 
@@ -54,7 +55,22 @@ def build_parallel_dropbox(parallel_mode, quiet, user_modules,
 
 ##__________________________________________________________________||
 def build_parallel_multiprocessing(quiet, processes):
-    progressMonitor, communicationChannel = alphatwirl.configure.build_progressMonitor_communicationChannel(quiet=quiet, processes=processes)
+
+    if quiet:
+        progressBar = None
+    elif sys.stdout.isatty():
+        progressBar = alphatwirl.progressbar.ProgressBar()
+    else:
+        progressBar = alphatwirl.progressbar.ProgressPrint()
+
+    if processes is None or processes == 0:
+        progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.ProgressMonitor(presentation = progressBar)
+        communicationChannel = alphatwirl.concurrently.CommunicationChannel0(progressMonitor)
+    else:
+        progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.BProgressMonitor(presentation = progressBar)
+        dropbox = alphatwirl.concurrently.MultiprocessingDropbox(processes, progressMonitor)
+        communicationChannel = alphatwirl.concurrently.CommunicationChannel(dropbox = dropbox)
+
     return Parallel(progressMonitor, communicationChannel)
 
 ##__________________________________________________________________||

@@ -1,27 +1,11 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import sys
-
-from .. import progressbar
-from .. import concurrently
+from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.parallel.build import build_parallel_multiprocessing
 
 ##__________________________________________________________________||
+@atdeprecated(msg='use alphatwirl.parallel.build.build_parallel_multiprocessing() instead.')
 def build_progressMonitor_communicationChannel(quiet, processes):
-
-    if quiet:
-        progressBar = None
-    elif sys.stdout.isatty():
-        progressBar = progressbar.ProgressBar()
-    else:
-        progressBar = progressbar.ProgressPrint()
-
-    if processes is None or processes == 0:
-        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.ProgressMonitor(presentation = progressBar)
-        communicationChannel = concurrently.CommunicationChannel0(progressMonitor)
-    else:
-        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.BProgressMonitor(presentation = progressBar)
-        dropbox = concurrently.MultiprocessingDropbox(processes, progressMonitor)
-        communicationChannel = concurrently.CommunicationChannel(dropbox = dropbox)
-
-    return progressMonitor, communicationChannel
+    parallel = build_parallel_multiprocessing(quiet, processes)
+    return parallel.progressMonitor, parallel.communicationChannel
 
 ##__________________________________________________________________||
