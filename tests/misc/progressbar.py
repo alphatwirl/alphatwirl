@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@gmail.com>
+from __future__ import print_function
 from alphatwirl.progressbar import ProgressReport, BProgressMonitor
 from alphatwirl.progressbar import ProgressBar
 from alphatwirl.progressbar import ProgressPrint

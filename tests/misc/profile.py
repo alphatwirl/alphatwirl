@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@gmail.com>
-
-##__________________________________________________________________||
+from __future__ import print_function
 import os, sys
 import tempfile
 
@@ -61,7 +60,7 @@ s = StringIO.StringIO()
 sortby = 'cumulative'
 ps = pstats.Stats(pr, stream = s).strip_dirs().sort_stats(sortby)
 ps.print_stats()
-print s.getvalue()
+print(s.getvalue())
 
 ## cProfile.run("alphaTwirl.run()")
 
