@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@gmail.com>
 from __future__ import print_function
-from alphatwirl.progressbar import ProgressReport, BProgressMonitor
-from alphatwirl.progressbar import ProgressBar
-from alphatwirl.progressbar import ProgressPrint
-from alphatwirl.concurrently import CommunicationChannel, MultiprocessingDropbox
 import sys
 import time, random
 import uuid
+
+import alphatwirl
 
 ##__________________________________________________________________||
 class Task(object):
@@ -19,17 +17,17 @@ class Task(object):
         time.sleep(random.randint(0, 3))
         for i in range(n):
             time.sleep(0.0001)
-            report = ProgressReport(name=self.name, done=i + 1, total=n, taskid=taskid)
+            report = alphatwirl.progressbar.ProgressReport(name=self.name, done=i + 1, total=n, taskid=taskid)
             progressReporter.report(report)
         return None
 
 ##__________________________________________________________________||
-progressBar = ProgressBar() if sys.stdout.isatty() else ProgressPrint()
+progressBar = alphatwirl.progressbar.ProgressBar() if sys.stdout.isatty() else alphatwirl.progressbar.ProgressPrint()
 
 ##__________________________________________________________________||
-progressMonitor = BProgressMonitor(presentation = progressBar)
-dropbox = MultiprocessingDropbox(nprocesses=10, progressMonitor=progressMonitor)
-channel = CommunicationChannel(dropbox)
+progressMonitor = alphatwirl.progressbar.BProgressMonitor(presentation=progressBar)
+dropbox = alphatwirl.concurrently.MultiprocessingDropbox(nprocesses=10, progressMonitor=progressMonitor)
+channel = alphatwirl.concurrently.CommunicationChannel(dropbox)
 progressMonitor.begin()
 channel.begin()
 channel.put(Task("loop"))
