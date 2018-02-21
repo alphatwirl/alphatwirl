@@ -13,13 +13,13 @@ import uuid
 class Task(object):
     def __init__(self, name):
         self.name = name
-    def __call__(self, progressReporter = None):
+    def __call__(self, progressReporter=None):
         n = random.randint(5, 1000000)
         taskid = uuid.uuid4()
         time.sleep(random.randint(0, 3))
         for i in range(n):
             time.sleep(0.0001)
-            report = ProgressReport(name = self.name, done = i + 1, total = n, taskid = taskid)
+            report = ProgressReport(name=self.name, done=i + 1, total=n, taskid=taskid)
             progressReporter.report(report)
         return None
 
@@ -28,7 +28,7 @@ progressBar = ProgressBar() if sys.stdout.isatty() else ProgressPrint()
 
 ##__________________________________________________________________||
 progressMonitor = BProgressMonitor(presentation = progressBar)
-dropbox = MultiprocessingDropbox(nprocesses = 10, progressMonitor = progressMonitor)
+dropbox = MultiprocessingDropbox(nprocesses=10, progressMonitor=progressMonitor)
 channel = CommunicationChannel(dropbox)
 progressMonitor.begin()
 channel.begin()
