@@ -16,7 +16,7 @@ except:
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
-parser.add_argument('paths', nargs = argparse.REMAINDER, help = 'paths to task packages')
+parser.add_argument('paths', nargs=argparse.REMAINDER, help='paths to task packages')
 args = parser.parse_args()
 
 ##__________________________________________________________________||
@@ -68,7 +68,7 @@ def print_logs(error):
         '{:>20}: {}'.format('os.environ', os.environ)
 
     ]
-    print('\n'.join(messages), file = sys.stderr)
+    print('\n'.join(messages), file=sys.stderr)
 
 ##__________________________________________________________________||
 def setup():
@@ -136,7 +136,7 @@ def compose_result_path(package_path):
 def store_result(result, result_path):
     mkdir_p(os.path.dirname(result_path))
     f = gzip.open(result_path, 'wb')
-    pickle.dump(result, f, protocol = pickle.HIGHEST_PROTOCOL)
+    pickle.dump(result, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 ##__________________________________________________________________||
 def mkdir_p(path):
