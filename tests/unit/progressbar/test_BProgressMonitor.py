@@ -8,12 +8,13 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.progressbar import BProgressMonitor, ProgressReporter
+from alphatwirl.progressbar import BProgressMonitor, ProgressReporter, ProgressReport
 
 ##__________________________________________________________________||
 @pytest.fixture()
 def presentation():
-    return mock.MagicMock()
+    ret = mock.MagicMock()
+    return ret
 
 @pytest.fixture()
 def monitor(presentation):
@@ -29,6 +30,14 @@ def test_begin_end(monitor):
     monitor.end()
 
 def test_createReporter(monitor):
-    assert isinstance(monitor.createReporter(), ProgressReporter)
+    reporter = monitor.createReporter()
+    assert isinstance(reporter, ProgressReporter)
+
+def test_send_report(monitor, presentation):
+    monitor.begin()
+    reporter = monitor.createReporter()
+    report = ProgressReport('task1', 0, 3)
+    reporter.report(report)
+    monitor.end()
 
 ##__________________________________________________________________||
