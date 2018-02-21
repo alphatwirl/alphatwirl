@@ -11,7 +11,7 @@ class ProgressReport(object):
         taskid (immutable, optional): if given, used to identify the task. useful if multiple tasks have the same name
     """
 
-    def __init__(self, name, done, total, taskid = None):
+    def __init__(self, name, done, total, taskid=None):
         self.taskid = taskid if taskid is not None else name
         self.name = name
         self.done = done
@@ -26,7 +26,7 @@ class ProgressReport(object):
         )
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def last(self):
