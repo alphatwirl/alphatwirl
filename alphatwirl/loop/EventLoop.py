@@ -18,7 +18,7 @@ class EventLoop(object):
         self.taskid = uuid.uuid4()
 
     def __repr__(self):
-        return '{}(build_events = {!r}, reader = {!r}, progressReportWriter = {!r})'.format(
+        return '{}(build_events={!r}, reader={!r}, progressReportWriter={!r})'.format(
             self.__class__.__name__,
             self.build_events,
             self.reader,
