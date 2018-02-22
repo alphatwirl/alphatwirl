@@ -9,6 +9,7 @@ except ImportError:
     import mock
 
 from alphatwirl.progressbar import Queue, ProgressMonitor
+from alphatwirl import progressbar
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -62,9 +63,11 @@ def test_init(monitor, mock_queue, MockQueue, presentation):
     assert [mock.call(presentation = presentation)] == MockQueue.call_args_list
     assert monitor.queue is mock_queue
 
-def test_begin_end(monitor):
+def test_begin_end(monitor, MockReporter):
     monitor.begin()
+    assert progressbar._progress_reporter is MockReporter()
     monitor.end()
+    assert progressbar._progress_reporter is None
 
 def test_createReporter(monitor, mock_reporter, MockReporter, presentation):
     reporter = monitor.createReporter()

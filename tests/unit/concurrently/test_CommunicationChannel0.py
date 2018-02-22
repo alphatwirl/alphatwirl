@@ -7,21 +7,11 @@ except ImportError:
     import mock
 
 from alphatwirl.concurrently import CommunicationChannel0
-from alphatwirl import progressbar
 
 ##__________________________________________________________________||
-class MockProgressReporter(object):
-    pass
-
 @pytest.fixture()
-def mock_progressmonitor():
-    ret = mock.MagicMock()
-    ret.createReporter.return_value = MockProgressReporter()
-    return ret
-
-@pytest.fixture()
-def obj(mock_progressmonitor):
-    return CommunicationChannel0(progressMonitor=mock_progressmonitor)
+def obj():
+    return CommunicationChannel0()
 
 ##__________________________________________________________________||
 def test_repr(obj):
@@ -30,9 +20,7 @@ def test_repr(obj):
 ##__________________________________________________________________||
 def test_begin_end(obj):
     obj.begin()
-    assert isinstance(progressbar._progress_reporter, MockProgressReporter)
     obj.end()
-    assert progressbar._progress_reporter is None
 
 ##__________________________________________________________________||
 def test_begin_begin_end(obj):

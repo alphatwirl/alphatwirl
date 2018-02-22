@@ -65,7 +65,7 @@ def build_parallel_multiprocessing(quiet, processes):
 
     if processes is None or processes == 0:
         progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.ProgressMonitor(presentation = progressBar)
-        communicationChannel = alphatwirl.concurrently.CommunicationChannel0(progressMonitor)
+        communicationChannel = alphatwirl.concurrently.CommunicationChannel0()
     else:
         progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.BProgressMonitor(presentation = progressBar)
         dropbox = alphatwirl.concurrently.MultiprocessingDropbox(processes, progressMonitor)

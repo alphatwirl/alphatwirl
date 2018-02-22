@@ -1,7 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
-from alphatwirl import progressbar
-
 ##__________________________________________________________________||
 class CommunicationChannel0(object):
     """A communication channel for the single process mode
@@ -17,8 +15,7 @@ class CommunicationChannel0(object):
 
     """
 
-    def __init__(self, progressMonitor=None):
-        self.progressMonitor = progressbar.NullProgressMonitor() if progressMonitor is None else progressMonitor
+    def __init__(self):
         self.results = [ ]
 
     def __repr__(self):
@@ -27,8 +24,7 @@ class CommunicationChannel0(object):
         )
 
     def begin(self):
-        reporter = self.progressMonitor.createReporter()
-        progressbar._progress_reporter = reporter
+        pass
 
     def put(self, task, *args, **kwargs):
         result = task(*args, **kwargs)
@@ -49,9 +45,10 @@ class CommunicationChannel0(object):
         del self.results[:]
         return ret
 
-    def terminate(self): pass
+    def terminate(self):
+        pass
 
     def end(self):
-        progressbar._progress_reporter = None
+        pass
 
 ##__________________________________________________________________||
