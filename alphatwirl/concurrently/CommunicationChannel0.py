@@ -51,6 +51,7 @@ class CommunicationChannel0(object):
 
     def terminate(self): pass
 
-    def end(self): pass
+    def end(self):
+        progressbar._progress_reporter = None
 
 ##__________________________________________________________________||

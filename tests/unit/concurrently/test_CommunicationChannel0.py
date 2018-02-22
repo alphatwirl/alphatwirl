@@ -32,6 +32,7 @@ def test_begin_end(obj):
     obj.begin()
     assert isinstance(progressbar._progress_reporter, MockProgressReporter)
     obj.end()
+    assert progressbar._progress_reporter is None
 
 ##__________________________________________________________________||
 def test_begin_begin_end(obj):
