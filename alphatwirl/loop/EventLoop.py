@@ -1,6 +1,9 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-from .EventLoopProgressReportWriter import EventLoopProgressReportWriter
 import uuid
+
+import alphatwirl
+
+from .EventLoopProgressReportWriter import EventLoopProgressReportWriter
 
 ##__________________________________________________________________||
 class EventLoop(object):
@@ -15,26 +18,28 @@ class EventLoop(object):
         self.taskid = uuid.uuid4()
 
     def __repr__(self):
-        return '{}(build_events = {!r}, reader = {!r}, progressReportWriter = {!r})'.format(
+        return '{}(build_events={!r}, reader={!r}, progressReportWriter={!r})'.format(
             self.__class__.__name__,
             self.build_events,
             self.reader,
             self.progressReportWriter
         )
 
-    def __call__(self, progressReporter = None):
+    def __call__(self):
         events = self.build_events()
-        self._reportProgress(progressReporter, events)
+        self._reportProgress(events)
         self.reader.begin(events)
         for event in events:
-            self._reportProgress(progressReporter, event)
+            self._reportProgress(event)
             self.reader.event(event)
         self.reader.end()
         return self.reader
 
-    def _reportProgress(self, progressReporter, event):
-        if progressReporter is None: return
-        report = self.progressReportWriter.write(self.taskid, event.config, event)
-        progressReporter.report(report)
+    def _reportProgress(self, event):
+        try:
+            report = self.progressReportWriter.write(self.taskid, event.config, event)
+            alphatwirl.progressbar.report_progress(report)
+        except:
+            pass
 
 ##__________________________________________________________________||

@@ -10,6 +10,8 @@ except ImportError:
 
 from alphatwirl.progressbar import BProgressMonitor, ProgressReporter, ProgressReport
 
+import alphatwirl
+
 ##__________________________________________________________________||
 @pytest.fixture()
 def presentation():
@@ -27,7 +29,9 @@ def test_repr(monitor):
 
 def test_begin_end(monitor):
     monitor.begin()
+    assert isinstance(alphatwirl.progressbar._progress_reporter, ProgressReporter)
     monitor.end()
+    assert alphatwirl.progressbar._progress_reporter is None
 
 def test_createReporter(monitor):
     reporter = monitor.createReporter()

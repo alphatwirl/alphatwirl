@@ -7,9 +7,6 @@ from alphatwirl.loop import ReaderComposite
 from alphatwirl.loop import Collector, CollectorComposite, CollectorDelegate
 
 ##__________________________________________________________________||
-class MockProgressReporter(object): pass
-
-##__________________________________________________________________||
 class MockResultsCombinationMethod(object):
     def combine(self, pairs) :pass
 
@@ -26,8 +23,6 @@ class TesEventsInDatasetReader_build_01(unittest.TestCase):
             |- 7:counter
             |- 8:counter
         """
-
-        progressReporter1 = MockProgressReporter()
 
         keyComposer4 = KeyValueComposer(('var4', ), (Echo(), ))
         counts4 = Count()
@@ -53,7 +48,7 @@ class TesEventsInDatasetReader_build_01(unittest.TestCase):
         reader3.add(reader4)
         reader3.add(reader5)
 
-        collector3 = CollectorComposite(progressReporter1)
+        collector3 = CollectorComposite()
         collector3.add(collector4)
         collector3.add(collector5)
 
@@ -62,7 +57,7 @@ class TesEventsInDatasetReader_build_01(unittest.TestCase):
         reader1.add(reader7)
         reader1.add(reader8)
 
-        collector1 = CollectorComposite(progressReporter1)
+        collector1 = CollectorComposite()
         collector1.add(collector3)
         collector1.add(collector7)
         collector1.add(collector8)

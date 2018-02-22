@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import multiprocessing
 
+from alphatwirl import progressbar
+
 ##__________________________________________________________________||
 class Worker(multiprocessing.Process):
     def __init__(self, task_queue, result_queue, lock, progressReporter):
@@ -11,21 +13,15 @@ class Worker(multiprocessing.Process):
         self.progressReporter = progressReporter
 
     def run(self):
+        progressbar._progress_reporter = self.progressReporter
         while True:
             message = self.task_queue.get()
             if message is None:
                 self.task_queue.task_done()
                 break
             task_idx, package = message
-            result = self._run_task(package)
+            result = package.task(*package.args, **package.kwargs)
             self.task_queue.task_done()
             self.result_queue.put((task_idx, result))
-
-    def _run_task(self, package):
-        try:
-            result = package.task(progressReporter = self.progressReporter, *package.args, **package.kwargs)
-        except TypeError:
-            result = package.task(*package.args, **package.kwargs)
-        return result
 
 ##__________________________________________________________________||

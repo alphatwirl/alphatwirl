@@ -1,8 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import multiprocessing
+
 from .ProgressReporter import ProgressReporter
 from .ProgressReportPickup import ProgressReportPickup
 
-import multiprocessing
+import alphatwirl
 
 ##__________________________________________________________________||
 class BProgressMonitor(object):
@@ -73,8 +75,11 @@ class BProgressMonitor(object):
     def begin(self):
         self.pickup = ProgressReportPickup(self.queue, self.presentation)
         self.pickup.start()
+        reporter = self.createReporter()
+        alphatwirl.progressbar._progress_reporter = reporter
 
     def end(self):
+        alphatwirl.progressbar._progress_reporter = None
         self.queue.put(None)
         self.pickup.join()
 
