@@ -34,42 +34,45 @@ def test_repr():
     repr(obj)
 
 ##__________________________________________________________________||
+MockResult = collections.namedtuple('MockResult', 'name args kwargs')
+
 class MockTask(object):
-    def __init__(self, result, time):
-        self.result = result
+    def __init__(self, name, time):
+        self.name = name
         self.time = time
 
-    def __call__(self):
+    def __call__(self, *args, **kwargs):
         time.sleep(self.time)
-        return self.result
-
-##__________________________________________________________________||
-MockResult = collections.namedtuple('MockResult', 'data')
+        return MockResult(name=self.name, args=args, kwargs=kwargs)
 
 ##__________________________________________________________________||
 @pytest.fixture()
 def package1():
-    result1 = MockResult('result1')
-    task1 = MockTask(result1, 0.010)
-    return TaskPackage(task=task1, args=(), kwargs={})
+    task = MockTask(name='task1', time=0.010)
+    args = (111, 222)
+    kwargs = dict(A='abc', B='def')
+    return TaskPackage(task=task, args=args, kwargs=kwargs)
 
 @pytest.fixture()
 def package2():
-    result2 = MockResult('result2')
-    task2 = MockTask(result2, 0.001)
-    return TaskPackage(task=task2, args=(), kwargs={})
+    task = MockTask(name='task2', time=0.001)
+    args = ( )
+    kwargs = { }
+    return TaskPackage(task=task, args=args, kwargs=kwargs)
 
 @pytest.fixture()
 def package3():
-    result3 = MockResult('result3')
-    task3 = MockTask(result3, 0.005)
-    return TaskPackage(task=task3, args=(), kwargs={})
+    task = MockTask(name='task3', time=0.005)
+    args = (33, 44)
+    kwargs = { }
+    return TaskPackage(task=task, args=args, kwargs=kwargs)
 
 @pytest.fixture()
 def package4():
-    result4 = MockResult('result4')
-    task4 = MockTask(result4, 0.002)
-    return TaskPackage(task=task4, args=(), kwargs={})
+    task = MockTask(name='task4', time=0.002)
+    args = ( )
+    kwargs = dict(ABC='abc', DEF='def')
+    return TaskPackage(task=task, args=args, kwargs=kwargs)
 
 @pytest.fixture()
 def obj():
@@ -87,33 +90,61 @@ def test_put_multiple(obj, package1, package2):
     obj.put_multiple([package1, package2])
 
 def test_put_receive(obj, package1, package2):
-    obj.put(package1)
-    obj.put(package2)
-    expected = [MockResult('result1'), MockResult('result2')]
+    packages = [package1, package2]
+    for p in packages:
+        obj.put(p)
+
+    expected = [ ]
+    for p in packages:
+        kwargs = dict(p.kwargs)
+        kwargs['progressReporter'] = None # add progressReporter for now
+        expected.append(MockResult(name=p.task.name, args=p.args, kwargs=kwargs))
     actual = obj.receive()
+
     assert expected == actual
 
 def test_receive_order(obj, package1, package2, package3):
     # results of tasks are sorted in the order in which the tasks are put.
-    obj.put(package1)
-    obj.put(package2)
-    obj.put(package3)
-    expected = [MockResult('result1'), MockResult('result2'), MockResult('result3')]
+
+    packages = [package1, package2, package3]
+    for p in packages:
+        obj.put(p)
+
+    expected = [ ]
+    for p in packages:
+        kwargs = dict(p.kwargs)
+        kwargs['progressReporter'] = None # add progressReporter for now
+        expected.append(MockResult(name=p.task.name, args=p.args, kwargs=kwargs))
     actual = obj.receive()
+
     assert expected == actual
 
 def test_put_receive_repeat(obj, package1, package2, package3, package4):
 
-    obj.put(package1)
-    obj.put(package2)
-    expected = [MockResult('result1'), MockResult('result2')]
+    packages = [package1, package2]
+    for p in packages:
+        obj.put(p)
+
+    expected = [ ]
+    for p in packages:
+        kwargs = dict(p.kwargs)
+        kwargs['progressReporter'] = None # add progressReporter for now
+        expected.append(MockResult(name=p.task.name, args=p.args, kwargs=kwargs))
     actual = obj.receive()
+
     assert expected == actual
 
-    obj.put(package3)
-    obj.put(package4)
-    expected = [MockResult('result3'), MockResult('result4')]
+    packages = [package3, package4]
+    for p in packages:
+        obj.put(p)
+
+    expected = [ ]
+    for p in packages:
+        kwargs = dict(p.kwargs)
+        kwargs['progressReporter'] = None # add progressReporter for now
+        expected.append(MockResult(name=p.task.name, args=p.args, kwargs=kwargs))
     actual = obj.receive()
+
     assert expected == actual
 
 def test_begin_put_recive_end_repeat(obj, package1, package2):
