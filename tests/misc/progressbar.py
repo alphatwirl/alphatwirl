@@ -11,7 +11,8 @@ import alphatwirl
 class Task(object):
     def __init__(self, name):
         self.name = name
-    def __call__(self, progressReporter=None):
+    def __call__(self):
+        progressReporter = alphatwirl.progressbar.progressReporter
         n = random.randint(5, 1000000)
         taskid = uuid.uuid4()
         time.sleep(random.randint(0, 3))
