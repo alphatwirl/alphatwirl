@@ -1,8 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
-import alphatwirl.progressbar
-
-from ..progressbar import NullProgressMonitor
+from alphatwirl import progressbar
 
 ##__________________________________________________________________||
 class CommunicationChannel0(object):
@@ -20,7 +18,7 @@ class CommunicationChannel0(object):
     """
 
     def __init__(self, progressMonitor=None):
-        self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
+        self.progressMonitor = progressbar.NullProgressMonitor() if progressMonitor is None else progressMonitor
         self.results = [ ]
 
     def __repr__(self):
@@ -29,14 +27,11 @@ class CommunicationChannel0(object):
         )
 
     def begin(self):
-        self.progressReporter = self.progressMonitor.createReporter()
-        alphatwirl.progressbar._progress_reporter = self.progressReporter
+        reporter = self.progressMonitor.createReporter()
+        progressbar._progress_reporter = reporter
 
     def put(self, task, *args, **kwargs):
-        try:
-            result = task(progressReporter=self.progressReporter, *args, **kwargs)
-        except TypeError:
-            result = task(*args, **kwargs)
+        result = task(*args, **kwargs)
         self.results.append(result)
 
     def put_multiple(self, task_args_kwargs_list):
