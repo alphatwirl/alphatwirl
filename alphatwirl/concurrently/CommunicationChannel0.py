@@ -1,4 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+
+import alphatwirl.progressbar
+
 from ..progressbar import NullProgressMonitor
 
 ##__________________________________________________________________||
@@ -27,6 +30,7 @@ class CommunicationChannel0(object):
 
     def begin(self):
         self.progressReporter = self.progressMonitor.createReporter()
+        alphatwirl.progressbar._progress_reporter = self.progressReporter
 
     def put(self, task, *args, **kwargs):
         try:
