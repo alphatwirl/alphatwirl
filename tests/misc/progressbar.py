@@ -5,7 +5,16 @@ import sys
 import time, random
 import uuid
 
+import argparse
+
 import alphatwirl
+
+##__________________________________________________________________||
+parser = argparse.ArgumentParser()
+parser.add_argument('--parallel-mode', default='multiprocessing', choices=['multiprocessing', 'subprocess', 'htcondor'], help='mode for concurrency')
+parser.add_argument('-p', '--process', default=16, type=int, help='number of processes to run in parallel')
+parser.add_argument('-q', '--quiet', default=False, action='store_true', help='quiet mode')
+args = parser.parse_args()
 
 ##__________________________________________________________________||
 class Task(object):
@@ -23,25 +32,24 @@ class Task(object):
         return None
 
 ##__________________________________________________________________||
-progressBar = alphatwirl.progressbar.ProgressBar() if sys.stdout.isatty() else alphatwirl.progressbar.ProgressPrint()
+parallel = alphatwirl.parallel.build_parallel(
+    parallel_mode=args.parallel_mode,
+    quiet=args.quiet,
+    processes=args.process
+)
 
 ##__________________________________________________________________||
-progressMonitor = alphatwirl.progressbar.BProgressMonitor(presentation=progressBar)
-dropbox = alphatwirl.concurrently.MultiprocessingDropbox(nprocesses=10, progressMonitor=progressMonitor)
-channel = alphatwirl.concurrently.CommunicationChannel(dropbox)
-progressMonitor.begin()
-channel.begin()
-channel.put(Task("loop"))
-channel.put(Task("another loop"))
-channel.put(Task("more loop"))
-channel.put(Task("loop loop loop"))
-channel.put(Task("l"))
-channel.put(Task("loop6"))
-channel.put(Task("loop7"))
-channel.put(Task("loop8"))
-channel.put(Task("loop6"))
-channel.receive()
-channel.end()
-progressMonitor.end()
+parallel.begin()
+parallel.communicationChannel.put(Task("loop"))
+parallel.communicationChannel.put(Task("another loop"))
+parallel.communicationChannel.put(Task("more loop"))
+parallel.communicationChannel.put(Task("loop loop loop"))
+parallel.communicationChannel.put(Task("l"))
+parallel.communicationChannel.put(Task("loop6"))
+parallel.communicationChannel.put(Task("loop7"))
+parallel.communicationChannel.put(Task("loop8"))
+parallel.communicationChannel.put(Task("loop6"))
+parallel.communicationChannel.receive()
+parallel.end()
 
 ##__________________________________________________________________||
