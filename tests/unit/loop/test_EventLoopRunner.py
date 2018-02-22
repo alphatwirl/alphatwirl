@@ -11,18 +11,8 @@ from alphatwirl.loop import EventLoopRunner
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def progressReporter():
-    return mock.Mock(name='progressReporter')
-
-@pytest.fixture()
-def progressMonitor(progressReporter):
-    ret = mock.Mock(name='progressMonitor')
-    ret.createReporter.return_value = progressReporter
-    return ret
-
-@pytest.fixture()
-def obj(progressMonitor):
-    return EventLoopRunner(progressMonitor=progressMonitor)
+def obj():
+    return EventLoopRunner()
 
 ##__________________________________________________________________||
 def test_repr(obj):
@@ -35,7 +25,7 @@ def test_end(obj):
     obj.begin()
     assert [ ] == obj.end()
 
-def test_run(obj, progressReporter):
+def test_run(obj):
     obj.begin()
 
     result1 = mock.Mock(name='result1')
@@ -43,18 +33,18 @@ def test_run(obj, progressReporter):
     eventLoop1.return_value = result1
     obj.run(eventLoop1)
 
-    assert [mock.call(progressReporter=progressReporter)] == eventLoop1.call_args_list
+    assert [mock.call()] == eventLoop1.call_args_list
 
     result2 = mock.Mock(name='result2')
     eventLoop2 = mock.Mock(name='eventLoop2')
     eventLoop2.return_value = result2
     obj.run(eventLoop2)
 
-    assert [mock.call(progressReporter=progressReporter)] == eventLoop2.call_args_list
+    assert [mock.call()] == eventLoop2.call_args_list
 
     assert [result1, result2] == obj.end()
 
-def test_run_multiple(obj, progressReporter):
+def test_run_multiple(obj):
     obj.begin()
 
     result1 = mock.Mock(name='result1')
@@ -67,8 +57,8 @@ def test_run_multiple(obj, progressReporter):
 
     obj.run_multiple([eventLoop1, eventLoop2])
 
-    assert [mock.call(progressReporter=progressReporter)] == eventLoop1.call_args_list
-    assert [mock.call(progressReporter=progressReporter)] == eventLoop2.call_args_list
+    assert [mock.call()] == eventLoop1.call_args_list
+    assert [mock.call()] == eventLoop2.call_args_list
 
     assert [result1, result2] == obj.end()
 

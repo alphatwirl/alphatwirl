@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-from ..progressbar import NullProgressMonitor
 
 ##__________________________________________________________________||
 class EventLoopRunner(object):
@@ -7,15 +6,12 @@ class EventLoopRunner(object):
     will return the results when `end()` is called.
 
     """
-    def __init__(self, progressMonitor=None):
-        if progressMonitor is None: progressMonitor = NullProgressMonitor()
-        self.progressReporter = progressMonitor.createReporter()
+    def __init__(self):
         self.results = [ ]
 
     def __repr__(self):
-        return '{}(progressReporter={!r}, results={!r})'.format(
+        return '{}(results={!r})'.format(
             self.__class__.__name__,
-            self.progressReporter,
             self.results
         )
 
@@ -23,7 +19,7 @@ class EventLoopRunner(object):
         self.results = [ ]
 
     def run(self, eventLoop):
-        self.results.append(eventLoop(progressReporter=self.progressReporter))
+        self.results.append(eventLoop())
 
     def run_multiple(self, eventLoops):
         for eventLoop in eventLoops:
