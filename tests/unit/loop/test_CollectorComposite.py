@@ -1,8 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import unittest
-
 import copy
 import collections
+import logging
 
 try:
     import unittest.mock as mock
@@ -33,6 +32,15 @@ class MockDataset(object):
 def test_repr():
     obj = CollectorComposite()
     repr(obj)
+
+def test_deprecated_option(caplog):
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
+        CollectorComposite(progressReporter=None)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'CollectorComposite' in caplog.records[0].name
+    assert 'deprecated' in caplog.records[0].msg
 
 def test_collect():
     """

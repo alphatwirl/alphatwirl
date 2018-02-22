@@ -1,5 +1,14 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+
 from ..progressbar import ProgressReport
+
+import alphatwirl
+
+class DeprecatedOption(object): pass
+DEPRECATEDOPTION = DeprecatedOption()
+
+logger = logging.getLogger(__name__)
 
 ##__________________________________________________________________||
 class CollectorComposite(object):
@@ -13,18 +22,25 @@ class CollectorComposite(object):
 
     """
 
-    def __init__(self, progressReporter = None):
+    def __init__(self, progressReporter=DEPRECATEDOPTION):
+
+        if progressReporter is not DEPRECATEDOPTION:
+            text = '{}: the option "{}" is deprecated.'.format(
+                self.__class__.__name__,
+                'progressReporter'
+            )
+            logger.warning(text)
+
         self.components = [ ]
         self.progressReporter = progressReporter
 
     def __repr__(self):
         name_value_pairs = (
             ('components',       self.components),
-            ('progressReporter', self.progressReporter),
         )
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def add(self, collector):
@@ -48,9 +64,8 @@ class CollectorComposite(object):
 
         ret = [ ]
         for i, collector in enumerate(self.components):
-            if self.progressReporter is not None:
-                report = ProgressReport(name = 'collecting results', done = i + 1, total = len(self.components))
-                self.progressReporter.report(report)
+            report = ProgressReport(name = 'collecting results', done = i + 1, total = len(self.components))
+            alphatwirl.progressbar.report_progress(report)
             ret.append(collector.collect([(dataset, tuple(r.readers[i] for r in readerComposites))
                                           for dataset, readerComposites in dataset_readers_list]))
         return ret
