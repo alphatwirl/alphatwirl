@@ -39,7 +39,7 @@ class ProgressReporter(object):
         self._read_time()
 
     def __repr__(self):
-        return '{}(queue = {!r}, interval = {!r}'.format(
+        return '{}(queue={!r}, interval={!r})'.format(
             self.__class__.__name__,
             self.queue,
             self.interval
