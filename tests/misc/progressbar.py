@@ -17,18 +17,20 @@ parser.add_argument('-q', '--quiet', default=False, action='store_true', help='q
 args = parser.parse_args()
 
 ##__________________________________________________________________||
+from alphatwirl.progressbar import ProgressReport
+
 class Task(object):
     def __init__(self, name):
         self.name = name
     def __call__(self):
-        progressReporter = alphatwirl.progressbar.progressReporter
-        n = random.randint(5, 1000000)
+        ## n = random.randint(5, 1000000)
+        n = random.randint(5, 100000)
         taskid = uuid.uuid4()
         time.sleep(random.randint(0, 3))
         for i in range(n):
             time.sleep(0.0001)
-            report = alphatwirl.progressbar.ProgressReport(name=self.name, done=i + 1, total=n, taskid=taskid)
-            progressReporter.report(report)
+            report = ProgressReport(name=self.name, done=(i + 1), total=n, taskid=taskid)
+            alphatwirl.progressbar.report_progress(report)
         return None
 
 ##__________________________________________________________________||
