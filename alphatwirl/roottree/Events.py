@@ -51,6 +51,9 @@ class Events(object):
         self.start = start
         self.iEvent = -1
 
+    def __len__(self):
+        return self.nEvents
+
     def __repr__(self):
         return '{}({})'.format(
             self.__class__.__name__,

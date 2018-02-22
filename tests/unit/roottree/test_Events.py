@@ -62,18 +62,23 @@ def test_nEvents():
     tree = MockTree(entries=100)
     events = Events(tree)
     assert 100 == events.nEvents # default the same as entries
+    assert 100 == len(events)
 
     events = Events(tree, -1)
     assert 100 == events.nEvents # the same as entries
+    assert 100 == len(events)
 
     events = Events(tree, 50)
     assert 50 == events.nEvents
+    assert 50 == len(events)
 
     events = Events(tree, 120)
     assert 100 == events.nEvents
+    assert 100 == len(events)
 
     events = Events(tree, 100)
     assert 100 == events.nEvents
+    assert 100 == len(events)
 
 
 def test_nEvents_start():
@@ -82,24 +87,31 @@ def test_nEvents_start():
 
     events = Events(tree, maxEvents=-1, start=1)
     assert 99 == events.nEvents
+    assert 99 == len(events)
 
     events = Events(tree, maxEvents=10, start=1)
     assert 10 == events.nEvents
+    assert 10 == len(events)
 
     events = Events(tree, maxEvents=-1, start=99)
     assert 1 == events.nEvents
+    assert 1 == len(events)
 
     events = Events(tree, maxEvents=20, start=99)
     assert 1 == events.nEvents
+    assert 1 == len(events)
 
     events = Events(tree, maxEvents=-1, start=100)
     assert 0 == events.nEvents
+    assert 0 == len(events)
 
     events = Events(tree, maxEvents=-1, start=110)
     assert 0 == events.nEvents
+    assert 0 == len(events)
 
     events = Events(tree, maxEvents=10, start=110)
     assert 0 == events.nEvents
+    assert 0 == len(events)
 
     with pytest.raises(ValueError):
         Events(tree, maxEvents=-1, start=-10)
