@@ -32,7 +32,6 @@ def build_parallel_dropbox(parallel_mode, user_modules,
     tmpdir = '_ccsp_temp'
     user_modules = set(user_modules)
     user_modules.add('alphatwirl')
-    alphatwirl.mkdir_p(tmpdir)
     progressMonitor = alphatwirl.progressbar.NullProgressMonitor()
     if parallel_mode == 'htcondor':
         dispatcher = alphatwirl.concurrently.HTCondorJobSubmitter(job_desc_extra=htcondor_job_desc_extra)

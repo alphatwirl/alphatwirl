@@ -20,8 +20,9 @@ MockResult = collections.namedtuple('MockResult', 'name')
 
 @pytest.fixture()
 def obj(tmpdir_factory):
-    tmpdir = tmpdir_factory.mktemp('')
-    return WorkingArea(dir=str(tmpdir), python_modules=('alphatwirl', ))
+    tmpdir = str(tmpdir_factory.mktemp(''))
+    tmpdir = os.path.join(tmpdir, '_ccsp_temp')
+    return WorkingArea(dir=tmpdir, python_modules=('alphatwirl', ))
 
 ##__________________________________________________________________||
 def test_repr(obj):

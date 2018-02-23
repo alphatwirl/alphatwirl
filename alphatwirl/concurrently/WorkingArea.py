@@ -13,6 +13,8 @@ try:
 except:
    import pickle
 
+import alphatwirl
+
 ##__________________________________________________________________||
 class WorkingArea(object):
     """
@@ -81,6 +83,8 @@ class WorkingArea(object):
         self.last_package_index = None
 
     def _prepare_dir(self, dir):
+
+        alphatwirl.mkdir_p(dir)
 
         prefix = 'tpd_{:%Y%m%d_%H%M%S}_'.format(datetime.datetime.now())
         # e.g., 'tpd_20161129_122841_'
