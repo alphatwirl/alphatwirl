@@ -14,7 +14,6 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     if parallel_mode in ('subprocess', 'htcondor'):
         return build_parallel_dropbox(
             parallel_mode=parallel_mode,
-            quiet=quiet,
             user_modules=user_modules,
             htcondor_job_desc_extra=htcondor_job_desc_extra
         )
@@ -28,7 +27,7 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     return build_parallel_multiprocessing(quiet=quiet, processes=processes)
 
 ##__________________________________________________________________||
-def build_parallel_dropbox(parallel_mode, quiet, user_modules,
+def build_parallel_dropbox(parallel_mode, user_modules,
                            htcondor_job_desc_extra=[ ]):
     tmpdir = '_ccsp_temp'
     user_modules = set(user_modules)

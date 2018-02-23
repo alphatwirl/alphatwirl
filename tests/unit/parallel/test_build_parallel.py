@@ -65,14 +65,12 @@ parallel_modes = ['subprocess', 'htcondor']
 @pytest.mark.parametrize('htcondor_job_desc_extra', [[], ['request_memory = 250']])
 @pytest.mark.parametrize('user_modules', [[], ['scribblers']])
 @pytest.mark.parametrize('processes', [0, 1, 3])
-@pytest.mark.parametrize('quiet', [True, False])
 @pytest.mark.parametrize('parallel_mode', parallel_modes)
-def test_build_parallel_dropbox(parallel_mode, quiet, processes, user_modules,
+def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
                         htcondor_job_desc_extra, isatty):
 
     parallel = build_parallel(
         parallel_mode=parallel_mode,
-        quiet=quiet,
         processes=processes,
         user_modules=user_modules,
         htcondor_job_desc_extra=htcondor_job_desc_extra
