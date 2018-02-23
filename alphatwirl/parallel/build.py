@@ -1,7 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import sys
 import logging
-import alphatwirl
+
+from alphatwirl import concurrently, progressbar
 
 from .parallel import Parallel
 
@@ -32,20 +33,20 @@ def build_parallel_dropbox(parallel_mode, user_modules,
     tmpdir = '_ccsp_temp'
     user_modules = set(user_modules)
     user_modules.add('alphatwirl')
-    progressMonitor = alphatwirl.progressbar.NullProgressMonitor()
+    progressMonitor = progressbar.NullProgressMonitor()
     if parallel_mode == 'htcondor':
-        dispatcher = alphatwirl.concurrently.HTCondorJobSubmitter(job_desc_extra=htcondor_job_desc_extra)
+        dispatcher = concurrently.HTCondorJobSubmitter(job_desc_extra=htcondor_job_desc_extra)
     else:
-        dispatcher = alphatwirl.concurrently.SubprocessRunner()
-    workingarea = alphatwirl.concurrently.WorkingArea(
+        dispatcher = concurrently.SubprocessRunner()
+    workingarea = concurrently.WorkingArea(
         dir=tmpdir,
         python_modules=list(user_modules)
     )
-    dropbox = alphatwirl.concurrently.TaskPackageDropbox(
+    dropbox = concurrently.TaskPackageDropbox(
         workingArea=workingarea,
         dispatcher=dispatcher
     )
-    communicationChannel = alphatwirl.concurrently.CommunicationChannel(
+    communicationChannel = concurrently.CommunicationChannel(
         dropbox=dropbox
     )
     return Parallel(progressMonitor, communicationChannel, workingarea)
@@ -56,17 +57,17 @@ def build_parallel_multiprocessing(quiet, processes):
     if quiet:
         progressBar = None
     elif sys.stdout.isatty():
-        progressBar = alphatwirl.progressbar.ProgressBar()
+        progressBar = progressbar.ProgressBar()
     else:
-        progressBar = alphatwirl.progressbar.ProgressPrint()
+        progressBar = progressbar.ProgressPrint()
 
     if processes is None or processes == 0:
-        progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.ProgressMonitor(presentation = progressBar)
-        communicationChannel = alphatwirl.concurrently.CommunicationChannel0()
+        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.ProgressMonitor(presentation = progressBar)
+        communicationChannel = concurrently.CommunicationChannel0()
     else:
-        progressMonitor = alphatwirl.progressbar.NullProgressMonitor() if quiet else alphatwirl.progressbar.BProgressMonitor(presentation = progressBar)
-        dropbox = alphatwirl.concurrently.MultiprocessingDropbox(processes, progressMonitor)
-        communicationChannel = alphatwirl.concurrently.CommunicationChannel(dropbox = dropbox)
+        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.BProgressMonitor(presentation = progressBar)
+        dropbox = concurrently.MultiprocessingDropbox(processes, progressMonitor)
+        communicationChannel = concurrently.CommunicationChannel(dropbox = dropbox)
 
     return Parallel(progressMonitor, communicationChannel)
 
