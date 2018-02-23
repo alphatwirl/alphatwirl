@@ -3,12 +3,10 @@ import logging
 
 from ..progressbar import ProgressReport
 
+from alphatwirl.misc.deprecation import atdeprecated_class_method_option
+
 import alphatwirl
 
-class DeprecatedOption(object): pass
-DEPRECATEDOPTION = DeprecatedOption()
-
-logger = logging.getLogger(__name__)
 
 ##__________________________________________________________________||
 class CollectorComposite(object):
@@ -22,14 +20,8 @@ class CollectorComposite(object):
 
     """
 
-    def __init__(self, progressReporter=DEPRECATEDOPTION):
-
-        if progressReporter is not DEPRECATEDOPTION:
-            text = '{}: the option "{}" is deprecated.'.format(
-                self.__class__.__name__,
-                'progressReporter'
-            )
-            logger.warning(text)
+    @atdeprecated_class_method_option('progressReporter')
+    def __init__(self, progressReporter=None):
 
         self.components = [ ]
         self.progressReporter = progressReporter
