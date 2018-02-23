@@ -3,41 +3,51 @@ import uuid
 
 import alphatwirl
 
-from .EventLoopProgressReportWriter import EventLoopProgressReportWriter
+from ..progressbar import ProgressReport
 
 ##__________________________________________________________________||
 class EventLoop(object):
     """An event loop
     """
-    def __init__(self, build_events, reader):
+    def __init__(self, build_events, reader, name=None):
         self.build_events = build_events
         self.reader = reader
-        self.progressReportWriter = EventLoopProgressReportWriter()
+
+        if name is None:
+            self.name = self.__class__.__name__
+        else:
+            self.name = name
 
         # assign a random unique id to be used by progress bar
         self.taskid = uuid.uuid4()
 
     def __repr__(self):
-        return '{}(build_events={!r}, reader={!r}, progressReportWriter={!r})'.format(
+        name_value_pairs = (
+            ('build_events', self.build_events),
+            ('reader',       self.reader),
+            ('name',         self.name),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.build_events,
-            self.reader,
-            self.progressReportWriter
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def __call__(self):
         events = self.build_events()
-        self._reportProgress(events)
+        self._report_progress(0, events)
         self.reader.begin(events)
-        for event in events:
-            self._reportProgress(event)
+        for i, event in enumerate(events):
+            self._report_progress(i, event)
             self.reader.event(event)
         self.reader.end()
         return self.reader
 
-    def _reportProgress(self, event):
+    def _report_progress(self, i, event):
         try:
-            report = self.progressReportWriter.write(self.taskid, event.config, event)
+            report = ProgressReport(
+                name=self.name, done=(i+1),
+                total=len(event), taskid=self.taskid
+            )
             alphatwirl.progressbar.report_progress(report)
         except:
             pass
