@@ -85,9 +85,9 @@ def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 
     if user_modules:
-        set(['fwtwirl', 'scribblers', 'alphatwirl']) == parallel.workingarea.python_modules
+        assert set(['scribblers', 'alphatwirl']) == set(parallel.workingarea.python_modules)
     else:
-        set(['fwtwirl', 'alphatwirl']) == parallel.workingarea.python_modules
+        assert set(['alphatwirl']) == set(parallel.workingarea.python_modules)
 
 
 ##__________________________________________________________________||
