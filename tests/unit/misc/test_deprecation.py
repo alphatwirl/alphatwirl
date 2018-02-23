@@ -31,6 +31,19 @@ def test_func_name():
 def test_func_pickle():
     pickle.dumps(func)
 
+@atdeprecated()
+def func_without_msg():
+    pass
+
+def test_func_logging_without_msg(caplog):
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
+        func_without_msg()
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'test_deprecation' in caplog.records[0].name
+    assert 'func_without_msg() is deprecated.' in caplog.records[0].msg
+
 ##__________________________________________________________________||
 @atdeprecated(msg='extra message')
 class ClassWithInit(object):

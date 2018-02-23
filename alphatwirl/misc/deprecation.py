@@ -5,7 +5,7 @@ import functools
 import logging
 
 ##__________________________________________________________________||
-def atdeprecated(msg):
+def atdeprecated(msg=''):
     def atdeprecated_imp(f):
         if inspect.isclass(f):
             return _decorate_class(f, msg)
