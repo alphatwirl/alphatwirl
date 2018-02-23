@@ -34,19 +34,20 @@ class EventLoop(object):
 
     def __call__(self):
         events = self.build_events()
-        self._report_progress(0, events)
+        self.nevents = len(events)
+        self._report_progress(0)
         self.reader.begin(events)
         for i, event in enumerate(events):
-            self._report_progress(i, event)
+            self._report_progress(i+1)
             self.reader.event(event)
         self.reader.end()
         return self.reader
 
-    def _report_progress(self, i, event):
+    def _report_progress(self, i):
         try:
             report = ProgressReport(
-                name=self.name, done=(i+1),
-                total=len(event), taskid=self.taskid
+                name=self.name, done=(i),
+                total=self.nevents, taskid=self.taskid
             )
             alphatwirl.progressbar.report_progress(report)
         except:
