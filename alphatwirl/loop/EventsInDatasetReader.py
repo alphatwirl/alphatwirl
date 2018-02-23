@@ -52,7 +52,7 @@ class EventsInDatasetReader(object):
         eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
-            eventLoop = self.EventLoop(build_events, reader)
+            eventLoop = self.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
         self.eventLoopRunner.run_multiple(eventLoops)
 
