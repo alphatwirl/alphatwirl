@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import logging
+import sys
 import pytest
 
 try:
@@ -8,6 +8,7 @@ except ImportError:
     import mock
 
 from alphatwirl.loop import EventLoop
+from alphatwirl import progressbar
 
 ##__________________________________________________________________||
 @pytest.fixture()
