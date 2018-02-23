@@ -33,6 +33,9 @@ def test_func_option_used(caplog):
     assert 'test_deprecation' in caplog.records[0].name
     assert 'func_01(): the option "B" is deprecated.' in caplog.records[0].msg
 
+def test_func_pickle():
+    pickle.dumps(func_01)
+
 ##__________________________________________________________________||
 @atdeprecated_func_option('C')
 def func_02(A=123, B=456, C=None):
@@ -105,4 +108,7 @@ def test_class_init_option_used(caplog):
     assert 'test_deprecation' in caplog.records[0].name
     assert 'tests.unit.misc.test_deprecation_option.Class.__init__(): the option "B" is deprecated.' in caplog.records[0].msg
 
+def test_class_pickle():
+    c = Class()
+    pickle.dumps(c)
 ##__________________________________________________________________||
