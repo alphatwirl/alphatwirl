@@ -47,5 +47,41 @@ def atdeprecated(msg=''):
     return _imp
 
 ##__________________________________________________________________||
+def atdeprecated_func_option(option, msg=''):
+    def _imp(f):
+        module_name = f.__module__
+        logger = logging.getLogger(module_name)
+        func_name = f.__name__
+
+        @functools.wraps(f)
+        def g(*args, **kwargs):
+            if option in kwargs:
+                name = '{}.{}'.format(module_name, func_name)
+                text = '{}(): the option "{}" is deprecated.'.format(name, option)
+                text += ' "{}={}" is given.'.format(option, kwargs[option])
+                if msg:
+                    text += ' ' + msg
+                logger.warning(text)
+            return f(*args, **kwargs)
+        return g
+    return _imp
+
+##__________________________________________________________________||
+def atdeprecated_class_method_option(option, msg=''):
+    def _imp(f):
+        module_name = f.__module__
+        logger = logging.getLogger(module_name)
+        method_name = f.__name__
+        def g(*args, **kwargs):
+            if option in kwargs:
+                name = '{}.{}.{}'.format(module_name, args[0].__class__.__name__, method_name)
+                text = '{}(): the option "{}" is deprecated.'.format(name, option)
+                text += ' "{}={}" is given.'.format(option, kwargs[option])
+                if msg:
+                    text += ' ' + msg
+                logger.warning(text)
+            return f(*args, **kwargs)
+        return g
+    return _imp
 
 ##__________________________________________________________________||
