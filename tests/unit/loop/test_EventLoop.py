@@ -1,59 +1,56 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.loop import EventLoop
-import unittest
 
 ##__________________________________________________________________||
-class MockEvent(object): pass
+@pytest.fixture()
+def events():
+    event1 = mock.Mock(name='event1')
+    event2 = mock.Mock(name='event2')
+    event3 = mock.Mock(name='event3')
+    return [event1, event2, event3]
+
+@pytest.fixture()
+def build_events(events):
+    ret = mock.Mock()
+    ret.return_value = events
+    return ret
+
+@pytest.fixture()
+def reader():
+    return mock.Mock()
+
+@pytest.fixture()
+def obj(build_events, reader):
+    return EventLoop(build_events, reader)
 
 ##__________________________________________________________________||
-class MockEventBuilder(object):
-    def __init__(self, events):
-        self.events = events
+def test_name(build_events, reader):
+    obj = EventLoop(build_events, reader)
+    assert 'EventLoop' == obj.name
 
-    def __call__(self):
-        return self.events
+    obj = EventLoop(build_events, reader, name='TTJets')
+    assert 'TTJets' == obj.name
 
-##__________________________________________________________________||
-class MockReader(object):
-    def __init__(self):
-        self.events = [ ]
-        self.beginCalled = None
-        self.endCalled = False
+def test_repr(obj):
+    repr(obj)
 
-    def begin(self, event):
-        self.beginCalled = event
+def test_call(obj, events, reader):
 
-    def event(self, event):
-        self.events.append(event)
+    assert reader == obj()
 
-    def end(self):
-        self.endCalled = True
-
-##__________________________________________________________________||
-class TestEventLoop(unittest.TestCase):
-
-    def test_call(self):
-
-        event1 = MockEvent()
-        event2 = MockEvent()
-        event3 = MockEvent()
-        events = [event1, event2, event3]
-        build_events = MockEventBuilder(events)
-
-        reader = MockReader()
-
-        obj = EventLoop(build_events, reader)
-
-        self.assertIsNone(reader.beginCalled)
-        self.assertFalse(reader.endCalled)
-        self.assertEqual([ ], reader.events)
-
-        self.assertEqual(reader, obj())
-
-        self.assertEqual([event1, event2, event3], reader.events)
-
-        self.assertIs(events, reader.beginCalled)
-        self.assertIsNot(events, reader.events)
-        self.assertEqual(events, reader.events)
-        self.assertTrue(reader.endCalled)
+    assert [
+        mock.call.begin(events),
+        mock.call.event(events[0]),
+        mock.call.event(events[1]),
+        mock.call.event(events[2]),
+        mock.call.end()] == reader.method_calls
 
 ##__________________________________________________________________||
