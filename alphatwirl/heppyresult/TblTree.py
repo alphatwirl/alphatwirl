@@ -4,7 +4,10 @@ from ..misc import list_to_aligned_text
 import os
 import ROOT
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class TblTree(object):
     def __init__(self, analyzerName, fileName, treeName, outPath):
         self.analyzerName = analyzerName

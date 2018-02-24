@@ -5,7 +5,10 @@ from ..misc import mkdir_p
 from ..misc import list_to_aligned_text
 from .ReadCounter import ReadCounter
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class TblCounter(object):
     """This class reads counter files of HeppyResult.
 

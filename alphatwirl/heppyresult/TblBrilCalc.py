@@ -4,7 +4,10 @@ from ..misc import list_to_aligned_text
 import os
 from .ReadCounter import ReadCounter
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class TblBrilCalc(object):
     """This class reads brilcalc results in csv.
 

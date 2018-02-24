@@ -7,7 +7,10 @@ from ..misc import mkdir_p
 from ..misc import list_to_aligned_text
 from ..roottree import inspect_tree
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class TblBranch(object):
     def __init__(self, analyzerName, fileName, treeName, outPath,
                  addType = True, addSize = False, addTitle = False, sortBySize = False

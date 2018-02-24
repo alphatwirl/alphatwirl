@@ -5,7 +5,10 @@ import os
 from .ReadComponentConfig import ReadComponentConfig
 from .Analyzer import Analyzer
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class Component(object):
     def __init__(self, path):
         self.path = path

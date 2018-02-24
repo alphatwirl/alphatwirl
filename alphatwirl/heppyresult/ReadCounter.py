@@ -6,7 +6,10 @@ import collections
 import ast
 import os
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class ReadCounter(object):
     def __call__(self, path):
         if not os.path.isfile(path): return None

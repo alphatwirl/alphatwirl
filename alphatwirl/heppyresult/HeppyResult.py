@@ -6,11 +6,14 @@ import re
 from .Component import Component
 from .ReadVersionInfo import ReadVersionInfo
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
 DEFAULT_EXCLUDE_LIST = ['Chunks', 'failed']
 DEFAULT_COMPONENT_HAS_THESE_FILES = ['config.pck', 'config.txt']
 
 ##__________________________________________________________________||
+@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class HeppyResult(object):
     """A Heppy result
 
