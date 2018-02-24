@@ -67,7 +67,7 @@ class BProgressMonitor(object):
         self.presentation = presentation
 
     def __repr__(self):
-        return '{}(presentation={!r}'.format(
+        return '{}(presentation={!r})'.format(
             self.__class__.__name__,
             self.presentation
         )
