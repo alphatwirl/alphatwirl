@@ -35,7 +35,7 @@ def test_repr(obj):
 
 def test_report(obj, mocsys, moctime):
     report = progressbar.ProgressReport('task1', 0, 10)
-    obj.present(report)
+    # obj.present(report)
     # print 
     # print mocsys.stdout.write.call_args_list
     # print mocsys.method_calls
