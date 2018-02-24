@@ -11,6 +11,11 @@ class ProgressPrint(object):
         self._readTime()
         self.last = [ ]
 
+    def __repr__(self):
+        return '{}()'.format(
+            self.__class__.__name__
+        )
+
     def nreports(self):
         return len(self.reports)
 
