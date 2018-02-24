@@ -11,7 +11,10 @@ except ImportError:
 from .EventBuilderConfig import EventBuilderConfig
 from .load_fwlite import load_fwlite
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='alphatwirl.cmsedm has been moved to https://github.com/alphatwirl/atcmsedm.')
 class EventBuilderConfigMaker(object):
     def __init__(self):
         pass
