@@ -6,6 +6,8 @@ from ..roottree.Events import Events
 
 from .load_delphes import load_delphes
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
 class TTreeWrap(object):
     """wrap ExRootTreeReader so that Events can treat it as TTree
@@ -20,6 +22,7 @@ class TTreeWrap(object):
         return self.treeReader.ReadEntry(entry)
 
 ##__________________________________________________________________||
+@atdeprecated(msg='alphatwirl.delphes has been moved to https://github.com/alphatwirl/atdelphes.')
 class DelphesEvents(Events):
     def __init__(self, tree, maxEvents = -1, start = 0):
         load_delphes()

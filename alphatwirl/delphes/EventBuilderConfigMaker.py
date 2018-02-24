@@ -7,7 +7,10 @@ import ROOT
 from .EventBuilderConfig import EventBuilderConfig
 from .load_delphes import load_delphes
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='alphatwirl.delphes has been moved to https://github.com/alphatwirl/atdelphes.')
 class EventBuilderConfigMaker(object):
     def __init__(self):
         self.treeName = 'Delphes'

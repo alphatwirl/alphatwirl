@@ -2,7 +2,10 @@
 import ROOT
 from .DelphesEvents import DelphesEvents
 
+from alphatwirl.misc.deprecation import atdeprecated
+
 ##__________________________________________________________________||
+@atdeprecated(msg='alphatwirl.delphes has been moved to https://github.com/alphatwirl/atdelphes.')
 class DelphesEventBuilder(object):
     def __init__(self, config):
         self.config = config
