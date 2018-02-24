@@ -2,5 +2,6 @@ ignore:
     - "alphatwirl/_version.py"
     - "alphatwirl/heppyresult/*"
     - "alphatwirl/delphes/*"
+    - "alphatwirl/cmsedm/*"
     - "tests/unit/heppyresult/*"
     - "tests/unit/delphes/*"
