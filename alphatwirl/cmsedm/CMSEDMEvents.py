@@ -28,6 +28,9 @@ class CMSEDMEvents(object):
         self.start = start
         self.iEvent = -1
 
+    def __len__(self):
+        return self.nEvents
+
     def __repr__(self):
         return '{}(edm_event = {!r}, maxEvents = {!r}, start = {!r}, nEvents = {!r}, iEvent = {!r})'.format(
             self.__class__.__name__,
