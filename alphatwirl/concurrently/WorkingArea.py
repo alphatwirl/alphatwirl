@@ -51,9 +51,9 @@ class WorkingArea(object):
         package_fullpath = os.path.join(self.path, package_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p.gz'
 
-        f = gzip.open(package_fullpath, 'wb')
-        pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
-        f.close()
+        with gzip.open(package_fullpath, 'wb') as f:
+           pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
+           f.close()
 
         return package_index
 
@@ -69,8 +69,8 @@ class WorkingArea(object):
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
         try:
-           f = gzip.open(result_path, 'rb')
-           result = pickle.load(f)
+           with gzip.open(result_path, 'rb') as f:
+              result = pickle.load(f)
         except (IOError, EOFError) as e:
            logger = logging.getLogger(__name__)
            logger.warning(e)
