@@ -140,8 +140,8 @@ def compose_result_path(package_path):
 ##__________________________________________________________________||
 def store_result(result, result_path):
     mkdir_p(os.path.dirname(result_path))
-    f = gzip.open(result_path, 'wb')
-    pickle.dump(result, f, protocol=pickle.HIGHEST_PROTOCOL)
+    with gzip.open(result_path, 'wb') as f:
+        pickle.dump(result, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 ##__________________________________________________________________||
 def mkdir_p(path):
