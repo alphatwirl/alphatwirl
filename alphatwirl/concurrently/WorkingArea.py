@@ -37,7 +37,8 @@ class WorkingArea(object):
 
     def open(self):
         self.path = self._prepare_dir(self.topdir)
-        self._put_python_modules(self.python_modules)
+        self._copy_run_py(area_path=self.path)
+        self._put_python_modules(modules=self.python_modules, area_path=self.path)
         self.last_package_index = -1 # so it starts from 0
 
     def put_package(self, package):
@@ -92,18 +93,18 @@ class WorkingArea(object):
         path = tempfile.mkdtemp(prefix=prefix, dir=dir)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF'
 
-        # copy run.py to the task dir
-        thisdir = os.path.dirname(__file__)
-        src = os.path.join(thisdir, 'run.py')
-        shutil.copy(src, path)
-
         return path
 
-    def _put_python_modules(self, modules):
+    def _copy_run_py(self, area_path):
+        thisdir = os.path.dirname(__file__)
+        src = os.path.join(thisdir, 'run.py')
+        shutil.copy(src, area_path)
+
+    def _put_python_modules(self, modules, area_path):
 
         if not modules: return
 
-        tar = tarfile.open(os.path.join(self.path, 'python_modules.tar.gz'), 'w:gz')
+        tar = tarfile.open(os.path.join(area_path, 'python_modules.tar.gz'), 'w:gz')
 
         def tar_filter(tarinfo):
             exclude_extensions = ('.pyc', )
