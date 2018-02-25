@@ -1,11 +1,25 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+from __future__ import print_function
+import logging
 import multiprocessing
+import threading
+
 from operator import itemgetter
 
 from ..progressbar import NullProgressMonitor
 from .TaskPackage import TaskPackage
 
 from .Worker import Worker
+
+##__________________________________________________________________||
+# https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
+def logger_thread(queue):
+    while True:
+        record = queue.get()
+        if record is None:
+            break
+        logger = logging.getLogger(record.name)
+        logger.handle(record)
 
 ##__________________________________________________________________||
 class MultiprocessingDropbox(object):
@@ -20,6 +34,7 @@ class MultiprocessingDropbox(object):
         self.n_workers = 0
         self.task_queue = multiprocessing.JoinableQueue()
         self.result_queue = multiprocessing.Queue()
+        self.logging_queue = multiprocessing.Queue()
         self.lock = multiprocessing.Lock()
         self.n_ongoing_tasks = 0
         self.task_idx = -1 # so it starts from 0
@@ -40,11 +55,18 @@ class MultiprocessingDropbox(object):
             # workers already created
             return
 
+        # start logging listener
+        self.loggingListener = threading.Thread(
+            target=logger_thread, args=(self.logging_queue,)
+        )
+        self.loggingListener.start()
+
         # start workers
         for i in range(self.n_workers, self.n_max_workers):
             worker = Worker(
                 task_queue=self.task_queue,
                 result_queue=self.result_queue,
+                logging_queue=self.logging_queue,
                 progressReporter=self.progressMonitor.createReporter(),
                 lock=self.lock
             )
@@ -78,9 +100,15 @@ class MultiprocessingDropbox(object):
         pass
 
     def close(self):
+
+        # end workers
         for i in range(self.n_workers):
-            self.task_queue.put(None) # end workers
+            self.task_queue.put(None)
         self.task_queue.join()
         self.n_workers = 0
+
+        # end logging listener
+        self.logging_queue.put(None)
+        self.loggingListener.join()
 
 ##__________________________________________________________________||
