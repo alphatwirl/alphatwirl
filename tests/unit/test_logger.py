@@ -24,7 +24,7 @@ def test_example():
     #     'alphatwirl.loop': 40,
     #     'pandas': 0,
     # }
-    # 
+    #
     # https://docs.python.org/3/library/logging.html#logging-levels
     #   Level Numeric value
     #   CRITICAL 50
