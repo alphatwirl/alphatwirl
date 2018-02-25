@@ -7,7 +7,6 @@ try:
     from logging.handlers import QueueHandler
 except ImportError:
     from .queuehandler import QueueHandler
-    pass
 
 from alphatwirl import progressbar
 
