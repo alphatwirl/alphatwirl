@@ -74,7 +74,7 @@ class HTCondorJobSubmitter(object):
         for d in resultdirs:
             alphatwirl.mkdir_p(d)
 
-        extra_input_files = ['python_modules.tar.gz']
+        extra_input_files = ['python_modules.tar.gz', 'logging_levels.json.gz']
         extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
 
         job_desc = self.job_desc_template.format(
