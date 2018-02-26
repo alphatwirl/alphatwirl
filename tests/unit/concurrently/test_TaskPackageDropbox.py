@@ -195,7 +195,8 @@ def test_receive_rerun(obj, workingarea, dispatcher, caplog):
     }[x]()
 
     assert 0 == dispatcher.poll.call_count
-    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         received = obj.receive()
 
     assert len(caplog.records) == 2
