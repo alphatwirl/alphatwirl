@@ -37,6 +37,7 @@ def test_open(obj):
     assert -1 == obj.last_package_index
     assert os.path.isdir(obj.path)
     assert os.path.isfile(os.path.join(obj.path, 'run.py'))
+    assert os.path.isfile(os.path.join(obj.path, 'logging_levels.json.gz'))
     assert os.path.isfile(os.path.join(obj.path, 'python_modules.tar.gz'))
 
 def test_put_package(obj):

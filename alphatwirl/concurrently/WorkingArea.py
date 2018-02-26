@@ -7,11 +7,13 @@ import imp
 import logging
 import tarfile
 import gzip
+import json
+import re
 
 try:
-   import cPickle as pickle
+    import cPickle as pickle
 except:
-   import pickle
+    import pickle
 
 import alphatwirl
 
@@ -38,6 +40,7 @@ class WorkingArea(object):
     def open(self):
         self.path = self._prepare_dir(self.topdir)
         self._copy_run_py(area_path=self.path)
+        self._save_logging_levels(area_path=self.path)
         self._put_python_modules(modules=self.python_modules, area_path=self.path)
         self.last_package_index = -1 # so it starts from 0
 
@@ -99,6 +102,18 @@ class WorkingArea(object):
         thisdir = os.path.dirname(__file__)
         src = os.path.join(thisdir, 'run.py')
         shutil.copy(src, area_path)
+
+    def _save_logging_levels(self, area_path):
+        logger_names = logging.Logger.manager.loggerDict.keys()
+        loglevel_dict = {l: logging.getLogger(l).getEffectiveLevel() for l in logger_names}
+
+        json_str = json.dumps(loglevel_dict, indent=4, sort_keys=True)
+        json_str = re.sub(r' *\n', '\n', json_str, flags=re.MULTILINE)
+        json_str += "\n"
+        json_bytes = json_str.encode('utf-8')
+        path = os.path.join(area_path, 'logging_levels.json.gz')
+        with gzip.open(path, "w") as f:
+            f.write(json_bytes)
 
     def _put_python_modules(self, modules, area_path):
 
