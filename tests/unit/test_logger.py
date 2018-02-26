@@ -11,6 +11,10 @@ def test_len_handlers():
     logger = logging.getLogger('alphatwirl')
     assert len(logger.handlers) >= 1
 
+def test_logging():
+    logger = logging.getLogger('alphatwirl')
+    logger.error('test message')
+
 ##__________________________________________________________________||
 def test_example():
     logger_names = logging.Logger.manager.loggerDict.keys()
