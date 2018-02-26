@@ -8,6 +8,8 @@ import argparse
 import tarfile
 import signal
 import gzip
+import json
+import logging
 import cProfile, pstats
 
 from io import StringIO, BytesIO
@@ -77,6 +79,28 @@ def print_logs(error):
 
 ##__________________________________________________________________||
 def setup():
+    setup_logging()
+    setup_python_modules()
+
+def setup_logging():
+    path = 'logging_levels.json.gz'
+    if not os.path.isfile(path):
+        return
+    with gzip.GzipFile(path, 'r') as f:
+        loglevel_dict = json.loads(f.read().decode('utf-8'))
+
+    for name, level in loglevel_dict.items():
+        logger = logging.getLogger(name)
+        logger.setLevel(level)
+
+    handler = logging.StreamHandler(sys.stdout)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logging.getLogger('').addHandler(handler)
+
+
+def setup_python_modules():
+
     dirname = 'python_modules'
     tarname = dirname + '.tar.gz'
 
