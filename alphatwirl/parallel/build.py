@@ -3,6 +3,7 @@ import sys
 import logging
 
 from alphatwirl import concurrently, progressbar
+from alphatwirl.misc.deprecation import atdeprecated
 
 from .parallel import Parallel
 
@@ -13,7 +14,7 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     default_parallel_mode = 'multiprocessing'
 
     if parallel_mode in ('subprocess', 'htcondor'):
-        return build_parallel_dropbox(
+        return _build_parallel_dropbox(
             parallel_mode=parallel_mode,
             user_modules=user_modules,
             htcondor_job_desc_extra=htcondor_job_desc_extra
@@ -25,10 +26,10 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
             parallel_mode, default_parallel_mode
         ))
 
-    return build_parallel_multiprocessing(quiet=quiet, processes=processes)
+    return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
 
 ##__________________________________________________________________||
-def build_parallel_dropbox(parallel_mode, user_modules,
+def _build_parallel_dropbox(parallel_mode, user_modules,
                            htcondor_job_desc_extra=[ ]):
     tmpdir = '_ccsp_temp'
     user_modules = set(user_modules)
@@ -52,7 +53,7 @@ def build_parallel_dropbox(parallel_mode, user_modules,
     return Parallel(progressMonitor, communicationChannel, workingarea)
 
 ##__________________________________________________________________||
-def build_parallel_multiprocessing(quiet, processes):
+def _build_parallel_multiprocessing(quiet, processes):
 
     if quiet:
         progressBar = None
@@ -70,5 +71,15 @@ def build_parallel_multiprocessing(quiet, processes):
         communicationChannel = concurrently.CommunicationChannel(dropbox = dropbox)
 
     return Parallel(progressMonitor, communicationChannel)
+
+##__________________________________________________________________||
+
+##__________________________________________________________________||
+@atdeprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')
+def build_parallel_multiprocessing(quiet, processes):
+    return build_parallel(
+        parallel_mode='multiprocessing',
+        quiet=quiet, processes=processes
+    )
 
 ##__________________________________________________________________||
