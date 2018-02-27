@@ -154,6 +154,13 @@ def test_terminate(obj, package1, package2):
     obj.put(package2)
     obj.terminate()
 
+def test_terminate_close(obj, package1, package2):
+
+    obj.put(package1)
+    obj.put(package2)
+    obj.terminate()
+    obj.close()
+
 def test_receive_without_put(obj):
     assert [ ] == obj.receive()
 
