@@ -11,8 +11,11 @@ class ProgressReportPickup(multiprocessing.Process):
         self.last_wait_time = 1.0 # [second]
 
     def run(self):
-        self._run_until_the_end_order_arrives()
-        self._run_until_reports_stop_coming()
+        try:
+            self._run_until_the_end_order_arrives()
+            self._run_until_reports_stop_coming()
+        except KeyboardInterrupt:
+            pass
 
     def _run_until_the_end_order_arrives(self):
         end_order_arrived = False
