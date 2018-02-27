@@ -32,6 +32,7 @@ class MultiprocessingDropbox(object):
 
         self.n_max_workers = nprocesses
         self.n_workers = 0
+        self.workers = [ ]
         self.task_queue = multiprocessing.JoinableQueue()
         self.result_queue = multiprocessing.Queue()
         self.logging_queue = multiprocessing.Queue()
@@ -71,6 +72,7 @@ class MultiprocessingDropbox(object):
                 lock=self.lock
             )
             worker.start()
+            self.workers.append(worker)
             self.n_workers += 1
 
     def put(self, package):
@@ -97,15 +99,22 @@ class MultiprocessingDropbox(object):
         return results
 
     def terminate(self):
-        pass
+        for worker in self.workers:
+            worker.terminate()
+
+        while any([w.is_alive() for w in self.workers]):
+            pass
+
+        self.n_workers = 0
 
     def close(self):
 
         # end workers
-        for i in range(self.n_workers):
-            self.task_queue.put(None)
-        self.task_queue.join()
-        self.n_workers = 0
+        if self.n_workers > 0:
+            for i in range(self.n_workers):
+                self.task_queue.put(None)
+                self.task_queue.join()
+            self.n_workers = 0
 
         # end logging listener
         self.logging_queue.put(None)
