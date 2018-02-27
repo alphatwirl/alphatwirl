@@ -17,16 +17,19 @@ except:
 
 import alphatwirl
 
+from alphatwirl.misc.deprecation import atrenamed_class_method_option
+
 ##__________________________________________________________________||
 class WorkingArea(object):
     """
         Args:
-        dir (str): a path to a directory in which a new directory will be created
+        topdir (str): a path to a directory in which a new directory will be created
 
     """
 
-    def __init__(self, dir, python_modules):
-        self.topdir = dir
+    @atrenamed_class_method_option(old='dir', new='topdir')
+    def __init__(self, topdir, python_modules):
+        self.topdir = topdir
         self.python_modules = python_modules
         self.path = None
         self.last_package_index = None
