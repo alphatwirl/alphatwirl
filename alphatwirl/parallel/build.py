@@ -37,15 +37,22 @@ def _build_parallel_dropbox(parallel_mode, user_modules,
     tmpdir = '_ccsp_temp'
     user_modules = set(user_modules)
     user_modules.add('alphatwirl')
-    progressMonitor = progressbar.NullProgressMonitor()
+    workingarea_options = dict(topdir=tmpdir, python_modules=user_modules)
+
     if parallel_mode == 'htcondor':
-        dispatcher = concurrently.HTCondorJobSubmitter(job_desc_extra=htcondor_job_desc_extra)
+        dispatcher_options = dict(job_desc_extra=htcondor_job_desc_extra)
     else:
-        dispatcher = concurrently.SubprocessRunner()
-    workingarea = concurrently.WorkingArea(
-        topdir=tmpdir,
-        python_modules=list(user_modules)
-    )
+        dispatcher_options = dict()
+
+    if parallel_mode == 'htcondor':
+        dispatcher_class = concurrently.HTCondorJobSubmitter
+    else:
+        dispatcher_class = concurrently.SubprocessRunner
+
+    workingarea = concurrently.WorkingArea(**workingarea_options)
+
+    dispatcher = dispatcher_class(**dispatcher_options)
+
     dropbox = concurrently.TaskPackageDropbox(
         workingArea=workingarea,
         dispatcher=dispatcher
@@ -53,6 +60,9 @@ def _build_parallel_dropbox(parallel_mode, user_modules,
     communicationChannel = concurrently.CommunicationChannel(
         dropbox=dropbox
     )
+
+    progressMonitor = progressbar.NullProgressMonitor()
+
     return Parallel(progressMonitor, communicationChannel, workingarea)
 
 ##__________________________________________________________________||
