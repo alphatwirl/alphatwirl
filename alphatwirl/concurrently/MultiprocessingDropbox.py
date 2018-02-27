@@ -31,7 +31,6 @@ class MultiprocessingDropbox(object):
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
 
         self.n_max_workers = nprocesses
-        self.n_workers = 0
         self.workers = [ ]
         self.task_queue = multiprocessing.JoinableQueue()
         self.result_queue = multiprocessing.Queue()
@@ -41,18 +40,17 @@ class MultiprocessingDropbox(object):
         self.task_idx = -1 # so it starts from 0
 
     def __repr__(self):
-        return '{}(progressMonitor={!r}, n_max_workers={!r}, n_workers={!r}, n_ongoing_tasks={!r}, task_idx={!r})'.format(
+        return '{}(progressMonitor={!r}, n_max_workers={!r}, n_ongoing_tasks={!r}, task_idx={!r})'.format(
             self.__class__.__name__,
             self.progressMonitor,
             self.n_max_workers,
-            self.n_workers,
             self.n_ongoing_tasks,
             self.task_idx
         )
 
     def open(self):
 
-        if self.n_workers >= self.n_max_workers:
+        if len(self.workers) >= self.n_max_workers:
             # workers already created
             return
 
@@ -63,7 +61,7 @@ class MultiprocessingDropbox(object):
         self.loggingListener.start()
 
         # start workers
-        for i in range(self.n_workers, self.n_max_workers):
+        for i in range(self.n_max_workers):
             worker = Worker(
                 task_queue=self.task_queue,
                 result_queue=self.result_queue,
@@ -73,7 +71,6 @@ class MultiprocessingDropbox(object):
             )
             worker.start()
             self.workers.append(worker)
-            self.n_workers += 1
 
     def put(self, package):
         self.task_idx += 1
@@ -102,19 +99,20 @@ class MultiprocessingDropbox(object):
         for worker in self.workers:
             worker.terminate()
 
+        # wait until all workers are terminated.
         while any([w.is_alive() for w in self.workers]):
             pass
 
-        self.n_workers = 0
+        self.workers = [ ]
 
     def close(self):
 
         # end workers
-        if self.n_workers > 0:
-            for i in range(self.n_workers):
+        if self.workers:
+            for i in range(len(self.workers)):
                 self.task_queue.put(None)
-                self.task_queue.join()
-            self.n_workers = 0
+            self.task_queue.join()
+            self.workers = [ ]
 
         # end logging listener
         self.logging_queue.put(None)
