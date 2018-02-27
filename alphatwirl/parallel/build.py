@@ -49,6 +49,13 @@ def _build_parallel_dropbox(parallel_mode, user_modules,
     else:
         dispatcher_class = concurrently.SubprocessRunner
 
+    return _build_parallel_dropbox_(
+        workingarea_options, dispatcher_class, dispatcher_options
+    )
+
+def _build_parallel_dropbox_(workingarea_options,
+                             dispatcher_class, dispatcher_options):
+
     workingarea = concurrently.WorkingArea(**workingarea_options)
 
     dispatcher = dispatcher_class(**dispatcher_options)
