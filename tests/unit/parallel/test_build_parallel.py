@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import pytest
+import logging
 import sys
+
+import pytest
 
 try:
     import unittest.mock as mock
@@ -55,9 +57,23 @@ def test_build_parallel_multiprocessing(quiet, processes, isatty):
         assert 'CommunicationChannel0' == parallel.communicationChannel.__class__.__name__
     else:
         assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
+        assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
 
     ## workingarea
     assert parallel.workingarea is None
+
+##__________________________________________________________________||
+def test_build_logging_unknown_parallel_mode(caplog):
+
+    with caplog.at_level(logging.WARNING):
+        parallel = build_parallel(parallel_mode='unknown_mode')
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'parallel.build' in caplog.records[0].name
+    assert 'unknown parallel_mode' in caplog.records[0].msg
+
+    assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
 
 ##__________________________________________________________________||
 parallel_modes = ['subprocess', 'htcondor']
@@ -81,6 +97,13 @@ def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
 
     ## communicationChannel
     assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
+    assert 'TaskPackageDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
+
+    ## dispatcher
+    if parallel_mode == 'subprocess':
+        assert 'SubprocessRunner' ==parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+    elif parallel_mode == 'htcondor':
+        assert 'HTCondorJobSubmitter' ==parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
 
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 
