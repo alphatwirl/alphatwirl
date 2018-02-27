@@ -51,7 +51,10 @@ parallel.communicationChannel.put(Task("loop6"))
 parallel.communicationChannel.put(Task("loop7"))
 parallel.communicationChannel.put(Task("loop8"))
 parallel.communicationChannel.put(Task("loop6"))
-parallel.communicationChannel.receive()
+try:
+    parallel.communicationChannel.receive()
+except KeyboardInterrupt:
+    parallel.terminate()
 parallel.end()
 
 ##__________________________________________________________________||
