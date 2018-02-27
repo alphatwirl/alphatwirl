@@ -34,10 +34,10 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
 ##__________________________________________________________________||
 def _build_parallel_dropbox(parallel_mode, user_modules,
                            htcondor_job_desc_extra=[ ]):
-    tmpdir = '_ccsp_temp'
-    user_modules = set(user_modules)
-    user_modules.add('alphatwirl')
-    workingarea_options = dict(topdir=tmpdir, python_modules=user_modules)
+    workingarea_topdir = '_ccsp_temp'
+    python_modules = set(user_modules)
+    python_modules.add('alphatwirl')
+    workingarea_options = dict(topdir=workingarea_topdir, python_modules=python_modules)
 
     if parallel_mode == 'htcondor':
         dispatcher_options = dict(job_desc_extra=htcondor_job_desc_extra)
