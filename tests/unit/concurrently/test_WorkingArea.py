@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import os
+import logging
 import collections
 import gzip
 
@@ -18,11 +19,27 @@ from alphatwirl import mkdir_p
 MockPackage = collections.namedtuple('MockPackage', 'name')
 MockResult = collections.namedtuple('MockResult', 'name')
 
+##__________________________________________________________________||
 @pytest.fixture()
-def obj(tmpdir_factory):
-    tmpdir = str(tmpdir_factory.mktemp(''))
-    tmpdir = os.path.join(tmpdir, '_ccsp_temp')
-    return WorkingArea(dir=tmpdir, python_modules=('alphatwirl', ))
+def topdir(tmpdir_factory):
+    ret = str(tmpdir_factory.mktemp(''))
+    ret = os.path.join(ret, '_ccsp_temp')
+    return ret
+
+##__________________________________________________________________||
+def test_renamed(topdir, caplog):
+    with caplog.at_level(logging.WARNING):
+        obj = WorkingArea(dir=topdir, python_modules=('alphatwirl', ))
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'WorkingArea' in caplog.records[0].name
+    assert 'renamed' in caplog.records[0].msg
+
+##__________________________________________________________________||
+@pytest.fixture()
+def obj(topdir):
+    return WorkingArea(topdir=topdir, python_modules=('alphatwirl', ))
 
 ##__________________________________________________________________||
 def test_repr(obj):
@@ -69,15 +86,23 @@ def test_collect_result(obj):
 
     assert result == obj.collect_result(package_index=package_index)
 
-def test_collect_result_ioerror(obj):
+def test_collect_result_ioerror(obj, caplog):
    # the file 'result.p.gz' doesn't exist
    # gzip.open() raises IOFError
 
     obj.open()
 
-    # logging.getLogger('alphatwirl').setLevel(logging.DEBUG)
     package_index = 9
-    assert obj.collect_result(package_index=package_index) is None
+    caplog.clear()
+    with caplog.at_level(logging.WARNING):
+        ret = obj.collect_result(package_index=package_index)
+
+    assert ret is None
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'WorkingArea' in caplog.records[0].name
+    # assert 'No such file or directory' in caplog.records[0].msg
 
 def test_collect_result_eoferror(obj):
    # the file 'result.p.gz' is empty.
