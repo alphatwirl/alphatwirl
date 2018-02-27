@@ -10,6 +10,7 @@ except ImportError:
     import mock
 
 from alphatwirl.parallel import build_parallel
+from alphatwirl.parallel.build import build_parallel_multiprocessing
 
 ##__________________________________________________________________||
 @pytest.fixture(
@@ -112,5 +113,23 @@ def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
     else:
         assert set(['alphatwirl']) == set(parallel.workingarea.python_modules)
 
+
+##__________________________________________________________________||
+
+##__________________________________________________________________||
+def test_build_depricated(caplog):
+    with caplog.at_level(logging.WARNING):
+        parallel = build_parallel_multiprocessing(quiet=True, processes=4)
+
+    progressMonitor = parallel.progressMonitor
+    communicationChannel = parallel.communicationChannel
+    assert 'NullProgressMonitor' == progressMonitor.__class__.__name__
+    assert 'CommunicationChannel' == communicationChannel.__class__.__name__
+    assert 'MultiprocessingDropbox' == communicationChannel.dropbox.__class__.__name__
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'parallel.build' in caplog.records[0].name
+    assert 'deprecated' in caplog.records[0].msg
 
 ##__________________________________________________________________||
