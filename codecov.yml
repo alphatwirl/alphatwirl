@@ -5,3 +5,6 @@ ignore:
     - "alphatwirl/cmsedm/*"
     - "tests/unit/heppyresult/*"
     - "tests/unit/delphes/*"
+    - "tests/ROOT/*"
+    - "tests/dataframe/*"
+    - "tests/misc/*"
