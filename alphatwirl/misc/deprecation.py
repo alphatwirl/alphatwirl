@@ -85,3 +85,41 @@ def atdeprecated_class_method_option(option, msg=''):
     return _imp
 
 ##__________________________________________________________________||
+def atrenamed_func_option(old, new, msg=''):
+    def _imp(f):
+        module_name = f.__module__
+        logger = logging.getLogger(module_name)
+        func_name = f.__name__
+        def g(*args, **kwargs):
+            if old in kwargs:
+                name = '{}.{}'.format(module_name, func_name)
+                text = '{}(): the option "{}" is renamed "{}".'.format(name, old, new)
+                text += ' "{}={}" is given.'.format(old, kwargs[old])
+                if msg:
+                    text += ' ' + msg
+                logger.warning(text)
+                kwargs[new] = kwargs.pop(old)
+            return f(*args, **kwargs)
+        return g
+    return _imp
+
+##__________________________________________________________________||
+def atrenamed_class_method_option(old, new, msg=''):
+    def _imp(f):
+        module_name = f.__module__
+        logger = logging.getLogger(module_name)
+        method_name = f.__name__
+        def g(*args, **kwargs):
+            if old in kwargs:
+                name = '{}.{}.{}'.format(module_name, args[0].__class__.__name__, method_name)
+                text = '{}(): the option "{}" is renamed "{}".'.format(name, old, new)
+                text += ' "{}={}" is given.'.format(old, kwargs[old])
+                if msg:
+                    text += ' ' + msg
+                logger.warning(text)
+                kwargs[new] = kwargs.pop(old)
+            return f(*args, **kwargs)
+        return g
+    return _imp
+
+##__________________________________________________________________||

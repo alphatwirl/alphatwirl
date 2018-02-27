@@ -98,8 +98,6 @@ class Class(object):
 
 def test_class_init_option_used(caplog):
 
-    print(Class.__init__)
-
     with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         Class(B=1)
 
