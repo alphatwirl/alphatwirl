@@ -23,7 +23,7 @@ class Worker(multiprocessing.Process):
 
     def run(self):
         self._configure_logger()
-        progressbar._progress_reporter = self.progressReporter
+        self._configure_progressbar()
         try:
             self._run_tasks()
         except KeyboardInterrupt:
@@ -34,6 +34,9 @@ class Worker(multiprocessing.Process):
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
         logger.addHandler(handler)
+
+    def _configure_progressbar(self):
+        progressbar._progress_reporter = self.progressReporter
 
     def _run_tasks(self):
         while True:
