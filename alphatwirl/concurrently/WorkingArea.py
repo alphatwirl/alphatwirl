@@ -24,6 +24,7 @@ class WorkingArea(object):
     """
         Args:
         topdir (str): a path to a directory in which a new directory will be created
+        python_modules (list): names of python modules to be shipped to worker nodes
 
     """
 
