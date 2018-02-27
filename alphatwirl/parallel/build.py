@@ -43,7 +43,7 @@ def _build_parallel_dropbox(parallel_mode, user_modules,
     else:
         dispatcher = concurrently.SubprocessRunner()
     workingarea = concurrently.WorkingArea(
-        dir=tmpdir,
+        topdir=tmpdir,
         python_modules=list(user_modules)
     )
     dropbox = concurrently.TaskPackageDropbox(
