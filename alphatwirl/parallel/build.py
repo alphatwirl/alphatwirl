@@ -11,22 +11,25 @@ from .parallel import Parallel
 def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
                    htcondor_job_desc_extra=[ ]):
 
+    dispatchers = ('subprocess', 'htcondor')
+    parallel_modes = ('multiprocessing', ) + dispatchers
     default_parallel_mode = 'multiprocessing'
 
-    if parallel_mode in ('subprocess', 'htcondor'):
-        return _build_parallel_dropbox(
-            parallel_mode=parallel_mode,
-            user_modules=user_modules,
-            htcondor_job_desc_extra=htcondor_job_desc_extra
-        )
-
-    if not parallel_mode == default_parallel_mode:
+    if not parallel_mode in parallel_modes:
         logger = logging.getLogger(__name__)
         logger.warning('unknown parallel_mode "{}", use default "{}"'.format(
             parallel_mode, default_parallel_mode
         ))
+        parallel_mode = default_parallel_mode
 
-    return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
+    if parallel_mode == 'multiprocessing':
+        return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
+
+    return _build_parallel_dropbox(
+        parallel_mode=parallel_mode,
+        user_modules=user_modules,
+        htcondor_job_desc_extra=htcondor_job_desc_extra
+    )
 
 ##__________________________________________________________________||
 def _build_parallel_dropbox(parallel_mode, user_modules,
