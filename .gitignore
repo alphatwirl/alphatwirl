@@ -56,3 +56,4 @@ target/
 *~
 .*sw[op]
 tests/profile_*.txt
+.pytest_cache
