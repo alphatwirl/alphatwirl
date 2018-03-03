@@ -5,9 +5,9 @@ from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
 class Reader(object):
-    def __init__(self, keyValComposer, summarizer, nextKeyComposer = None,
-                 weightCalculator = WeightCalculatorOne(),
-                 nevents = None):
+    def __init__(self, keyValComposer, summarizer, nextKeyComposer=None,
+                 weightCalculator=WeightCalculatorOne(),
+                 nevents=None):
         self.keyValComposer = keyValComposer
         self.summarizer = summarizer
         self.weightCalculator = weightCalculator
@@ -17,7 +17,7 @@ class Reader(object):
         self.ievent = 0
 
     def __repr__(self):
-        return '{}(keyValComposer = {!r}, summarizer = {!r}, weightCalculator = {!r}, nextKeyComposer = {!r}), nevents = {!r})'.format(
+        return '{}(keyValComposer={!r}, summarizer={!r}, weightCalculator={!r}, nextKeyComposer={!r}, nevents={!r})'.format(
             self.__class__.__name__,
             self.keyValComposer,
             self.summarizer,
@@ -43,7 +43,7 @@ class Reader(object):
 
         weight = self.weightCalculator(event)
         for key, val in keyvals:
-            self.summarizer.add(key = key, val = val, weight = weight)
+            self.summarizer.add(key=key, val=val, weight=weight)
 
     def end(self):
         if self.nextKeyComposer is None: return
