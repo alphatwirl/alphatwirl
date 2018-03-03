@@ -160,22 +160,29 @@ def test_merge(obj):
     """
     composite
         |- reader1
-        |- reader2
+        |- reader2 (no merge)
+        |- reader3
     """
     reader1 = mock.Mock()
     reader2 = mock.Mock()
+    reader3 = mock.Mock()
+    del reader2.merge
+
     obj.add(reader1)
     obj.add(reader2)
+    obj.add(reader3)
 
     obj1 = copy.deepcopy(obj)
     assert obj.readers[0] is reader1
     assert obj.readers[1] is reader2
+    assert obj.readers[2] is reader3
     assert obj1.readers[0] is not reader1
     assert obj1.readers[1] is not reader2
+    assert obj1.readers[2] is not reader3
 
     obj.merge(obj1)
 
     assert [mock.call(obj1.readers[0])] == reader1.merge.call_args_list
-    assert [mock.call(obj1.readers[1])] == reader2.merge.call_args_list
+    assert [mock.call(obj1.readers[2])] == reader3.merge.call_args_list
 
 ##__________________________________________________________________||

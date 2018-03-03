@@ -39,6 +39,7 @@ class ReaderComposite(object):
 
     def merge(self, other):
         for r, o in zip(self.readers, other.readers):
+            if not hasattr(r, 'merge'): continue
             r.merge(o)
 
     def end(self):
