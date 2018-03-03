@@ -30,7 +30,9 @@ class Reader(object):
         self.keyValComposer.begin(event)
 
     def event(self, event):
-        if self.nevents is not None and self.nevents <= self.ievent: return
+        if self.nevents is not None and self.nevents <= self.ievent:
+            return
+
         self.ievent += 1
 
         try:
@@ -46,10 +48,13 @@ class Reader(object):
             self.summarizer.add(key=key, val=val, weight=weight)
 
     def end(self):
-        if self.nextKeyComposer is None: return
+        if self.nextKeyComposer is None:
+            return
+
         for key in sorted(self.summarizer.keys()):
             nextKeys = self.nextKeyComposer(key)
-            for nextKey in nextKeys: self.summarizer.add_key(nextKey)
+            for nextKey in nextKeys:
+                self.summarizer.add_key(nextKey)
 
     def results(self):
         return self.summarizer
