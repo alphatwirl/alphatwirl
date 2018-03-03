@@ -17,10 +17,10 @@ class Summarizer(object):
         )
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
-    def add(self, key, val = None, weight = 1):
+    def add(self, key, val=None, weight=1):
         self._results[key] += self.Summary(val, weight)
 
     def add_key(self, key):
@@ -68,7 +68,7 @@ class Summarizer(object):
 
     def to_tuple_list(self):
         key_vals_dict = self.to_key_vals_dict()
-        ret = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill = 0)
+        ret = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill=0)
         # e.g.,
         # [
         #     (200, 2, 120, 240),
@@ -78,7 +78,7 @@ class Summarizer(object):
         return ret
 
 ##__________________________________________________________________||
-def convert_key_vals_dict_to_tuple_list(dict_, fill = float('nan')):
+def convert_key_vals_dict_to_tuple_list(dict_, fill=float('nan')):
 
     d = [ ]
 
