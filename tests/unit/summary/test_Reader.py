@@ -1,198 +1,136 @@
-import unittest
-import collections
-import logging
+# Tai Sakuma <tai.sakuma@gmail.com>
+import pytest
 
-import alphatwirl.summary as summary
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
-##__________________________________________________________________||
-MockKey = collections.namedtuple('MockKey', 'key')
-MockVal = collections.namedtuple('MockVal', 'val')
-MockEvent = collections.namedtuple('MockEvent', 'event keys vals')
-MockWeight = collections.namedtuple('MockWeight', 'event')
+from alphatwirl.summary import Reader
 
 ##__________________________________________________________________||
-class MockSummarizer(object):
-    def __init__(self):
-        self.add_called_with = [ ]
-        self.add_key_called_with = [ ]
-        self.keys_return = [ ]
+@pytest.fixture()
+def mockKeyValComposer():
+    return mock.Mock()
 
-    def add(self, key, val, weight):
-        self.add_called_with.append((key, val, weight))
+@pytest.fixture()
+def mockSummarizer():
+    return mock.Mock()
 
-    def add_key(self, key):
-        self.add_key_called_with.append(key)
+@pytest.fixture()
+def mockNextKeyComposer():
+    return mock.Mock()
 
-    def keys(self):
-        return self.keys_return
+@pytest.fixture()
+def mockWeightCalculator():
+    return mock.Mock()
 
-##__________________________________________________________________||
-class MockWeightCalculator(object):
-    def __call__(self, event):
-        return MockWeight(event = event)
+@pytest.fixture()
+def obj(mockKeyValComposer, mockSummarizer, mockNextKeyComposer, mockWeightCalculator):
+    return Reader(
+        mockKeyValComposer, mockSummarizer,
+        nextKeyComposer=mockNextKeyComposer,
+        weightCalculator=mockWeightCalculator
+    )
 
-##__________________________________________________________________||
-class MockKeyValueComposer(object):
-    def __init__(self):
-        self.began_with = None
+def test_repr(obj):
+    repr(obj)
 
-    def begin(self, event):
-        self.began_with = event
+def test_begin(obj, mockKeyValComposer):
+    event = mock.Mock()
+    obj.begin(event)
+    assert [mock.call(event)] == mockKeyValComposer.begin.call_args_list
 
-    def __call__(self, event):
-        return [(k, v) for k, v in zip(event.keys, event.vals)]
-
-##__________________________________________________________________||
-class MockKeyValueComposerRaise(object):
-    def __init__(self):
-        pass
-
-    def begin(self, event):
-        pass
-
-    def __call__(self, event):
-        raise Exception('raised by MockKeyValueComposerRaise')
-
-##__________________________________________________________________||
-class MockNextKeyComposer(object):
-    def __init__(self, nextdic):
-        self.nextdic = nextdic
-
-    def __call__(self, key):
-        return self.nextdic[key]
-
-##__________________________________________________________________||
-class TestReader(unittest.TestCase):
-
-    def setUp(self):
-        logging.disable(logging.CRITICAL)
-
-    def tearDown(self):
-        logging.disable(logging.NOTSET)
-
-    def test_repr(self):
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        obj = summary.Reader(keyvalcomposer, summarizer)
-        repr(obj)
-
-    def test_begin(self):
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        obj = summary.Reader(keyvalcomposer, summarizer)
-        self.assertIsNone(keyvalcomposer.began_with)
-        event = MockEvent(event = 'event1', keys = (), vals = ())
-        obj.begin(event)
-        self.assertEqual(event, keyvalcomposer.began_with)
-
-    def test_event_raise(self):
-        keyvalcomposer = MockKeyValueComposerRaise()
-        summarizer = MockSummarizer()
-        weightCalculator = MockWeightCalculator()
-        obj = summary.Reader(keyvalcomposer, summarizer, weightCalculator = weightCalculator)
-
-        event = MockEvent(event = 'event1', keys = (), vals = ())
-
-        self.assertRaises(Exception, obj.event, event)
-
-    def test_event(self):
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        weightCalculator = MockWeightCalculator()
-        obj = summary.Reader(keyvalcomposer, summarizer, weightCalculator = weightCalculator)
-
-        # two key-val pairs
-        key1 = MockKey('key1')
-        key2 = MockKey('key2')
-        val1 = MockVal('val1')
-        val2 = MockVal('val2')
-
-        event = MockEvent(
-            event = 'event1',
-            keys = (key1, key2),
-            vals = (val1, val2)
-        )
-
+def test_event_raise(obj, mockKeyValComposer):
+    event = mock.Mock()
+    mockKeyValComposer.side_effect = Exception
+    with pytest.raises(Exception):
         obj.event(event)
-        self.assertEqual(
-            [
-                (key1, val1, MockWeight(event)),
-                (key2, val2, MockWeight(event)),
-            ], summarizer.add_called_with)
 
-        # no key-val pairs
-        summarizer.add_called_with[:] = [ ]
+def test_event(obj, mockKeyValComposer, mockSummarizer, mockWeightCalculator):
+    event = mock.Mock()
+    key1 = mock.Mock(name='key1')
+    val1 = mock.Mock(name='val1')
+    key2 = mock.Mock(name='key2')
+    val2 = mock.Mock(name='val2')
+    mockKeyValComposer.return_value = [(key1, val1), (key2, val2)]
+    weight1 = mock.Mock(name='weight1')
+    mockWeightCalculator.return_value = weight1
+    obj.event(event)
 
-        event = MockEvent(event = 'event1', keys = ( ), vals = ( ))
+    assert [
+        mock.call(key=key1, val=val1, weight=weight1),
+        mock.call(key=key2, val=val2, weight=weight1),
+    ] == mockSummarizer.add.call_args_list
 
-        obj.event(event)
-        self.assertEqual([ ], summarizer.add_called_with)
+    assert [mock.call(event)] == mockKeyValComposer.call_args_list
+    assert [mock.call(event)] == mockWeightCalculator.call_args_list
 
-    def test_event_nevents(self):
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        weightCalculator = MockWeightCalculator()
-        obj = summary.Reader(
-            keyvalcomposer, summarizer,
-            weightCalculator = weightCalculator,
-            nevents = 2 # read only first 2 events
-        )
+def test_event_nevents(mockKeyValComposer, mockSummarizer, mockWeightCalculator):
+    obj = Reader(
+        mockKeyValComposer, mockSummarizer,
+        weightCalculator=mockWeightCalculator,
+        nevents=2 # read only first 2 events
+    )
 
-        key1 = MockKey('key1')
-        val1 = MockVal('val1')
+    key1 = mock.Mock(name='key1')
+    val1 = mock.Mock(name='val1')
+    key2 = mock.Mock(name='key2')
+    val2 = mock.Mock(name='val2')
+    key3 = mock.Mock(name='key3')
+    val3 = mock.Mock(name='val3')
+    mockKeyValComposer.side_effect = [[(key1, val1)], [(key2, val2)], [(key3, val3)]]
+    weight1 = mock.Mock(name='weight1')
+    mockWeightCalculator.return_value = weight1
 
-        event1 = MockEvent(event = 'event1', keys = (key1,), vals = (val1, ))
-        event2 = MockEvent(event = 'event2', keys = (key1,), vals = (val1, ))
-        event3 = MockEvent(event = 'event3', keys = (key1,), vals = (val1, ))
+    event1 = mock.Mock(name='event1')
+    event2 = mock.Mock(name='event2')
+    event3 = mock.Mock(name='event3')
+    obj.event(event1)
+    obj.event(event2)
+    obj.event(event3)
 
-        obj.event(event1)
-        obj.event(event2)
-        obj.event(event3)
-        self.assertEqual(
-            [
-                (key1, val1, MockWeight(event1)),
-                (key1, val1, MockWeight(event2)),
-            ], summarizer.add_called_with)
+    assert [
+        mock.call(key=key1, val=val1, weight=weight1),
+        mock.call(key=key2, val=val2, weight=weight1),
+    ] == mockSummarizer.add.call_args_list
 
+    assert [mock.call(event1), mock.call(event2)] == mockKeyValComposer.call_args_list
+    assert [mock.call(event1), mock.call(event2)] == mockWeightCalculator.call_args_list
 
-    def test_end(self):
-        key1 = MockKey('key1')
-        key11 = MockKey('key11')
-        key2 = MockKey('key2')
-        key21 = MockKey('key21')
-        key22 = MockKey('key22')
-        key3 = MockKey('key3')
-        nextdic = {
-            key1: (key11, ),
-            key2: (key21, key22),
-            key3: ( ),
-        }
+def test_end(obj, mockSummarizer, mockNextKeyComposer):
+    key1 = mock.MagicMock(name='key1')
+    key2 = mock.MagicMock(name='key2')
+    key3 = mock.MagicMock(name='key3')
 
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        summarizer.keys_return[:] = [key1, key2, key3]
-        nextKeyComposer = MockNextKeyComposer(nextdic)
-        obj = summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
-        obj.end()
-        self.assertEqual(set([key11, key21, key22]), set(summarizer.add_key_called_with))
+    key1.__lt__.return_value = True
+    key2.__lt__.return_value = True
+    key3.__lt__.return_value = True
 
-    def test_end_None_nextKeyComposer(self):
-        key1 = MockKey('key1')
-        key2 = MockKey('key2')
-        key3 = MockKey('key3')
+    key11 = mock.Mock(name='key12')
+    key21 = mock.Mock(name='key21')
+    key22 = mock.Mock(name='key22')
 
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        summarizer.keys_return[:] = [key1, key2, key3]
-        nextKeyComposer = None
-        obj = summary.Reader(keyvalcomposer, summarizer, nextKeyComposer = nextKeyComposer)
-        obj.end()
-        self.assertEqual(set([]), set(summarizer.add_key_called_with))
+    mockSummarizer.keys.return_value = [key1, key2, key3]
+    mockNextKeyComposer.side_effect = [(key11, ), (key21, key22), ()]
+    obj.end()
+    assert [
+        mock.call(key11), mock.call(key21), mock.call(key22)
+    ] == mockSummarizer.add_key.call_args_list
 
-    def test_results(self):
-        keyvalcomposer = MockKeyValueComposer()
-        summarizer = MockSummarizer()
-        obj = summary.Reader(keyvalcomposer, summarizer)
-        self.assertIs(summarizer, obj.results())
+def test_end_None_nextKeyComposer(mockKeyValComposer, mockSummarizer):
+    obj = Reader(
+        mockKeyValComposer, mockSummarizer,
+        nextKeyComposer=None
+    )
+    key1 = mock.Mock(name='key1')
+    key2 = mock.Mock(name='key2')
+    key3 = mock.Mock(name='key3')
+    mockSummarizer.keys.return_value = [key1, key2, key3]
+    obj.end()
+    assert [ ] == mockSummarizer.add_key.call_args_list
+
+def test_results(obj, mockSummarizer):
+    assert mockSummarizer is obj.results()
 
 ##__________________________________________________________________||
