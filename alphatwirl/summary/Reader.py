@@ -56,6 +56,9 @@ class Reader(object):
             for nextKey in nextKeys:
                 self.summarizer.add_key(nextKey)
 
+    def merge(self, other):
+        self.summarizer += other.summarizer
+
     def results(self):
         return self.summarizer
 

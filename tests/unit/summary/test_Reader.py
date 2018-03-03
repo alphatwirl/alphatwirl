@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import copy
 import pytest
 
 try:
@@ -15,7 +16,7 @@ def mockKeyValComposer():
 
 @pytest.fixture()
 def mockSummarizer():
-    return mock.Mock()
+    return mock.MagicMock()
 
 @pytest.fixture()
 def mockNextKeyComposer():
@@ -132,5 +133,25 @@ def test_end_None_nextKeyComposer(mockKeyValComposer, mockSummarizer):
 
 def test_results(obj, mockSummarizer):
     assert mockSummarizer is obj.results()
+
+def test_merge(obj, mockSummarizer):
+    obj1 = copy.deepcopy(obj)
+
+    assert obj1.summarizer is not obj.summarizer
+    # note: if just print summarizers like
+    # print obj1.summarizer, obj.summarizer
+    # the same ids are shown, e.g.,
+    # <MagicMock id='4782590736'> <MagicMock id='4782590736'>
+    # this is very confusing. they are indeed different objects.
+    # the attribute `id` is copied.
+    # to print the real id of the copied object, need to print repr()
+    # of it.
+    # print repr(obj1.summarizer)
+    # <MagicMock id='4782590352'>
+
+    obj.merge(obj1)
+
+    assert [mock.call(obj1.summarizer)] == mockSummarizer.__iadd__.call_args_list
+    assert obj.summarizer is mockSummarizer.__iadd__()
 
 ##__________________________________________________________________||
