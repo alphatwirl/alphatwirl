@@ -37,6 +37,10 @@ class ReaderComposite(object):
         for reader in self.readers:
             if reader.event(event) is False: break
 
+    def merge(self, other):
+        for r, o in zip(self.readers, other.readers):
+            r.merge(o)
+
     def end(self):
         for reader in self.readers:
             if not hasattr(reader, 'end'): continue

@@ -156,3 +156,26 @@ def test_no_begin_end(obj):
     assert [mock.call()] == reader3.end.call_args_list
 
 ##__________________________________________________________________||
+def test_merge(obj):
+    """
+    composite
+        |- reader1
+        |- reader2
+    """
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    obj.add(reader1)
+    obj.add(reader2)
+
+    obj1 = copy.deepcopy(obj)
+    assert obj.readers[0] is reader1
+    assert obj.readers[1] is reader2
+    assert obj1.readers[0] is not reader1
+    assert obj1.readers[1] is not reader2
+
+    obj.merge(obj1)
+
+    assert [mock.call(obj1.readers[0])] == reader1.merge.call_args_list
+    assert [mock.call(obj1.readers[1])] == reader2.merge.call_args_list
+
+##__________________________________________________________________||
