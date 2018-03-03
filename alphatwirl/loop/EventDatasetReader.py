@@ -76,6 +76,18 @@ class EventDatasetReader(object):
         for dataset, nreaders in self.dataset_nreaders:
             dataset_readers_list.append((dataset.name, tuple(returned_readers[i:(i + nreaders)])))
             i += nreaders
+
+        dataset_merged_readers_list = [ ]
+        for dataset, readers in dataset_readers_list:
+            reader = copy.deepcopy(self.reader)
+            for r in readers:
+                reader.merge(r)
+            dataset_merged_readers_list.append((dataset, [reader]))
+
+        # TODO: use this return instead when merge() is implemented in
+        # AllwCount, AnywCount, NotwCount. <>
+        # return self.collector.collect(dataset_merged_readers_list)
+
         return self.collector.collect(dataset_readers_list)
 
 ##__________________________________________________________________||
