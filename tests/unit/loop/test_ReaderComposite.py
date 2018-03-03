@@ -1,186 +1,158 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+import copy
+import logging
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
 from alphatwirl.loop import ReaderComposite
-import unittest
 
 ##__________________________________________________________________||
-class MockReader(object):
+@pytest.fixture()
+def obj():
+    return ReaderComposite()
 
-    def __init__(self):
-        self._beganWith = None
-        self._events = [ ]
-        self._ended = False
+def test_repr(obj):
+    repr(obj)
 
-    def begin(self, event):
-        self._beganWith = event
+def test_event_two_readers_two_events(obj):
+    """
+    composite
+        |- reader1
+        |- reader2
+    """
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    obj.add(reader1)
+    obj.add(reader2)
 
-    def event(self, event):
-        self._events.append(event)
+    events = mock.Mock()
+    obj.begin(events)
+    assert [mock.call(events)] == reader1.begin.call_args_list
+    assert [mock.call(events)] == reader2.begin.call_args_list
 
-    def end(self):
-        self._ended = True
+    event1 = mock.Mock()
+    obj.event(event1)
 
-##__________________________________________________________________||
-class MockReader_without_begin_end(object):
+    event2 = mock.Mock()
+    obj.event(event2)
+    assert [mock.call(event1), mock.call(event2)], reader1.events.call_args_list
+    assert [mock.call(event1), mock.call(event2)], reader2.events.call_args_list
 
-    def __init__(self):
-        self._events = [ ]
+    obj.end()
+    assert [mock.call()] == reader1.end.call_args_list
+    assert [mock.call()] == reader2.end.call_args_list
 
-    def event(self, event):
-        self._events.append(event)
+def test_event_nested_composite():
+    """
+    composite1
+        |- composite2
+        |      |- reader1
+        |      |- reader2
+        |- reader3
+    """
+    obj1 = ReaderComposite()
+    obj2 = ReaderComposite()
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    reader3 = mock.Mock()
+    obj1.add(obj2)
+    obj2.add(reader1)
+    obj2.add(reader2)
+    obj1.add(reader3)
 
-##__________________________________________________________________||
-class MockReader_with_return(object):
-    def __init__(self):
-        self._events = [ ]
-        self._ret = None
+    events = mock.Mock()
+    obj1.begin(events)
+    assert [mock.call(events)] == reader1.begin.call_args_list
+    assert [mock.call(events)] == reader2.begin.call_args_list
+    assert [mock.call(events)] == reader3.begin.call_args_list
 
-    def begin(self, event): pass
+    event1 = mock.Mock()
+    obj1.event(event1)
 
-    def event(self, event):
-        self._events.append(event)
-        return self._ret
+    event2 = mock.Mock()
+    obj1.event(event2)
+    assert [mock.call(event1), mock.call(event2)], reader1.events.call_args_list
+    assert [mock.call(event1), mock.call(event2)], reader2.events.call_args_list
+    assert [mock.call(event1), mock.call(event2)], reader3.events.call_args_list
 
-    def end(self): pass
+    obj1.end()
+    assert [mock.call()] == reader1.end.call_args_list
+    assert [mock.call()] == reader2.end.call_args_list
+    assert [mock.call()] == reader3.end.call_args_list
 
-##__________________________________________________________________||
-class MockEvent(object):
-    pass
+def test_return_False(obj):
+    """
+    composite
+        |- reader1 (return None)
+        |- reader2 (return True)
+        |- reader3 (return False)
+        |- reader4
+    """
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    reader3 = mock.Mock()
+    reader4 = mock.Mock()
+    obj.add(reader1)
+    obj.add(reader2)
+    obj.add(reader3)
+    obj.add(reader4)
 
-##__________________________________________________________________||
-class TestReaderComposite(unittest.TestCase):
+    events = mock.Mock()
+    obj.begin(events)
 
-    def test_event_two_readers_two_events(self):
-        """
-        composite
-            |- reader1
-            |- reader2
-        """
-        composite = ReaderComposite()
-        reader1 = MockReader()
-        reader2 = MockReader()
-        composite.add(reader1)
-        composite.add(reader2)
+    reader1.event.return_value = None
+    reader2.event.return_value = True
+    reader3.event.return_value = False
 
-        events = MockEvent()
-        composite.begin(events)
-        self.assertIs(events, reader1._beganWith)
-        self.assertIs(events, reader2._beganWith)
+    event1 = mock.Mock()
+    ret = obj.event(event1)
 
-        event1 = MockEvent()
-        composite.event(event1)
+    assert [mock.call(event1)], reader1.event.call_args_list
+    assert [mock.call(event1)], reader2.event.call_args_list
+    assert [mock.call(event1)], reader3.event.call_args_list
+    assert [mock.call()], reader4.event.call_args_list
+    assert ret is None
 
-        event2 = MockEvent()
-        composite.event(event2)
-        self.assertEqual([event1, event2], reader1._events)
-        self.assertEqual([event1, event2], reader2._events)
+    obj.end()
 
-        composite.end()
-        self.assertTrue(reader1._ended)
-        self.assertTrue(reader2._ended)
+def test_no_begin_end(obj):
+    """
+    composite
+        |- reader1
+        |- reader2 (without begin end)
+        |- reader3
+    """
+    reader1 = mock.Mock()
 
-    def test_event_nested_composite(self):
-        """
-        composite1
-            |- composite2
-            |      |- reader1
-            |      |- reader2
-            |- reader3
-        """
-        composite1 = ReaderComposite()
-        composite2 = ReaderComposite()
-        reader1 = MockReader()
-        reader2 = MockReader()
-        reader3 = MockReader()
-        composite1.add(composite2)
-        composite2.add(reader1)
-        composite2.add(reader2)
-        composite1.add(reader3)
+    reader2 = mock.Mock()
+    del reader2.begin
+    del reader2.end
 
-        events = MockEvent()
-        composite1.begin(events)
-        self.assertIs(events, reader1._beganWith)
-        self.assertIs(events, reader2._beganWith)
-        self.assertIs(events, reader3._beganWith)
+    reader3 = mock.Mock()
+    obj.add(reader1)
+    obj.add(reader2)
+    obj.add(reader3)
 
-        event1 = MockEvent()
-        composite1.event(event1)
+    events = mock.Mock()
+    obj.begin(events)
+    assert [mock.call(events)] == reader1.begin.call_args_list
+    assert [mock.call(events)] == reader3.begin.call_args_list
 
-        event2 = MockEvent()
-        composite1.event(event2)
-        self.assertEqual([event1, event2], reader1._events)
-        self.assertEqual([event1, event2], reader2._events)
-        self.assertEqual([event1, event2], reader3._events)
+    event1 = mock.Mock()
+    obj.event(event1)
 
-        composite1.end()
-        self.assertTrue(reader1._ended)
-        self.assertTrue(reader2._ended)
-        self.assertTrue(reader3._ended)
+    event2 = mock.Mock()
+    obj.event(event2)
+    assert [mock.call(event1), mock.call(event2)], reader1.events.call_args_list
+    assert [mock.call(event1), mock.call(event2)], reader2.events.call_args_list
+    assert [mock.call(event1), mock.call(event2)], reader3.events.call_args_list
 
-    def test_return_False(self):
-        """
-        composite
-            |- reader1 (return None)
-            |- reader2 (return True)
-            |- reader3 (return False)
-            |- reader4
-        """
-        composite = ReaderComposite()
-        reader1 = MockReader_with_return()
-        reader2 = MockReader_with_return()
-        reader3 = MockReader_with_return()
-        reader4 = MockReader_with_return()
-        composite.add(reader1)
-        composite.add(reader2)
-        composite.add(reader3)
-        composite.add(reader4)
-
-        events = MockEvent()
-        composite.begin(events)
-
-        reader1._ret = None
-        reader2._ret = True
-        reader3._ret = False
-
-        event1 = MockEvent()
-        ret = composite.event(event1)
-
-        self.assertEqual([event1, ], reader1._events)
-        self.assertEqual([event1, ], reader2._events)
-        self.assertEqual([event1, ], reader3._events)
-        self.assertEqual([ ], reader4._events)
-        self.assertIsNone(ret)
-
-        composite.end()
-
-    def test_no_begin_end(self):
-        """
-        composite
-            |- reader1
-            |- reader2 (without begin end)
-            |- reader3
-        """
-        composite = ReaderComposite()
-        reader1 = MockReader()
-        reader2 = MockReader_without_begin_end()
-        reader3 = MockReader()
-        composite.add(reader1)
-        composite.add(reader2)
-        composite.add(reader3)
-
-        events = MockEvent()
-        composite.begin(events)
-        self.assertIs(events, reader1._beganWith)
-
-        event1 = MockEvent()
-        composite.event(event1)
-
-        event2 = MockEvent()
-        composite.event(event2)
-        self.assertEqual([event1, event2], reader1._events)
-        self.assertEqual([event1, event2], reader2._events)
-        self.assertEqual([event1, event2], reader3._events)
-
-        composite.end()
-        self.assertTrue(reader1._ended)
-        self.assertTrue(reader3._ended)
+    obj.end()
+    assert [mock.call()] == reader1.end.call_args_list
+    assert [mock.call()] == reader3.end.call_args_list
 
 ##__________________________________________________________________||
