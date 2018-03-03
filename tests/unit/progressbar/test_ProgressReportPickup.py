@@ -26,6 +26,7 @@ def pickup(queue, presentation):
 
 ##__________________________________________________________________||
 def test_start_join(pickup, queue, presentation):
+    presentation.nreports.return_value = 10
     pickup.start()
     queue.put(None)
     pickup.join()

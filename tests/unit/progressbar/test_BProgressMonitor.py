@@ -27,7 +27,8 @@ def monitor(presentation):
 def test_repr(monitor):
     repr(monitor)
 
-def test_begin_end(monitor):
+def test_begin_end(monitor, presentation):
+    presentation.nreports.return_value = 0
     monitor.begin()
     assert isinstance(alphatwirl.progressbar._progress_reporter, ProgressReporter)
     monitor.end()
@@ -38,6 +39,7 @@ def test_createReporter(monitor):
     assert isinstance(reporter, ProgressReporter)
 
 def test_send_report(monitor, presentation):
+    presentation.nreports.return_value = 10
     monitor.begin()
     reporter = monitor.createReporter()
     report = ProgressReport('task1', 0, 3)
