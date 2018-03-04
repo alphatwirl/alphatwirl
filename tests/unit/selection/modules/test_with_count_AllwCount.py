@@ -16,6 +16,11 @@ def obj():
 def test_repr(obj):
     repr(obj)
 
+class MockEventSelection(object):
+    def begin(self, event): pass
+    def __call__(self, event): pass
+    def end(self): pass
+
 def test_empty(obj):
 
     event = mock.Mock()
@@ -28,15 +33,11 @@ def test_empty(obj):
     assert [ ] == count._results
 
 def test_standard(obj):
-    sel1 = mock.Mock()
+    sel1 = mock.Mock(spec=MockEventSelection)
     sel1.name ='sel1'
-    sel1.__class__.__name__ = 'MockEventSelection'
-    del sel1.results
 
-    sel2 = mock.Mock()
+    sel2 = mock.Mock(spec=MockEventSelection)
     sel2.name =''
-    sel2.__class__.__name__ = 'MockEventSelection'
-    del sel2.results
 
     obj.add(sel1)
     obj.add(sel2)
@@ -94,30 +95,20 @@ def test_nested(obj):
     obj1 = AllwCount('all1')
     obj2 = AllwCount('all2')
 
-    sel11 = mock.Mock()
+    sel11 = mock.Mock(spec=MockEventSelection)
     sel11.name ='sel11'
-    sel11.__class__.__name__ = 'MockEventSelection'
-    del sel11.results
 
-    sel12 = mock.Mock()
+    sel12 = mock.Mock(spec=MockEventSelection)
     sel12.name ='sel12'
-    sel12.__class__.__name__ = 'MockEventSelection'
-    del sel12.results
 
-    sel21 = mock.Mock()
+    sel21 = mock.Mock(spec=MockEventSelection)
     sel21.name ='sel21'
-    sel21.__class__.__name__ = 'MockEventSelection'
-    del sel21.results
 
-    sel22 = mock.Mock()
+    sel22 = mock.Mock(spec=MockEventSelection)
     sel22.name ='sel22'
-    sel22.__class__.__name__ = 'MockEventSelection'
-    del sel22.results
 
-    sel3 = mock.Mock()
+    sel3 = mock.Mock(spec=MockEventSelection)
     sel3.name ='sel3'
-    sel3.__class__.__name__ = 'MockEventSelection'
-    del sel3.results
 
     obj.add(obj1)
     obj.add(obj2)
