@@ -80,14 +80,12 @@ class EventDatasetReader(object):
         dataset_merged_readers_list = [ ]
         for dataset, readers in dataset_readers_list:
             reader = copy.deepcopy(self.reader)
+            dataset_merged_readers_list.append((dataset, [reader]))
+            if not hasattr(reader, 'merge'):
+                continue
             for r in readers:
                 reader.merge(r)
-            dataset_merged_readers_list.append((dataset, [reader]))
 
-        # TODO: use this return instead when merge() is implemented in
-        # AllwCount, AnywCount, NotwCount. <>
-        # return self.collector.collect(dataset_merged_readers_list)
-
-        return self.collector.collect(dataset_readers_list)
+        return self.collector.collect(dataset_merged_readers_list)
 
 ##__________________________________________________________________||

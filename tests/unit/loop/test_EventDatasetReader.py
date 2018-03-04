@@ -129,8 +129,27 @@ def test_standard(obj, eventLoopRunner, reader, collector,
         ('dataset2', ( )),
         ('dataset3', (eventLoop4.reader, )),
     ]
-    assert expected == results
-    assert [mock.call(expected)] == collector.collect.call_args_list
+
+    # results = [
+    #     ('dataset1', [deepcopy(reader)]),
+    #     ('dataset2', [deepcopy(reader)]),
+    #     ('dataset3', [deepcopy(reader)]),
+    # ]
+
+    assert 'dataset1' == results[0][0]
+    assert [
+        mock.call(eventLoop1.reader),
+        mock.call(eventLoop2.reader),
+        mock.call(eventLoop3.reader)
+    ] == results[0][1][0].merge.call_args_list
+
+    assert 'dataset2' == results[1][0]
+    assert [ ] == results[1][1][0].merge.call_args_list
+
+    assert 'dataset3' == results[2][0]
+    assert [
+        mock.call(eventLoop4.reader),
+    ] == results[2][1][0].merge.call_args_list
 
 def test_wrong_number_of_results(obj, eventLoopRunner, reader,
                                  collector, split_into_build_events,
