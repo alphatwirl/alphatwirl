@@ -1,60 +1,57 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-from alphatwirl.selection.modules import NotwCount
-import unittest
+import pytest
 
-##__________________________________________________________________||
-class MockEvent(object): pass
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
+from alphatwirl.selection.modules import NotwCount
 
 ##__________________________________________________________________||
 class MockEventSelection(object):
-    def __init__(self, name = None):
-        self.name = name
-        self.is_begin_called = False
-        self.is_end_called = False
-        self.ret = True
+    def begin(self, event): pass
+    def __call__(self, event): pass
+    def end(self): pass
 
-    def begin(self, event):
-        self.is_begin_called = True
+@pytest.fixture()
+def sel1():
+    ret = mock.Mock(spec=MockEventSelection)
+    ret.name ='sel1'
+    sel1.return_value = True
+    return ret
 
-    def __call__(self, event):
-        return self.ret
+@pytest.fixture()
+def obj(sel1):
+    return NotwCount(selection=sel1)
 
-    def end(self):
-        self.is_end_called = True
+def test_repr(obj):
+    repr(obj)
 
-##__________________________________________________________________||
-class Test_NotwCount(unittest.TestCase):
+def test_standard(obj, sel1):
 
-    def test_standard(self):
+    assert [ ] == sel1.begin.call_args_list
+    assert [ ] == sel1.end.call_args_list
 
-        sel1 = MockEventSelection(name = 'sel1')
-        obj = NotwCount(selection = sel1)
 
-        self.assertFalse(sel1.is_begin_called)
+    event = mock.Mock()
+    obj.begin(event)
+    assert [mock.call(event)] == sel1.begin.call_args_list
 
-        self.assertFalse(sel1.is_end_called)
+    event = mock.Mock()
+    sel1.return_value = False   # 1/1
+    assert obj(event)
 
-        event = MockEvent()
-        obj.begin(event)
-        self.assertTrue(sel1.is_begin_called)
+    event = mock.Mock()
+    sel1.return_value = True   # 1/2
+    assert not obj(event)
 
-        event = MockEvent()
-        sel1.ret = False   # 1/1
-        self.assertTrue(obj(event))
+    obj.end()
+    assert [mock.call()] == sel1.end.call_args_list
 
-        event = MockEvent()
-        sel1.ret = True  # 1/2
-        self.assertFalse(obj.event(event))
-
-        obj.end()
-        self.assertTrue(sel1.is_end_called)
-
-        count = obj.results()
-        self.assertEqual(
-            [
-                [1, 'MockEventSelection', 'sel1', 1, 2],
-            ],
-            count._results
-        )
+    count = obj.results()
+    assert [
+        [1, 'MockEventSelection', 'sel1', 1, 2],
+    ] == count._results
 
 ##__________________________________________________________________||
