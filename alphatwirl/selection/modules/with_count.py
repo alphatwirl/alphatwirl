@@ -64,7 +64,7 @@ class AllwCount(object):
 
 ##__________________________________________________________________||
 class AnywCount(object):
-    """select events that meet all conditions
+    """select events that meet any of the conditions
 
     """
 
