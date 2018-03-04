@@ -70,8 +70,8 @@ def test_standard(obj):
     assert not obj(event)
 
     event = mock.Mock()
-    sel1.ret = False  # 2/4
-    sel2.ret = False  # 1/2
+    sel1.return_value = False  # 2/4
+    sel2.return_value = False  # 1/2
     assert not obj(event)
 
     obj.end()
