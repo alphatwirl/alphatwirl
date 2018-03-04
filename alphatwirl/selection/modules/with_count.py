@@ -9,13 +9,13 @@ class AllwCount(object):
 
     """
 
-    def __init__(self, name = None):
+    def __init__(self, name=None):
         self.name = name if name is not None else 'All'
         self.selections = [ ]
         self.count = Count()
 
     def __repr__(self):
-        return '{}(name = {!r}, selections = {!r}), count = {!r}'.format(
+        return '{}(name={!r}, selections={!r}), count={!r}'.format(
             self.__class__.__name__,
             self.name,
             self.selections,
@@ -48,17 +48,17 @@ class AllwCount(object):
         for s in self.selections:
             if hasattr(s, 'end'): s.end()
 
-    def results(self, increment = False):
+    def results(self, increment=False):
 
         ret = self.count.copy()
 
         # reversed enumerate
         for i, s in zip(reversed(range(len(self.selections))), reversed(self.selections)):
             if hasattr(s, 'results'):
-                ret.insert(i, s.results(increment = True))
+                ret.insert(i, s.results(increment=True))
 
         if increment:
-            ret.increment_depth(by = 1)
+            ret.increment_depth(by=1)
 
         return ret
 
@@ -68,13 +68,13 @@ class AnywCount(object):
 
     """
 
-    def __init__(self, name = None):
+    def __init__(self, name=None):
         self.name = name if name is not None else 'Any'
         self.selections = [ ]
         self.count = Count()
 
     def __repr__(self):
-        return '{}(name = {!r}, selections = {!r}), count = {!r}'.format(
+        return '{}(name={!r}, selections={!r}), count={!r}'.format(
             self.__class__.__name__,
             self.name,
             self.selections,
@@ -107,17 +107,17 @@ class AnywCount(object):
         for s in self.selections:
             if hasattr(s, 'end'): s.end()
 
-    def results(self, increment = False):
+    def results(self, increment=False):
 
         ret = self.count.copy()
 
         # reversed enumerate
         for i, s in zip(reversed(range(len(self.selections))), reversed(self.selections)):
             if hasattr(s, 'results'):
-                ret.insert(i, s.results(increment = True))
+                ret.insert(i, s.results(increment=True))
 
         if increment:
-            ret.increment_depth(by = 1)
+            ret.increment_depth(by=1)
 
         return ret
 
@@ -127,14 +127,14 @@ class NotwCount(object):
 
     """
 
-    def __init__(self, selection, name = None):
+    def __init__(self, selection, name=None):
         self.name = name if name is not None else 'Not'
         self.selection = selection
         self.count = Count()
         self.count.add(selection)
 
     def __repr__(self):
-        return '{}(name = {!r}, selection = {!r}), count = {!r}'.format(
+        return '{}(name={!r}, selection={!r}), count={!r}'.format(
             self.__class__.__name__,
             self.name,
             self.selection,
@@ -155,12 +155,12 @@ class NotwCount(object):
     def end(self):
         if hasattr(self.selection, 'begin'): self.selection.end()
 
-    def results(self, increment = False):
+    def results(self, increment=False):
         ret = self.count.copy()
         if hasattr(self.selection, 'results'):
-            ret.insert(0, self.selection.results(increment = True))
+            ret.insert(0, self.selection.results(increment=True))
         if increment:
-            ret.increment_depth(by = 1)
+            ret.increment_depth(by=1)
         return ret
 
 ##__________________________________________________________________||
