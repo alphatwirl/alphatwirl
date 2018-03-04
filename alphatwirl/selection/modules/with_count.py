@@ -48,6 +48,13 @@ class AllwCount(object):
         for s in self.selections:
             if hasattr(s, 'end'): s.end()
 
+    def merge(self, other):
+        self.count += other.count
+        for s, o in zip(self.selections, other.selections):
+            if not hasattr(s, 'merge'):
+                continue
+            s.merge(o)
+
     def results(self, increment=False):
 
         ret = self.count.copy()
@@ -107,6 +114,13 @@ class AnywCount(object):
         for s in self.selections:
             if hasattr(s, 'end'): s.end()
 
+    def merge(self, other):
+        self.count += other.count
+        for s, o in zip(self.selections, other.selections):
+            if not hasattr(s, 'merge'):
+                continue
+            s.merge(o)
+
     def results(self, increment=False):
 
         ret = self.count.copy()
@@ -154,6 +168,12 @@ class NotwCount(object):
 
     def end(self):
         if hasattr(self.selection, 'begin'): self.selection.end()
+
+    def merge(self, other):
+        self.count += other.count
+        if not hasattr(self.selection, 'merge'):
+            return
+        self.selection.merge(other.selection)
 
     def results(self, increment=False):
         ret = self.count.copy()

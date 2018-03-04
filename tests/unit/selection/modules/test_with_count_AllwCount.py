@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import copy
 import pytest
 
 try:
@@ -163,5 +164,56 @@ def test_nested(obj):
         [2, 'MockEventSelection',     'sel22', 1, 1],
         [1, 'MockEventSelection',     'sel3',  1, 1],
     ] == count._results
+
+##__________________________________________________________________||
+def test_merge(obj):
+    #
+    # all (obj) --- all (obj1) --- sel (sel11)
+    #            |              +- sel (sel12)
+    #            +- all (obj2) --- sel (sel21)
+    #            |              +- sel (sel22)
+    #            +- sel (sel3)
+    #
+
+    obj.count = mock.MagicMock()
+    obj.count.__iadd__.return_value = obj.count
+
+    obj1 = AllwCount('all1')
+    obj1.count = mock.MagicMock()
+    obj1.count.__iadd__.return_value = obj1.count
+
+    obj2 = AllwCount('all2')
+    obj2.count = mock.MagicMock()
+    obj2.count.__iadd__.return_value = obj2.count
+
+    sel11 = mock.Mock(spec=MockEventSelection)
+    sel11.name ='sel11'
+
+    sel12 = mock.Mock(spec=MockEventSelection)
+    sel12.name ='sel12'
+
+    sel21 = mock.Mock(spec=MockEventSelection)
+    sel21.name ='sel21'
+
+    sel22 = mock.Mock(spec=MockEventSelection)
+    sel22.name ='sel22'
+
+    sel3 = mock.Mock(spec=MockEventSelection)
+    sel3.name ='sel3'
+
+    obj.add(obj1)
+    obj.add(obj2)
+    obj.add(sel3)
+    obj1.add(sel11)
+    obj1.add(sel12)
+    obj2.add(sel21)
+    obj2.add(sel22)
+
+    obj_copy = copy.deepcopy(obj)
+    obj.merge(obj_copy)
+
+    assert [mock.call(obj_copy.count)] == obj.count.__iadd__.call_args_list
+    assert [mock.call(obj_copy.selections[0].count)] == obj1.count.__iadd__.call_args_list
+    assert [mock.call(obj_copy.selections[1].count)] == obj2.count.__iadd__.call_args_list
 
 ##__________________________________________________________________||

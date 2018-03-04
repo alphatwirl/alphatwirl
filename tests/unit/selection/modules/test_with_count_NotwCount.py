@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import copy
 import pytest
 
 try:
@@ -83,10 +84,26 @@ def test_nested(sel1):
     assert [mock.call()] == sel1.end.call_args_list
 
     count = obj.results()
-    print count._results
     assert [
         [1, 'NotwCount', 'Not', 1, 3],
         [2, 'MockEventSelection', 'sel1', 2, 3],
     ] == count._results
+
+##__________________________________________________________________||
+def test_merge(sel1):
+
+    obj1 = NotwCount(selection=sel1)
+    obj1.count = mock.MagicMock()
+    obj1.count.__iadd__.return_value = obj1.count
+
+    obj = NotwCount(selection=obj1)
+    obj.count = mock.MagicMock()
+    obj.count.__iadd__.return_value = obj.count
+
+    obj_copy = copy.deepcopy(obj)
+    obj.merge(obj_copy)
+
+    assert [mock.call(obj_copy.count)] == obj.count.__iadd__.call_args_list
+    assert [mock.call(obj_copy.selection.count)] == obj1.count.__iadd__.call_args_list
 
 ##__________________________________________________________________||
