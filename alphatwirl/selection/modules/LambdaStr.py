@@ -12,12 +12,12 @@ class LambdaStr(object):
     subprocesses. begin() will be called in the subprocesses.
 
     """
-    def __init__(self, lambda_str, name = None):
+    def __init__(self, lambda_str, name=None):
         self.name = name if name is not None else lambda_str
         self.lambda_str = lambda_str
 
     def __repr__(self):
-        return '{}(name = {!r}, lambda_str = {!r})'.format(
+        return '{}(name={!r}, lambda_str={!r})'.format(
             self.__class__.__name__,
             self.name,
             self.lambda_str
