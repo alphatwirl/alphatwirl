@@ -1,4 +1,6 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
 import copy
+import logging
 
 ##__________________________________________________________________||
 N_KEYS = 3
@@ -58,13 +60,13 @@ class Count(object):
 
     def _add_results_inplace(self, res1, res2):
         if not len(res1) == len(res2):
-            import logging
-            logging.warning('cannot add because res1 and res2 don\'t have the same length: res1 = {}, res2 = {}'.format(res1, res2))
+            logger = logging.getLogger(__name__)
+            logger.warning('cannot add because res1 and res2 don\'t have the same length: res1 = {}, res2 = {}'.format(res1, res2))
             return
 
         if not all([(r1[:N_KEYS] == r2[:N_KEYS]) for r1, r2 in zip(res1, res2)]):
-            import logging
-            logging.warning('cannot add because res1 and res2 don\'t have the same key columns: res1 = {}, res2 = {}'.format(res1, res2))
+            logger = logging.getLogger(__name__)
+            logger.warning('cannot add because res1 and res2 don\'t have the same key columns: res1 = {}, res2 = {}'.format(res1, res2))
             return
 
         for r1, r2 in zip(res1, res2):
