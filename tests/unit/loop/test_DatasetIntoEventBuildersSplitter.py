@@ -38,7 +38,7 @@ def obj(MockEventBuilder, mockConfigMaker):
 def test_repr(obj):
    repr(obj)
 
-@pytest.mark.parametrize('maxEvents, maxEventsPerRun, expected', [
+@pytest.mark.parametrize('max_events, max_events_per_run, expected', [
     ( 0,  0,  True),
     ( 0, -1,  True),
     ( 0,  1,  True),
@@ -49,11 +49,11 @@ def test_repr(obj):
     ( 1, -1 , True),
     ( 1,  1, True),
 ])
-def test_need_get_number_of_events_in_files(obj, maxEvents, maxEventsPerRun, expected):
-    actual = obj._need_get_number_of_events_in_files(maxEvents, maxEventsPerRun)
+def test_need_get_number_of_events_in_files(obj, max_events, max_events_per_run, expected):
+    actual = obj._need_get_number_of_events_in_files(max_events, max_events_per_run)
     assert expected == actual
 
-@pytest.mark.parametrize('files, maxFilesPerRun, expected', [
+@pytest.mark.parametrize('files, max_files_per_run, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
         [(['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0, -1)]
@@ -81,11 +81,11 @@ def test_need_get_number_of_events_in_files(obj, maxEvents, maxEventsPerRun, exp
         ]
     ),
 ])
-def test_fast_path(obj, files, maxFilesPerRun, expected):
-    actual = obj._fast_path(files, maxFilesPerRun)
+def test_fast_path(obj, files, max_files_per_run, expected):
+    actual = obj._fast_path(files, max_files_per_run)
     assert expected == actual
 
-@pytest.mark.parametrize('files, maxEvents, maxEventsPerRun, maxFilesPerRun, expected', [
+@pytest.mark.parametrize('files, max_events, max_events_per_run, max_files_per_run, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         330, 80, 2,
@@ -96,11 +96,11 @@ def test_fast_path(obj, files, maxFilesPerRun, expected):
         ]
     ),
 ])
-def test_full_path(obj, files, maxEvents, maxEventsPerRun, maxFilesPerRun, expected):
-    actual = obj._full_path(files, maxEvents, maxEventsPerRun, maxFilesPerRun)
+def test_full_path(obj, files, max_events, max_events_per_run, max_files_per_run, expected):
+    actual = obj._full_path(files, max_events, max_events_per_run, max_files_per_run)
     assert expected == actual
 
-@pytest.mark.parametrize('files, maxEvents, expected', [
+@pytest.mark.parametrize('files, max_events, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
         [('A.root', 100), ('B.root', 200), ('C.root', 150), ('D.root', 180), ('E.root', 210)]
@@ -118,8 +118,8 @@ def test_full_path(obj, files, maxEvents, maxEventsPerRun, maxFilesPerRun, expec
         [('A.root', 100), ('B.root', 200)]
     ),
 ])
-def test_file_nevents_list_(obj, files, maxEvents, expected):
-    actual = obj._file_nevents_list_(files, maxEvents=maxEvents)
+def test_file_nevents_list_(obj, files, max_events, expected):
+    actual = obj._file_nevents_list_(files, max_events=max_events)
     assert expected == actual
 
 def test_create_configs(obj, mockConfigMaker):

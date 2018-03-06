@@ -12,10 +12,10 @@ class DatasetIntoEventBuildersSplitter(object):
 
         self.EventBuilder = EventBuilder
         self.eventBuilderConfigMaker = eventBuilderConfigMaker
-        self.maxEvents = maxEvents
-        self.maxEventsPerRun = maxEventsPerRun
-        self.maxFiles = maxFiles
-        self.maxFilesPerRun = maxFilesPerRun
+        self.max_events = maxEvents
+        self.max_events_per_run = maxEventsPerRun
+        self.max_files = maxFiles
+        self.max_files_per_run = maxFilesPerRun
         self.create_file_start_length_list = create_file_start_length_list
 
     def __repr__(self):
@@ -23,22 +23,22 @@ class DatasetIntoEventBuildersSplitter(object):
             self.__class__.__name__,
             self.EventBuilder,
             self.eventBuilderConfigMaker,
-            self.maxEvents,
-            self.maxEventsPerRun,
-            self.maxFiles,
-            self.maxFilesPerRun
+            self.max_events,
+            self.max_events_per_run,
+            self.max_files,
+            self.max_files_per_run
         )
 
     def __call__(self, dataset):
 
-        files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles=self.maxFiles)
+        files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles=self.max_files)
         # e.g., ['A.root', 'B.root', 'C.root', 'D.root', 'E.root']
 
         file_start_length_list = self._file_start_length_list(
             files,
-            maxEvents=self.maxEvents,
-            maxEventsPerRun=self.maxEventsPerRun,
-            maxFilesPerRun=self.maxFilesPerRun
+            max_events=self.max_events,
+            max_events_per_run=self.max_events_per_run,
+            max_files_per_run=self.max_files_per_run
         )
         # (files, start, length)
         # e.g.,
@@ -54,54 +54,54 @@ class DatasetIntoEventBuildersSplitter(object):
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
 
-    def _file_start_length_list(self, files, maxEvents, maxEventsPerRun,
-                                maxFilesPerRun):
+    def _file_start_length_list(self, files, max_events, max_events_per_run,
+                                max_files_per_run):
 
-        if not self._need_get_number_of_events_in_files(maxEvents, maxEventsPerRun):
-            return self._fast_path(files, maxFilesPerRun)
+        if not self._need_get_number_of_events_in_files(max_events, max_events_per_run):
+            return self._fast_path(files, max_files_per_run)
 
-        return self._full_path(files, maxEvents, maxEventsPerRun, maxFilesPerRun)
+        return self._full_path(files, max_events, max_events_per_run, max_files_per_run)
 
-    def _need_get_number_of_events_in_files(self, maxEvents, maxEventsPerRun):
-        return maxEvents >= 0 or maxEventsPerRun >= 0
+    def _need_get_number_of_events_in_files(self, max_events, max_events_per_run):
+        return max_events >= 0 or max_events_per_run >= 0
 
-    def _fast_path(self, files, maxFilesPerRun):
+    def _fast_path(self, files, max_files_per_run):
         if not files:
             return [ ]
-        if maxFilesPerRun < 0:
+        if max_files_per_run < 0:
             return [(files, 0, -1)]
-        if maxFilesPerRun == 0:
+        if max_files_per_run == 0:
             return [ ]
-        return [(files[i:(i + maxFilesPerRun)], 0, -1) for i in range(0, len(files), maxFilesPerRun)]
+        return [(files[i:(i + max_files_per_run)], 0, -1) for i in range(0, len(files), max_files_per_run)]
 
-    def _full_path(self, files, maxEvents, maxEventsPerRun, maxFilesPerRun):
+    def _full_path(self, files, max_events, max_events_per_run, max_files_per_run):
 
         # this can be slow
         file_nevents_list = self._file_nevents_list_(
             files,
-            maxEvents=maxEvents
+            max_events=max_events
         )
 
         file_start_length_list = self.create_file_start_length_list(
             file_nevents_list=file_nevents_list,
-            max_events_per_run=maxEventsPerRun,
-            max_events_total=maxEvents,
-            max_files_per_run=maxFilesPerRun
+            max_events_per_run=max_events_per_run,
+            max_events_total=max_events,
+            max_files_per_run=max_files_per_run
         )
         return file_start_length_list
 
-    def _file_nevents_list_(self, files, maxEvents):
-        totalEvents = 0
+    def _file_nevents_list_(self, files, max_events):
+        total_events = 0
         ret = [ ]
         for f in files:
-            if 0 <= maxEvents <= totalEvents:
+            if 0 <= max_events <= total_events:
                 break
 
             # this can be slow
             n = self.eventBuilderConfigMaker.nevents_in_file(f)
 
             ret.append((f, n))
-            totalEvents += n
+            total_events += n
         return ret
 
     def _create_configs(self, dataset, file_start_length_list):
