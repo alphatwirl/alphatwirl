@@ -194,24 +194,6 @@ def test_file_start_length_list_long_path(obj, mockConfigMaker, mock_split_func)
         max_events_per_run=80, max_events_total=330, max_files_per_run=2
     )] == mock_split_func.call_args_list
 
-def test_file_nevents_list_for(obj):
-    dataset = mock.Mock()
-    expected = [
-        ('A.root', 100), ('B.root', 200), ('C.root', 150), ('D.root', 180), ('E.root', 210)
-    ]
-    actual = obj._file_nevents_list_for(dataset)
-    assert expected == actual
-
-def test_file_nevents_list_for_maxFiles(obj):
-    dataset = mock.Mock()
-    expected = [('A.root', 100)]
-    actual = obj._file_nevents_list_for(dataset, maxFiles=1)
-    assert expected == actual
-
-    expected = [ ]
-    actual = obj._file_nevents_list_for(dataset, maxFiles=0)
-    assert expected == actual
-
 @pytest.mark.parametrize('files, maxEvents, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
