@@ -75,7 +75,7 @@ class DatasetIntoEventBuildersSplitter(object):
         ret = [ ]
         for f in files:
             if 0 <= maxEvents <= totalEvents:
-                return ret
+                break
 
             # this can be slow
             n = self.eventBuilderConfigMaker.nevents_in_file(f)
