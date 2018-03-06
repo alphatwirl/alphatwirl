@@ -4,14 +4,14 @@ from .BranchBuilder import BranchBuilder
 
 ##__________________________________________________________________||
 class BEvents(Events):
-    def __init__(self, tree, maxEvents = -1, start = 0):
+    def __init__(self, tree, maxEvents=-1, start=0):
         super(BEvents, self).__init__(tree, maxEvents, start)
         self.branches = { }
         self.buildBranch = BranchBuilder()
         self.buildBranch.register_tree(tree)
 
     def __repr__(self):
-        return '{}({}, branches = {!r})'.format(
+        return '{}({}, branches={!r})'.format(
             self.__class__.__name__,
             super(BEvents, self)._repr_contents(),
             self.branches
