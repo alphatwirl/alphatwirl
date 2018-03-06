@@ -54,8 +54,8 @@ class DatasetIntoEventBuildersSplitter(object):
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
 
-    def _file_start_length_list(self, files, maxEvents=-1, maxEventsPerRun=-1,
-                                maxFilesPerRun=1):
+    def _file_start_length_list(self, files, maxEvents, maxEventsPerRun,
+                                maxFilesPerRun):
 
         if not self._need_get_number_of_events_in_files(maxEvents, maxEventsPerRun):
             return self._fast_path(files, maxFilesPerRun)
@@ -90,7 +90,7 @@ class DatasetIntoEventBuildersSplitter(object):
         )
         return file_start_length_list
 
-    def _file_nevents_list_(self, files, maxEvents=-1):
+    def _file_nevents_list_(self, files, maxEvents):
         totalEvents = 0
         ret = [ ]
         for f in files:
