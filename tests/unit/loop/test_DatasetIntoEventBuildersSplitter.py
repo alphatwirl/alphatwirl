@@ -194,6 +194,21 @@ def test_file_start_length_list_long_path(obj, mockConfigMaker, mock_split_func)
         max_events_per_run=80, max_events_total=330, max_files_per_run=2
     )] == mock_split_func.call_args_list
 
+@pytest.mark.parametrize('maxEvents, maxEventsPerRun, expected', [
+    ( 0,  0,  True),
+    ( 0, -1,  True),
+    ( 0,  1,  True),
+    (-1,  0,  True),
+    (-1, -1, False),
+    (-1,  1, True),
+    ( 1,  0, True),
+    ( 1, -1 , True),
+    ( 1,  1, True),
+])
+def test_need_get_number_of_events_in_files(obj, maxEvents, maxEventsPerRun, expected):
+    actual = obj._need_get_number_of_events_in_files(maxEvents, maxEventsPerRun)
+    assert expected == actual
+
 @pytest.mark.parametrize('files, maxFilesPerRun, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
