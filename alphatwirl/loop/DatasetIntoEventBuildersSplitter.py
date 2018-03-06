@@ -73,6 +73,9 @@ class DatasetIntoEventBuildersSplitter(object):
 
     def _file_nevents_list_for(self, dataset, maxEvents=-1, maxFiles=-1):
         files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles=maxFiles)
+        return self._file_nevents_list_(files=files, maxEvents=maxEvents)
+
+    def _file_nevents_list_(self, files, maxEvents=-1):
         totalEvents = 0
         ret = [ ]
         for f in files:
