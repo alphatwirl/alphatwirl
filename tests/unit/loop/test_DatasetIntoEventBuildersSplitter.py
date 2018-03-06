@@ -241,6 +241,21 @@ def test_fast_path(obj, files, maxFilesPerRun, expected):
     actual = obj._fast_path(files, maxFilesPerRun)
     assert expected == actual
 
+@pytest.mark.parametrize('files, maxEvents, maxEventsPerRun, maxFilesPerRun, expected', [
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        330, 80, 2,
+        [
+            (['A.root'], 0, 80), (['A.root', 'B.root'], 80, 80),
+            (['B.root'], 60, 80), (['B.root', 'C.root'], 140, 80),
+            (['C.root'], 20, 10)
+        ]
+    ),
+])
+def test_full_path(obj, files, maxEvents, maxEventsPerRun, maxFilesPerRun, expected):
+    actual = obj._full_path(files, maxEvents, maxEventsPerRun, maxFilesPerRun)
+    assert expected == actual
+
 @pytest.mark.parametrize('files, maxEvents, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
