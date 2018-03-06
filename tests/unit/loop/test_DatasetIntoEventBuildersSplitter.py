@@ -194,6 +194,38 @@ def test_file_start_length_list_long_path(obj, mockConfigMaker, mock_split_func)
         max_events_per_run=80, max_events_total=330, max_files_per_run=2
     )] == mock_split_func.call_args_list
 
+@pytest.mark.parametrize('files, maxFilesPerRun, expected', [
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
+        [(['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0, -1)]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0,
+        [ ]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 1,
+        [
+            (['A.root'], 0, -1),
+            (['B.root'], 0, -1),
+            (['C.root'], 0, -1),
+            (['D.root'], 0, -1),
+            (['E.root'], 0, -1)
+        ]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 2,
+        [
+            (['A.root', 'B.root'], 0, -1),
+            (['C.root', 'D.root'], 0, -1),
+            (['E.root'], 0, -1)
+        ]
+    ),
+])
+def test_fast_path(obj, files, maxFilesPerRun, expected):
+    actual = obj._fast_path(files, maxFilesPerRun)
+    assert expected == actual
+
 @pytest.mark.parametrize('files, maxEvents, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
