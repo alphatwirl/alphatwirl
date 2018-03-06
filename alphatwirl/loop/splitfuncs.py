@@ -99,35 +99,3 @@ def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per
     return ret
 
 ##__________________________________________________________________||
-def _start_length_pairs_for_split_lists(ntotal, max_per_list):
-    # e.g., ntotal =  35, max_per_list = 10
-
-    if max_per_list < 0: return [(0, ntotal)]
-
-    nlists = ntotal//max_per_list
-    # https://stackoverflow.com/questions/1282945/python-integer-division-yields-float
-    # nlists = 3
-
-    ret = [(i*max_per_list, max_per_list) for i in range(nlists)]
-    # e.g., [(0, 10), (10, 10), (20, 10)]
-
-    remainder =  ntotal % max_per_list
-    # e.g., 5
-
-    if remainder > 0:
-        last = (nlists*max_per_list, remainder)
-        # e.g, (30, 5)
-
-        ret.append(last)
-
-    # e.g., [(0, 10), (10, 10), (20, 10), (30, 5)]
-    return ret
-
-##__________________________________________________________________||
-def _minimum_positive_value(vals):
-    # returns -1 if all negative or empty
-    vals = [v for v in vals if v >= 0]
-    if not vals: return -1
-    return min(vals)
-
-##__________________________________________________________________||

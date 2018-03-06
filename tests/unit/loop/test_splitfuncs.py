@@ -3,8 +3,6 @@
 from alphatwirl.loop.splitfuncs import *
 from alphatwirl.loop.splitfuncs import _apply_max_events_total
 from alphatwirl.loop.splitfuncs import _file_start_length_list
-from alphatwirl.loop.splitfuncs import _start_length_pairs_for_split_lists
-from alphatwirl.loop.splitfuncs import _minimum_positive_value
 
 ##__________________________________________________________________||
 def test_create_file_start_length_list():
@@ -212,30 +210,5 @@ def test_file_start_length_list_06():
     args = ([('A', 100), ('B', 5), ('C', 7), ('D', 100)], 0, 0) # both are 0
     expected = [ ]
     assert expected == _file_start_length_list(*args)
-
-def test_start_length_pairs_for_split_lists():
-    assert [(0, 10), (10, 10), (20, 10), (30, 10)] == _start_length_pairs_for_split_lists(40, 10)
-    assert [(0, 10), (10, 10), (20, 10), (30, 10), (40, 1)] == _start_length_pairs_for_split_lists(41, 10)
-    assert [(0, 40)] == _start_length_pairs_for_split_lists(40, 40)
-    assert [(0, 40)] == _start_length_pairs_for_split_lists(40, 50)
-
-    assert [(0, 40)] == _start_length_pairs_for_split_lists(40, -1)
-
-def test_minimum_positive_value():
-
-    # empty
-    assert -1 == _minimum_positive_value([])
-
-    # all negative
-    assert -1 == _minimum_positive_value([-1, -2, - 3])
-
-    # all positive
-    assert 10 == _minimum_positive_value([10, 20, 30])
-
-    # zero or positive
-    assert 0 == _minimum_positive_value([10, 20, 0, 30])
-
-    # general
-    assert 10 == _minimum_positive_value([10, 20, 30, -2, -3])
 
 ##__________________________________________________________________||
