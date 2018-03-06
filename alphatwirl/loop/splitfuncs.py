@@ -8,7 +8,7 @@ def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, ma
     return _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run)
 
 ##__________________________________________________________________||
-def _apply_max_events_total(file_nevents_list, max_events_total = -1):
+def _apply_max_events_total(file_nevents_list, max_events_total):
 
     if max_events_total < 0: return file_nevents_list
 

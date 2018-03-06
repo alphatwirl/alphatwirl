@@ -33,11 +33,6 @@ def test_apply_max_events_total():
     expected = [('A', 100), ('B', 200)]
     assert expected == _apply_max_events_total(file_nevents_list, max_events_total)
 
-    # default
-    file_nevents_list = [('A', 100), ('B', 200)]
-    expected = [('A', 100), ('B', 200)]
-    assert expected == _apply_max_events_total(file_nevents_list)
-
     # zero
     file_nevents_list = [('A', 100), ('B', 200)]
     max_events_total = 0
