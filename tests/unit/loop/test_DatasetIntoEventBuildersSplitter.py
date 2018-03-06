@@ -15,16 +15,6 @@ def MockEventBuilder():
     return mock.Mock()
 
 @pytest.fixture()
-def mock_split_func():
-    ret = mock.Mock()
-    ret.return_value = [
-        (['A.root'], 0, 80), (['A.root', 'B.root'], 80, 80),
-        (['B.root'], 60, 80), (['B.root', 'C.root'], 140, 80),
-        (['C.root'], 20, 10)
-    ]
-    return ret
-
-@pytest.fixture()
 def mockConfigMaker():
     ret = mock.Mock()
     file_list = ['A.root', 'B.root', 'C.root', 'D.root', 'E.root']
@@ -38,12 +28,11 @@ def mockConfigMaker():
     return ret
 
 @pytest.fixture()
-def obj(MockEventBuilder, mockConfigMaker, mock_split_func):
+def obj(MockEventBuilder, mockConfigMaker):
     ret = DatasetIntoEventBuildersSplitter(
         EventBuilder=MockEventBuilder,
         eventBuilderConfigMaker=mockConfigMaker
     )
-    ret.create_file_start_length_list = mock_split_func
     return ret
 
 def test_repr(obj):
