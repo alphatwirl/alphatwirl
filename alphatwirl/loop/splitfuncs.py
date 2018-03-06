@@ -1,7 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, max_events_total = -1, max_files_per_run = 1):
+def create_file_start_length_list(file_nevents_list, max_events_per_run=-1,
+                                   max_events_total=-1, max_files_per_run=1):
 
     file_nevents_list = _apply_max_events_total(file_nevents_list, max_events_total)
 
@@ -10,11 +11,13 @@ def create_file_start_length_list(file_nevents_list, max_events_per_run = -1, ma
 ##__________________________________________________________________||
 def _apply_max_events_total(file_nevents_list, max_events_total):
 
-    if max_events_total < 0: return file_nevents_list
+    if max_events_total < 0:
+        return file_nevents_list
 
     ret = [ ]
     for file, nevents in file_nevents_list:
-        if max_events_total == 0: break
+        if max_events_total == 0:
+            break
         nevents = min(max_events_total, nevents)
         ret.append((file, nevents))
         max_events_total -= nevents
