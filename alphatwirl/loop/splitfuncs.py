@@ -26,7 +26,7 @@ def _fast_path(files, max_files_per_run):
 def _full_path(files, func_get_nevents_in_file, max_events, max_events_per_run, max_files_per_run):
 
     # this can be slow
-    file_nevents_list = _file_nevents_list_(
+    file_nevents_list = _file_nevents_list(
         files,
         func_get_nevents_in_file=func_get_nevents_in_file,
         max_events=max_events
@@ -40,7 +40,7 @@ def _full_path(files, func_get_nevents_in_file, max_events, max_events_per_run, 
     )
     return file_start_length_list
 
-def _file_nevents_list_(files, func_get_nevents_in_file, max_events):
+def _file_nevents_list(files, func_get_nevents_in_file, max_events):
     total_events = 0
     ret = [ ]
     for f in files:
