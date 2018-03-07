@@ -37,6 +37,7 @@ class DatasetIntoEventBuildersSplitter(object):
         files_start_length_list = self._file_start_length_list(
             files,
             max_events=self.max_events,
+            func_get_nevents_in_file=self.eventBuilderConfigMaker.nevents_in_file,
             max_events_per_run=self.max_events_per_run,
             max_files_per_run=self.max_files_per_run
         )
@@ -54,14 +55,15 @@ class DatasetIntoEventBuildersSplitter(object):
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
 
-    def _file_start_length_list(self, files, max_events, max_events_per_run,
+    def _file_start_length_list(self, files, func_get_nevents_in_file,
+                                max_events, max_events_per_run,
                                 max_files_per_run):
 
         if not self._need_get_number_of_events_in_files(max_events, max_events_per_run):
             return self._fast_path(files, max_files_per_run)
 
-        func_get_nevents_in_file=self.eventBuilderConfigMaker.nevents_in_file
-        return self._full_path(files, func_get_nevents_in_file, max_events, max_events_per_run, max_files_per_run)
+        return self._full_path(files, func_get_nevents_in_file, max_events,
+                               max_events_per_run, max_files_per_run)
 
     def _need_get_number_of_events_in_files(self, max_events, max_events_per_run):
         return max_events >= 0 or max_events_per_run >= 0
