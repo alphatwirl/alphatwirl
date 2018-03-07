@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import sys
 import pytest
 
 try:
@@ -6,9 +7,41 @@ try:
 except ImportError:
     import mock
 
+from alphatwirl.loop.splitfuncs import create_files_start_length_list
 from alphatwirl.loop.splitfuncs import _file_nevents_list
 from alphatwirl.loop.splitfuncs import _fast_path
 from alphatwirl.loop.splitfuncs import _need_get_number_of_events_in_files
+
+##__________________________________________________________________||
+@pytest.fixture()
+def mock_fast_path(monkeypatch):
+    module = sys.modules['alphatwirl.loop.splitfuncs']
+    ret = mock.Mock(name='mock_fast_path')
+    monkeypatch.setattr(module, '_fast_path', ret)
+    return ret
+
+@pytest.fixture()
+def mock_full_path(monkeypatch):
+    module = sys.modules['alphatwirl.loop.splitfuncs']
+    ret = mock.Mock(name='mock_full_path')
+    monkeypatch.setattr(module, '_full_path', ret)
+    return ret
+
+@pytest.mark.parametrize('files', [[], ['A.root'], ['A.root', 'B.root', 'C.root']])
+@pytest.mark.parametrize('max_events', [-1, 0, 1, 100])
+@pytest.mark.parametrize('max_events_per_run', [-1, 0, 1, 100])
+@pytest.mark.parametrize('max_files_per_run', [-1, 0, 1, 100])
+def test_create_files_start_length_list(
+        files, max_events, max_events_per_run, max_files_per_run,
+        mock_fast_path, mock_full_path
+):
+    actual = create_files_start_length_list(
+        files=files,
+        func_get_nevents_in_file=None,
+        max_events=max_events,
+        max_events_per_run=max_events_per_run,
+        max_files_per_run=max_files_per_run
+    )
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
