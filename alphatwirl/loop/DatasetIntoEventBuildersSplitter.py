@@ -34,7 +34,7 @@ class DatasetIntoEventBuildersSplitter(object):
         files = self.eventBuilderConfigMaker.file_list_in(dataset, maxFiles=self.max_files)
         # e.g., ['A.root', 'B.root', 'C.root', 'D.root', 'E.root']
 
-        file_start_length_list = self._file_start_length_list(
+        files_start_length_list = self._file_start_length_list(
             files,
             max_events=self.max_events,
             max_events_per_run=self.max_events_per_run,
@@ -50,7 +50,7 @@ class DatasetIntoEventBuildersSplitter(object):
         #     (['C.root'], 20, 10)
         # ]
 
-        configs = self._create_configs(dataset, file_start_length_list)
+        configs = self._create_configs(dataset, files_start_length_list)
         eventBuilders = [self.EventBuilder(c) for c in configs]
         return eventBuilders
 
