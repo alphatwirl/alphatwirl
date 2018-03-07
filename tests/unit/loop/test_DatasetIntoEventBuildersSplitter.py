@@ -85,9 +85,11 @@ def test_fast_path(obj, files, max_files_per_run, expected):
     actual = obj._fast_path(files, max_files_per_run)
     assert expected == actual
 
-@pytest.mark.parametrize('files, max_events, max_events_per_run, max_files_per_run, expected', [
+@pytest.mark.parametrize(
+    'files, nevents, max_events, max_events_per_run, max_files_per_run, expected', [
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 200, 150, 180, 210],
         330, 80, 2,
         [
             (['A.root'], 0, 80), (['A.root', 'B.root'], 80, 80),
@@ -96,8 +98,12 @@ def test_fast_path(obj, files, max_files_per_run, expected):
         ]
     ),
 ])
-def test_full_path(obj, files, max_events, max_events_per_run, max_files_per_run, expected):
-    actual = obj._full_path(files, max_events, max_events_per_run, max_files_per_run)
+def test_full_path(obj, files, nevents, max_events, max_events_per_run,
+                   max_files_per_run, expected):
+    func_get_nevents_in_file = mock.Mock()
+    func_get_nevents_in_file.side_effect = nevents
+    actual = obj._full_path(files, func_get_nevents_in_file, max_events,
+                            max_events_per_run, max_files_per_run)
     assert expected == actual
 
 @pytest.mark.parametrize(
