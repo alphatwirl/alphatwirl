@@ -7,6 +7,7 @@ except ImportError:
     import mock
 
 from alphatwirl.loop.splitfuncs import create_files_start_length_list
+from alphatwirl.loop.splitfuncs import _full_path
 from alphatwirl.loop.splitfuncs import _files_start_length_list
 
 ##__________________________________________________________________||
@@ -203,6 +204,23 @@ def test_create_files_start_length_list(args, expected):
         max_events=-1,
         max_events_per_run=max_events_per_run,
         max_files=-1,
+        max_files_per_run=max_files_per_run
+    )
+
+@pytest.mark.parametrize('args, expected', params)
+def test_full_path(args, expected):
+    file_nevents_list = args[0]
+    files, nevents = zip(*file_nevents_list) if file_nevents_list else (( ), ( ))
+    max_events_per_run = args[1]
+    max_files_per_run = args[2]
+    func_get_nevents_in_file = mock.Mock()
+    func_get_nevents_in_file.side_effect = nevents
+
+    assert expected == _full_path(
+        files=files,
+        func_get_nevents_in_file=func_get_nevents_in_file,
+        max_events=-1,
+        max_events_per_run=max_events_per_run,
         max_files_per_run=max_files_per_run
     )
 ##__________________________________________________________________||
