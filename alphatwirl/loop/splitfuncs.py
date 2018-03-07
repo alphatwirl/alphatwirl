@@ -1,6 +1,60 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
+def create_files_start_length_list(files, func_get_nevents_in_file,
+                                   max_events, max_events_per_run,
+                                   max_files_per_run):
+
+    if not _need_get_number_of_events_in_files(max_events, max_events_per_run):
+        return _fast_path(files, max_files_per_run)
+
+    return _full_path(files, func_get_nevents_in_file, max_events,
+                           max_events_per_run, max_files_per_run)
+
+def _need_get_number_of_events_in_files(max_events, max_events_per_run):
+    return max_events >= 0 or max_events_per_run >= 0
+
+def _fast_path(files, max_files_per_run):
+    if not files:
+        return [ ]
+    if max_files_per_run < 0:
+        return [(files, 0, -1)]
+    if max_files_per_run == 0:
+        return [ ]
+    return [(files[i:(i + max_files_per_run)], 0, -1) for i in range(0, len(files), max_files_per_run)]
+
+def _full_path(files, func_get_nevents_in_file, max_events, max_events_per_run, max_files_per_run):
+
+    # this can be slow
+    file_nevents_list = _file_nevents_list_(
+        files,
+        func_get_nevents_in_file=func_get_nevents_in_file,
+        max_events=max_events
+    )
+
+    file_start_length_list = create_file_start_length_list(
+        file_nevents_list=file_nevents_list,
+        max_events_per_run=max_events_per_run,
+        max_events_total=max_events,
+        max_files_per_run=max_files_per_run
+    )
+    return file_start_length_list
+
+def _file_nevents_list_(files, func_get_nevents_in_file, max_events):
+    total_events = 0
+    ret = [ ]
+    for f in files:
+        if 0 <= max_events <= total_events:
+            break
+
+        # this can be slow
+        n = func_get_nevents_in_file(f)
+
+        ret.append((f, n))
+        total_events += n
+    return ret
+
+##__________________________________________________________________||
 def create_file_start_length_list(file_nevents_list, max_events_per_run=-1,
                                    max_events_total=-1, max_files_per_run=1):
 
