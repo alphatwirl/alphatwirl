@@ -202,6 +202,7 @@ def test_create_files_start_length_list(args, expected):
         func_get_nevents_in_file=func_get_nevents_in_file,
         max_events=-1,
         max_events_per_run=max_events_per_run,
+        max_files=-1,
         max_files_per_run=max_files_per_run
     )
 ##__________________________________________________________________||

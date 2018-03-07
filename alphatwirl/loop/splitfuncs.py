@@ -3,7 +3,7 @@
 ##__________________________________________________________________||
 def create_files_start_length_list(files, func_get_nevents_in_file,
                                    max_events, max_events_per_run,
-                                   max_files_per_run):
+                                   max_files, max_files_per_run):
 
     if not _need_get_number_of_events_in_files(max_events, max_events_per_run):
         return _fast_path(files, max_files_per_run)

@@ -30,9 +30,11 @@ def mock_full_path(monkeypatch):
 @pytest.mark.parametrize('files', [[], ['A.root'], ['A.root', 'B.root', 'C.root']])
 @pytest.mark.parametrize('max_events', [-1, 0, 1, 100])
 @pytest.mark.parametrize('max_events_per_run', [-1, 0, 1, 100])
+@pytest.mark.parametrize('max_files', [-1, 0, 1, 100])
 @pytest.mark.parametrize('max_files_per_run', [-1, 0, 1, 100])
 def test_create_files_start_length_list(
-        files, max_events, max_events_per_run, max_files_per_run,
+        files, max_events, max_events_per_run,
+        max_files, max_files_per_run,
         mock_fast_path, mock_full_path
 ):
     actual = create_files_start_length_list(
@@ -40,6 +42,7 @@ def test_create_files_start_length_list(
         func_get_nevents_in_file=None,
         max_events=max_events,
         max_events_per_run=max_events_per_run,
+        max_files=max_files,
         max_files_per_run=max_files_per_run
     )
 

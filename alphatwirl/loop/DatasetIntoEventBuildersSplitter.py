@@ -38,6 +38,7 @@ class DatasetIntoEventBuildersSplitter(object):
             func_get_nevents_in_file=self.eventBuilderConfigMaker.nevents_in_file,
             max_events=self.max_events,
             max_events_per_run=self.max_events_per_run,
+            max_files=self.max_files,
             max_files_per_run=self.max_files_per_run
         )
         # (files, start, length)
