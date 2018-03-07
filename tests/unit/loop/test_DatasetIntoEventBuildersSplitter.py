@@ -126,10 +126,12 @@ def test_full_path(obj, files, max_events, max_events_per_run, max_files_per_run
     (
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         [100, 200, 150, 180, 210],
-        300,
+        300, # exactly the nevents in the first two files
         [('A.root', 100), ('B.root', 200)],
         ['A.root', 'B.root'],
     ),
+    ([ ], [ ], -1, [ ], [ ]),
+    ([ ], [ ], 10, [ ], [ ]),
 ])
 def test_file_nevents_list_(
         obj, files, nevents, max_events,
