@@ -11,6 +11,7 @@ def create_files_start_length_list(files, func_get_nevents_in_file,
     return _full_path(files, func_get_nevents_in_file, max_events,
                            max_events_per_run, max_files_per_run)
 
+##__________________________________________________________________||
 def _need_get_number_of_events_in_files(max_events, max_events_per_run):
     return max_events >= 0 or max_events_per_run >= 0
 
