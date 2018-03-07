@@ -11,9 +11,15 @@ from alphatwirl.loop.splitfuncs import create_files_start_length_list
 from alphatwirl.loop.splitfuncs import _apply_max_files
 from alphatwirl.loop.splitfuncs import _file_nevents_list
 from alphatwirl.loop.splitfuncs import _fast_path
-from alphatwirl.loop.splitfuncs import _need_get_number_of_events_in_files
 
 ##__________________________________________________________________||
+@pytest.fixture()
+def wrapped_apply_max_files(monkeypatch):
+    module = sys.modules['alphatwirl.loop.splitfuncs']
+    ret = mock.Mock(wraps=_apply_max_files)
+    monkeypatch.setattr(module, '_apply_max_files', ret)
+    return ret
+
 @pytest.fixture()
 def mock_fast_path(monkeypatch):
     module = sys.modules['alphatwirl.loop.splitfuncs']
@@ -36,6 +42,7 @@ def mock_full_path(monkeypatch):
 def test_create_files_start_length_list(
         files, max_events, max_events_per_run,
         max_files, max_files_per_run,
+        wrapped_apply_max_files,
         mock_fast_path, mock_full_path
 ):
     actual = create_files_start_length_list(
@@ -46,6 +53,15 @@ def test_create_files_start_length_list(
         max_files=max_files,
         max_files_per_run=max_files_per_run
     )
+
+    wrapped_apply_max_files.assert_called_once()
+
+    if max_events == 0 or max_events_per_run == 0:
+        assert [ ] == actual
+    elif max_events < 0 and max_events_per_run < 0:
+        assert mock_fast_path() == actual
+    else:
+        assert mock_full_path() == actual
 
 ##__________________________________________________________________||
 def test_create_files_start_length_list_default():
@@ -183,20 +199,3 @@ def test_fast_path(files, max_files_per_run, expected):
     assert expected == actual
 
 ##__________________________________________________________________||
-@pytest.mark.parametrize('max_events, max_events_per_run, expected', [
-    ( 0,  0,  True),
-    ( 0, -1,  True),
-    ( 0,  1,  True),
-    (-1,  0,  True),
-    (-1, -1, False),
-    (-1,  1, True),
-    ( 1,  0, True),
-    ( 1, -1 , True),
-    ( 1,  1, True),
-])
-def test_need_get_number_of_events_in_files(max_events, max_events_per_run, expected):
-    actual = _need_get_number_of_events_in_files(max_events, max_events_per_run)
-    assert expected == actual
-
-##__________________________________________________________________||
-
