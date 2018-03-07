@@ -1,8 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
-from alphatwirl.loop.splitfuncs import *
-from alphatwirl.loop.splitfuncs import _apply_max_events_total
-from alphatwirl.loop.splitfuncs import _file_start_length_list
+from alphatwirl.loop.splitfuncs import create_file_start_length_list
 
 ##__________________________________________________________________||
 def test_create_file_start_length_list():
