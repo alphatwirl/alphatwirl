@@ -88,14 +88,11 @@ def _files_start_length_list(file_nevents_list, max_events_per_run, max_files_pe
     if not file_nevents_list:
         return [ ]
 
+    if max_events_per_run == 0 or max_files_per_run == 0:
+        return [ ]
+
     total_nevents = sum([n for f, n, in file_nevents_list])
     if total_nevents == 0:
-        return [ ]
-
-    if max_files_per_run == 0:
-        return [ ]
-
-    if max_events_per_run == 0:
         return [ ]
 
     if max_events_per_run < 0:
@@ -105,7 +102,7 @@ def _files_start_length_list(file_nevents_list, max_events_per_run, max_files_pe
     if max_files_per_run < 0:
         max_files_per_run = total_nfiles
 
-
+    ##
     files = [ ]
     nevents = [ ]
     start = [ ]
@@ -155,9 +152,6 @@ def _files_start_length_list(file_nevents_list, max_events_per_run, max_files_pe
         if max_files_per_run == len(files[i]):
             i += 1 # to next run
 
-    # print files, nevents, start, length
-    ret = list(zip(files, start, length))
-
-    return ret
+    return list(zip(files, start, length))
 
 ##__________________________________________________________________||
