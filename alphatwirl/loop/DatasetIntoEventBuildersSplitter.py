@@ -79,6 +79,7 @@ class DatasetIntoEventBuildersSplitter(object):
         # this can be slow
         file_nevents_list = self._file_nevents_list_(
             files,
+            func_get_nevents_in_file=self.eventBuilderConfigMaker.nevents_in_file,
             max_events=max_events
         )
 
@@ -90,7 +91,7 @@ class DatasetIntoEventBuildersSplitter(object):
         )
         return file_start_length_list
 
-    def _file_nevents_list_(self, files, max_events):
+    def _file_nevents_list_(self, files, func_get_nevents_in_file, max_events):
         total_events = 0
         ret = [ ]
         for f in files:
@@ -98,7 +99,7 @@ class DatasetIntoEventBuildersSplitter(object):
                 break
 
             # this can be slow
-            n = self.eventBuilderConfigMaker.nevents_in_file(f)
+            n = func_get_nevents_in_file(f)
 
             ret.append((f, n))
             total_events += n

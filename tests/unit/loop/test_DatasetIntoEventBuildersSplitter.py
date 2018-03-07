@@ -100,27 +100,49 @@ def test_full_path(obj, files, max_events, max_events_per_run, max_files_per_run
     actual = obj._full_path(files, max_events, max_events_per_run, max_files_per_run)
     assert expected == actual
 
-@pytest.mark.parametrize('files, max_events, expected', [
+@pytest.mark.parametrize(
+    'files, nevents, max_events, expected_results, expected_call_args', [
     (
-        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
-        [('A.root', 100), ('B.root', 200), ('C.root', 150), ('D.root', 180), ('E.root', 210)]
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 200, 150, 180, 210],
+        -1,
+        [('A.root', 100), ('B.root', 200), ('C.root', 150), ('D.root', 180), ('E.root', 210)],
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
     ),
     (
-        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0,
-        [ ]
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 200, 150, 180, 210],
+        0,
+        [ ],
+        [ ],
     ),
     (
-        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 150,
-        [('A.root', 100), ('B.root', 200)]
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 200, 150, 180, 210],
+        150,
+        [('A.root', 100), ('B.root', 200)],
+        ['A.root', 'B.root'],
     ),
     (
-        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 300,
-        [('A.root', 100), ('B.root', 200)]
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 200, 150, 180, 210],
+        300,
+        [('A.root', 100), ('B.root', 200)],
+        ['A.root', 'B.root'],
     ),
 ])
-def test_file_nevents_list_(obj, files, max_events, expected):
-    actual = obj._file_nevents_list_(files, max_events=max_events)
-    assert expected == actual
+def test_file_nevents_list_(
+        obj, files, nevents, max_events,
+        expected_results, expected_call_args):
+    func_get_nevents_in_file = mock.Mock()
+    func_get_nevents_in_file.side_effect = nevents
+    actual = obj._file_nevents_list_(
+        files,
+        func_get_nevents_in_file=func_get_nevents_in_file,
+        max_events=max_events
+    )
+    assert expected_results == actual
+    assert [mock.call(a) for a in expected_call_args] == func_get_nevents_in_file.call_args_list
 
 def test_create_configs(obj, mockConfigMaker):
     dataset = mock.Mock()
