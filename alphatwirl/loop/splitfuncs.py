@@ -6,6 +6,8 @@ def create_files_start_length_list(
         max_events=-1, max_events_per_run=-1,
         max_files=-1, max_files_per_run=-1):
 
+    files = _apply_max_files(files, max_files)
+
     if not _need_get_number_of_events_in_files(max_events, max_events_per_run):
         return _fast_path(files, max_files_per_run)
 
@@ -13,6 +15,11 @@ def create_files_start_length_list(
                            max_events_per_run, max_files_per_run)
 
 ##__________________________________________________________________||
+def _apply_max_files(files, max_files):
+    if max_files < 0:
+        return files
+    return files[:min(max_files, len(files))]
+
 def _need_get_number_of_events_in_files(max_events, max_events_per_run):
     return max_events >= 0 or max_events_per_run >= 0
 

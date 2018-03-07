@@ -8,6 +8,7 @@ except ImportError:
     import mock
 
 from alphatwirl.loop.splitfuncs import create_files_start_length_list
+from alphatwirl.loop.splitfuncs import _apply_max_files
 from alphatwirl.loop.splitfuncs import _file_nevents_list
 from alphatwirl.loop.splitfuncs import _fast_path
 from alphatwirl.loop.splitfuncs import _need_get_number_of_events_in_files
@@ -51,6 +52,55 @@ def test_create_files_start_length_list_default():
     files = mock.sentinel.files
     actual = create_files_start_length_list(files)
     assert [(files, 0, -1)] == actual
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('args, expected', [
+
+    ## empty
+    pytest.param(([ ], -1), [ ], id='empty. -1'),
+    pytest.param(([ ],  0), [ ], id='empty. 0'),
+    pytest.param(([ ],  1), [ ], id='empty. 1'),
+    pytest.param(([ ], 10), [ ], id='empty. 10'),
+    pytest.param((['A.root' ], -1), ['A.root'], id='1 file. -1'),
+    pytest.param((['A.root' ],  0), [ ], id='1 file. 0'),
+    pytest.param((['A.root' ],  1), ['A.root'], id='1 file. 1'),
+    pytest.param((['A.root' ], 10), ['A.root'], id='1 file. 10'),
+    pytest.param(
+        (
+            ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+            -1
+        ),
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='all'
+    ),
+    pytest.param(
+        (['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0),
+        [ ],
+        id='zero'
+    ),
+    pytest.param(
+        (['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 1),
+        ['A.root'],
+        id='one'
+    ),
+    pytest.param(
+        (['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 3),
+        ['A.root', 'B.root', 'C.root'],
+        id='smaller max_events'
+    ),
+    pytest.param(
+        (['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 5),
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='exact max_events'
+    ),
+    pytest.param(
+        (['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 10),
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='larger max_events'
+    ),
+])
+def test_apply_max_files(args, expected):
+    assert expected == _apply_max_files(*args)
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
