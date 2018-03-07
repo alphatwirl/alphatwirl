@@ -38,7 +38,7 @@ def test_create_files_start_length_list(
         mock_fast_path, mock_full_path
 ):
     actual = create_files_start_length_list(
-        files=files,
+        files,
         func_get_nevents_in_file=None,
         max_events=max_events,
         max_events_per_run=max_events_per_run,
