@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
-from alphatwirl.loop.splitfuncs import _file_start_length_list
+from alphatwirl.loop.splitfuncs import _files_start_length_list
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('args, expected', [
@@ -171,7 +171,7 @@ from alphatwirl.loop.splitfuncs import _file_start_length_list
         id='max_events_per_run 0. max_files_per_run 0.'
     ),
 ])
-def test_file_start_length_list(args, expected):
-    assert expected == _file_start_length_list(*args)
+def test_files_start_length_list(args, expected):
+    assert expected == _files_start_length_list(*args)
 
 ##__________________________________________________________________||

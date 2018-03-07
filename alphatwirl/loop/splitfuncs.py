@@ -60,7 +60,7 @@ def create_file_start_length_list(file_nevents_list, max_events_per_run=-1,
 
     file_nevents_list = _apply_max_events_total(file_nevents_list, max_events_total)
 
-    return _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run)
+    return _files_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run)
 
 ##__________________________________________________________________||
 def _apply_max_events_total(file_nevents_list, max_events_total):
@@ -78,7 +78,7 @@ def _apply_max_events_total(file_nevents_list, max_events_total):
     return ret
 
 ##__________________________________________________________________||
-def _file_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run):
+def _files_start_length_list(file_nevents_list, max_events_per_run, max_files_per_run):
 
     if not file_nevents_list:
         return [ ]
