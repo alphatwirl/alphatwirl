@@ -6,10 +6,9 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.loop import DatasetIntoEventBuildersSplitter
-
 from alphatwirl.loop.splitfuncs import _file_nevents_list
-from alphatwirl.loop.splitfuncs import create_file_start_length_list
+from alphatwirl.loop.splitfuncs import _fast_path
+from alphatwirl.loop.splitfuncs import _need_get_number_of_events_in_files
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
@@ -59,18 +58,53 @@ def test_file_nevents_list_(
     assert [mock.call(a) for a in expected_call_args] == func_get_nevents_in_file.call_args_list
 
 ##__________________________________________________________________||
-def test_create_file_start_length_list():
-
-    # simple
-    file_nevents_list = [('A', 100), ('B', 100)]
-    max_events_per_run = 30
-    max_events_total = 140
-    max_files_per_run = 2
-
-    expected = [
-        (['A'], 0, 30), (['A'], 30, 30), (['A'], 60, 30), (['A', 'B'], 90, 30),
-        (['B'], 20, 20)
-    ]
-    assert expected == create_file_start_length_list(file_nevents_list, max_events_per_run, max_events_total, max_files_per_run)
+@pytest.mark.parametrize('files, max_files_per_run, expected', [
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], -1,
+        [(['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0, -1)]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 0,
+        [ ]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 1,
+        [
+            (['A.root'], 0, -1),
+            (['B.root'], 0, -1),
+            (['C.root'], 0, -1),
+            (['D.root'], 0, -1),
+            (['E.root'], 0, -1)
+        ]
+    ),
+    (
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'], 2,
+        [
+            (['A.root', 'B.root'], 0, -1),
+            (['C.root', 'D.root'], 0, -1),
+            (['E.root'], 0, -1)
+        ]
+    ),
+])
+def test_fast_path(files, max_files_per_run, expected):
+    actual = _fast_path(files, max_files_per_run)
+    assert expected == actual
 
 ##__________________________________________________________________||
+@pytest.mark.parametrize('max_events, max_events_per_run, expected', [
+    ( 0,  0,  True),
+    ( 0, -1,  True),
+    ( 0,  1,  True),
+    (-1,  0,  True),
+    (-1, -1, False),
+    (-1,  1, True),
+    ( 1,  0, True),
+    ( 1, -1 , True),
+    ( 1,  1, True),
+])
+def test_need_get_number_of_events_in_files(max_events, max_events_per_run, expected):
+    actual = _need_get_number_of_events_in_files(max_events, max_events_per_run)
+    assert expected == actual
+
+##__________________________________________________________________||
+
