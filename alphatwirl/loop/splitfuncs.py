@@ -34,6 +34,9 @@ def _fast_path(files, max_files_per_run):
 
 def _full_path(files, func_get_nevents_in_file, max_events, max_events_per_run, max_files_per_run):
 
+    if max_events == 0 or max_events_per_run == 0 or max_files_per_run == 0:
+        return [ ]
+
     # this can be slow
     file_nevents_list = _file_nevents_list(
         files,
