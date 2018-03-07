@@ -47,6 +47,12 @@ def test_create_files_start_length_list(
     )
 
 ##__________________________________________________________________||
+def test_create_files_start_length_list_default():
+    files = mock.sentinel.files
+    actual = create_files_start_length_list(files)
+    assert [(files, 0, -1)] == actual
+
+##__________________________________________________________________||
 @pytest.mark.parametrize(
     'files, nevents, max_events, expected_results, expected_call_args', [
     (

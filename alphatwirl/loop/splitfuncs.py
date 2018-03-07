@@ -1,9 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-def create_files_start_length_list(files, func_get_nevents_in_file,
-                                   max_events, max_events_per_run,
-                                   max_files, max_files_per_run):
+def create_files_start_length_list(
+        files, func_get_nevents_in_file=None,
+        max_events=-1, max_events_per_run=-1,
+        max_files=-1, max_files_per_run=-1):
 
     if not _need_get_number_of_events_in_files(max_events, max_events_per_run):
         return _fast_path(files, max_files_per_run)
