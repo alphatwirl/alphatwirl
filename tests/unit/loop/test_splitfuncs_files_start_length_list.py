@@ -1,10 +1,17 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
+from alphatwirl.loop.splitfuncs import create_files_start_length_list
 from alphatwirl.loop.splitfuncs import _files_start_length_list
 
 ##__________________________________________________________________||
-@pytest.mark.parametrize('args, expected', [
+# 'args, expected'
+params = [
     ## empty
     pytest.param(([ ], 20, 2), [ ], id='empty file list'),
     pytest.param(([('A', 0)], 20, 2), [ ], id='no events, one file'),
@@ -170,8 +177,31 @@ from alphatwirl.loop.splitfuncs import _files_start_length_list
         [ ],
         id='max_events_per_run 0. max_files_per_run 0.'
     ),
-])
+]
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('args, expected', params)
 def test_files_start_length_list(args, expected):
     assert expected == _files_start_length_list(*args)
 
+@pytest.mark.parametrize('args, expected', params)
+def test_create_files_start_length_list(args, expected):
+    file_nevents_list = args[0]
+    files, nevents = zip(*file_nevents_list) if file_nevents_list else (( ), ( ))
+    max_events_per_run = args[1]
+    max_files_per_run = args[2]
+    func_get_nevents_in_file = mock.Mock()
+    func_get_nevents_in_file.side_effect = nevents
+
+    if not max_events_per_run >= 0:
+        # _files_start_length_list() won't be called
+        return
+
+    assert expected == create_files_start_length_list(
+        files=files,
+        func_get_nevents_in_file=func_get_nevents_in_file,
+        max_events=-1,
+        max_events_per_run=max_events_per_run,
+        max_files_per_run=max_files_per_run
+    )
 ##__________________________________________________________________||
