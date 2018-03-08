@@ -4,7 +4,7 @@ import collections
 
 import pytest
 
-from alphatwirl.summary import convert_key_vals_dict_to_tuple_list
+from alphatwirl.summary.convert import convert_key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
