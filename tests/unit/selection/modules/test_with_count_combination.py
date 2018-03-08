@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import copy
 import itertools
 import pytest
 
@@ -88,6 +89,65 @@ def test_combination(tree):
         all0(event)
 
     all0.end()
+
+    count = all0.results()
+    assert [
+        [1,          'AllwCount', 'all1',  3, 32],
+        [2,          'AllwCount', 'all2',  8, 32],
+        [3, 'MockEventSelection', 'sel1', 16, 32],
+        [3, 'MockEventSelection', 'sel2',  8, 16],
+        [2 ,         'NotwCount', 'not1',  3,  8],
+        [3,          'AnywCount', 'any1',  5,  8],
+        [4,          'AllwCount', 'all3',  2,  8],
+        [5, 'MockEventSelection', 'sel3',  4,  8],
+        [5, 'MockEventSelection', 'sel4',  2,  4],
+        [4, 'MockEventSelection', 'sel5',  3,  6]
+    ] == count._results
+
+##__________________________________________________________________||
+def test_merge():
+
+    # manually call the fixture because multiple instances are needed
+
+    # deep.copy() is not used because it will be difficult to access
+    # to copied sels
+
+    tree0 = tree()
+    all0 = tree0['alls'][0]
+
+    tree0_copy1 = tree()
+    tree0_copy2 = tree()
+
+    all0_copy1 = tree0_copy1['alls'][0]
+    all0_copy2 = tree0_copy2['alls'][0]
+
+    sels_copy1 = tree0_copy1['sels']
+    sels_copy2 = tree0_copy2['sels']
+
+    event = mock.Mock()
+    all0_copy1.begin(event)
+    all0_copy2.begin(event)
+
+    all_possible_results = list(itertools.product(*[[True, False]]*len(sels_copy1)))
+
+    results1 = all_possible_results[:len(all_possible_results)//2]
+    results2 = all_possible_results[len(all_possible_results)//2:]
+
+    for l in results1:
+        for sel, ret in zip(sels_copy1, l):
+            sel.return_value = ret
+        all0_copy1(event)
+
+    for l in results2:
+        for sel, ret in zip(sels_copy2, l):
+            sel.return_value = ret
+        all0_copy2(event)
+
+    all0_copy1.end()
+    all0_copy2.end()
+
+    all0.merge(all0_copy1)
+    all0.merge(all0_copy2)
 
     count = all0.results()
     assert [
