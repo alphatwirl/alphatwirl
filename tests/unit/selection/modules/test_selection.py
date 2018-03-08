@@ -80,6 +80,9 @@ def test_all_call(Class):
     assert not obj(event)
     assert not obj(event)
 
+    sel1.assert_called_with(event)
+    sel2.assert_called_with(event)
+
     obj.end()
 
 @pytest.mark.parametrize('Class', any_classes, ids=any_classe_ids)
@@ -101,6 +104,9 @@ def test_any_call(Class):
     assert obj(event)
     assert obj(event)
     assert not obj(event)
+
+    sel1.assert_called_with(event)
+    sel2.assert_called_with(event)
 
     obj.end()
 
@@ -135,6 +141,8 @@ def test_not_call(Class):
 
     assert not obj(event)
     assert obj(event)
+
+    sel1.assert_called_with(event)
 
     obj.end()
 
