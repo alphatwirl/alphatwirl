@@ -64,8 +64,6 @@ def test_not_repr(Class):
 def test_all_call(Class):
     sel1 = mock.Mock()
     sel2 = mock.Mock()
-    sel1.side_effect = [True, True, False, False]
-    sel2.side_effect = [True, False, True, False]
 
     obj = Class()
     obj.add(sel1)
@@ -75,9 +73,23 @@ def test_all_call(Class):
 
     obj.begin(event)
 
+    # need to set return_value each time because a selection is not
+    # guaranteed to be called
+
+    sel1.return_value = True
+    sel2.return_value = True
     assert obj(event)
+
+    sel1.return_value = True
+    sel2.return_value = False
     assert not obj(event)
+
+    sel1.return_value = False
+    sel2.return_value = True
     assert not obj(event)
+
+    sel1.return_value = False
+    sel2.return_value = False
     assert not obj(event)
 
     sel1.assert_called_with(event)
@@ -89,8 +101,6 @@ def test_all_call(Class):
 def test_any_call(Class):
     sel1 = mock.Mock()
     sel2 = mock.Mock()
-    sel1.side_effect = [True, True, False, False]
-    sel2.side_effect = [True, False, True, False]
 
     obj = Class()
     obj.add(sel1)
@@ -100,9 +110,23 @@ def test_any_call(Class):
 
     obj.begin(event)
 
+    # need to set return_value each time because a selection is not
+    # guaranteed to be called
+
+    sel1.return_value = True
+    sel2.return_value = True
     assert obj(event)
+
+    sel1.return_value = True
+    sel2.return_value = False
     assert obj(event)
+
+    sel1.return_value = False
+    sel2.return_value = True
     assert obj(event)
+
+    sel1.return_value = False
+    sel2.return_value = False
     assert not obj(event)
 
     sel1.assert_called_with(event)
