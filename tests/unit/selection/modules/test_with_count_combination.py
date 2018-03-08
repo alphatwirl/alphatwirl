@@ -16,7 +16,8 @@ class MockEventSelection(object):
     def end(self): pass
 
 ##__________________________________________________________________||
-def test_combination():
+@pytest.fixture()
+def tree():
     # all0 - all1 --- all2 --- sel1
     #              |        +- sel2
     #              +- not1 --- any1 --- all3 --- sel3
@@ -55,15 +56,35 @@ def test_combination():
 
     all0.add(all1)
 
+    return dict(
+        alls=(all0, all1, all2, all3),
+        anys=(any1, ),
+        nots=(not1, ),
+        sels=(sel1, sel2, sel3, sel4, sel5)
+    )
+
+##__________________________________________________________________||
+def test_combination(tree):
+
+    all0 = tree['alls'][0]
+    sels = tree['sels']
+
     event = mock.Mock()
     all0.begin(event)
 
-    for l in itertools.product(*[[True, False]]*5):
-        sel1.return_value = l[0]
-        sel2.return_value = l[1]
-        sel3.return_value = l[2]
-        sel4.return_value = l[3]
-        sel5.return_value = l[4]
+    all_possible_results = itertools.product(*[[True, False]]*len(sels))
+    # e.g.,
+    # [
+    #     (True, True, True, True, True),
+    #     (True, True, True, True, False),
+    #     ...
+    #     (False, False, False, False, False)
+    # ]
+
+    for l in all_possible_results:
+        # e.g. l = (True, True, False, True, False)
+        for sel, ret in zip(sels, l):
+            sel.return_value = ret
         all0(event)
 
     all0.end()
