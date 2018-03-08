@@ -3,6 +3,16 @@ import itertools
 
 ##__________________________________________________________________||
 def key_vals_dict_to_tuple_list(key_vals_dict, fill=float('nan')):
+    """Convert ``key_vals_dict`` to `tuple_list``.
+
+    Args:
+        key_vals_dict (dict): The first parameter.
+        fill: a value to fill missing data
+
+    Returns:
+        A list of tuples
+
+    """
 
     tuple_list = [ ]
 
