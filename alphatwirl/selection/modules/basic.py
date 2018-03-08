@@ -37,14 +37,13 @@ class All(Base):
 
     """
 
-    def __init__(self, name=None):
-        if name is None:
-            name = 'All'
+    def __init__(self, name='All'):
         super(All, self).__init__(name)
 
     def __call__(self, event):
         for s in self.selections:
-            if not s(event): return False
+            if not s(event):
+                return False
         return True
 
 ##__________________________________________________________________||
@@ -53,14 +52,13 @@ class Any(Base):
 
     """
 
-    def __init__(self, name=None):
-        if name is None:
-            name = 'Any'
+    def __init__(self, name='Any'):
         super(Any, self).__init__(name)
 
     def __call__(self, event):
         for s in self.selections:
-            if s(event): return True
+            if s(event):
+                return True
         return False
 
 ##__________________________________________________________________||
@@ -69,8 +67,8 @@ class Not(object):
 
     """
 
-    def __init__(self, selection, name=None):
-        self.name = name if name is not None else 'Not'
+    def __init__(self, selection, name='Not'):
+        self.name = name
         self.selection = selection
 
     def __repr__(self):
@@ -81,7 +79,8 @@ class Not(object):
         )
 
     def begin(self, event):
-        if hasattr(self.selection, 'begin'): self.selection.begin(event)
+        if hasattr(self.selection, 'begin'):
+            self.selection.begin(event)
 
     def event(self, event):
         return not self.selection(event)
@@ -90,6 +89,7 @@ class Not(object):
         return self.event(event)
 
     def end(self):
-        if hasattr(self.selection, 'end'): self.selection.end()
+        if hasattr(self.selection, 'end'):
+            self.selection.end()
 
 ##__________________________________________________________________||
