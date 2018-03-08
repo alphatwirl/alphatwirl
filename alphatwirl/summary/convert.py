@@ -2,22 +2,22 @@
 import itertools
 
 ##__________________________________________________________________||
-def convert_key_vals_dict_to_tuple_list(dict_, fill=float('nan')):
+def convert_key_vals_dict_to_tuple_list(key_vals_dict, fill=float('nan')):
 
-    d = [ ]
+    tuple_list = [ ]
 
-    if not dict_: return d
+    if not key_vals_dict: return tuple_list
 
-    vlen = max([len(vs) for vs in itertools.chain(*dict_.values())])
+    vlen = max([len(vs) for vs in itertools.chain(*key_vals_dict.values())])
 
-    for k, vs in dict_.items():
+    for k, vs in key_vals_dict.items():
         try:
-            d.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+            tuple_list.extend([k + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
         except TypeError:
             # assume k is not a tuple
-            d.extend([(k, ) + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
+            tuple_list.extend([(k, ) + tuple(v) + (fill, )*(vlen - len(v)) for v in vs])
 
 
-    return d
+    return tuple_list
 
 ##__________________________________________________________________||
