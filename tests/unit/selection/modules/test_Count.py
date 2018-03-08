@@ -139,14 +139,13 @@ def test_three(obj):
         [1, 'MockEventSelection', 'sel2', 0, 1],
         [1, 'MockEventSelection',     '', 0, 0],
     ] == obj._results
-        
+
     obj.count(pass_=[True, True, False])
     assert [
         [1, 'MockEventSelection', 'sel1', 2, 2],
         [1, 'MockEventSelection', 'sel2', 1, 2],
         [1, 'MockEventSelection',     '', 0, 1],
     ] == obj._results
-        
 
 def test_to_tuple_list(obj):
     obj._results[:] = [
