@@ -135,3 +135,22 @@ def test_not():
     ] == count._results
 
 ##__________________________________________________________________||
+def test_all_empty():
+    obj = AllwCount()
+    event = mock.Mock()
+    obj.begin(event)
+    assert obj(event)
+    obj.end()
+    count = obj.results()
+    assert [ ] == count._results
+
+def test_any_empty():
+    obj = AnywCount()
+    event = mock.Mock()
+    obj.begin(event)
+    assert not obj(event)
+    obj.end()
+    count = obj.results()
+    assert [ ] == count._results
+
+##__________________________________________________________________||
