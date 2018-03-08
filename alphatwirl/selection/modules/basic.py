@@ -6,12 +6,12 @@ class All(object):
 
     """
 
-    def __init__(self, name = None):
+    def __init__(self, name=None):
         self.name = name if name is not None else 'All'
         self.selections = [ ]
 
     def __repr__(self):
-        return '{}(name = {!r}, selections = {!r})'.format(
+        return '{}(name={!r}, selections={!r})'.format(
             self.__class__.__name__,
             self.name,
             self.selections
@@ -42,12 +42,12 @@ class Any(object):
 
     """
 
-    def __init__(self, name = None):
+    def __init__(self, name=None):
         self.name = name if name is not None else 'Any'
         self.selections = [ ]
 
     def __repr__(self):
-        return '{}(name = {!r}, selections = {!r})'.format(
+        return '{}(name={!r}, selections={!r})'.format(
             self.__class__.__name__,
             self.name,
             self.selections
@@ -78,12 +78,12 @@ class Not(object):
 
     """
 
-    def __init__(self, selection, name = None):
+    def __init__(self, selection, name=None):
         self.name = name if name is not None else 'Not'
         self.selection = selection
 
     def __repr__(self):
-        return '{}(name = {!r}, selection = {!r})'.format(
+        return '{}(name={!r}, selection={!r})'.format(
             self.__class__.__name__,
             self.name,
             self.selection
