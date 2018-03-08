@@ -61,7 +61,7 @@ def test_not_repr(Class):
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('Class', all_classes, ids=all_classe_ids)
-def test_all(Class):
+def test_all_call(Class):
     sel1 = mock.Mock()
     sel2 = mock.Mock()
     sel1.side_effect = [True, True, False, False]
@@ -83,7 +83,7 @@ def test_all(Class):
     obj.end()
 
 @pytest.mark.parametrize('Class', any_classes, ids=any_classe_ids)
-def test_any(Class):
+def test_any_call(Class):
     sel1 = mock.Mock()
     sel2 = mock.Mock()
     sel1.side_effect = [True, True, False, False]
@@ -106,7 +106,7 @@ def test_any(Class):
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('Class', all_classes, ids=all_classe_ids)
-def test_all_empty(Class):
+def test_all_call_empty(Class):
     obj = Class()
     event = mock.Mock()
     obj.begin(event)
@@ -114,7 +114,7 @@ def test_all_empty(Class):
     obj.end()
 
 @pytest.mark.parametrize('Class', any_classes, ids=any_classe_ids)
-def test_any_empty(Class):
+def test_any_call_empty(Class):
     obj = Class()
     event = mock.Mock()
     obj.begin(event)
@@ -123,7 +123,7 @@ def test_any_empty(Class):
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('Class', not_classes, ids=not_classe_ids)
-def test_not(Class):
+def test_not_call(Class):
     sel1 = mock.Mock()
     sel1.side_effect = [True, False]
 
