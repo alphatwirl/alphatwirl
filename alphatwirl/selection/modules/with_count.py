@@ -135,7 +135,7 @@ class NotwCount(object):
         return self.event(event)
 
     def end(self):
-        if hasattr(self.selection, 'begin'): self.selection.end()
+        if hasattr(self.selection, 'end'): self.selection.end()
 
     def merge(self, other):
         self.count += other.count
