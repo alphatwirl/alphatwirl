@@ -65,9 +65,12 @@ def test_create_files_start_length_list(
 
 ##__________________________________________________________________||
 def test_create_files_start_length_list_default():
-    files = mock.sentinel.files
+    file1 = mock.sentinel.file1
+    file2 = mock.sentinel.file2
+    file3 = mock.sentinel.file3
+    files = [file1, file2, file3]
     actual = create_files_start_length_list(files)
-    assert [(files, 0, -1)] == actual
+    assert [([file1], 0, -1), ([file2], 0, -1), ([file3], 0, -1)] == actual
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('args, expected', [

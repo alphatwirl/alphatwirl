@@ -4,7 +4,7 @@
 def create_files_start_length_list(
         files, func_get_nevents_in_file=None,
         max_events=-1, max_events_per_run=-1,
-        max_files=-1, max_files_per_run=-1):
+        max_files=-1, max_files_per_run=1):
 
     files = _apply_max_files(files, max_files)
 
