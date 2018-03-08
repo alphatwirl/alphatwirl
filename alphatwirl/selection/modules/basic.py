@@ -38,6 +38,8 @@ class All(Base):
     """
 
     def __init__(self, name='All'):
+        if name is None:
+            name = 'All'
         super(All, self).__init__(name)
 
     def __call__(self, event):
@@ -53,6 +55,8 @@ class Any(Base):
     """
 
     def __init__(self, name='Any'):
+        if name is None:
+            name = 'Any'
         super(Any, self).__init__(name)
 
     def __call__(self, event):
@@ -68,6 +72,8 @@ class Not(object):
     """
 
     def __init__(self, selection, name='Not'):
+        if name is None:
+            name = 'Not'
         self.name = name
         self.selection = selection
 

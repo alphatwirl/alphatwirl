@@ -5,10 +5,22 @@ from .Count import Count
 
 ##__________________________________________________________________||
 class WithCountBase(object):
+    """The base class of the classes AllwCount and AnywCount
 
-    def __init__(self):
+    """
+
+    def __init__(self, name):
+        self.name = name
         self.selections = [ ]
         self.count = Count()
+
+    def __repr__(self):
+        return '{}(name={!r}, selections={!r}), count={!r}'.format(
+            self.__class__.__name__,
+            self.name,
+            self.selections,
+            self.count
+        )
 
     def add(self, selection):
         self.selections.append(selection)
@@ -18,8 +30,8 @@ class WithCountBase(object):
         for s in self.selections:
             if hasattr(s, 'begin'): s.begin(event)
 
-    def __call__(self, event):
-        return self.event(event)
+    def event(self, event):
+        return self(event)
 
     def end(self):
         for s in self.selections:
@@ -45,25 +57,19 @@ class WithCountBase(object):
             ret.increment_depth(by=1)
 
         return ret
+
 ##__________________________________________________________________||
 class AllwCount(WithCountBase):
     """select events that meet all conditions
 
     """
 
-    def __init__(self, name=None):
-        super(AllwCount, self).__init__()
-        self.name = name if name is not None else 'All'
+    def __init__(self, name='All'):
+        if name is None:
+            name = 'All'
+        super(AllwCount, self).__init__(name)
 
-    def __repr__(self):
-        return '{}(name={!r}, selections={!r}), count={!r}'.format(
-            self.__class__.__name__,
-            self.name,
-            self.selections,
-            self.count
-        )
-
-    def event(self, event):
+    def __call__(self, event):
         ret = True
         pass_ = [ ]
         for s in self.selections:
@@ -80,19 +86,12 @@ class AnywCount(WithCountBase):
 
     """
 
-    def __init__(self, name=None):
-        super(AnywCount, self).__init__()
-        self.name = name if name is not None else 'Any'
+    def __init__(self, name='Any'):
+        if name is None:
+            name = 'Any'
+        super(AnywCount, self).__init__(name)
 
-    def __repr__(self):
-        return '{}(name={!r}, selections={!r}), count={!r}'.format(
-            self.__class__.__name__,
-            self.name,
-            self.selections,
-            self.count
-        )
-
-    def event(self, event):
+    def __call__(self, event):
         ret = False
         pass_ = [ ]
         for s in self.selections:
@@ -109,8 +108,10 @@ class NotwCount(object):
 
     """
 
-    def __init__(self, selection, name=None):
-        self.name = name if name is not None else 'Not'
+    def __init__(self, selection, name='Not'):
+        if name is None:
+            name = 'Not'
+        self.name = name
         self.selection = selection
         self.count = Count()
         self.count.add(selection)
@@ -126,13 +127,13 @@ class NotwCount(object):
     def begin(self, event):
         if hasattr(self.selection, 'begin'): self.selection.begin(event)
 
-    def event(self, event):
+    def __call__(self, event):
         pass_ = self.selection(event)
         self.count.count([pass_])
         return not pass_
 
-    def __call__(self, event):
-        return self.event(event)
+    def event(self, event):
+        return self(event)
 
     def end(self):
         if hasattr(self.selection, 'end'): self.selection.end()

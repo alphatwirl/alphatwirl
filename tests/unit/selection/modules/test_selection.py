@@ -27,20 +27,29 @@ allany_classe_ids = all_classe_ids + any_classe_ids
 @pytest.mark.parametrize('Class', allany_classes, ids=allany_classe_ids)
 def test_allany_init(Class):
     obj = Class()
+    assert obj.name is not None
     obj = Class(name='name_of_object')
+    assert obj.name is not None
+    obj = Class(name=None)
+    assert obj.name is not None
 
+@pytest.mark.parametrize('Class', not_classes, ids=not_classe_ids)
+def test_not_init(Class):
+    sel1 = mock.Mock()
+    obj = Class(sel1)
+    assert obj.name is not None
+    obj = Class(sel1, name='name_of_object')
+    assert obj.name is not None
+    obj = Class(sel1, name=None)
+    assert obj.name is not None
+
+##__________________________________________________________________||
 @pytest.mark.parametrize('Class', allany_classes, ids=allany_classe_ids)
 def test_allany_repr(Class):
     obj = Class()
     repr(obj)
     obj = Class(name='name_of_object')
     repr(obj)
-
-@pytest.mark.parametrize('Class', not_classes, ids=not_classe_ids)
-def test_not_init(Class):
-    sel1 = mock.Mock()
-    obj = Class(sel1)
-    obj = Class(sel1, name='name_of_object')
 
 @pytest.mark.parametrize('Class', not_classes, ids=not_classe_ids)
 def test_not_repr(Class):
@@ -50,6 +59,7 @@ def test_not_repr(Class):
     obj = Class(sel1, name='name_of_object')
     repr(obj)
 
+##__________________________________________________________________||
 @pytest.mark.parametrize('Class', all_classes, ids=all_classe_ids)
 def test_all(Class):
     sel1 = mock.Mock()
