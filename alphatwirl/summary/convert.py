@@ -2,7 +2,7 @@
 import itertools
 
 ##__________________________________________________________________||
-def convert_key_vals_dict_to_tuple_list(key_vals_dict, fill=float('nan')):
+def key_vals_dict_to_tuple_list(key_vals_dict, fill=float('nan')):
 
     tuple_list = [ ]
 

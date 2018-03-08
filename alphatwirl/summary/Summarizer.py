@@ -4,7 +4,7 @@ import collections
 import itertools
 import copy
 
-from .convert import convert_key_vals_dict_to_tuple_list
+from .convert import key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 class Summarizer(object):
@@ -70,7 +70,7 @@ class Summarizer(object):
 
     def to_tuple_list(self):
         key_vals_dict = self.to_key_vals_dict()
-        ret = convert_key_vals_dict_to_tuple_list(key_vals_dict, fill=0)
+        ret = key_vals_dict_to_tuple_list(key_vals_dict, fill=0)
         # e.g.,
         # [
         #     (200, 2, 120, 240),

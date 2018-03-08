@@ -4,7 +4,7 @@ import collections
 
 import pytest
 
-from alphatwirl.summary.convert import convert_key_vals_dict_to_tuple_list
+from alphatwirl.summary.convert import key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
@@ -72,7 +72,7 @@ from alphatwirl.summary.convert import convert_key_vals_dict_to_tuple_list
     ]
 )
 def test_convert(key_vals_dict, tuple_list, kwargs):
-    assert tuple_list == convert_key_vals_dict_to_tuple_list(key_vals_dict, **kwargs)
+    assert tuple_list == key_vals_dict_to_tuple_list(key_vals_dict, **kwargs)
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
@@ -97,6 +97,6 @@ def test_convert(key_vals_dict, tuple_list, kwargs):
 @pytest.mark.skip(reason="nan == nan is False in python")
 def test_convert_fill_nan(key_vals_dict, tuple_list):
     # note: nan == nan is False in python
-    assert tuple_list == convert_key_vals_dict_to_tuple_list(key_vals_dict)
+    assert tuple_list == key_vals_dict_to_tuple_list(key_vals_dict)
 
 ##__________________________________________________________________||
