@@ -4,12 +4,13 @@
 class LambdaStr(object):
     """select events to which a lambda returns True.
 
-    A lambda should be given as a string to __init__ and will be
-    evaluated in begin(). This is because a lambda is not picklable.
+    A lambda should be given as a string to ``__init__`` and will be
+    evaluated in ``begin()``. This is because a lambda is not
+    picklable.
 
-    In the multiprocessing mode, __init__() is called in the main
+    In the multiprocessing mode, ``__init__()`` is called in the main
     process. Then, the instance will be pickled and sent to
-    subprocesses. begin() will be called in the subprocesses.
+    subprocesses. ``begin()`` will be called in the subprocesses.
 
     """
     def __init__(self, lambda_str, name=None):
