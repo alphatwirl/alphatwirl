@@ -18,6 +18,7 @@ alphatwirl\.loop\.ReaderComposite
       ~ReaderComposite.begin
       ~ReaderComposite.end
       ~ReaderComposite.event
+      ~ReaderComposite.merge
    
    
 
