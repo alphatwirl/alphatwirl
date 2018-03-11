@@ -3,8 +3,8 @@
 ##__________________________________________________________________||
 def FactoryDispatcher(path_cfg, **kargs):
 
-    aliasDict = kargs['aliasDict'] if 'aliasDict' in kargs else None
-    path_cfg = expand_path_cfg(path_cfg, aliasDict=aliasDict)
+    alias_dict = kargs['aliasDict'] if 'aliasDict' in kargs else None
+    path_cfg = expand_path_cfg(path_cfg, alias_dict=alias_dict)
 
     if not isinstance(path_cfg, dict):
         raise ValueError("cannot recognize the path_cfg")
@@ -21,13 +21,13 @@ def FactoryDispatcher(path_cfg, **kargs):
     return factory(**kargs_copy)
 
 ##__________________________________________________________________||
-def expand_path_cfg(path_cfg, aliasDict=None, overriding_kargs=dict()):
+def expand_path_cfg(path_cfg, alias_dict=None, overriding_kargs=dict()):
 
     if isinstance(path_cfg, str):
-        if aliasDict is not None and path_cfg in aliasDict:
+        if alias_dict is not None and path_cfg in alias_dict:
             new_overriding_kargs = dict(alias=path_cfg)
             new_overriding_kargs.update(overriding_kargs)
-            return expand_path_cfg(aliasDict[path_cfg], aliasDict=aliasDict, overriding_kargs=new_overriding_kargs)
+            return expand_path_cfg(alias_dict[path_cfg], alias_dict=alias_dict, overriding_kargs=new_overriding_kargs)
 
         ret = dict(factory='LambdaStrFactory', lambda_str=path_cfg)
 
@@ -43,7 +43,7 @@ def expand_path_cfg(path_cfg, aliasDict=None, overriding_kargs=dict()):
         if isinstance(path_cfg[0], str) and isinstance(path_cfg[1], dict):
             new_overriding_kargs = path_cfg[1].copy()
             new_overriding_kargs.update(overriding_kargs)
-            return expand_path_cfg(path_cfg[0], overriding_kargs=new_overriding_kargs, aliasDict=aliasDict)
+            return expand_path_cfg(path_cfg[0], overriding_kargs=new_overriding_kargs, alias_dict=alias_dict)
 
         raise ValueError("cannot recognize the path_cfg")
 

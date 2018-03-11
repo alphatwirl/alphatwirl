@@ -168,7 +168,7 @@ def alias_dict():
     ),
 ])
 def test_expand_path_cfg(alias_dict, path_cfg, expected):
-    actual = expand_path_cfg(path_cfg=path_cfg, aliasDict=alias_dict)
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
     assert expected == actual
 
 ##__________________________________________________________________||
