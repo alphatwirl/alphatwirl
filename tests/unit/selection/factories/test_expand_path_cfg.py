@@ -180,9 +180,23 @@ def alias_dict():
                 ),
             )),
         )),
-        { },
+        {
+            'factory': 'AnyFactory',
+            'path_cfg_list': (
+                'ev : ev.x[0] == 0',
+                {'All': (
+                    'ev : ev.x[0] >= 1',
+                    'ev : ev.y[0] >= 100'
+                )},
+                {'Not': {
+                    'Any': (
+                        'ev : ev.z[0] == 0',
+                        'ev : ev.w[0] >= 300'
+                    )}
+                })
+        },
         id='example',
-        marks=pytest.mark.skip(reason='not fully expanded')
+        ## marks=pytest.mark.skip(reason='not fully expanded')
     ),
 ])
 def test_expand_path_cfg(alias_dict, path_cfg, expected):
