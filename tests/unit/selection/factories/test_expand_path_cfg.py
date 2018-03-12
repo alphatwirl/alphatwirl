@@ -35,7 +35,7 @@ def alias_dict():
             lambda_str='ev : ev.var1[0] >= 10',
             name='name1'
         ),
-        id='alias1 with name'
+        id='alias1:with-name'
     ),
     pytest.param(
         'alias2',
@@ -44,7 +44,7 @@ def alias_dict():
             lambda_str='ev : ev.var2[0] >= 20',
             name='name2' #  name has priority over alias
         ),
-        id='alias2, name has priority over alias'
+        id='alias2:name-priority-over-alias'
     ),
     pytest.param(
         ('alias2', dict(name='new_name2')),
@@ -53,7 +53,7 @@ def alias_dict():
             lambda_str='ev : ev.var2[0] >= 20',
             name='new_name2' # name can be overridden
         ),
-        id='alias2, name can be overridden'
+        id='alias2:name-overridden'
     ),
     pytest.param(
         'alias3',
@@ -62,7 +62,7 @@ def alias_dict():
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias3' # the outermost alias has priority
         ),
-        id='alias3, alias of alias'
+        id='alias3:alias-of-alias'
     ),
     pytest.param(
         'alias4',
@@ -71,7 +71,7 @@ def alias_dict():
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias4' # the outermost alias has priority
         ),
-        id='alias4, alias of alias of alias'
+        id='alias4:alias-of-alias-of-alias'
     ),
     pytest.param(
         ('alias5', dict(n=30)),
@@ -81,7 +81,7 @@ def alias_dict():
             n=30,
             name='alias5'
         ),
-        id='alias5, not formatted'
+        id='alias5:not-formatted'
     ),
     pytest.param(
         'alias6',
@@ -92,7 +92,7 @@ def alias_dict():
             high=20,
             name='alias6',
         ),
-        id='alias6, not formatted with default values'
+        id='alias6:not-formatted-with-default-values'
     ),
     pytest.param(
         ('alias6', dict(high=30)),
@@ -103,7 +103,7 @@ def alias_dict():
             high=30,
             name='alias6'
         ),
-        id='alias6, not formatted with default values overridden'
+        id='alias6:not-formatted-with-default-values-overridden'
     ),
     pytest.param(
         'ev : ev.nJets[0] >= 2',
@@ -111,7 +111,7 @@ def alias_dict():
             factory='LambdaStrFactory',
             lambda_str='ev : ev.nJets[0] >= 2',
         ),
-        id='string lambda_str'
+        id='string:lambda_str'
     ),
     pytest.param(
         'ev : ev.nJets[0] >= {n}',
@@ -119,22 +119,22 @@ def alias_dict():
             factory='LambdaStrFactory',
             lambda_str='ev : ev.nJets[0] >= {n}',
         ),
-        id='string lambda_str not formatted'
+        id='string:lambda_str-not-formatted'
     ),
     pytest.param(
         dict(All=()),
         {'factory': 'AllFactory', 'path_cfg_list': ()},
-        id='dict all empty'
+        id='dict-all-empty'
     ),
     pytest.param(
         dict(Any=()),
         {'factory': 'AnyFactory', 'path_cfg_list': ()},
-        id='dict any empty'
+        id='dict-any-empty'
     ),
     pytest.param(
         dict(Not=()),
         {'factory': 'NotFactory', 'path_cfg': ()},
-        id='dict not empty'
+        id='dict-not-empty'
     ),
     pytest.param(
         dict(All=(dict(factory='factory1'), dict(factory='factory2')), name='test_all', arg2=2, arg3=3),
@@ -144,7 +144,7 @@ def alias_dict():
             name='test_all',
             arg2=2, arg3=3
         ),
-        id='dict all'
+        id='dict-all'
     ),
     pytest.param(
         dict(Any=(dict(factory='factory1'), dict(factory='factory2')), name='test_any', arg2=2, arg3=3),
@@ -154,7 +154,7 @@ def alias_dict():
             name='test_any',
             arg2=2, arg3=3
         ),
-        id='dict any'
+        id='dict-any'
     ),
     pytest.param(
         dict(Not=dict(factory='factory1'), name='test_not', arg2=2, arg3=3),
@@ -164,7 +164,7 @@ def alias_dict():
             name='test_not',
             arg2=2, arg3=3
         ),
-        id='dict not'
+        id='dict-not'
     ),
 ])
 def test_expand_path_cfg(alias_dict, path_cfg, expected):
