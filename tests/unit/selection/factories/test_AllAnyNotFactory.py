@@ -38,8 +38,15 @@ def MockFactoryDispatcher(monkeypatch):
 def test_AllFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
     MockClass = mock.Mock()
     obj = AllFactory(AllClass=MockClass, **kwargs)
+
     assert [mock.call(**expected_kwargs)] == MockClass.call_args_list
     assert obj == MockClass()
+
+    assert [
+        mock.call('ev : ev.nJet[0] >= 2', AllClass=MockClass),
+        mock.call('ev : ev.nMET[0] >= 200', AllClass=MockClass),
+    ] == MockFactoryDispatcher.call_args_list
+
     assert [
         mock.call(MockFactoryDispatcher()),
         mock.call(MockFactoryDispatcher()),
@@ -62,6 +69,12 @@ def test_AnyFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
     obj = AnyFactory(AnyClass=MockClass, **kwargs)
     assert [mock.call(**expected_kwargs)] == MockClass.call_args_list
     assert obj == MockClass()
+
+    assert [
+        mock.call('ev : ev.nJet[0] >= 2', AnyClass=MockClass),
+        mock.call('ev : ev.nMET[0] >= 200', AnyClass=MockClass),
+    ] == MockFactoryDispatcher.call_args_list
+
     assert [
         mock.call(MockFactoryDispatcher()),
         mock.call(MockFactoryDispatcher()),
@@ -82,8 +95,14 @@ def test_AnyFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
 def test_NotFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
     MockClass = mock.Mock()
     obj = NotFactory(NotClass=MockClass, **kwargs)
+
+    assert [
+        mock.call('ev : ev.nJet[0] >= 2', NotClass=MockClass),
+    ] == MockFactoryDispatcher.call_args_list
+
     expected_kwargs['selection'] = MockFactoryDispatcher()
     assert [mock.call(**expected_kwargs)] == MockClass.call_args_list
     assert obj == MockClass()
+
 
 ##__________________________________________________________________||
