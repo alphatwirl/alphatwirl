@@ -100,21 +100,19 @@ def _expand_path_cfg_tuple(path_cfg, alias_dict, overriding_kargs):
 
 ##__________________________________________________________________||
 def find_factory(name):
-    import imp
 
-    top_module_name = 'factories'
-    f, filename, description = imp.find_module(top_module_name)
-    top_module = imp.load_module(top_module_name, f, filename, description)
-    ##______________________________________________________________||
+    from .AllFactory import AllFactory
+    from .AnyFactory import AnyFactory
+    from .NotFactory import NotFactory
+    from .LambdaStrFactory import LambdaStrFactory
 
-    module_name = "{}.{}".format(top_module_name, name)
-    # e.g., 'factories.AllFactory'
+    ret_dict = dict(
+        AllFactory=AllFactory,
+        AnyFactory=AnyFactory,
+        NotFactory=NotFactory,
+        LambdaStrFactory=LambdaStrFactory,
+    )
 
-    f, filename, description = imp.find_module(name, top_module.__path__)
-    module = imp.load_module(module_name, f, filename, description)
-
-    factory = getattr(module, name)
-
-    return factory
+    return ret_dict[name]
 
 ##__________________________________________________________________||
