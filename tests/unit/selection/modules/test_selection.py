@@ -33,6 +33,11 @@ def test_allany_init(Class):
     obj = Class(name=None)
     assert obj.name is not None
 
+    sel1 = mock.sentinel.sel1
+    sel2 = mock.sentinel.sel2
+    obj = Class(selections=(sel1, sel2))
+    assert [sel1, sel2] == obj.selections
+
 @pytest.mark.parametrize('Class', not_classes, ids=not_classe_ids)
 def test_not_init(Class):
     sel1 = mock.Mock()

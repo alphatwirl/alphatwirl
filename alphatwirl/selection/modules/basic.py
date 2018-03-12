@@ -6,9 +6,9 @@ class Base(object):
 
     """
 
-    def __init__(self, name):
+    def __init__(self, name, selections):
         self.name = name
-        self.selections = [ ]
+        self.selections = list(selections)
 
     def __repr__(self):
         return '{}(name={!r}, selections={!r})'.format(
@@ -37,10 +37,10 @@ class All(Base):
 
     """
 
-    def __init__(self, name='All'):
+    def __init__(self, name='All', selections=[ ]):
         if name is None:
             name = 'All'
-        super(All, self).__init__(name)
+        super(All, self).__init__(name, selections)
 
     def __call__(self, event):
         for s in self.selections:
@@ -54,10 +54,10 @@ class Any(Base):
 
     """
 
-    def __init__(self, name='Any'):
+    def __init__(self, name='Any', selections=[ ]):
         if name is None:
             name = 'Any'
-        super(Any, self).__init__(name)
+        super(Any, self).__init__(name, selections)
 
     def __call__(self, event):
         for s in self.selections:

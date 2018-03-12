@@ -9,9 +9,9 @@ class WithCountBase(object):
 
     """
 
-    def __init__(self, name):
+    def __init__(self, name, selections):
         self.name = name
-        self.selections = [ ]
+        self.selections = list(selections)
         self.count = Count()
 
     def __repr__(self):
@@ -64,10 +64,10 @@ class AllwCount(WithCountBase):
 
     """
 
-    def __init__(self, name='All'):
+    def __init__(self, name='All', selections=[ ]):
         if name is None:
             name = 'All'
-        super(AllwCount, self).__init__(name)
+        super(AllwCount, self).__init__(name, selections)
 
     def __call__(self, event):
         ret = True
@@ -86,10 +86,10 @@ class AnywCount(WithCountBase):
 
     """
 
-    def __init__(self, name='Any'):
+    def __init__(self, name='Any', selections=[ ]):
         if name is None:
             name = 'Any'
-        super(AnywCount, self).__init__(name)
+        super(AnywCount, self).__init__(name, selections)
 
     def __call__(self, event):
         ret = False
