@@ -5,6 +5,7 @@ import pytest
 
 from alphatwirl.selection.factories.FactoryDispatcher import FactoryDispatcher
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
+from alphatwirl.selection.modules import All, Any, Not
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -35,5 +36,42 @@ def test_string(sys_path, alias_dict):
     assert isinstance(obj, LambdaStr)
     assert 'alias1' == obj.name
     assert 'ev : ev.var1[0] >= 10' == obj.lambda_str
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('path_cfg, kargs, expected', [
+    pytest.param(
+        dict(Any=(
+            'ev : ev.x[0] == 0',
+            dict(All=(
+                'ev : ev.x[0] >= 1',
+                'ev : ev.y[0] >= 100',
+                )),
+            dict(Not=dict(
+                Any=(
+                    'ev : ev.z[0] == 0',
+                    'ev : ev.w[0] >= 300',
+                ),
+            )),
+        )),
+        dict(AllClass=All, AnyClass=Any, NotClass=Not, LambdaStrClass=LambdaStr),
+        Any(selections=[
+            LambdaStr('ev : ev.x[0] == 0'),
+            All(selections=[
+                LambdaStr('ev : ev.x[0] >= 1'),
+                LambdaStr('ev : ev.y[0] >= 100'),
+            ]),
+            Not(selection=Any(selections=[
+                LambdaStr('ev : ev.z[0] == 0'),
+                LambdaStr('ev : ev.w[0] >= 300'),
+            ]),
+            ),
+        ]),
+        id='example'
+    ),
+])
+def test_dispatcher(sys_path, path_cfg, kargs, expected):
+    obj = FactoryDispatcher(path_cfg=path_cfg, **kargs)
+    assert repr(expected) == repr(obj)
+    assert str(expected) == str(obj)
 
 ##__________________________________________________________________||
