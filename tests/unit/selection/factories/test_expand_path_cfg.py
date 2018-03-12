@@ -166,6 +166,24 @@ def alias_dict():
         ),
         id='dict-not'
     ),
+    pytest.param(
+        dict(Any=(
+            'ev : ev.x[0] == 0',
+            dict(All=(
+                'ev : ev.x[0] >= 1',
+                'ev : ev.y[0] >= 100',
+                )),
+            dict(Not=dict(
+                Any=(
+                    'ev : ev.z[0] == 0',
+                    'ev : ev.w[0] >= 300',
+                ),
+            )),
+        )),
+        { },
+        id='example',
+        marks=pytest.mark.skip(reason='not fully expanded')
+    ),
 ])
 def test_expand_path_cfg(alias_dict, path_cfg, expected):
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
