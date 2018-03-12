@@ -13,14 +13,14 @@ from alphatwirl.selection.factories.NotFactory import NotFactory
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def MockFactoryDispatcher(monkeypatch):
+def mock_call_factory(monkeypatch):
     ret = mock.Mock()
     module = sys.modules['alphatwirl.selection.factories.AllFactory']
-    monkeypatch.setattr(module, 'FactoryDispatcher', ret)
+    monkeypatch.setattr(module, 'call_factory', ret)
     module = sys.modules['alphatwirl.selection.factories.AnyFactory']
-    monkeypatch.setattr(module, 'FactoryDispatcher', ret)
+    monkeypatch.setattr(module, 'call_factory', ret)
     module = sys.modules['alphatwirl.selection.factories.NotFactory']
-    monkeypatch.setattr(module, 'FactoryDispatcher', ret)
+    monkeypatch.setattr(module, 'call_factory', ret)
     return ret
 
 @pytest.mark.parametrize('kwargs, expected_kwargs', [
@@ -35,7 +35,7 @@ def MockFactoryDispatcher(monkeypatch):
         id='simple',
     ),
 ])
-def test_AllFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
+def test_AllFactory(kwargs, expected_kwargs, mock_call_factory):
     MockClass = mock.Mock()
     obj = AllFactory(AllClass=MockClass, **kwargs)
 
@@ -45,11 +45,11 @@ def test_AllFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
     assert [
         mock.call('ev : ev.nJet[0] >= 2', AllClass=MockClass),
         mock.call('ev : ev.nMET[0] >= 200', AllClass=MockClass),
-    ] == MockFactoryDispatcher.call_args_list
+    ] == mock_call_factory.call_args_list
 
     assert [
-        mock.call(MockFactoryDispatcher()),
-        mock.call(MockFactoryDispatcher()),
+        mock.call(mock_call_factory()),
+        mock.call(mock_call_factory()),
     ] == MockClass().add.call_args_list
 
 @pytest.mark.parametrize('kwargs, expected_kwargs', [
@@ -64,7 +64,7 @@ def test_AllFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
         id='simple',
     ),
 ])
-def test_AnyFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
+def test_AnyFactory(kwargs, expected_kwargs, mock_call_factory):
     MockClass = mock.Mock()
     obj = AnyFactory(AnyClass=MockClass, **kwargs)
     assert [mock.call(**expected_kwargs)] == MockClass.call_args_list
@@ -73,11 +73,11 @@ def test_AnyFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
     assert [
         mock.call('ev : ev.nJet[0] >= 2', AnyClass=MockClass),
         mock.call('ev : ev.nMET[0] >= 200', AnyClass=MockClass),
-    ] == MockFactoryDispatcher.call_args_list
+    ] == mock_call_factory.call_args_list
 
     assert [
-        mock.call(MockFactoryDispatcher()),
-        mock.call(MockFactoryDispatcher()),
+        mock.call(mock_call_factory()),
+        mock.call(mock_call_factory()),
     ] == MockClass().add.call_args_list
 
 @pytest.mark.parametrize('kwargs, expected_kwargs', [
@@ -92,15 +92,15 @@ def test_AnyFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
         id='simple',
     ),
 ])
-def test_NotFactory(kwargs, expected_kwargs, MockFactoryDispatcher):
+def test_NotFactory(kwargs, expected_kwargs, mock_call_factory):
     MockClass = mock.Mock()
     obj = NotFactory(NotClass=MockClass, **kwargs)
 
     assert [
         mock.call('ev : ev.nJet[0] >= 2', NotClass=MockClass),
-    ] == MockFactoryDispatcher.call_args_list
+    ] == mock_call_factory.call_args_list
 
-    expected_kwargs['selection'] = MockFactoryDispatcher()
+    expected_kwargs['selection'] = mock_call_factory()
     assert [mock.call(**expected_kwargs)] == MockClass.call_args_list
     assert obj == MockClass()
 
