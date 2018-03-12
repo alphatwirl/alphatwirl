@@ -67,19 +67,19 @@ def _expand_path_cfg_dict(path_cfg, alias_dict):
     if 'All' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'AllFactory'
-        new_path_cfg['path_cfg_list'] = new_path_cfg.pop('All')
+        new_path_cfg['path_cfg_list'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('All')])
         return new_path_cfg
 
     if 'Any' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'AnyFactory'
-        new_path_cfg['path_cfg_list'] = new_path_cfg.pop('Any')
+        new_path_cfg['path_cfg_list'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('Any')])
         return new_path_cfg
 
     if 'Not' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'NotFactory'
-        new_path_cfg['path_cfg'] = new_path_cfg.pop('Not')
+        new_path_cfg['path_cfg'] = expand_path_cfg(new_path_cfg.pop('Not'), alias_dict=alias_dict)
         return new_path_cfg
 
     raise ValueError("cannot recognize the path_cfg")

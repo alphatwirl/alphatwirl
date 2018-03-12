@@ -132,11 +132,6 @@ def alias_dict():
         id='dict-any-empty'
     ),
     pytest.param(
-        dict(Not=()),
-        {'factory': 'NotFactory', 'path_cfg': ()},
-        id='dict-not-empty'
-    ),
-    pytest.param(
         dict(All=(dict(factory='factory1'), dict(factory='factory2')), name='test_all', arg2=2, arg3=3),
         dict(
             factory='AllFactory',
@@ -183,17 +178,40 @@ def alias_dict():
         {
             'factory': 'AnyFactory',
             'path_cfg_list': (
-                'ev : ev.x[0] == 0',
-                {'All': (
-                    'ev : ev.x[0] >= 1',
-                    'ev : ev.y[0] >= 100'
-                )},
-                {'Not': {
-                    'Any': (
-                        'ev : ev.z[0] == 0',
-                        'ev : ev.w[0] >= 300'
-                    )}
-                })
+                {
+                    'factory': 'LambdaStrFactory',
+                    'lambda_str': 'ev : ev.x[0] == 0',
+                },
+                {
+                    'factory': 'AllFactory',
+                    'path_cfg_list': (
+                        {
+                            'factory': 'LambdaStrFactory',
+                            'lambda_str': 'ev : ev.x[0] >= 1',
+                        },
+                        {
+                            'factory': 'LambdaStrFactory',
+                            'lambda_str': 'ev : ev.y[0] >= 100',
+                        }
+                    )
+                },
+                {
+                    'factory': 'NotFactory',
+                    'path_cfg': {
+                        'factory': 'AnyFactory',
+                        'path_cfg_list': (
+                            {
+                                'factory': 'LambdaStrFactory',
+                                'lambda_str': 'ev : ev.z[0] == 0'
+                            },
+                            {
+                                'factory': 'LambdaStrFactory',
+                                'lambda_str': 'ev : ev.w[0] >= 300'
+                            }
+                        )
+                    }
+                }
+            )
         },
         id='example',
         ## marks=pytest.mark.skip(reason='not fully expanded')
