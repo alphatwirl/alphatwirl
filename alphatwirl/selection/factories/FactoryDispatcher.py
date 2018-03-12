@@ -27,7 +27,7 @@ def expand_path_cfg(path_cfg, alias_dict=None, overriding_kargs=dict()):
         return _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs)
 
     if isinstance(path_cfg, dict):
-        return _expand_path_cfg_dict(path_cfg, alias_dict, overriding_kargs)
+        return _expand_path_cfg_dict(path_cfg, alias_dict)
 
     # assume tuple or list
     return _expand_path_cfg_tuple(path_cfg, alias_dict, overriding_kargs)
@@ -57,7 +57,7 @@ def _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs):
     return ret
 
 ##__________________________________________________________________||
-def _expand_path_cfg_dict(path_cfg, alias_dict, overriding_kargs):
+def _expand_path_cfg_dict(path_cfg, alias_dict):
     if 'factory' in path_cfg:
         return path_cfg
 
