@@ -12,6 +12,11 @@ def FactoryDispatcher(path_cfg, **kargs):
     if 'factory' not in path_cfg:
         raise ValueError("cannot recognize the path_cfg")
 
+    return call_factory(path_cfg, **kargs)
+
+##__________________________________________________________________||
+def call_factory(path_cfg, **kargs):
+
     path_cfg_copy = path_cfg.copy()
     factoryName = path_cfg_copy.pop('factory')
     factory = find_factory(factoryName)
