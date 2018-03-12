@@ -6,12 +6,6 @@ def FactoryDispatcher(path_cfg, **kargs):
     alias_dict = kargs['aliasDict'] if 'aliasDict' in kargs else None
     path_cfg = expand_path_cfg(path_cfg, alias_dict=alias_dict)
 
-    if not isinstance(path_cfg, dict):
-        raise ValueError("cannot recognize the path_cfg")
-
-    if 'factory' not in path_cfg:
-        raise ValueError("cannot recognize the path_cfg")
-
     return call_factory(path_cfg, **kargs)
 
 ##__________________________________________________________________||
