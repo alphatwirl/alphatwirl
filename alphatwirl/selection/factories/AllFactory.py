@@ -2,9 +2,9 @@
 from .FactoryDispatcher import FactoryDispatcher
 
 ##__________________________________________________________________||
-def AllFactory(path_cfg_list, name = None,  **kargs):
+def AllFactory(path_cfg_list, name=None,  **kargs):
 
-    ret = kargs['AllClass'](name = name)
+    ret = kargs['AllClass'](name=name)
 
     for path_cfg in path_cfg_list:
         ret.add(FactoryDispatcher(path_cfg, **kargs))
