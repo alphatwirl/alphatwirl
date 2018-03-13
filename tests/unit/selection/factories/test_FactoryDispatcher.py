@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
-from alphatwirl.selection.factories.FactoryDispatcher import FactoryDispatcher
+from alphatwirl.selection.factories.factory import FactoryDispatcher
 from alphatwirl.selection.modules.LambdaStr import LambdaStr
 from alphatwirl.selection.modules import All, Any, Not
 
