@@ -3,13 +3,13 @@
 ##__________________________________________________________________||
 def FactoryDispatcher(path_cfg, **kargs):
 
-    alias_dict = kargs['aliasDict'] if 'aliasDict' in kargs else None
+    alias_dict = kargs.get('aliasDict', { })
     path_cfg = expand_path_cfg(path_cfg, alias_dict=alias_dict)
 
     return call_factory(path_cfg, **kargs)
 
 ##__________________________________________________________________||
-def expand_path_cfg(path_cfg, alias_dict=None, overriding_kargs=dict()):
+def expand_path_cfg(path_cfg, alias_dict={ }, overriding_kargs={ }):
 
     if isinstance(path_cfg, str):
         return _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs)
@@ -22,19 +22,48 @@ def expand_path_cfg(path_cfg, alias_dict=None, overriding_kargs=dict()):
 
 ##__________________________________________________________________||
 def _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs):
+    """expand a path config given as a string
 
-    if alias_dict is not None and path_cfg in alias_dict:
+    Args:
+        path_cfg (str): to be given to lambda or an alias
+        alias_dict (dict):
+        overriding_kargs (dict):
+    """
+
+
+    if path_cfg in alias_dict:
+
+        # e.g.,
+        # path_cfg = 'var_cut'
+
+        new_path_cfg = alias_dict[path_cfg]
+        # e.g., ('ev : {low} <= ev.var[0] < {high}', {'low': 10, 'high': 200})
+
         new_overriding_kargs = dict(alias=path_cfg)
+        # e.g., {'alias': 'var_cut'}
+
         new_overriding_kargs.update(overriding_kargs)
+        # e.g., {'alias': 'var_cut', 'name': 'var_cut25', 'low': 25}
+
         return expand_path_cfg(
-            alias_dict[path_cfg],
+            new_path_cfg,
             alias_dict=alias_dict,
             overriding_kargs=new_overriding_kargs
         )
 
+    # e.g.,
+    # path_cfg = 'ev : {low} <= ev.var[0] < {high}'
+
     ret = dict(factory='LambdaStrFactory', lambda_str=path_cfg)
+    # e.g.,
+    # {
+    #     'factory': 'LambdaStrFactory',
+    #     'lambda_str': 'ev : {low} <= ev.var[0] < {high}'
+    # }
 
     overriding_kargs_copy = overriding_kargs.copy()
+    # e.g., {'low': 25, 'high': 200, 'alias': 'var_cut', 'name': 'var_cut25'}
+
     if 'alias' in overriding_kargs:
         ret['name'] = overriding_kargs_copy.pop('alias')
 
@@ -42,6 +71,14 @@ def _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs):
         ret['name'] = overriding_kargs_copy.pop('name')
 
     ret.update(overriding_kargs_copy)
+    # e.g., 
+    # {
+    #     'factory': 'LambdaStrFactory',
+    #     'lambda_str': 'ev : {low} <= ev.var[0] < {high}',
+    #     'name': 'var_cut25',
+    #     'low': 25, 'high': 200
+    # }
+
     return ret
 
 ##__________________________________________________________________||
