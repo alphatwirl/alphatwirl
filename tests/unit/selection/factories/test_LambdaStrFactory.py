@@ -6,7 +6,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.selection.factories.LambdaStrFactory import LambdaStrFactory
+from alphatwirl.selection.factories.factory import LambdaStrFactory
 
 ##__________________________________________________________________||
 @pytest.fixture()

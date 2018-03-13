@@ -7,19 +7,15 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.selection.factories.AllFactory import AllFactory
-from alphatwirl.selection.factories.AnyFactory import AnyFactory
-from alphatwirl.selection.factories.NotFactory import NotFactory
+from alphatwirl.selection.factories.factory import AllFactory
+from alphatwirl.selection.factories.factory import AnyFactory
+from alphatwirl.selection.factories.factory import NotFactory
 
 ##__________________________________________________________________||
 @pytest.fixture()
 def mock_call_factory(monkeypatch):
     ret = mock.Mock()
-    module = sys.modules['alphatwirl.selection.factories.AllFactory']
-    monkeypatch.setattr(module, 'call_factory', ret)
-    module = sys.modules['alphatwirl.selection.factories.AnyFactory']
-    monkeypatch.setattr(module, 'call_factory', ret)
-    module = sys.modules['alphatwirl.selection.factories.NotFactory']
+    module = sys.modules['alphatwirl.selection.factories.factory']
     monkeypatch.setattr(module, 'call_factory', ret)
     return ret
 

@@ -24,10 +24,10 @@ def call_factory(path_cfg, **kargs):
 ##__________________________________________________________________||
 def find_factory(name):
 
-    from .AllFactory import AllFactory
-    from .AnyFactory import AnyFactory
-    from .NotFactory import NotFactory
-    from .LambdaStrFactory import LambdaStrFactory
+    from .factory import AllFactory
+    from .factory import AnyFactory
+    from .factory import NotFactory
+    from .factory import LambdaStrFactory
 
     ret_dict = dict(
         AllFactory=AllFactory,
