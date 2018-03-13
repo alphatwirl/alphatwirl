@@ -16,7 +16,7 @@ def alias_dict():
     }
 
 ##__________________________________________________________________||
-@pytest.mark.parametrize('path_cfg, expected', [
+params = [
     pytest.param(
         'alias1',
         dict(
@@ -103,9 +103,43 @@ def alias_dict():
         ),
         id='alias6:not-formatted-with-default-values-overridden'
     ),
-])
-def test_expand_path_cfg(alias_dict, path_cfg, expected):
+]
+
+@pytest.mark.parametrize('path_cfg, expected', params)
+def test_alias(alias_dict, path_cfg, expected):
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    assert expected == actual
+
+@pytest.mark.parametrize('path_cfg, expected', params)
+def test_nested(alias_dict, path_cfg, expected):
+    path_cfg = dict(All=(path_cfg, ))
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='AllFactory', path_cfg_list=(expected, ))
+    assert expected == actual
+
+    path_cfg = dict(All=(path_cfg, ))
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='AllFactory', path_cfg_list=(expected, ))
+    assert expected == actual
+
+    path_cfg = dict(Not=path_cfg)
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='NotFactory', path_cfg=expected)
+    assert expected == actual
+
+    path_cfg = dict(Any=(path_cfg, ))
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='AnyFactory', path_cfg_list=(expected, ))
+    assert expected == actual
+
+    path_cfg = dict(Any=(path_cfg, ))
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='AnyFactory', path_cfg_list=(expected, ))
+    assert expected == actual
+
+    path_cfg = dict(Not=path_cfg)
+    actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
+    expected = dict(factory='NotFactory', path_cfg=expected)
     assert expected == actual
 
 ##__________________________________________________________________||
