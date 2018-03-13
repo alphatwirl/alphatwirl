@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
-from alphatwirl.selection.factories.FactoryDispatcher import expand_path_cfg
+from alphatwirl.selection.factories.expand import expand_path_cfg
 
 ##__________________________________________________________________||
 @pytest.fixture()

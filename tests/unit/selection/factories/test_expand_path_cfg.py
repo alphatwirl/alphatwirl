@@ -3,7 +3,7 @@ import os
 import sys
 import pytest
 
-from alphatwirl.selection.factories.FactoryDispatcher import expand_path_cfg
+from alphatwirl.selection.factories.expand import expand_path_cfg
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('path_cfg, expected', [
