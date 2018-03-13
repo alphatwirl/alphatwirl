@@ -123,6 +123,10 @@ def test_expand_path_cfg(path_cfg, expected):
     actual = expand_path_cfg(path_cfg=path_cfg)
     assert expected == actual
 
+    # give expanded one
+    actual = expand_path_cfg(path_cfg=actual)
+    assert expected == actual
+
 ##__________________________________________________________________||
 @pytest.mark.parametrize('path_cfg, error', [
     pytest.param(

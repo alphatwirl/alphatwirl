@@ -110,6 +110,11 @@ def test_alias(alias_dict, path_cfg, expected):
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
     assert expected == actual
 
+    # give expanded one
+    actual = expand_path_cfg(path_cfg=actual, alias_dict=alias_dict)
+    assert expected == actual
+
+
 @pytest.mark.parametrize('path_cfg, expected', params)
 def test_nested(alias_dict, path_cfg, expected):
     path_cfg = dict(All=(path_cfg, ))
@@ -140,6 +145,10 @@ def test_nested(alias_dict, path_cfg, expected):
     path_cfg = dict(Not=path_cfg)
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
     expected = dict(factory='NotFactory', path_cfg=expected)
+    assert expected == actual
+
+    # give expanded one
+    actual = expand_path_cfg(path_cfg=actual, alias_dict=alias_dict)
     assert expected == actual
 
 ##__________________________________________________________________||
