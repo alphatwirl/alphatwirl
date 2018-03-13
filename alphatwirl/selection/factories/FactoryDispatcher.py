@@ -9,17 +9,6 @@ def FactoryDispatcher(path_cfg, **kargs):
     return call_factory(path_cfg, **kargs)
 
 ##__________________________________________________________________||
-def call_factory(path_cfg, **kargs):
-
-    path_cfg_copy = path_cfg.copy()
-    factoryName = path_cfg_copy.pop('factory')
-    factory = find_factory(factoryName)
-    kargs_copy = kargs.copy()
-    kargs_copy.update(path_cfg_copy)
-
-    return factory(**kargs_copy)
-
-##__________________________________________________________________||
 def expand_path_cfg(path_cfg, alias_dict=None, overriding_kargs=dict()):
 
     if isinstance(path_cfg, str):
@@ -56,6 +45,20 @@ def _expand_path_cfg_str(path_cfg, alias_dict, overriding_kargs):
     return ret
 
 ##__________________________________________________________________||
+def _expand_path_cfg_tuple(path_cfg, alias_dict, overriding_kargs):
+
+    if isinstance(path_cfg[0], str) and isinstance(path_cfg[1], dict):
+        new_overriding_kargs = path_cfg[1].copy()
+        new_overriding_kargs.update(overriding_kargs)
+        return expand_path_cfg(
+            path_cfg[0],
+            overriding_kargs=new_overriding_kargs,
+            alias_dict=alias_dict
+        )
+
+    raise ValueError("cannot recognize the path_cfg")
+
+##__________________________________________________________________||
 def _expand_path_cfg_dict(path_cfg, alias_dict):
     if 'factory' in path_cfg:
         return path_cfg
@@ -84,18 +87,15 @@ def _expand_path_cfg_dict(path_cfg, alias_dict):
     raise ValueError("cannot recognize the path_cfg")
 
 ##__________________________________________________________________||
-def _expand_path_cfg_tuple(path_cfg, alias_dict, overriding_kargs):
+def call_factory(path_cfg, **kargs):
 
-    if isinstance(path_cfg[0], str) and isinstance(path_cfg[1], dict):
-        new_overriding_kargs = path_cfg[1].copy()
-        new_overriding_kargs.update(overriding_kargs)
-        return expand_path_cfg(
-            path_cfg[0],
-            overriding_kargs=new_overriding_kargs,
-            alias_dict=alias_dict
-        )
+    path_cfg_copy = path_cfg.copy()
+    factoryName = path_cfg_copy.pop('factory')
+    factory = find_factory(factoryName)
+    kargs_copy = kargs.copy()
+    kargs_copy.update(path_cfg_copy)
 
-    raise ValueError("cannot recognize the path_cfg")
+    return factory(**kargs_copy)
 
 ##__________________________________________________________________||
 def find_factory(name):
