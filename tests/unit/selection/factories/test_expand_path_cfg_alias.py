@@ -182,4 +182,34 @@ def test_factory(alias_dict, path_cfg, _, expected):
     assert repr(expected) == repr(obj)
     assert str(expected) == str(obj)
 
+@pytest.mark.parametrize('path_cfg, _, expected', params)
+def test_factory_nested(alias_dict, path_cfg, _, expected):
+
+    kargs = dict(
+        AllClass=All, AnyClass=Any, NotClass=Not,
+        LambdaStrClass=LambdaStr, aliasDict=alias_dict,
+    )
+
+    path_cfg = dict(All=(path_cfg, ))
+    expected = All(name='All', selections=[expected])
+
+    path_cfg = dict(All=(path_cfg, ))
+    expected = All(name='All', selections=[expected])
+
+    path_cfg = dict(Not=path_cfg)
+    expected = Not(name='Not', selection=expected)
+
+    path_cfg = dict(Any=(path_cfg, ))
+    expected = Any(name='Any', selections=[expected])
+
+    path_cfg = dict(Any=(path_cfg, ))
+    expected = Any(name='Any', selections=[expected])
+
+    path_cfg = dict(Not=path_cfg)
+    expected = Not(name='Not', selection=expected)
+
+    obj = FactoryDispatcher(path_cfg=path_cfg, **kargs)
+    assert repr(expected) == repr(obj)
+    assert str(expected) == str(obj)
+
 ##__________________________________________________________________||
