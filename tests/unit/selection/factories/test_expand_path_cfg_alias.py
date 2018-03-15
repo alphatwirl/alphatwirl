@@ -26,6 +26,7 @@ params = [
         'alias1',
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias1'
         ),
@@ -39,6 +40,7 @@ params = [
         ('alias1', dict(name='name1')),
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var1[0] >= 10',
             name='name1'
         ),
@@ -49,6 +51,7 @@ params = [
         'alias2',
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var2[0] >= 20',
             name='name2' #  name has priority over alias
         ),
@@ -59,6 +62,7 @@ params = [
         ('alias2', dict(name='new_name2')),
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var2[0] >= 20',
             name='new_name2' # name can be overridden
         ),
@@ -69,6 +73,7 @@ params = [
         'alias3',
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias3' # the outermost alias has priority
         ),
@@ -79,6 +84,7 @@ params = [
         'alias4',
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias4' # the outermost alias has priority
         ),
@@ -89,6 +95,7 @@ params = [
         ('alias5', dict(n=30)),
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : ev.var4[0] == {n}', # not formatted
             n=30,
             name='alias5'
@@ -100,6 +107,7 @@ params = [
         'alias6',
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : {low} <= ev.var5[0] < {high}',
             low=11,
             high=20,
@@ -112,6 +120,7 @@ params = [
         ('alias6', dict(high=30)),
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : {low} <= ev.var5[0] < {high}',
             low=11,
             high=30,
@@ -137,32 +146,32 @@ def test_alias(alias_dict, path_cfg, expected, _):
 def test_nested(alias_dict, path_cfg, expected, _):
     path_cfg = dict(All=(path_cfg, ))
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='AllFactory', path_cfg_list=(expected, ))
+    expected = dict(factory='AllFactory', components=(expected, ))
     assert expected == actual
 
     path_cfg = dict(All=(path_cfg, ))
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='AllFactory', path_cfg_list=(expected, ))
+    expected = dict(factory='AllFactory', components=(expected, ))
     assert expected == actual
 
     path_cfg = dict(Not=path_cfg)
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='NotFactory', path_cfg=expected)
+    expected = dict(factory='NotFactory', components=(expected, ))
     assert expected == actual
 
     path_cfg = dict(Any=(path_cfg, ))
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='AnyFactory', path_cfg_list=(expected, ))
+    expected = dict(factory='AnyFactory', components=(expected, ))
     assert expected == actual
 
     path_cfg = dict(Any=(path_cfg, ))
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='AnyFactory', path_cfg_list=(expected, ))
+    expected = dict(factory='AnyFactory', components=(expected, ))
     assert expected == actual
 
     path_cfg = dict(Not=path_cfg)
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
-    expected = dict(factory='NotFactory', path_cfg=expected)
+    expected = dict(factory='NotFactory', components=(expected, ))
     assert expected == actual
 
     # give expanded one

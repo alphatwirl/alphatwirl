@@ -3,20 +3,20 @@
 from .expand import expand_path_cfg
 
 ##__________________________________________________________________||
-def AllFactory(path_cfg_list, name=None, **kargs):
+def AllFactory(components, name=None, **kargs):
     ret = kargs['AllClass'](name=name)
-    for path_cfg in path_cfg_list:
-        ret.add(call_factory(path_cfg, **kargs))
+    for c in components:
+        ret.add(c)
     return ret
 
-def AnyFactory(path_cfg_list, name=None,  **kargs):
+def AnyFactory(components, name=None,  **kargs):
     ret = kargs['AnyClass'](name=name)
-    for path_cfg in path_cfg_list:
-        ret.add(call_factory(path_cfg, **kargs))
+    for c in components:
+        ret.add(c)
     return ret
 
-def NotFactory(path_cfg, name=None,  **kargs):
-    return kargs['NotClass'](selection=call_factory(path_cfg, **kargs), name=name)
+def NotFactory(components, name=None, **kargs):
+    return kargs['NotClass'](selection=components[0], name=name)
 
 ##__________________________________________________________________||
 def LambdaStrFactory(lambda_str, LambdaStrClass, name=None, **kargs):
@@ -32,13 +32,13 @@ def FactoryDispatcher(path_cfg, **kargs):
 
 ##__________________________________________________________________||
 def call_factory(path_cfg, **kargs):
-
+    components = [call_factory(c, **kargs) for c in path_cfg['components']]
     path_cfg_copy = path_cfg.copy()
     factoryName = path_cfg_copy.pop('factory')
     factory = find_factory(factoryName)
     kargs_copy = kargs.copy()
     kargs_copy.update(path_cfg_copy)
-
+    kargs_copy['components'] = components
     return factory(**kargs_copy)
 
 ##__________________________________________________________________||

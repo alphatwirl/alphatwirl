@@ -16,6 +16,7 @@ params = [
         ('var_cut', dict(name='var_cut25', low=25)),
         dict(
             factory='LambdaStrFactory',
+            components=(),
             lambda_str='ev : {low} <= ev.var[0] < {high}',
             name='var_cut25',
             low=25, high=200,
