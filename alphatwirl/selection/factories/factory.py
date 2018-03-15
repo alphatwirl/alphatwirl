@@ -3,15 +3,15 @@
 from .expand import expand_path_cfg
 
 ##__________________________________________________________________||
-def AllFactory(path_cfg_list, name=None, **kargs):
+def AllFactory(components, name=None, **kargs):
     ret = kargs['AllClass'](name=name)
-    for path_cfg in path_cfg_list:
+    for path_cfg in components:
         ret.add(call_factory(path_cfg, **kargs))
     return ret
 
-def AnyFactory(path_cfg_list, name=None,  **kargs):
+def AnyFactory(components, name=None,  **kargs):
     ret = kargs['AnyClass'](name=name)
-    for path_cfg in path_cfg_list:
+    for path_cfg in components:
         ret.add(call_factory(path_cfg, **kargs))
     return ret
 

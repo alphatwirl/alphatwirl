@@ -124,13 +124,13 @@ def _expand_dict(path_cfg, alias_dict):
     if 'All' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'AllFactory'
-        new_path_cfg['path_cfg_list'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('All')])
+        new_path_cfg['components'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('All')])
         return new_path_cfg
 
     if 'Any' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'AnyFactory'
-        new_path_cfg['path_cfg_list'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('Any')])
+        new_path_cfg['components'] = tuple([expand_path_cfg(p, alias_dict=alias_dict) for p in new_path_cfg.pop('Any')])
         return new_path_cfg
 
     if 'Not' in path_cfg:

@@ -64,7 +64,7 @@ params = [
         )),
         dict(
             factory='AnyFactory',
-            path_cfg_list=(
+            components=(
                 dict(
                     factory='LambdaStrFactory',
                     components=[],
@@ -72,7 +72,7 @@ params = [
                 ),
                 dict(
                     factory='AllFactory',
-                    path_cfg_list=(
+                    components=(
                         dict(
                             factory='LambdaStrFactory',
                             components=[],
@@ -89,7 +89,7 @@ params = [
                     factory='NotFactory',
                     path_cfg=dict(
                         factory='AnyFactory',
-                        path_cfg_list=(
+                        components=(
                             dict(
                                 factory='LambdaStrFactory',
                                 components=[],
@@ -100,7 +100,7 @@ params = [
                                 components=[],
                                 lambda_str='ev : ev.w[0] >= 300',
                                 ),
-                        )
+                        ),
                     )
                 )
             )
