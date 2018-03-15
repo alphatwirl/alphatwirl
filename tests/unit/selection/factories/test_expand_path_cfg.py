@@ -77,44 +77,44 @@ from alphatwirl.selection.factories.expand import expand_path_cfg
                 ),
             )),
         )),
-        {
-            'factory': 'AnyFactory',
-            'path_cfg_list': (
-                {
-                    'factory': 'LambdaStrFactory',
-                    'lambda_str': 'ev : ev.x[0] == 0',
-                },
-                {
-                    'factory': 'AllFactory',
-                    'path_cfg_list': (
-                        {
-                            'factory': 'LambdaStrFactory',
-                            'lambda_str': 'ev : ev.x[0] >= 1',
-                        },
-                        {
-                            'factory': 'LambdaStrFactory',
-                            'lambda_str': 'ev : ev.y[0] >= 100',
-                        }
-                    )
-                },
-                {
-                    'factory': 'NotFactory',
-                    'path_cfg': {
-                        'factory': 'AnyFactory',
-                        'path_cfg_list': (
-                            {
-                                'factory': 'LambdaStrFactory',
-                                'lambda_str': 'ev : ev.z[0] == 0'
-                            },
-                            {
-                                'factory': 'LambdaStrFactory',
-                                'lambda_str': 'ev : ev.w[0] >= 300'
-                            }
+        dict(
+            factory='AnyFactory',
+            path_cfg_list=(
+                dict(
+                    factory='LambdaStrFactory',
+                    lambda_str='ev : ev.x[0] == 0',
+                ),
+                dict(
+                    factory='AllFactory',
+                    path_cfg_list=(
+                        dict(
+                            factory='LambdaStrFactory',
+                            lambda_str='ev : ev.x[0] >= 1',
+                        ),
+                        dict(
+                            factory='LambdaStrFactory',
+                            lambda_str='ev : ev.y[0] >= 100',
                         )
-                    }
-                }
+                    )
+                ),
+                dict(
+                    factory='NotFactory',
+                    path_cfg=dict(
+                        factory='AnyFactory',
+                        path_cfg_list=(
+                            dict(
+                                factory='LambdaStrFactory',
+                                lambda_str='ev : ev.z[0] == 0'
+                            ),
+                            dict(
+                                factory='LambdaStrFactory',
+                                lambda_str='ev : ev.w[0] >= 300',
+                                ),
+                        )
+                    )
+                )
             )
-        },
+        ),
         id='example',
         ## marks=pytest.mark.skip(reason='not fully expanded')
     ),
