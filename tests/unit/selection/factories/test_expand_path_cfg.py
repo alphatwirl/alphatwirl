@@ -15,6 +15,7 @@ params = [
     pytest.param(
         'ev : ev.nJets[0] >= 2',
         dict(
+            components=(),
             factory='LambdaStrFactory',
             lambda_str='ev : ev.nJets[0] >= 2',
         ),
@@ -27,6 +28,7 @@ params = [
     pytest.param(
         'ev : ev.nJets[0] >= {n}',
         dict(
+            components=(),
             factory='LambdaStrFactory',
             lambda_str='ev : ev.nJets[0] >= {n}',
         ),
@@ -38,13 +40,13 @@ params = [
     ),
     pytest.param(
         dict(All=()),
-        {'factory': 'AllFactory', 'path_cfg_list': ()},
+        {'factory': 'AllFactory', 'components': ()},
         All(name='All', selections=[]),
         id='dict-all-empty'
     ),
     pytest.param(
         dict(Any=()),
-        {'factory': 'AnyFactory', 'path_cfg_list': ()},
+        {'factory': 'AnyFactory', 'components': ()},
         Any(name='Any', selections=[]),
         id='dict-any-empty'
     ),
