@@ -37,7 +37,7 @@ def _expand_for_lambda_str(path_cfg, alias_dict, overriding_kargs):
     # e.g.,
     # path_cfg = 'ev : {low} <= ev.var[0] < {high}'
 
-    ret = dict(factory='LambdaStrFactory', lambda_str=path_cfg)
+    ret = dict(factory='LambdaStrFactory', lambda_str=path_cfg, components=[])
     # e.g.,
     # {
     #     'factory': 'LambdaStrFactory',
