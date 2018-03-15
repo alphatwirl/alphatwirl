@@ -5,12 +5,21 @@ import pytest
 
 from alphatwirl.selection.factories.expand import expand_path_cfg
 
+from alphatwirl.selection.factories.factory import FactoryDispatcher
+from alphatwirl.selection.modules.LambdaStr import LambdaStr
+from alphatwirl.selection.modules import All, Any, Not
+
 ##__________________________________________________________________||
-@pytest.mark.parametrize('path_cfg, expected', [
+# path_cfg, expanded, obj
+params = [
     pytest.param(
         'ev : ev.nJets[0] >= 2',
         dict(
             factory='LambdaStrFactory',
+            lambda_str='ev : ev.nJets[0] >= 2',
+        ),
+        LambdaStr(
+            name='ev : ev.nJets[0] >= 2',
             lambda_str='ev : ev.nJets[0] >= 2',
         ),
         id='string:lambda_str'
@@ -21,47 +30,23 @@ from alphatwirl.selection.factories.expand import expand_path_cfg
             factory='LambdaStrFactory',
             lambda_str='ev : ev.nJets[0] >= {n}',
         ),
+        LambdaStr(
+            name='ev : ev.nJets[0] >= 5242',
+            lambda_str='ev : ev.nJets[0] >= 5242',
+        ),
         id='string:lambda_str-not-formatted'
     ),
     pytest.param(
         dict(All=()),
         {'factory': 'AllFactory', 'path_cfg_list': ()},
+        All(name='All', selections=[]),
         id='dict-all-empty'
     ),
     pytest.param(
         dict(Any=()),
         {'factory': 'AnyFactory', 'path_cfg_list': ()},
+        Any(name='Any', selections=[]),
         id='dict-any-empty'
-    ),
-    pytest.param(
-        dict(All=(dict(factory='factory1'), dict(factory='factory2')), name='test_all', arg2=2, arg3=3),
-        dict(
-            factory='AllFactory',
-            path_cfg_list=(dict(factory='factory1'), dict(factory='factory2')),
-            name='test_all',
-            arg2=2, arg3=3
-        ),
-        id='dict-all'
-    ),
-    pytest.param(
-        dict(Any=(dict(factory='factory1'), dict(factory='factory2')), name='test_any', arg2=2, arg3=3),
-        dict(
-            factory='AnyFactory',
-            path_cfg_list=(dict(factory='factory1'), dict(factory='factory2')),
-            name='test_any',
-            arg2=2, arg3=3
-        ),
-        id='dict-any'
-    ),
-    pytest.param(
-        dict(Not=dict(factory='factory1'), name='test_not', arg2=2, arg3=3),
-        dict(
-            factory='NotFactory',
-            path_cfg=dict(factory='factory1'),
-            name='test_not',
-            arg2=2, arg3=3
-        ),
-        id='dict-not'
     ),
     pytest.param(
         dict(Any=(
@@ -115,17 +100,68 @@ from alphatwirl.selection.factories.expand import expand_path_cfg
                 )
             )
         ),
+        Any(
+            name='Any',
+            selections=[
+                LambdaStr(
+                    name='ev : ev.x[0] == 0',
+                    lambda_str='ev : ev.x[0] == 0'
+                ),
+                All(
+                    name='All',
+                    selections=[
+                        LambdaStr(
+                            name='ev : ev.x[0] >= 1',
+                            lambda_str='ev : ev.x[0] >= 1'),
+                        LambdaStr(
+                            name='ev : ev.y[0] >= 100',
+                            lambda_str='ev : ev.y[0] >= 100')
+                    ]
+                ),
+                Not(
+                    name='Not',
+                    selection=Any(
+                        name='Any',
+                        selections=[
+                            LambdaStr(
+                                name='ev : ev.z[0] == 0',
+                                lambda_str='ev : ev.z[0] == 0'
+                            ),
+                            LambdaStr(
+                                name='ev : ev.w[0] >= 300',
+                                lambda_str='ev : ev.w[0] >= 300'
+                            )
+                        ]
+                    )
+                )
+            ]
+        ),
         id='example',
         ## marks=pytest.mark.skip(reason='not fully expanded')
     ),
-])
-def test_expand_path_cfg(path_cfg, expected):
+]
+
+@pytest.mark.parametrize('path_cfg, expected, _', params)
+def test_expand_path_cfg(path_cfg, expected, _):
     actual = expand_path_cfg(path_cfg=path_cfg)
     assert expected == actual
 
     # give expanded one
     actual = expand_path_cfg(path_cfg=actual)
     assert expected == actual
+
+@pytest.mark.parametrize('path_cfg, _, expected', params)
+def test_factory(path_cfg, _, expected):
+
+    kargs = dict(
+        AllClass=All, AnyClass=Any, NotClass=Not,
+        LambdaStrClass=LambdaStr,
+        n=5242,
+    )
+
+    obj = FactoryDispatcher(path_cfg=path_cfg, **kargs)
+    assert repr(expected) == repr(obj)
+    assert str(expected) == str(obj)
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('path_cfg, error', [
