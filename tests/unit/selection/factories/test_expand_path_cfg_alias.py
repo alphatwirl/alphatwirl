@@ -3,6 +3,10 @@ import pytest
 
 from alphatwirl.selection.factories.expand import expand_path_cfg
 
+from alphatwirl.selection.factories.factory import FactoryDispatcher
+from alphatwirl.selection.modules.LambdaStr import LambdaStr
+from alphatwirl.selection.modules import All, Any, Not
+
 ##__________________________________________________________________||
 @pytest.fixture()
 def alias_dict():
@@ -16,6 +20,7 @@ def alias_dict():
     }
 
 ##__________________________________________________________________||
+# path_cfg, expanded, obj
 params = [
     pytest.param(
         'alias1',
@@ -23,6 +28,10 @@ params = [
             factory='LambdaStrFactory',
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias1'
+        ),
+        LambdaStr(
+            name='alias1',
+            lambda_str='ev : ev.var1[0] >= 10'
         ),
         id='alias1'
     ),
@@ -33,6 +42,7 @@ params = [
             lambda_str='ev : ev.var1[0] >= 10',
             name='name1'
         ),
+        LambdaStr(name='name1', lambda_str='ev : ev.var1[0] >= 10'),
         id='alias1:with-name'
     ),
     pytest.param(
@@ -42,6 +52,7 @@ params = [
             lambda_str='ev : ev.var2[0] >= 20',
             name='name2' #  name has priority over alias
         ),
+        LambdaStr(name='name2', lambda_str='ev : ev.var2[0] >= 20'),
         id='alias2:name-priority-over-alias'
     ),
     pytest.param(
@@ -51,6 +62,7 @@ params = [
             lambda_str='ev : ev.var2[0] >= 20',
             name='new_name2' # name can be overridden
         ),
+        LambdaStr(name='new_name2', lambda_str='ev : ev.var2[0] >= 20'),
         id='alias2:name-overridden'
     ),
     pytest.param(
@@ -60,6 +72,7 @@ params = [
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias3' # the outermost alias has priority
         ),
+        LambdaStr(name='alias3', lambda_str='ev : ev.var1[0] >= 10'),
         id='alias3:alias-of-alias'
     ),
     pytest.param(
@@ -69,6 +82,7 @@ params = [
             lambda_str='ev : ev.var1[0] >= 10',
             name='alias4' # the outermost alias has priority
         ),
+        LambdaStr(name='alias4', lambda_str='ev : ev.var1[0] >= 10'),
         id='alias4:alias-of-alias-of-alias'
     ),
     pytest.param(
@@ -79,6 +93,7 @@ params = [
             n=30,
             name='alias5'
         ),
+        LambdaStr(name='alias5', lambda_str='ev : ev.var4[0] == 30'),
         id='alias5:not-formatted'
     ),
     pytest.param(
@@ -90,6 +105,7 @@ params = [
             high=20,
             name='alias6',
         ),
+        LambdaStr(name='alias6', lambda_str='ev : 11 <= ev.var5[0] < 20'),
         id='alias6:not-formatted-with-default-values'
     ),
     pytest.param(
@@ -101,12 +117,14 @@ params = [
             high=30,
             name='alias6'
         ),
+        LambdaStr(name='alias6', lambda_str='ev : 11 <= ev.var5[0] < 30'),
         id='alias6:not-formatted-with-default-values-overridden'
     ),
 ]
 
-@pytest.mark.parametrize('path_cfg, expected', params)
-def test_alias(alias_dict, path_cfg, expected):
+##__________________________________________________________________||
+@pytest.mark.parametrize('path_cfg, expected, _', params)
+def test_alias(alias_dict, path_cfg, expected, _):
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
     assert expected == actual
 
@@ -115,8 +133,8 @@ def test_alias(alias_dict, path_cfg, expected):
     assert expected == actual
 
 
-@pytest.mark.parametrize('path_cfg, expected', params)
-def test_nested(alias_dict, path_cfg, expected):
+@pytest.mark.parametrize('path_cfg, expected, _', params)
+def test_nested(alias_dict, path_cfg, expected, _):
     path_cfg = dict(All=(path_cfg, ))
     actual = expand_path_cfg(path_cfg=path_cfg, alias_dict=alias_dict)
     expected = dict(factory='AllFactory', path_cfg_list=(expected, ))
@@ -150,5 +168,18 @@ def test_nested(alias_dict, path_cfg, expected):
     # give expanded one
     actual = expand_path_cfg(path_cfg=actual, alias_dict=alias_dict)
     assert expected == actual
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('path_cfg, _, expected', params)
+def test_factory(alias_dict, path_cfg, _, expected):
+
+    kargs = dict(
+        AllClass=All, AnyClass=Any, NotClass=Not,
+        LambdaStrClass=LambdaStr, aliasDict=alias_dict,
+    )
+
+    obj = FactoryDispatcher(path_cfg=path_cfg, **kargs)
+    assert repr(expected) == repr(obj)
+    assert str(expected) == str(obj)
 
 ##__________________________________________________________________||
