@@ -136,7 +136,7 @@ def _expand_dict(path_cfg, alias_dict):
     if 'Not' in path_cfg:
         new_path_cfg = path_cfg.copy()
         new_path_cfg['factory'] = 'NotFactory'
-        new_path_cfg['path_cfg'] = expand_path_cfg(new_path_cfg.pop('Not'), alias_dict=alias_dict)
+        new_path_cfg['components'] = (expand_path_cfg(new_path_cfg.pop('Not'), alias_dict=alias_dict), )
         return new_path_cfg
 
     raise ValueError("cannot recognize the path_cfg")

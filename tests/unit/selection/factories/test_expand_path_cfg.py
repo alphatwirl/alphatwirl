@@ -87,21 +87,23 @@ params = [
                 ),
                 dict(
                     factory='NotFactory',
-                    path_cfg=dict(
-                        factory='AnyFactory',
-                        components=(
-                            dict(
-                                factory='LambdaStrFactory',
-                                components=[],
-                                lambda_str='ev : ev.z[0] == 0'
-                            ),
-                            dict(
-                                factory='LambdaStrFactory',
-                                components=[],
-                                lambda_str='ev : ev.w[0] >= 300',
+                    components=(
+                        dict(
+                            factory='AnyFactory',
+                            components=(
+                                dict(
+                                    factory='LambdaStrFactory',
+                                    components=[],
+                                    lambda_str='ev : ev.z[0] == 0'
                                 ),
+                                dict(
+                                    factory='LambdaStrFactory',
+                                    components=[],
+                                    lambda_str='ev : ev.w[0] >= 300',
+                                ),
+                            ),
                         ),
-                    )
+                    ),
                 )
             )
         ),

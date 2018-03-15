@@ -15,8 +15,8 @@ def AnyFactory(components, name=None,  **kargs):
         ret.add(call_factory(path_cfg, **kargs))
     return ret
 
-def NotFactory(path_cfg, name=None,  **kargs):
-    return kargs['NotClass'](selection=call_factory(path_cfg, **kargs), name=name)
+def NotFactory(components, name=None, **kargs):
+    return kargs['NotClass'](selection=call_factory(components[0], **kargs), name=name)
 
 ##__________________________________________________________________||
 def LambdaStrFactory(lambda_str, LambdaStrClass, name=None, **kargs):
