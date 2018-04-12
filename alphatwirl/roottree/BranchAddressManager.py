@@ -89,7 +89,7 @@ def inspectLeaf(tree, bname):
         Double_t = 'd',
         Long64_t = 'l',
         ULong64_t = 'L',
-        Bool_t = 'i',
+        Bool_t = 'b',
     )
 
     leaf = tree.GetLeaf(bname)
