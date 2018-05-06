@@ -73,6 +73,7 @@ def test_standard(obj, eventLoopRunner, reader, collector,
     dataset3 = mock.Mock(name='dataset3', build_events=[build_events4])
     dataset3.configure_mock(name='dataset3')
 
+    eventLoopRunner.run_multiple.side_effect = [[0, 1, 2], [ ], [3]]
     split_into_build_events.side_effect = lambda dataset: dataset.build_events
 
     ## read
@@ -115,14 +116,14 @@ def test_standard(obj, eventLoopRunner, reader, collector,
     assert 'reader' == eventLoop4.reader.name
 
     ## end
-    eventLoopRunner.end.return_value = [
-        eventLoop1.reader, eventLoop2.reader, eventLoop3.reader, eventLoop4.reader
+    eventLoopRunner.poll.return_value = [
+        (0, eventLoop1.reader), (1, eventLoop2.reader), (2, eventLoop3.reader), (3, eventLoop4.reader)
     ]
     collector.collect.side_effect = lambda x: x
-    assert 0 == eventLoopRunner.end.call_count
+    assert 0 == eventLoopRunner.poll.call_count
     assert 0 == collector.collect.call_count
     results = obj.end()
-    assert 1 == eventLoopRunner.end.call_count
+    assert 1 == eventLoopRunner.poll.call_count
     assert 1 == collector.collect.call_count
     expected = [
         ('dataset1', (eventLoop1.reader, eventLoop2.reader, eventLoop3.reader), ),

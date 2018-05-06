@@ -1,5 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import copy
+import itertools
+from operator import itemgetter
 
 from .EventLoop import EventLoop
 
@@ -29,6 +31,7 @@ class EventDatasetReader(object):
         self.EventLoop = EventLoop
 
         self.dataset_nreaders = [ ]
+        self.dataset_runids = [ ]
 
     def __repr__(self):
         name_value_pairs = (
@@ -45,6 +48,7 @@ class EventDatasetReader(object):
     def begin(self):
         self.eventLoopRunner.begin()
         self.dataset_nreaders = [ ]
+        self.runids = [ ]
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
@@ -54,10 +58,20 @@ class EventDatasetReader(object):
             reader = copy.deepcopy(self.reader)
             eventLoop = self.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
-        self.eventLoopRunner.run_multiple(eventLoops)
+        runids = self.eventLoopRunner.run_multiple(eventLoops)
+        self.dataset_runids.append((dataset, runids))
 
     def end(self):
-        returned_readers = self.eventLoopRunner.end()
+
+        runids_towait = list(itertools.chain(*[ids for _, ids in self.dataset_runids]))
+        returned = [ ]
+        while runids_towait:
+            r_ = self.eventLoopRunner.poll()
+            ids_ = [i for i, _ in r_]
+            runids_towait = [i for i in runids_towait if i not in ids_]
+            returned.extend(r_)
+        returned = sorted(returned, key=itemgetter(0))
+        returned_readers = [r for _, r in returned]
 
         nreaders_total = sum((n for _, n in self.dataset_nreaders))
 
