@@ -42,6 +42,8 @@ class TaskPackageDropbox(object):
         runid = self.dispatcher.run(self.workingArea, pkgidx)
         self.runid_pkgidx_map[runid] = pkgidx
 
+        return pkgidx
+
     def put_multiple(self, packages):
         pkgidxs = [self.workingArea.put_package(p) for p in packages ]
 
@@ -51,6 +53,8 @@ class TaskPackageDropbox(object):
         ))
         runids = self.dispatcher.run_multiple(self.workingArea, pkgidxs)
         self.runid_pkgidx_map.update(zip(runids, pkgidxs))
+
+        return pkgidxs
 
     def receive(self):
         pkgidx_result_pairs = [ ] # a list of (pkgidx, _result)
