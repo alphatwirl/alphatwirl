@@ -106,9 +106,9 @@ def test_receive(obj, dropbox):
     obj.begin()
 
     result1 = mock.MagicMock(name='result1')
-    dropbox.receive = mock.MagicMock(return_value=result1)
+    dropbox.receive = mock.MagicMock(return_value=[(0, result1)])
 
-    assert result1 == obj.receive()
+    assert [result1] == obj.receive()
 
     obj.end()
 
@@ -129,7 +129,7 @@ def test_put_when_closed(obj, dropbox, caplog):
 def test_receive_when_closed(obj, dropbox, caplog):
 
     result1 = mock.MagicMock(name='result1')
-    dropbox.receive = mock.MagicMock(return_value=result1)
+    dropbox.receive = mock.MagicMock(return_value=[(0, result1)])
 
     with caplog.at_level(logging.WARNING, logger='alphatwirl'):
         result = obj.receive()

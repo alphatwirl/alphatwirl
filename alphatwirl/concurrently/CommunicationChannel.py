@@ -136,7 +136,8 @@ class CommunicationChannel(object):
             logger.warning('the drop box is not open')
             return
 
-        results = self.dropbox.receive()
+        pkgidx_result_pairs = self.dropbox.receive()
+        results = [r for _, r in pkgidx_result_pairs]
         return results
 
     def terminate(self):
