@@ -219,3 +219,105 @@ def test_receive_rerun(obj, workingarea, dispatcher, caplog):
     assert 1 == dispatcher.terminate.call_count
 
 ##__________________________________________________________________||
+def test_poll_all_finished_once(obj, workingarea, dispatcher):
+
+    obj.open()
+
+    ## put
+    workingarea.put_package.side_effect = [0, 1]
+    dispatcher.run.side_effect = [1001, 1002]
+
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
+
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
+
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1002]]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1}[x]
+
+    assert 0 == dispatcher.poll.call_count
+    assert [(0, result0), (1, result1)] == obj.poll()
+    assert 1 == dispatcher.poll.call_count
+    assert [mock.call([])] == dispatcher.failed_runids.call_args_list
+
+    obj.terminate()
+    obj.close()
+
+def test_poll_finished_in_steps(obj, workingarea, dispatcher):
+
+    obj.open()
+
+    ## put
+    workingarea.put_package.side_effect = [0, 1, 2]
+    dispatcher.run.side_effect = [1001, 1002, 1003]
+
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
+
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
+
+    package2 = mock.MagicMock(name='package2')
+    obj.put(package2)
+
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1003], [ ], [1002]]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    result2 = mock.MagicMock(name='result2')
+    workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1, 2: result2}[x]
+
+    assert 0 == dispatcher.poll.call_count
+    assert [(0, result0), (2, result2)] == obj.poll()
+    assert 1 == dispatcher.poll.call_count
+    assert [ ] == obj.poll()
+    assert 2 == dispatcher.poll.call_count
+    assert [(1, result1)] == obj.poll()
+    assert 3 == dispatcher.poll.call_count
+
+    assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
+
+    obj.terminate()
+    obj.close()
+
+##__________________________________________________________________||
+def test_poll_receive_finished_in_steps(obj, workingarea, dispatcher):
+
+    obj.open()
+
+    ## put
+    workingarea.put_package.side_effect = [0, 1, 2]
+    dispatcher.run.side_effect = [1001, 1002, 1003]
+
+    package0 = mock.MagicMock(name='package0')
+    obj.put(package0)
+
+    package1 = mock.MagicMock(name='package1')
+    obj.put(package1)
+
+    package2 = mock.MagicMock(name='package2')
+    obj.put(package2)
+
+    ## receive
+    dispatcher.poll.side_effect = [[1001, 1003], [ ], [1002]]
+    result0 = mock.MagicMock(name='result0')
+    result1 = mock.MagicMock(name='result1')
+    result2 = mock.MagicMock(name='result2')
+    workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1, 2: result2}[x]
+
+    assert 0 == dispatcher.poll.call_count
+    assert [(0, result0), (2, result2)] == obj.poll()
+    assert 1 == dispatcher.poll.call_count
+    assert [(1, result1)] == obj.receive()
+    assert 3 == dispatcher.poll.call_count
+
+    assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
+
+    obj.terminate()
+    obj.close()
+
+##__________________________________________________________________||

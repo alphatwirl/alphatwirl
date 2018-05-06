@@ -60,12 +60,23 @@ class TaskPackageDropbox(object):
 
         return pkgidxs
 
+    def poll(self):
+        """Return pairs of package indices and results of finished tasks.
+        """
+
+        pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
+        ## a list of (pkgidx, result)
+
+        pairs = sorted(pairs, key=itemgetter(0))
+
+        return pairs
+
     def receive(self):
         """Return pairs of package indices and results.
 
         This method waits until all tasks finish.
         """
-        pkgidx_result_pairs = [ ] # a list of (pkgidx, _result)
+        pkgidx_result_pairs = [ ] # a list of (pkgidx, result)
         while self.runid_pkgidx_map:
 
             pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
