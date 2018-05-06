@@ -87,14 +87,19 @@ class MultiprocessingDropbox(object):
     def receive(self):
         messages = [ ] # a list of (task_idx, result)
         while self.n_ongoing_tasks >= 1:
-            if self.result_queue.empty(): continue
-            message = self.result_queue.get()
-            messages.append(message)
-            self.n_ongoing_tasks -= 1
+            messages.extend(self._receive_finished())
 
         # sort in the order of task_idx
         messages = sorted(messages, key=itemgetter(0))
 
+        return messages
+
+    def _receive_finished(self):
+        messages = [ ] # a list of (task_idx, result)
+        while not self.result_queue.empty():
+            message = self.result_queue.get()
+            messages.append(message)
+            self.n_ongoing_tasks -= 1
         return messages
 
     def terminate(self):
