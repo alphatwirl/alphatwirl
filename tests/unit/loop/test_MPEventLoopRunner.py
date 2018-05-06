@@ -30,19 +30,22 @@ def test_begin_end(obj, communicationChannel):
 def test_run(obj, communicationChannel):
     obj.begin()
 
+    communicationChannel.put.side_effect = [0, 1]
+
     eventLoop1 = mock.Mock(name='eventLoop1')
-    obj.run(eventLoop1)
+    assert 0 == obj.run(eventLoop1)
 
     eventLoop2 = mock.Mock(name='eventLoop2')
-    obj.run(eventLoop2)
+    assert 1 == obj.run(eventLoop2)
 
     assert [mock.call(eventLoop1), mock.call(eventLoop2)] == communicationChannel.put.call_args_list
 
 def test_run_multiple(obj, communicationChannel):
     obj.begin()
+    communicationChannel.put_multiple.return_value = [0, 1]
     eventLoop1 = mock.Mock(name='eventLoop1')
     eventLoop2 = mock.Mock(name='eventLoop2')
-    obj.run_multiple([eventLoop1, eventLoop2])
+    assert [0, 1] == obj.run_multiple([eventLoop1, eventLoop2])
 
     assert [mock.call([eventLoop1, eventLoop2])] == communicationChannel.put_multiple.call_args_list
 
