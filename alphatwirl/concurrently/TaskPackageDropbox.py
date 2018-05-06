@@ -33,6 +33,8 @@ class TaskPackageDropbox(object):
         self.runid_pkgidx_map = { }
 
     def put(self, package):
+        """Put a package. Return a package index.
+        """
 
         pkgidx = self.workingArea.put_package(package)
 
@@ -45,6 +47,8 @@ class TaskPackageDropbox(object):
         return pkgidx
 
     def put_multiple(self, packages):
+        """Put multiple packages. Return package indices.
+        """
         pkgidxs = [self.workingArea.put_package(p) for p in packages ]
 
         logger = logging.getLogger(__name__)
@@ -57,6 +61,10 @@ class TaskPackageDropbox(object):
         return pkgidxs
 
     def receive(self):
+        """Return pairs of package indices and results.
+
+        This method waits until all tasks finish.
+        """
         pkgidx_result_pairs = [ ] # a list of (pkgidx, _result)
         while self.runid_pkgidx_map:
 
