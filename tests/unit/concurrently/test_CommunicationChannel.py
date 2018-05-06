@@ -159,4 +159,15 @@ def test_receive_all(obj, dropbox):
 
     obj.end()
 
+def test_receive_finished(obj, dropbox):
+
+    obj.begin()
+
+    result1 = mock.MagicMock(name='result1')
+    dropbox.poll = mock.MagicMock(return_value=[(0, result1)])
+
+    assert [(0, result1)] == obj.receive_finished()
+
+    obj.end()
+
 ##__________________________________________________________________||
