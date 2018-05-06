@@ -68,8 +68,7 @@ class TaskPackageDropbox(object):
         # sort in the order of pkgidx
         pkgidx_result_pairs = sorted(pkgidx_result_pairs, key=itemgetter(0))
 
-        results = [result for i, result in pkgidx_result_pairs]
-        return results
+        return pkgidx_result_pairs
 
     def _collect_pkgidx_result_pairs_of_finished_tasks(self):
 

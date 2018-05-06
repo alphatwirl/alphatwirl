@@ -107,7 +107,7 @@ def test_receive_all_finished_once(obj, workingarea, dispatcher):
     workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1}[x]
 
     assert 0 == dispatcher.poll.call_count
-    assert [result0, result1] == obj.receive()
+    assert [(0, result0), (1, result1)] == obj.receive()
     assert 1 == dispatcher.poll.call_count
     assert [mock.call([])] == dispatcher.failed_runids.call_args_list
 
@@ -146,7 +146,7 @@ def test_receive_finished_in_steps(obj, workingarea, dispatcher):
     workingarea.collect_result.side_effect = lambda x: {0: result0, 1: result1, 2: result2}[x]
 
     assert 0 == dispatcher.poll.call_count
-    assert [result0, result1, result2] == obj.receive()
+    assert [(0, result0), (1, result1), (2, result2)] == obj.receive()
     assert 3 == dispatcher.poll.call_count
 
     assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
@@ -207,7 +207,7 @@ def test_receive_rerun(obj, workingarea, dispatcher, caplog):
     assert 'resubmitting' in caplog.records[0].msg
     assert 'resubmitting' in caplog.records[1].msg
 
-    assert [result0, result1, result2] == received
+    assert [(0, result0), (1, result1), (2, result2)] == received
     assert 4 == dispatcher.poll.call_count
 
     assert [mock.call([1003]), mock.call([]), mock.call([1004]), mock.call([])] == dispatcher.failed_runids.call_args_list
