@@ -103,10 +103,13 @@ def test_put_multiple(obj, package1, package2):
 
 def test_put_receive(obj, package1, package2):
     packages = [package1, package2]
+    pkgidxs = [ ]
     for p in packages:
-        obj.put(p)
+        pkgidxs.append(obj.put(p))
 
-    expected = [MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs) for p in packages]
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
     actual = obj.receive()
     assert expected == actual
 
@@ -114,28 +117,37 @@ def test_receive_order(obj, package1, package2, package3):
     # results of tasks are sorted in the order in which the tasks are put.
 
     packages = [package1, package2, package3]
+    pkgidxs = [ ]
     for p in packages:
-        obj.put(p)
+        pkgidxs.append(obj.put(p))
 
-    expected = [MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs) for p in packages]
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
     actual = obj.receive()
     assert expected == actual
 
 def test_put_receive_repeat(obj, package1, package2, package3, package4):
 
     packages = [package1, package2]
+    pkgidxs = [ ]
     for p in packages:
-        obj.put(p)
+        pkgidxs.append(obj.put(p))
 
-    expected = [MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs) for p in packages]
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
     actual = obj.receive()
     assert expected == actual
 
     packages = [package3, package4]
+    pkgidxs = [ ]
     for p in packages:
-        obj.put(p)
+        pkgidxs.append(obj.put(p))
 
-    expected = [MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs) for p in packages]
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
     actual = obj.receive()
     assert expected == actual
 

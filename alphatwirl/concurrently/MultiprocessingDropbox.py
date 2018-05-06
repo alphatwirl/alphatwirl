@@ -95,8 +95,7 @@ class MultiprocessingDropbox(object):
         # sort in the order of task_idx
         messages = sorted(messages, key=itemgetter(0))
 
-        results = [result for task_idx, result in messages]
-        return results
+        return messages
 
     def terminate(self):
         for worker in self.workers:
