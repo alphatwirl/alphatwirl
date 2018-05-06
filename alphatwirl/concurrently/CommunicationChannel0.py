@@ -17,6 +17,7 @@ class CommunicationChannel0(object):
 
     def __init__(self):
         self.results = [ ]
+        self.task_idx = -1 # so it starts from 0
 
     def __repr__(self):
         return '{}()'.format(
@@ -27,18 +28,23 @@ class CommunicationChannel0(object):
         pass
 
     def put(self, task, *args, **kwargs):
+        self.task_idx += 1
         result = task(*args, **kwargs)
         self.results.append(result)
+        return self.task_idx
 
     def put_multiple(self, task_args_kwargs_list):
+        task_idxs = [ ]
         for t in task_args_kwargs_list:
             try:
                 task = t['task']
                 args = t.get('args', ())
                 kwargs = t.get('kwargs', {})
-                self.put(task, *args, **kwargs)
+                task_idx = self.put(task, *args, **kwargs)
             except TypeError:
-                self.put(t)
+                task_idx = self.put(t)
+            task_idxs.append(task_idx)
+        return task_idxs
 
     def receive(self):
         ret = self.results[:]
