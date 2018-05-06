@@ -148,3 +148,15 @@ def test_receive_when_closed(obj, dropbox, caplog):
     obj.end()
 
 ##__________________________________________________________________||
+def test_receive_all(obj, dropbox):
+
+    obj.begin()
+
+    result1 = mock.MagicMock(name='result1')
+    dropbox.receive = mock.MagicMock(return_value=[(0, result1)])
+
+    assert [(0, result1)] == obj.receive_all()
+
+    obj.end()
+
+##__________________________________________________________________||

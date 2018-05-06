@@ -130,13 +130,19 @@ class CommunicationChannel(object):
             packages.append(package)
         return self.dropbox.put_multiple(packages)
 
-    def receive(self):
+    def receive_all(self):
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
             return
 
         pkgidx_result_pairs = self.dropbox.receive()
+        return pkgidx_result_pairs
+
+    def receive(self):
+        pkgidx_result_pairs = self.receive_all()
+        if pkgidx_result_pairs is None:
+            return
         results = [r for _, r in pkgidx_result_pairs]
         return results
 
