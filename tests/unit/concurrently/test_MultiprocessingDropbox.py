@@ -95,11 +95,11 @@ def obj(mock_progressmonitor):
 
 ##__________________________________________________________________||
 def test_put(obj, package1, package2):
-    obj.put(package1)
-    obj.put(package2)
+    assert 0 == obj.put(package1)
+    assert 1 == obj.put(package2)
 
 def test_put_multiple(obj, package1, package2):
-    obj.put_multiple([package1, package2])
+    assert [0, 1] == obj.put_multiple([package1, package2])
 
 def test_put_receive(obj, package1, package2):
     packages = [package1, package2]
