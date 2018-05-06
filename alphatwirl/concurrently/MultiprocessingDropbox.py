@@ -84,7 +84,23 @@ class MultiprocessingDropbox(object):
             task_idxs.append(self.put(package))
         return task_idxs
 
+    def poll(self):
+        """Return pairs of task indices and results of finished tasks.
+        """
+        messages = self._receive_finished()
+        # a list of (task_idx, result)
+
+        # sort in the order of task_idx
+        messages = sorted(messages, key=itemgetter(0))
+
+        return messages
+
     def receive(self):
+        """Return pairs of task indices and results.
+
+        This method waits until all tasks finish.
+        """
+
         messages = [ ] # a list of (task_idx, result)
         while self.n_ongoing_tasks >= 1:
             messages.extend(self._receive_finished())

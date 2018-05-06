@@ -177,3 +177,18 @@ def test_receive_without_put(obj):
     assert [ ] == obj.receive()
 
 ##__________________________________________________________________||
+def test_put_poll(obj, package1, package2):
+    packages = [package1, package2]
+    pkgidxs = [ ]
+    for p in packages:
+        pkgidxs.append(obj.put(p))
+
+    time.sleep(0.2) # so all tasks finish
+
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
+    actual = obj.poll()
+    assert expected == actual
+
+##__________________________________________________________________||
