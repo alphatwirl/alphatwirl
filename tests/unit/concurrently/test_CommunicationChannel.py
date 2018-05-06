@@ -59,11 +59,13 @@ def test_put(obj, dropbox):
 
     obj.begin()
 
+    dropbox.put.side_effect = [0, 1]
+
     task1 = mock.MagicMock(name='task1')
-    obj.put(task1)
+    assert 0 == obj.put(task1)
 
     task2 = mock.MagicMock(name='task2')
-    obj.put(task2, 123, 'ABC', A=34)
+    assert 1 == obj.put(task2, 123, 'ABC', A=34)
 
     expected = [
         mock.call(TaskPackage(task=task1, args=(), kwargs={})),
@@ -77,12 +79,14 @@ def test_put_multiple(obj, dropbox):
 
     obj.begin()
 
+    dropbox.put_multiple.return_value = [0, 1, 2, 3]
+
     task1 = mock.Mock(name='task1')
     task2 = mock.Mock(name='task2')
     task3 = mock.Mock(name='task3')
     task4 = mock.Mock(name='task4')
 
-    obj.put_multiple([
+    assert [0, 1, 2, 3] == obj.put_multiple([
         task1,
         dict(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
         dict(task=task3, kwargs={'B': 123}),
