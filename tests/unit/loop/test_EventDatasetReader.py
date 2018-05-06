@@ -36,7 +36,7 @@ def obj(eventLoopRunner, reader, collector, split_into_build_events):
 
 ##__________________________________________________________________||
 def test_repr(obj):
-   repr(obj)
+    repr(obj)
 
 def test_begin(obj, eventLoopRunner):
     assert 0 == eventLoopRunner.begin.call_count
@@ -45,7 +45,7 @@ def test_begin(obj, eventLoopRunner):
 
 def test_begin_end(obj, eventLoopRunner, collector):
     obj.begin()
-    eventLoopRunner.end.return_value = [ ]
+    eventLoopRunner.poll.return_value = [ ]
     end = obj.end()
     assert [mock.call([ ])] == collector.collect.call_args_list
     assert collector.collect() == end
@@ -158,7 +158,7 @@ def test_wrong_number_of_results(obj, eventLoopRunner, reader,
 
     reader1 = mock.Mock(name='reader1')
     reader2 = mock.Mock(name='reader2')
-    eventLoopRunner.end.return_value = [reader1, reader2]
+    eventLoopRunner.poll.return_value = [reader1, reader2]
 
     dataset1 = mock.Mock(name='dataset1')
     obj.dataset_nreaders[:] = [(dataset1, 1)]
