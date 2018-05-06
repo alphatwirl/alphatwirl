@@ -92,6 +92,34 @@ class MPEventLoopRunner(object):
         self.nruns += len(eventLoops)
         return self.communicationChannel.put_multiple(eventLoops)
 
+    def poll(self):
+        """Return pairs of run ids and results of finish event loops.
+        """
+        ret = self.communicationChannel.receive_finished()
+        self.nruns -= len(ret)
+        return ret
+
+    def receive(self):
+        """Return pairs of run ids and results.
+
+        This method waits until all event loops finish
+        """
+        ret = self.communicationChannel.receive_all()
+        self.nruns -= len(ret)
+        if self.nruns > 0:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                'too few results received: {} results received, {} more expected'.format(
+                    len(ret), self.nruns))
+        elif self.nruns < 0:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                'too many results received: {} results received, {} too many'.format(
+                    len(ret), -self.nruns))
+        return ret
+
     def end(self):
         """wait until all event loops end and returns the results.
 
