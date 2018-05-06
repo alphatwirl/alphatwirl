@@ -170,3 +170,63 @@ def test_put_multiple(obj):
     obj.end()
 
 ##__________________________________________________________________||
+def test_receive_all(obj):
+    obj.begin()
+
+    result1 = mock.Mock(name='result1')
+    task1 = mock.Mock(name='task1')
+    task1.return_value = result1
+    assert 0 == obj.put(task1)
+
+    result2 = mock.Mock(name='result2')
+    task2 = mock.Mock(name='task2')
+    task2.return_value = result2
+    assert 1 == obj.put(task2)
+
+    assert [(0, result1), (1, result2)] == obj.receive_all()
+
+    result3 = mock.Mock(name='result3')
+    task3 = mock.Mock(name='task3')
+    task3.return_value = result3
+    assert 2 == obj.put(task3)
+
+    result4 = mock.Mock(name='result4')
+    task4 = mock.Mock(name='task4')
+    task4.return_value = result4
+    assert 3 == obj.put(task4)
+
+    assert [(2, result3), (3, result4)] == obj.receive_all()
+
+    obj.end()
+
+##__________________________________________________________________||
+def test_receive_finished(obj):
+    obj.begin()
+
+    result1 = mock.Mock(name='result1')
+    task1 = mock.Mock(name='task1')
+    task1.return_value = result1
+    assert 0 == obj.put(task1)
+
+    result2 = mock.Mock(name='result2')
+    task2 = mock.Mock(name='task2')
+    task2.return_value = result2
+    assert 1 == obj.put(task2)
+
+    assert [(0, result1), (1, result2)] == obj.receive_finished()
+
+    result3 = mock.Mock(name='result3')
+    task3 = mock.Mock(name='task3')
+    task3.return_value = result3
+    assert 2 == obj.put(task3)
+
+    result4 = mock.Mock(name='result4')
+    task4 = mock.Mock(name='task4')
+    task4.return_value = result4
+    assert 3 == obj.put(task4)
+
+    assert [(2, result3), (3, result4)] == obj.receive_finished()
+
+    obj.end()
+
+##__________________________________________________________________||
