@@ -7,25 +7,38 @@ class EventLoopRunner(object):
 
     """
     def __init__(self):
-        self.results = [ ]
+        self.idx = -1 # so it starts from 0
+        self.idx_result_pairs = [ ]
 
     def __repr__(self):
-        return '{}(results={!r})'.format(
+        return '{}()'.format(
             self.__class__.__name__,
-            self.results
         )
 
     def begin(self):
-        self.results = [ ]
+        self.idx_result_pairs = [ ]
 
     def run(self, eventLoop):
-        self.results.append(eventLoop())
+        self.idx += 1
+        result = eventLoop()
+        self.idx_result_pairs.append((self.idx, result))
+        return self.idx
 
     def run_multiple(self, eventLoops):
+        idxs = [ ]
         for eventLoop in eventLoops:
-            self.run(eventLoop)
+            idxs.append(self.run(eventLoop))
+        return idxs
+
+    def poll(self):
+        return self.receive()
+
+    def receive(self):
+        ret = self.idx_result_pairs[:]
+        del self.idx_result_pairs[:]
+        return ret
 
     def end(self):
-        return self.results
+        return [r for _, r in self.receive()]
 
 ##__________________________________________________________________||
