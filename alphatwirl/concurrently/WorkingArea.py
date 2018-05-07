@@ -36,9 +36,13 @@ class WorkingArea(object):
         self.last_package_index = None
 
     def __repr__(self):
-        return '{}(topdir={!r}, python_modules={!r}, path={!r}, last_package_index={!r})'.format(
+        name_value_pairs = (
+            ('topdir', self.topdir),
+            ('python_modules', self.python_modules),
+        )
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.topdir, self.python_modules, self.path, self.last_package_index
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def open(self):
