@@ -91,6 +91,7 @@ def obj(mock_progressmonitor):
     ret = MultiprocessingDropbox(progressMonitor=mock_progressmonitor)
     ret.open()
     yield ret
+    ret.terminate()
     ret.close()
 
 ##__________________________________________________________________||
