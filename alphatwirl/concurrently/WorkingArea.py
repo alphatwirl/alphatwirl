@@ -33,7 +33,7 @@ class WorkingArea(object):
         self.topdir = topdir
         self.python_modules = python_modules
         self.path = None
-        self.last_package_index = None
+        self.last_package_index = -1 # so it starts from 0
 
     def __repr__(self):
         name_value_pairs = (
@@ -50,7 +50,6 @@ class WorkingArea(object):
         self._copy_run_py(area_path=self.path)
         self._save_logging_levels(area_path=self.path)
         self._put_python_modules(modules=self.python_modules, area_path=self.path)
-        self.last_package_index = -1 # so it starts from 0
 
     def put_package(self, package):
 
@@ -92,7 +91,6 @@ class WorkingArea(object):
 
     def close(self):
         self.path = None
-        self.last_package_index = None
 
     def _prepare_dir(self, dir):
 

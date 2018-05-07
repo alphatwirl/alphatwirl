@@ -47,7 +47,6 @@ def test_repr(obj):
 
 def test_open(obj):
     assert obj.path is None
-    assert obj.last_package_index is None
 
     obj.open()
     assert obj.path is not None
