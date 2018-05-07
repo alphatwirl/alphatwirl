@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import collections
+import imp
 
 import pytest
 
@@ -25,7 +26,7 @@ from alphatwirl.concurrently import TaskPackageDropbox
         'CommunicationChannel-multiprocessing',
         ## 'CommunicationChannel-subprocess'
     ])
-def obj(request, tmpdir_factory):
+def obj(request, tmpdir_factory, monkeypatch):
     name = request.param
     if name == 'CommunicationChannel0':
         ret = CommunicationChannel0()
@@ -35,10 +36,15 @@ def obj(request, tmpdir_factory):
     elif name == 'CommunicationChannel-subprocess':
         topdir = str(tmpdir_factory.mktemp(''))
         topdir = os.path.join(topdir, '_ccsp_temp')
+        thisdir = os.path.dirname(os.path.realpath(__file__))
+        ## receive error "No module named unit.concurrently.test_channel"
+        ## not sure how to make it work
+        monkeypatch.syspath_prepend(path)
+        monkeypatch.setenv('PYTHONPATH', '{}:{}'.format(path, os.environ['PYTHONPATH']))
         workingarea = WorkingArea(topdir=topdir, python_modules=( ))
         dropbox = TaskPackageDropbox(
             workingArea=workingarea,
-            dispatcher=SubprocessRunner
+            dispatcher=SubprocessRunner()
         )
         ret = CommunicationChannel(dropbox=dropbox)
 
