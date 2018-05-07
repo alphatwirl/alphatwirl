@@ -207,3 +207,55 @@ def test_poll_then_receive(obj, package1, package2, package3, package4):
     assert sorted(expected) == sorted(actual)
 
 ##__________________________________________________________________||
+def test_receive_one(obj, package1, package2, package3, package4):
+    packages = [package1, package2, package3, package4]
+    pkgidxs = obj.put_multiple(packages)
+
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
+
+    actual = [ ]
+    actual.append(obj.receive_one())
+    actual.append(obj.receive_one())
+    actual.append(obj.receive_one())
+    actual.append(obj.receive_one())
+    assert obj.receive_one() is None
+    assert sorted(expected) == sorted(actual)
+
+def test_receive_one_then_receive(obj, package1, package2, package3, package4):
+    packages = [package1, package2, package3, package4]
+    pkgidxs = obj.put_multiple(packages)
+
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
+
+    time.sleep(0.005) # so multiple jobs finish
+
+    actual = [ ]
+    actual.append(obj.receive_one())
+
+    actual.extend(obj.receive())
+
+    assert sorted(expected) == sorted(actual)
+
+def test_receive_one_then_poll(obj, package1, package2, package3, package4):
+    packages = [package1, package2, package3, package4]
+    pkgidxs = obj.put_multiple(packages)
+
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
+
+    time.sleep(0.005) # so multiple jobs finish
+
+    actual = [ ]
+    actual.append(obj.receive_one())
+
+    while len(actual) < len(expected):
+        actual.extend(obj.poll())
+
+    assert sorted(expected) == sorted(actual)
+
+##__________________________________________________________________||

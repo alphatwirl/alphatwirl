@@ -5,6 +5,7 @@ import multiprocessing
 import threading
 
 from operator import itemgetter
+from collections import deque
 
 from ..progressbar import NullProgressMonitor
 from .TaskPackage import TaskPackage
@@ -72,6 +73,8 @@ class MultiprocessingDropbox(object):
             worker.start()
             self.workers.append(worker)
 
+        self.to_return = deque()
+
     def put(self, package):
         self.task_idx += 1
         self.task_queue.put((self.task_idx, package))
@@ -87,13 +90,35 @@ class MultiprocessingDropbox(object):
     def poll(self):
         """Return pairs of task indices and results of finished tasks.
         """
-        messages = self._receive_finished()
-        # a list of (task_idx, result)
+
+        messages = list(self.to_return) # a list of (task_idx, result)
+        self.to_return.clear()
+
+        messages.extend(self._receive_finished())
 
         # sort in the order of task_idx
         messages = sorted(messages, key=itemgetter(0))
 
         return messages
+
+    def receive_one(self):
+        """Return a pair of a package index and a result.
+
+        This method waits until a task finishes.
+        This method returns None if no task is running.
+        """
+
+        if self.n_ongoing_tasks == 0:
+            return None
+
+        if self.to_return:
+            return self.to_return.popleft()
+
+        while not self.to_return:
+            self.to_return.extend(self._receive_finished())
+
+        return self.to_return.popleft()
+
 
     def receive(self):
         """Return pairs of task indices and results.
@@ -101,7 +126,9 @@ class MultiprocessingDropbox(object):
         This method waits until all tasks finish.
         """
 
-        messages = [ ] # a list of (task_idx, result)
+        messages = list(self.to_return) # a list of (task_idx, result)
+        self.to_return.clear()
+
         while self.n_ongoing_tasks >= 1:
             messages.extend(self._receive_finished())
 
