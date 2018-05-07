@@ -18,6 +18,8 @@ from alphatwirl.concurrently import WorkingArea
 from alphatwirl.concurrently import SubprocessRunner
 from alphatwirl.concurrently import TaskPackageDropbox
 
+from alphatwirl.concurrently.testing import MockResult, MockTask
+
 ##__________________________________________________________________||
 @pytest.fixture(
     params=[
