@@ -108,11 +108,11 @@ class MultiprocessingDropbox(object):
         This method returns None if no task is running.
         """
 
-        if self.n_ongoing_tasks == 0:
-            return None
-
         if self.to_return:
             return self.to_return.popleft()
+
+        if self.n_ongoing_tasks == 0:
+            return None
 
         while not self.to_return:
             self.to_return.extend(self._receive_finished())
