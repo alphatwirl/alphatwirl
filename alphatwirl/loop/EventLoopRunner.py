@@ -33,6 +33,11 @@ class EventLoopRunner(object):
     def poll(self):
         return self.receive()
 
+    def receive_one(self):
+        if self.idx_result_pairs:
+            return self.idx_result_pairs.pop(0)
+        return None
+
     def receive(self):
         ret = self.idx_result_pairs[:]
         del self.idx_result_pairs[:]

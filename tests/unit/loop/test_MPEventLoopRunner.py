@@ -119,4 +119,23 @@ def test_poll(obj, communicationChannel):
     communicationChannel.receive_finished.return_value = [(0, result1), (1, result2)]
     assert [(0, result1), (1, result2)] == obj.poll()
 
+def test_receive_one(obj, communicationChannel):
+    obj.begin()
+
+    communicationChannel.put.side_effect = [0, 1]
+
+    eventLoop1 = mock.Mock(name='eventLoop1')
+    assert 0 == obj.run(eventLoop1)
+
+    eventLoop2 = mock.Mock(name='eventLoop2')
+    assert 1 == obj.run(eventLoop2)
+
+    result1 = mock.Mock(name='result1')
+    result2 = mock.Mock(name='result2')
+
+    communicationChannel.receive_one.side_effect = [(0, result1), (1, result2), None]
+    assert (0, result1) == obj.receive_one()
+    assert (1, result2) == obj.receive_one()
+    assert obj.receive_one() is None
+
 ##__________________________________________________________________||
