@@ -48,72 +48,10 @@ def test_begin_end(obj, dropbox):
     dropbox.close.assert_called_once()
 
 def test_begin_terminate_end(obj, dropbox):
-
     obj.begin()
     assert 0 == dropbox.terminate.call_count
     obj.terminate()
     assert 1 == dropbox.terminate.call_count
-    obj.end()
-
-def test_put(obj, dropbox):
-
-    obj.begin()
-
-    dropbox.put.side_effect = [0, 1]
-
-    task1 = mock.MagicMock(name='task1')
-    assert 0 == obj.put(task1)
-
-    task2 = mock.MagicMock(name='task2')
-    assert 1 == obj.put(task2, 123, 'ABC', A=34)
-
-    expected = [
-        mock.call(TaskPackage(task=task1, args=(), kwargs={})),
-        mock.call(TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34})),
-    ]
-    assert expected == dropbox.put.call_args_list
-
-    obj.end()
-
-def test_put_multiple(obj, dropbox):
-
-    obj.begin()
-
-    dropbox.put_multiple.return_value = [0, 1, 2, 3]
-
-    task1 = mock.Mock(name='task1')
-    task2 = mock.Mock(name='task2')
-    task3 = mock.Mock(name='task3')
-    task4 = mock.Mock(name='task4')
-
-    assert [0, 1, 2, 3] == obj.put_multiple([
-        task1,
-        dict(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
-        dict(task=task3, kwargs={'B': 123}),
-        dict(task=task4, args=(222, 'def')),
-    ])
-
-    expected = [
-        mock.call([
-            TaskPackage(task=task1, args=(), kwargs={}),
-            TaskPackage(task=task2, args=(123, 'ABC'), kwargs={'A': 34}),
-            TaskPackage(task=task3, args=(), kwargs={'B': 123}),
-            TaskPackage(task=task4, args=(222, 'def'), kwargs={}),
-        ])
-    ]
-    assert expected == dropbox.put_multiple.call_args_list
-
-    obj.end()
-
-def test_receive(obj, dropbox):
-
-    obj.begin()
-
-    result1 = mock.MagicMock(name='result1')
-    dropbox.receive = mock.MagicMock(return_value=[(0, result1)])
-
-    assert [result1] == obj.receive()
-
     obj.end()
 
 def test_put_when_closed(obj, dropbox, caplog):
@@ -144,29 +82,6 @@ def test_receive_when_closed(obj, dropbox, caplog):
     assert 'the drop box is not open' in caplog.records[0].msg
 
     assert result is None
-
-    obj.end()
-
-##__________________________________________________________________||
-def test_receive_all(obj, dropbox):
-
-    obj.begin()
-
-    result1 = mock.MagicMock(name='result1')
-    dropbox.receive = mock.MagicMock(return_value=[(0, result1)])
-
-    assert [(0, result1)] == obj.receive_all()
-
-    obj.end()
-
-def test_receive_finished(obj, dropbox):
-
-    obj.begin()
-
-    result1 = mock.MagicMock(name='result1')
-    dropbox.poll = mock.MagicMock(return_value=[(0, result1)])
-
-    assert [(0, result1)] == obj.receive_finished()
 
     obj.end()
 
