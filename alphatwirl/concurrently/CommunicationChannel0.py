@@ -49,6 +49,11 @@ class CommunicationChannel0(object):
     def receive_finished(self):
         return self.receive_all()
 
+    def receive_one(self):
+        if self.taskidx_result_pairs:
+            return self.taskidx_result_pairs.pop(0)
+        return None
+
     def receive_all(self):
         ret = self.taskidx_result_pairs[:]
         del self.taskidx_result_pairs[:]

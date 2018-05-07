@@ -239,3 +239,22 @@ def test_receive_finished_then_receive_all(obj):
     assert sorted([(0, result1), (1, result2), (2, result3), (3, result4)]) == sorted(runid_result_pairs)
 
 ##__________________________________________________________________||
+def test_receive_one_four_tasks(obj):
+    assert [0, 1, 2, 3] == obj.put_multiple([
+        dict(task=task1, args=task1_args, kwargs=task1_kwargs),
+        dict(task=task2, args=task2_args, kwargs=task2_kwargs),
+        dict(task=task3, args=task3_args, kwargs=task3_kwargs),
+        dict(task=task4, args=task4_args, kwargs=task4_kwargs),
+    ])
+
+    runid_result_pairs = [ ]
+    runid_result_pairs.append(obj.receive_one())
+    runid_result_pairs.append(obj.receive_one())
+    runid_result_pairs.append(obj.receive_one())
+    runid_result_pairs.append(obj.receive_one())
+
+    assert obj.receive_one() is None
+
+    assert sorted([(0, result1), (1, result2), (2, result3), (3, result4)]) == sorted(runid_result_pairs)
+
+##__________________________________________________________________||
