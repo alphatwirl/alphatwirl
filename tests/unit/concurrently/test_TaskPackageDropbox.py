@@ -20,13 +20,18 @@ def dispatcher():
 
 @pytest.fixture()
 def obj(workingarea, dispatcher):
-    return TaskPackageDropbox(workingArea=workingarea, dispatcher=dispatcher, sleep=0.01)
+    ret = TaskPackageDropbox(workingArea=workingarea, dispatcher=dispatcher, sleep=0.01)
+    ret.open()
+    yield ret
+    ret.close()
 
 ##__________________________________________________________________||
 def test_repr(obj):
     repr(obj)
 
-def test_open_terminate_close(obj, workingarea, dispatcher):
+def test_open_terminate_close(workingarea, dispatcher):
+
+    obj = TaskPackageDropbox(workingArea=workingarea, dispatcher=dispatcher, sleep=0.01)
 
     assert 0 == workingarea.open.call_count
     assert 0 == workingarea.close.call_count
@@ -49,9 +54,6 @@ def test_open_terminate_close(obj, workingarea, dispatcher):
 
 def test_put(obj, workingarea, dispatcher):
 
-    ## open
-    obj.open()
-
     ## put
     workingarea.put_package.side_effect = [0, 1] # pkgidx
     dispatcher.run.side_effect = [1001, 1002] # runid
@@ -67,9 +69,6 @@ def test_put(obj, workingarea, dispatcher):
 
 def test_put_multiple(obj, workingarea, dispatcher):
 
-    ## open
-    obj.open()
-
     ## put
     workingarea.put_package.side_effect = [0, 1] # pkgidx
     dispatcher.run_multiple.return_value = [1001, 1002] # runid
@@ -83,9 +82,6 @@ def test_put_multiple(obj, workingarea, dispatcher):
     assert [mock.call(workingarea, [0, 1])] == dispatcher.run_multiple.call_args_list
 
 def test_receive_all_finished_once(obj, workingarea, dispatcher):
-
-    ## open
-    obj.open()
 
     ## put
     workingarea.put_package.side_effect = [0, 1]
@@ -118,9 +114,6 @@ def test_receive_all_finished_once(obj, workingarea, dispatcher):
     assert 1 == dispatcher.terminate.call_count
 
 def test_receive_finished_in_steps(obj, workingarea, dispatcher):
-
-    ## open
-    obj.open()
 
     ## put
     workingarea.put_package.side_effect = [0, 1, 2]
@@ -158,9 +151,6 @@ def test_receive_finished_in_steps(obj, workingarea, dispatcher):
     assert 1 == dispatcher.terminate.call_count
 
 def test_receive_rerun(obj, workingarea, dispatcher, caplog):
-
-    ## open
-    obj.open()
 
     ## put
     workingarea.put_package.side_effect = [0, 1, 2]
@@ -221,8 +211,6 @@ def test_receive_rerun(obj, workingarea, dispatcher, caplog):
 ##__________________________________________________________________||
 def test_poll_all_finished_once(obj, workingarea, dispatcher):
 
-    obj.open()
-
     ## put
     workingarea.put_package.side_effect = [0, 1]
     dispatcher.run.side_effect = [1001, 1002]
@@ -245,11 +233,8 @@ def test_poll_all_finished_once(obj, workingarea, dispatcher):
     assert [mock.call([])] == dispatcher.failed_runids.call_args_list
 
     obj.terminate()
-    obj.close()
 
 def test_poll_finished_in_steps(obj, workingarea, dispatcher):
-
-    obj.open()
 
     ## put
     workingarea.put_package.side_effect = [0, 1, 2]
@@ -282,12 +267,9 @@ def test_poll_finished_in_steps(obj, workingarea, dispatcher):
     assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
 
     obj.terminate()
-    obj.close()
 
 ##__________________________________________________________________||
 def test_poll_receive_finished_in_steps(obj, workingarea, dispatcher):
-
-    obj.open()
 
     ## put
     workingarea.put_package.side_effect = [0, 1, 2]
@@ -318,6 +300,5 @@ def test_poll_receive_finished_in_steps(obj, workingarea, dispatcher):
     assert [mock.call([]), mock.call([]), mock.call([])] == dispatcher.failed_runids.call_args_list
 
     obj.terminate()
-    obj.close()
 
 ##__________________________________________________________________||
