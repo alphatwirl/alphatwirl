@@ -79,11 +79,11 @@ class TaskPackageDropbox(object):
         This method returns None if no task is running.
         """
 
-        if not self.runid_pkgidx_map:
-            return None
-
         if self.to_return:
             return self.to_return.popleft()
+
+        if not self.runid_pkgidx_map:
+            return None
 
         while not self.to_return:
             pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
