@@ -177,19 +177,33 @@ def test_receive_without_put(obj):
     assert [ ] == obj.receive()
 
 ##__________________________________________________________________||
-def test_put_poll(obj, package1, package2):
-    packages = [package1, package2]
-    pkgidxs = [ ]
-    for p in packages:
-        pkgidxs.append(obj.put(p))
-
-    time.sleep(0.2) # so all tasks finish
+def test_poll(obj, package1, package2, package3, package4):
+    packages = [package1, package2, package3, package4]
+    pkgidxs = obj.put_multiple(packages)
 
     expected = [
         (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
         for i, p in zip(pkgidxs, packages)]
-    actual = obj.poll()
-    ## assert expected == actual ## commented out because, tasks are not
-                                 ## guaranteed to finish
+
+    actual = [ ]
+    while len(actual) < len(expected):
+        actual.extend(obj.poll())
+    assert sorted(expected) == sorted(actual)
+
+def test_poll_then_receive(obj, package1, package2, package3, package4):
+    packages = [package1, package2, package3, package4]
+    pkgidxs = obj.put_multiple(packages)
+
+    expected = [
+        (i, MockResult(name=p.task.name, args=p.args, kwargs=p.kwargs))
+        for i, p in zip(pkgidxs, packages)]
+
+    actual = [ ]
+    while not actual:
+        actual.extend(obj.poll())
+
+    actual.extend(obj.receive())
+
+    assert sorted(expected) == sorted(actual)
 
 ##__________________________________________________________________||
