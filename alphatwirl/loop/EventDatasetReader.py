@@ -66,10 +66,9 @@ class EventDatasetReader(object):
         runids_towait = list(itertools.chain(*[ids for _, ids in self.dataset_runids]))
         returned = [ ]
         while runids_towait:
-            r_ = self.eventLoopRunner.poll()
-            ids_ = [i for i, _ in r_]
-            runids_towait = [i for i in runids_towait if i not in ids_]
-            returned.extend(r_)
+            r_ = self.eventLoopRunner.receive_one()
+            runids_towait.remove(r_[0])
+            returned.append(r_)
         returned = sorted(returned, key=itemgetter(0))
         returned_readers = [r for _, r in returned]
 

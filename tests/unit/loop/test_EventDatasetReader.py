@@ -116,14 +116,14 @@ def test_standard(obj, eventLoopRunner, reader, collector,
     assert 'reader' == eventLoop4.reader.name
 
     ## end
-    eventLoopRunner.poll.return_value = [
+    eventLoopRunner.receive_one.side_effect = [
         (0, eventLoop1.reader), (1, eventLoop2.reader), (2, eventLoop3.reader), (3, eventLoop4.reader)
     ]
     collector.collect.side_effect = lambda x: x
-    assert 0 == eventLoopRunner.poll.call_count
+    assert 0 == eventLoopRunner.receive_one.call_count
     assert 0 == collector.collect.call_count
     results = obj.end()
-    assert 1 == eventLoopRunner.poll.call_count
+    assert 4 == eventLoopRunner.receive_one.call_count
     assert 1 == collector.collect.call_count
     expected = [
         ('dataset1', (eventLoop1.reader, eventLoop2.reader, eventLoop3.reader), ),
@@ -158,7 +158,7 @@ def test_wrong_number_of_results(obj, eventLoopRunner, reader,
 
     reader1 = mock.Mock(name='reader1')
     reader2 = mock.Mock(name='reader2')
-    eventLoopRunner.poll.return_value = [reader1, reader2]
+    eventLoopRunner.receive_one.side_effect = [reader1, reader2]
 
     dataset1 = mock.Mock(name='dataset1')
     obj.dataset_nreaders[:] = [(dataset1, 1)]
