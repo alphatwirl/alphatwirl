@@ -82,11 +82,6 @@ def obj(workingarea, dispatcher, packages):
     ret.close()
 
 ##__________________________________________________________________||
-def test_one(workingarea, collect_results):
-    print workingarea.collect_result(0)
-    print collect_results
-
-##__________________________________________________________________||
 def test_receive(obj, pkgidx_result_pairs):
     assert pkgidx_result_pairs == obj.receive()
 
@@ -121,7 +116,6 @@ def test_receive_in_one_step(obj, pkgidx_result_pairs, dispatcher, collect_resul
 
 ##__________________________________________________________________||
 def test_poll(obj, pkgidx_result_pairs):
-    print pkgidx_result_pairs
     actual = [ ]
     while len(actual) < len(pkgidx_result_pairs):
         actual.extend(obj.poll())
