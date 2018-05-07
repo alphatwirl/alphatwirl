@@ -2,6 +2,7 @@
 import logging
 import time
 from operator import itemgetter
+from collections import deque
 
 from .WorkingArea import WorkingArea
 
@@ -31,6 +32,7 @@ class TaskPackageDropbox(object):
     def open(self):
         self.workingArea.open()
         self.runid_pkgidx_map = { }
+        self.to_return = deque() # pairs of pkgidxs and results
 
     def put(self, package):
         """Put a package. Return a package index.
@@ -64,19 +66,41 @@ class TaskPackageDropbox(object):
         """Return pairs of package indices and results of finished tasks.
         """
 
-        pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
-        ## a list of (pkgidx, result)
-
+        pairs = list(self.to_return)
+        self.to_return.clear()
+        pairs.extend(self._collect_pkgidx_result_pairs_of_finished_tasks())
         pairs = sorted(pairs, key=itemgetter(0))
-
         return pairs
+
+    def receive_one(self):
+        """Return a pair of a package index and result.
+
+        This method waits until a task finishes.
+        This method returns None if no task is running.
+        """
+
+        if not self.runid_pkgidx_map:
+            return None
+
+        if self.to_return:
+            return self.to_return.popleft()
+
+        while not self.to_return:
+            pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()
+            self.to_return.extend(pairs)
+
+            time.sleep(self.sleep)
+
+        return self.to_return.popleft()
 
     def receive(self):
         """Return pairs of package indices and results.
 
         This method waits until all tasks finish.
         """
-        pkgidx_result_pairs = [ ] # a list of (pkgidx, result)
+
+        pkgidx_result_pairs = list(self.to_return)
+        self.to_return.clear()
         while self.runid_pkgidx_map:
 
             pairs = self._collect_pkgidx_result_pairs_of_finished_tasks()

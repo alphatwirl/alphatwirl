@@ -127,4 +127,43 @@ def test_poll(obj, pkgidx_result_pairs):
         actual.extend(obj.poll())
     assert sorted(pkgidx_result_pairs) == sorted(actual)
 
+def test_poll_then_receive(obj, pkgidx_result_pairs):
+    actual = [ ]
+    actual.extend(obj.poll())
+    actual.extend(obj.receive())
+
+    assert sorted(pkgidx_result_pairs) == sorted(actual)
+
+##__________________________________________________________________||
+def test_receive_one(obj, pkgidx_result_pairs):
+    actual = [ ]
+    while len(actual) < len(pkgidx_result_pairs):
+        pair = obj.receive_one()
+        if pair is None:
+            break
+        actual.append(pair)
+    assert obj.receive_one() is None
+    assert sorted(pkgidx_result_pairs) == sorted(actual)
+
+def test_receive_one_then_receive(obj, pkgidx_result_pairs):
+    actual = [ ]
+
+    actual.append(obj.receive_one())
+
+    actual.extend(obj.receive())
+
+    assert sorted(pkgidx_result_pairs) == sorted(actual)
+
+def test_receive_one_then_poll(obj, pkgidx_result_pairs):
+    actual = [ ]
+
+    actual.append(obj.receive_one())
+
+    actual.extend(obj.poll())
+    actual.extend(obj.poll())
+    actual.extend(obj.poll())
+    actual.extend(obj.poll())
+
+    assert sorted(pkgidx_result_pairs) == sorted(actual)
+
 ##__________________________________________________________________||
