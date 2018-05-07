@@ -3,7 +3,6 @@ import os
 import sys
 import time
 import collections
-import imp
 
 import pytest
 
@@ -36,11 +35,6 @@ def obj(request, tmpdir_factory, monkeypatch):
     elif name == 'CommunicationChannel-subprocess':
         topdir = str(tmpdir_factory.mktemp(''))
         topdir = os.path.join(topdir, '_ccsp_temp')
-        thisdir = os.path.dirname(os.path.realpath(__file__))
-        ## receive error "No module named unit.concurrently.test_channel"
-        ## not sure how to make it work
-        monkeypatch.syspath_prepend(path)
-        monkeypatch.setenv('PYTHONPATH', '{}:{}'.format(path, os.environ['PYTHONPATH']))
         workingarea = WorkingArea(topdir=topdir, python_modules=( ))
         dropbox = TaskPackageDropbox(
             workingArea=workingarea,
@@ -66,17 +60,6 @@ def test_terminate(obj):
     obj.terminate()
 
 ##__________________________________________________________________||
-MockResult = collections.namedtuple('MockResult', 'name args kwargs')
-
-class MockTask(object):
-    def __init__(self, name, time):
-        self.name = name
-        self.time = time
-
-    def __call__(self, *args, **kwargs):
-        time.sleep(self.time)
-        return MockResult(name=self.name, args=args, kwargs=kwargs)
-
 task1 = MockTask(name='task1', time=0.01)
 task1_args = (123, 'ABC')
 task1_kwargs = {'A': 34}
