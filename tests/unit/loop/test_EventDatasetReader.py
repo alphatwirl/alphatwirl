@@ -152,6 +152,7 @@ def test_standard(obj, eventLoopRunner, reader, collector,
         mock.call(eventLoop4.reader),
     ] == results[2][1][0].merge.call_args_list
 
+@pytest.mark.skip(reason="no longer check the number of the results")
 def test_wrong_number_of_results(obj, eventLoopRunner, reader,
                                  collector, split_into_build_events,
                                  caplog):

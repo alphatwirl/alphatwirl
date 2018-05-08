@@ -2,6 +2,7 @@
 import copy
 import itertools
 from operator import itemgetter
+from collections import OrderedDict
 
 from .EventLoop import EventLoop
 
@@ -31,7 +32,10 @@ class EventDatasetReader(object):
         self.EventLoop = EventLoop
 
         self.dataset_nreaders = [ ]
-        self.dataset_runids = [ ]
+
+        self.runids = [ ]
+        self.runid_dataset_map = { }
+        self.dataset_runid_reader_map = OrderedDict()
 
     def __repr__(self):
         name_value_pairs = (
@@ -48,7 +52,10 @@ class EventDatasetReader(object):
     def begin(self):
         self.eventLoopRunner.begin()
         self.dataset_nreaders = [ ]
+
         self.runids = [ ]
+        self.runid_dataset_map = { }
+        self.dataset_runid_reader_map = OrderedDict()
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
@@ -59,36 +66,20 @@ class EventDatasetReader(object):
             eventLoop = self.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
         runids = self.eventLoopRunner.run_multiple(eventLoops)
-        self.dataset_runids.append((dataset, runids))
+        self.runids.extend(runids)
+        self.runid_dataset_map.update({i: dataset.name for i in runids})
+        self.dataset_runid_reader_map[dataset.name] = OrderedDict([(i, None) for i in runids])
 
     def end(self):
 
-        runids_towait = list(itertools.chain(*[ids for _, ids in self.dataset_runids]))
-        returned = [ ]
+        runids_towait = self.runids[:]
         while runids_towait:
-            r_ = self.eventLoopRunner.receive_one()
-            runids_towait.remove(r_[0])
-            returned.append(r_)
-        returned = sorted(returned, key=itemgetter(0))
-        returned_readers = [r for _, r in returned]
+            runid, reader = self.eventLoopRunner.receive_one()
+            self.dataset_runid_reader_map[self.runid_dataset_map[runid]][runid] = reader
+            runids_towait.remove(runid)
 
-        nreaders_total = sum((n for _, n in self.dataset_nreaders))
-
-        if nreaders_total != len(returned_readers):
-            import logging
-            logger = logging.getLogger(__name__)
-            logger.warning(
-                'the same number of the readers were not returned: {} readers sent, {} readers returned. cannot collect results'.format(
-                    nreaders_total,
-                    len(returned_readers)
-                ))
-            return None
-
-        dataset_readers_list = [ ]
-        i = 0
-        for dataset, nreaders in self.dataset_nreaders:
-            dataset_readers_list.append((dataset.name, tuple(returned_readers[i:(i + nreaders)])))
-            i += nreaders
+        ## print self.dataset_runid_reader_map
+        dataset_readers_list = [(d, rr.values()) for d, rr in self.dataset_runid_reader_map.items()]
 
         dataset_merged_readers_list = [ ]
         for dataset, readers in dataset_readers_list:
@@ -98,6 +89,8 @@ class EventDatasetReader(object):
                 continue
             for r in readers:
                 reader.merge(r)
+
+        ## print dataset_merged_readers_list
 
         return self.collector.collect(dataset_merged_readers_list)
 
