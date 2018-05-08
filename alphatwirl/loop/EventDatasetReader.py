@@ -78,28 +78,42 @@ class EventDatasetReader(object):
             self._merge_imp_1(runid, reader)
             runids_towait.remove(runid)
 
-        ## print self.dataset_runid_reader_map
-        dataset_readers_list = [(d, rr.values()) for d, rr in self.dataset_runid_reader_map.items()]
+        dataset_readers_list = [(d, list(rr.values())) for d, rr in self.dataset_runid_reader_map.items()]
 
-        dataset_merged_readers_list = [ ]
-        for dataset, readers in dataset_readers_list:
-            reader = copy.deepcopy(self.reader)
-            dataset_merged_readers_list.append((dataset, [reader]))
-            if not hasattr(reader, 'merge'):
-                continue
-            for r in readers:
-                reader.merge(r)
-
-        ## print dataset_merged_readers_list
-
-        return self.collector.collect(dataset_merged_readers_list)
+        return self.collector.collect(dataset_readers_list)
 
     def _merge_imp_1(self, runid, reader):
         dataset = self.runid_dataset_map[runid]
         runid_reader_map = self.dataset_runid_reader_map[dataset]
         self._merge_imp_2(runid_reader_map, runid, reader)
 
-    def _merge_imp_2(self, runid_reader_map, runid, reader):
-        runid_reader_map[runid] = reader
+    def _merge_imp_2(self, map_, id_, data):
+
+        ## merge to prev
+        idx = list(map_.keys()).index(id_)
+        idx_prev = idx - 1
+        if idx_prev < 0:
+            map_[id_] = data
+        else:
+            data_prev = list(map_.values())[idx_prev]
+            id_prev = list(map_.keys())[idx_prev]
+            if data_prev is None:
+                map_[id_] = data
+            else:
+                if hasattr(data_prev, 'merge'):
+                    data_prev.merge(data)
+                map_.pop(id_)
+                id_ = id_prev
+                data = data_prev
+
+        ## merge next
+        idx = list(map_.keys()).index(id_)
+        idx_next = idx + 1
+        if idx_next < len(map_):
+            data_next = list(map_.values())[idx_next]
+            if data_next is not None:
+                if hasattr(data, 'merge'):
+                    data.merge(data_next)
+                map_.pop(list(map_.keys())[idx_next])
 
 ##__________________________________________________________________||

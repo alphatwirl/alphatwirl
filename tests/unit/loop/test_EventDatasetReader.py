@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import copy
 import logging
+from collections import OrderedDict
+
 import pytest
 
 try:
@@ -138,19 +140,18 @@ def test_standard(obj, eventLoopRunner, reader, collector,
     # ]
 
     assert 'dataset1' == results[0][0]
+    assert eventLoop1.reader == results[0][1][0]
     assert [
-        mock.call(eventLoop1.reader),
         mock.call(eventLoop2.reader),
         mock.call(eventLoop3.reader)
-    ] == results[0][1][0].merge.call_args_list
+    ] == eventLoop1.reader.merge.call_args_list
 
     assert 'dataset2' == results[1][0]
-    assert [ ] == results[1][1][0].merge.call_args_list
 
     assert 'dataset3' == results[2][0]
+    assert eventLoop4.reader == results[2][1][0]
     assert [
-        mock.call(eventLoop4.reader),
-    ] == results[2][1][0].merge.call_args_list
+    ] == eventLoop4.reader.merge.call_args_list
 
 @pytest.mark.skip(reason="no longer check the number of the results")
 def test_wrong_number_of_results(obj, eventLoopRunner, reader,
@@ -173,5 +174,98 @@ def test_wrong_number_of_results(obj, eventLoopRunner, reader,
     assert caplog.records[0].levelname == 'WARNING'
     assert 'EventDatasetReader' in caplog.records[0].name
     assert 'the same number of' in caplog.records[0].msg
+
+##__________________________________________________________________||
+class MockData(object):
+    def __init__(self, name):
+        self.name = name
+        self.merged = [ ]
+
+    def __repr__(self):
+        name_value_pairs = (
+            ('name', self.name),
+            ('merged', self.merged),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
+    def merge(self, data_):
+        self.merged.extend([data_.name] + data_.merged)
+
+
+@pytest.mark.parametrize('orders', [
+    [0, 1, 2, 3, 4, 5],
+    [5, 4, 3, 2, 1, 0],
+    [1, 2, 4, 3, 0, 5],
+])
+def test_merge_imp_2_six_data(obj, orders):
+    ndata = 6
+    map_ = OrderedDict([(i, None) for i in range(ndata)])
+
+    data = [MockData(name='data{}'.format(i)) for i in range(ndata)]
+
+    for i in orders:
+        obj._merge_imp_2(map_, i, data[i])
+
+    assert ['data1', 'data2', 'data3', 'data4', 'data5'] == data[0].merged
+
+@pytest.mark.parametrize('orders', [
+    [0, 1, 2, 3, 4, 5],
+    [5, 4, 3, 2, 1, 0],
+    [1, 2, 4, 3, 0, 5],
+])
+def test_merge_imp_2_six_data_id_shifted(obj, orders):
+    ndata = 6
+    map_ = OrderedDict([(i + 1000, None) for i in range(ndata)])
+
+    data = [MockData(name='data{}'.format(i)) for i in range(ndata)]
+
+    for i in orders:
+        id_ = i + 1000
+        obj._merge_imp_2(map_, id_, data[i])
+
+    assert ['data1', 'data2', 'data3', 'data4', 'data5'] == data[0].merged
+
+def test_merge_imp_2_one_data(obj):
+    ndata = 1
+    map_ = OrderedDict([(1000, None)])
+    data = [MockData(name='data0')]
+    obj._merge_imp_2(map_, 1000, data[0])
+
+    assert [ ] == data[0].merged
+
+##__________________________________________________________________||
+class MockDataWoMerge(object):
+    def __init__(self, name):
+        self.name = name
+        self.merged = [ ]
+
+    def __repr__(self):
+        name_value_pairs = (
+            ('name', self.name),
+            ('merged', self.merged),
+        )
+        return '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
+@pytest.mark.parametrize('orders', [
+    [0, 1, 2, 3, 4, 5],
+    [5, 4, 3, 2, 1, 0],
+    [1, 2, 4, 3, 0, 5],
+])
+def test_merge_imp_2_no_merge_method(obj, orders):
+    ndata = 6
+    map_ = OrderedDict([(i, None) for i in range(ndata)])
+
+    data = [MockDataWoMerge(name='data{}'.format(i)) for i in range(ndata)]
+
+    for i in orders:
+        obj._merge_imp_2(map_, i, data[i])
+
+    assert [ ] == data[0].merged
 
 ##__________________________________________________________________||
