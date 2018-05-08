@@ -75,7 +75,7 @@ class EventDatasetReader(object):
         runids_towait = self.runids[:]
         while runids_towait:
             runid, reader = self.eventLoopRunner.receive_one()
-            self.dataset_runid_reader_map[self.runid_dataset_map[runid]][runid] = reader
+            self._merge_imp_1(runid, reader)
             runids_towait.remove(runid)
 
         ## print self.dataset_runid_reader_map
@@ -93,5 +93,13 @@ class EventDatasetReader(object):
         ## print dataset_merged_readers_list
 
         return self.collector.collect(dataset_merged_readers_list)
+
+    def _merge_imp_1(self, runid, reader):
+        dataset = self.runid_dataset_map[runid]
+        runid_reader_map = self.dataset_runid_reader_map[dataset]
+        self._merge_imp_2(runid_reader_map, runid, reader)
+
+    def _merge_imp_2(self, runid_reader_map, runid, reader):
+        runid_reader_map[runid] = reader
 
 ##__________________________________________________________________||
