@@ -139,6 +139,32 @@ def test_receive_one(obj, pkgidx_result_pairs):
     assert obj.receive_one() is None
     assert sorted(pkgidx_result_pairs) == sorted(actual)
 
+@pytest.mark.parametrize('dispatcher_poll', [
+    pytest.param(
+        [[1001, 1003], [ ], [1002], [1000, 1005], [1006, 1004]],
+        id='as_in_fixture'
+    ),
+    pytest.param(
+        [[1001, 1003], [ ], [1002], [1000, 1005], [1006], [1004]],
+        id='last_one'
+    ),
+    pytest.param(
+        [[ ], [1001, 1003], [ ], [1002], [1000, 1005], [1006, 1004]],
+        id='empty_first'
+    ),
+])
+def test_receive_one_param(obj, pkgidx_result_pairs, dispatcher, dispatcher_poll):
+    dispatcher.poll.side_effect = dispatcher_poll
+
+    actual = [ ]
+    while len(actual) < len(pkgidx_result_pairs):
+        pair = obj.receive_one()
+        if pair is None:
+            break
+        actual.append(pair)
+    assert obj.receive_one() is None
+    assert sorted(pkgidx_result_pairs) == sorted(actual)
+
 def test_receive_one_then_receive(obj, pkgidx_result_pairs):
     actual = [ ]
 
