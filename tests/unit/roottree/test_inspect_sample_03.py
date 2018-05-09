@@ -1,6 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import os
 import sys
+import numbers
 import pytest
 
 has_no_ROOT = False
@@ -27,7 +28,27 @@ def tree():
 
 
 def test_inspect(tree):
-    assert expected == inspect_tree(tree)
+    actual = inspect_tree(tree)
+
+    ## assert expected == actual ## this doesn't work in different
+                                 ## architectures.
+
+    assert len(expected) == len(actual) # only 'leaves'
+    leaves_expected = expected['leaves']
+    leaves_actual = actual['leaves']
+    assert len(leaves_expected) == len(leaves_actual)
+    for leave_expected, leave_actual in zip(leaves_expected, leaves_actual):
+        assert len(leave_expected) == len(leave_actual)
+        keys = list(leave_expected.keys())
+        for key in keys:
+            e = leave_expected[key]
+            a = leave_actual[key]
+            if isinstance(e, numbers.Integral):
+                assert e == a
+            elif isinstance(e, numbers.Number):
+                assert e == pytest.approx(a, rel=1e-1)
+            else:
+                assert e == a
 
 expected = {
     'leaves': [
