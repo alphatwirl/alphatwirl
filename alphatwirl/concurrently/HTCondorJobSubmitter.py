@@ -78,8 +78,8 @@ class HTCondorJobSubmitter(object):
         extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
 
         job_desc = self.job_desc_template.format(
-            input_files = ', '.join(['$(resultdir).p.gz'] + extra_input_files),
-            resultdirs = ', '.join(resultdir_basenames)
+            input_files=', '.join(['$(resultdir).p.gz'] + extra_input_files),
+            resultdirs=', '.join(resultdir_basenames)
         )
 
         procargs = ['condor_submit']
