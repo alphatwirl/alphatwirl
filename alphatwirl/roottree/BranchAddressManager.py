@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import array
 
+from .inspect import is_ROOT_null_pointer
+
 ##__________________________________________________________________||
 class BranchAddressManager(object):
     """The branch address manager for ROOT TTree
@@ -106,13 +108,5 @@ def inspectLeaf(tree, bname):
         countarraytype=typedic[leafcount.GetTypeName()] if isArray else None,
         countmax=leafcount.GetMaximum() if isArray else None
         )
-
-##__________________________________________________________________||
-def is_ROOT_null_pointer(tobject):
-    try:
-        tobject.GetName()
-        return False
-    except ReferenceError:
-        return True
 
 ##__________________________________________________________________||
