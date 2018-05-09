@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-def IsROOTNullPointer(tobject):
+def is_ROOT_null_pointer(tobject):
     try:
         tobject.GetName()
         return False
@@ -24,7 +24,7 @@ def inspect_leaf(leaf):
 ##__________________________________________________________________||
 def inspect_leaf_definition(leaf):
     leafcount = leaf.GetLeafCount()
-    isArray = not IsROOTNullPointer(leafcount)
+    isArray = not is_ROOT_null_pointer(leafcount)
     ret = { }
     ret['name'] = leaf.GetName()
     ret['type'] = leaf.GetTypeName()

@@ -14,7 +14,7 @@ inputPath = args.args[0]
 treeName = 'tree'
 
 ##__________________________________________________________________||
-def IsROOTNullPointer(tobject):
+def is_ROOT_null_pointer(tobject):
     try:
         tobject.GetName()
         return False
@@ -40,7 +40,7 @@ results.append(('name', 'ROOTtype', 'arraytype', 'isarray', 'countname', 'countR
 
 for leaf in tree.GetListOfLeaves():
     leafcount = leaf.GetLeafCount()
-    isArray = not IsROOTNullPointer(leafcount)
+    isArray = not is_ROOT_null_pointer(leafcount)
     row = [ ]
     row.append(leaf.GetName())
     row.append(leaf.GetTypeName())

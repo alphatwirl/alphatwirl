@@ -94,7 +94,7 @@ def inspectLeaf(tree, bname):
 
     leaf = tree.GetLeaf(bname)
     leafcount = leaf.GetLeafCount()
-    isArray = not IsROOTNullPointer(leafcount)
+    isArray = not is_ROOT_null_pointer(leafcount)
 
     return dict(
         name=leaf.GetName(),
@@ -108,7 +108,7 @@ def inspectLeaf(tree, bname):
         )
 
 ##__________________________________________________________________||
-def IsROOTNullPointer(tobject):
+def is_ROOT_null_pointer(tobject):
     try:
         tobject.GetName()
         return False
