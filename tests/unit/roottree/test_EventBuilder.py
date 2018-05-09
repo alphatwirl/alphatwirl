@@ -14,11 +14,10 @@ try:
 except ImportError:
     has_no_ROOT = True
 
-from alphatwirl.roottree import EventBuilderConfig
 
 if not has_no_ROOT:
-    from alphatwirl.roottree.BEventBuilder import BEventBuilder
-    from alphatwirl.roottree.EventBuilder import EventBuilder
+    from alphatwirl.roottree import EventBuilderConfig
+    from alphatwirl.roottree import EventBuilder
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")

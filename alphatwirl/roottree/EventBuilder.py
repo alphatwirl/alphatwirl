@@ -8,8 +8,9 @@ from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
 class EventBuilder(object):
-    def __init__(self, config):
+    def __init__(self, config, EventsClass=Events):
         self.config = config
+        self.EventsClass = EventsClass
 
     def __repr__(self):
         return '{}({!r})'.format(
@@ -26,7 +27,7 @@ class EventBuilder(object):
                 logger.error('cannot open {}'.format(path))
                 raise OSError('cannot open {}'.format(path))
             chain.Add(path)
-        events = Events(chain, self.config.maxEvents, self.config.start)
+        events = self.EventsClass(chain, self.config.maxEvents, self.config.start)
         events.config = self.config
         return events
 
