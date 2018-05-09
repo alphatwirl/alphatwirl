@@ -1,6 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+
 import ROOT
+
 from .BEvents import BEvents
+from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
 class BEventBuilder(object):
@@ -16,6 +20,11 @@ class BEventBuilder(object):
     def __call__(self):
         chain = ROOT.TChain(self.config.treeName)
         for path in self.config.inputPaths:
+            file_ = ROOT.TFile.Open(path)
+            if is_ROOT_null_pointer(file_) or file_.IsZombie():
+                logger = logging.getLogger(__name__)
+                logger.error('cannot open {}'.format(path))
+                raise OSError('cannot open {}'.format(path))
             chain.Add(path)
         events = BEvents(chain, self.config.maxEvents, self.config.start)
         events.config = self.config

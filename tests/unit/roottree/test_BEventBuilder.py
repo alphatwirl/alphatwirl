@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import sys
+import logging
 import pytest
 
 try:
@@ -37,9 +38,27 @@ def mockevents(monkeypatch):
     return ret
 
 @pytest.fixture()
+def mocktfile():
+    ret = mock.Mock()
+    ret.IsZombie.return_value = False
+    return ret
+
+@pytest.fixture()
+def mocktfile_null():
+    ret = mock.Mock()
+    ret.GetName.side_effect = ReferenceError
+    return ret
+
+@pytest.fixture()
+def mocktfile_zombie():
+    ret = mock.Mock()
+    ret.IsZombie.return_value = True
+    return ret
+
+@pytest.fixture()
 def obj(mockroot, mockevents):
     config = EventBuilderConfig(
-        inputPaths=['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
+        inputPaths=['/path/to/input1/tree.root', '/path/to/input2/tree.root'],
         treeName='tree',
         maxEvents=123,
         start=11,
@@ -51,11 +70,35 @@ def obj(mockroot, mockevents):
 def test_repr(obj):
     repr(obj)
 
-def test_build(obj, mockroot, mockevents):
+def test_build(obj, mockroot, mocktfile, mockevents):
+    mockroot.TFile.Open.return_value = mocktfile
     events = obj()
     assert [mock.call('tree')] == mockroot.TChain.call_args_list
     chain = mockroot.TChain()
-    assert [mock.call('/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root')] == chain.Add.call_args_list
+    assert [
+        mock.call('/path/to/input1/tree.root'),
+        mock.call('/path/to/input2/tree.root'),
+    ] == chain.Add.call_args_list
     assert [mock.call(chain, 123, 11)] == mockevents.call_args_list
+
+def test_build_raise_null_file(obj, mockroot, mocktfile_null, caplog):
+    mockroot.TFile.Open.return_value = mocktfile_null
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(OSError):
+            events = obj()
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'ERROR'
+    assert 'BEventBuilder' in caplog.records[0].name
+    assert 'cannot open' in caplog.records[0].msg
+
+def test_build_raise_zombie_file(obj, mockroot, mocktfile_zombie, caplog):
+    mockroot.TFile.Open.return_value = mocktfile_zombie
+    with caplog.at_level(logging.WARNING):
+        with pytest.raises(OSError):
+            events = obj()
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'ERROR'
+    assert 'BEventBuilder' in caplog.records[0].name
+    assert 'cannot open' in caplog.records[0].msg
 
 ##__________________________________________________________________||
