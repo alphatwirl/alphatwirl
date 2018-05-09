@@ -18,6 +18,7 @@ from alphatwirl.roottree import EventBuilderConfig
 
 if not has_no_ROOT:
     from alphatwirl.roottree.BEventBuilder import BEventBuilder
+    from alphatwirl.roottree.EventBuilder import EventBuilder
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
@@ -28,6 +29,8 @@ def mockroot(monkeypatch):
     ret = mock.Mock()
     module = sys.modules['alphatwirl.roottree.BEventBuilder']
     monkeypatch.setattr(module, 'ROOT', ret)
+    module = sys.modules['alphatwirl.roottree.EventBuilder']
+    monkeypatch.setattr(module, 'ROOT', ret)
     return ret
 
 @pytest.fixture()
@@ -35,6 +38,8 @@ def mockevents(monkeypatch):
     ret = mock.Mock()
     module = sys.modules['alphatwirl.roottree.BEventBuilder']
     monkeypatch.setattr(module, 'BEvents', ret)
+    module = sys.modules['alphatwirl.roottree.EventBuilder']
+    monkeypatch.setattr(module, 'Events', ret)
     return ret
 
 @pytest.fixture()
@@ -55,8 +60,8 @@ def mocktfile_zombie():
     ret.IsZombie.return_value = True
     return ret
 
-@pytest.fixture()
-def obj(mockroot, mockevents):
+@pytest.fixture(params=[BEventBuilder, EventBuilder])
+def obj(request, mockroot, mockevents):
     config = EventBuilderConfig(
         inputPaths=['/path/to/input1/tree.root', '/path/to/input2/tree.root'],
         treeName='tree',
@@ -64,7 +69,8 @@ def obj(mockroot, mockevents):
         start=11,
         name='TTJets'
     )
-    return BEventBuilder(config)
+    builder = request.param
+    return builder(config)
 
 ##__________________________________________________________________||
 def test_repr(obj):
@@ -88,7 +94,7 @@ def test_build_raise_null_file(obj, mockroot, mocktfile_null, caplog):
             events = obj()
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'ERROR'
-    assert 'BEventBuilder' in caplog.records[0].name
+    ## assert 'BEventBuilder' in caplog.records[0].name
     assert 'cannot open' in caplog.records[0].msg
 
 def test_build_raise_zombie_file(obj, mockroot, mocktfile_zombie, caplog):
@@ -98,7 +104,7 @@ def test_build_raise_zombie_file(obj, mockroot, mocktfile_zombie, caplog):
             events = obj()
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'ERROR'
-    assert 'BEventBuilder' in caplog.records[0].name
+    ## assert 'BEventBuilder' in caplog.records[0].name
     assert 'cannot open' in caplog.records[0].msg
 
 ##__________________________________________________________________||
