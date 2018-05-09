@@ -32,9 +32,9 @@ class HTCondorJobSubmitter(object):
 
         self.job_desc_template = """
         Executable = run.py
-        output = results/$(resultdir)/stdout.txt
-        error = results/$(resultdir)/stderr.txt
-        log = results/$(resultdir)/log.txt
+        output = results/$(resultdir)/stdout.$(cluster).$(process).txt
+        error = results/$(resultdir)/stderr.$(cluster).$(process).txt
+        log = results/$(resultdir)/log.$(cluster).$(process).txt
         Arguments = $(resultdir).p.gz
         should_transfer_files = YES
         when_to_transfer_output = ON_EXIT
