@@ -66,7 +66,7 @@ def test_run(obj, tmpdir_factory, caplog):
     workingarea = mock.MagicMock()
     workingarea.path = str(tmpdir_factory.mktemp(''))
     workingarea.package_path.return_value = 'aaa'
-    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
+    with caplog.at_level(logging.WARNING):
         assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
 
 ##__________________________________________________________________||
