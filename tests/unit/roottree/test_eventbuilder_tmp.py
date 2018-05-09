@@ -27,8 +27,6 @@ pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 @pytest.fixture()
 def mockroot(monkeypatch):
     ret = mock.Mock()
-    module = sys.modules['alphatwirl.roottree.BEventBuilder']
-    monkeypatch.setattr(module, 'ROOT', ret)
     module = sys.modules['alphatwirl.roottree.EventBuilder']
     monkeypatch.setattr(module, 'ROOT', ret)
     return ret
@@ -60,7 +58,7 @@ def mocktfile_zombie():
     ret.IsZombie.return_value = True
     return ret
 
-@pytest.fixture(params=[BEventBuilder, EventBuilder])
+@pytest.fixture()
 def obj(request, mockroot, mockevents):
     config = EventBuilderConfig(
         inputPaths=['/path/to/input1/tree.root', '/path/to/input2/tree.root'],
@@ -69,8 +67,7 @@ def obj(request, mockroot, mockevents):
         start=11,
         name='TTJets'
     )
-    builder = request.param
-    return builder(config)
+    return EventBuilder(config, EventsClass=mockevents)
 
 ##__________________________________________________________________||
 def test_repr(obj):
