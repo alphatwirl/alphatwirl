@@ -79,17 +79,17 @@ def inspectLeaf(tree, bname):
     # https://root.cern.ch/root/html/RtypesCore.h
     # https://docs.python.org/2/library/array.html
     typedic = dict(
-        Char_t = 'b',
-        UChar_t = 'B',
-        Short_t = 'h',
-        UShort_t = 'H',
-        Int_t = 'i',
-        UInt_t = 'I',
-        Float_t = 'f',
-        Double_t = 'd',
-        Long64_t = 'l',
-        ULong64_t = 'L',
-        Bool_t = 'b',
+        Char_t='b',
+        UChar_t='B',
+        Short_t='h',
+        UShort_t='H',
+        Int_t='i',
+        UInt_t='I',
+        Float_t='f',
+        Double_t='d',
+        Long64_t='l',
+        ULong64_t='L',
+        Bool_t='b',
     )
 
     leaf = tree.GetLeaf(bname)
@@ -97,14 +97,14 @@ def inspectLeaf(tree, bname):
     isArray = not IsROOTNullPointer(leafcount)
 
     return dict(
-        name = leaf.GetName(),
-        ROOTtype = leaf.GetTypeName(),
-        arraytype = typedic[leaf.GetTypeName()] if leaf.GetTypeName() in typedic else None,
-        isarray = isArray,
-        countname = leafcount.GetName() if isArray else None,
-        countROOTtype = leafcount.GetTypeName() if isArray else None,
-        countarraytype = typedic[leafcount.GetTypeName()] if isArray else None,
-        countmax = leafcount.GetMaximum() if isArray else None
+        name=leaf.GetName(),
+        ROOTtype=leaf.GetTypeName(),
+        arraytype=typedic[leaf.GetTypeName()] if leaf.GetTypeName() in typedic else None,
+        isarray=isArray,
+        countname=leafcount.GetName() if isArray else None,
+        countROOTtype=leafcount.GetTypeName() if isArray else None,
+        countarraytype=typedic[leafcount.GetTypeName()] if isArray else None,
+        countmax=leafcount.GetMaximum() if isArray else None
         )
 
 ##__________________________________________________________________||
