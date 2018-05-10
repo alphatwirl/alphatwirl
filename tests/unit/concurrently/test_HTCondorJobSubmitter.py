@@ -11,40 +11,24 @@ try:
 except ImportError:
     import mock
 
+from alphatwirl.concurrently import WorkingArea
 from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
-job_desc_template_with_extra = """
-Executable = run.py
+job_desc_expected = """
+executable = run.py
 output = results/$(resultdir)/stdout.$(cluster).$(process).txt
 error = results/$(resultdir)/stderr.$(cluster).$(process).txt
 log = results/$(resultdir)/log.$(cluster).$(process).txt
-Arguments = $(resultdir).p.gz
+arguments = $(resultdir).p.gz
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
-transfer_input_files = {input_files}
+transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
 transfer_output_files = results
-Universe = vanilla
+universe = vanilla
 notification = Error
 getenv = True
 request_memory = 900
-queue resultdir in {resultdirs}
-"""
-job_desc_template_with_extra = textwrap.dedent(job_desc_template_with_extra).strip()
-
-job_desc_expected = """
-Executable = run.py
-output = results/$(resultdir)/stdout.$(cluster).$(process).txt
-error = results/$(resultdir)/stderr.$(cluster).$(process).txt
-log = results/$(resultdir)/log.$(cluster).$(process).txt
-Arguments = $(resultdir).p.gz
-should_transfer_files = YES
-when_to_transfer_output = ON_EXIT
-transfer_input_files = $(resultdir).p.gz
-transfer_output_files = results
-Universe = vanilla
-notification = Error
-getenv = True
 queue resultdir in tpd_20161129_122841_HnpcmF
 """.strip()
 
@@ -56,7 +40,7 @@ def proc_submit():
     return ret
 
 @pytest.fixture()
-def subprocess(proc_submit):
+def mocksubprocess(proc_submit):
     proc_prio = mock.MagicMock(name='proc_condor_prio')
     proc_prio.communicate.return_value = ('', '')
     proc_prio.returncode = 0
@@ -66,25 +50,27 @@ def subprocess(proc_submit):
     return ret
 
 @pytest.fixture()
-def obj(monkeypatch, subprocess):
+def obj(monkeypatch, mocksubprocess):
     module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module, 'subprocess', subprocess)
+    monkeypatch.setattr(module, 'subprocess', mocksubprocess)
     module = sys.modules['alphatwirl.concurrently.exec_util']
-    monkeypatch.setattr(module, 'subprocess', subprocess)
-    return HTCondorJobSubmitter()
+    monkeypatch.setattr(module, 'subprocess', mocksubprocess)
+    job_desc_extra = ['request_memory = 900']
+    return HTCondorJobSubmitter(job_desc_extra=job_desc_extra)
+
+@pytest.fixture()
+def workingarea(tmpdir_factory):
+    ret = mock.Mock(spec=WorkingArea)
+    ret.path = str(tmpdir_factory.mktemp(''))
+    ret.package_path.return_value = 'tpd_20161129_122841_HnpcmF'
+    ret.executable = 'run.py'
+    ret.extra_input_files = set(['python_modules.tar.gz', 'logging_levels.json.gz'])
+    return ret
 
 def test_repr(obj):
     repr(obj)
 
-def test_init_job_desc_extra(obj):
-    job_desc_extra = ['request_memory = 900']
-    obj = HTCondorJobSubmitter(job_desc_extra=job_desc_extra)
-    assert job_desc_template_with_extra == obj.job_desc_template
-
-def test_run(obj, tmpdir_factory, proc_submit, caplog):
-    workingarea = mock.MagicMock()
-    workingarea.path = str(tmpdir_factory.mktemp(''))
-    workingarea.package_path.return_value = 'tpd_20161129_122841_HnpcmF'
+def test_run(obj, workingarea, proc_submit, caplog):
     with caplog.at_level(logging.WARNING):
         assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
     assert [mock.call(job_desc_expected)] == proc_submit.communicate.call_args_list

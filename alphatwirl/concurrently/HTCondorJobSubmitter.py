@@ -39,27 +39,22 @@ class HTCondorJobSubmitter(object):
         ## including complete description of submit description file
         ## http://research.cs.wisc.edu/htcondor/manual/v8.4/condor_submit.html#man-condor-submit
 
-        self.job_desc_template = """
-        Executable = run.py
-        output = results/$(resultdir)/stdout.$(cluster).$(process).txt
-        error = results/$(resultdir)/stderr.$(cluster).$(process).txt
-        log = results/$(resultdir)/log.$(cluster).$(process).txt
-        Arguments = $(resultdir).p.gz
-        should_transfer_files = YES
-        when_to_transfer_output = ON_EXIT
-        transfer_input_files = {input_files}
-        transfer_output_files = results
-        Universe = vanilla
-        notification = Error
-        getenv = True
-        queue resultdir in {resultdirs}
-        """
-        self.job_desc_template = textwrap.dedent(self.job_desc_template).strip()
+        self.job_desc_dict = collections.OrderedDict([
+            ('executable', 'run.py'),
+            ('output', 'results/$(resultdir)/stdout.$(cluster).$(process).txt'),
+            ('error', 'results/$(resultdir)/stderr.$(cluster).$(process).txt'),
+            ('log', 'results/$(resultdir)/log.$(cluster).$(process).txt'),
+            ('arguments', '$(resultdir).p.gz'),
+            ('should_transfer_files', 'YES'),
+            ('when_to_transfer_output', 'ON_EXIT'),
+            ('transfer_input_files', '$(resultdir).p.gz'),
+            ('transfer_output_files', 'results'),
+            ('universe', 'vanilla'),
+            ('notification', 'Error'),
+            ('getenv', 'True'),
+        ])
 
-        if job_desc_extra:
-            lines = self.job_desc_template.split('\n')
-            lines[-1:-1] = job_desc_extra
-            self.job_desc_template = '\n'.join(lines)
+        self.job_desc_extra = job_desc_extra
 
         self.clusterprocids_outstanding = [ ]
         self.clusterprocids_finished = [ ]
@@ -83,13 +78,19 @@ class HTCondorJobSubmitter(object):
         for d in resultdirs:
             alphatwirl.mkdir_p(d)
 
-        extra_input_files = ['python_modules.tar.gz', 'logging_levels.json.gz']
-        extra_input_files = [f for f in extra_input_files if os.path.exists(f)]
+        self.job_desc_dict['executable'] = workingArea.executable
 
-        job_desc = self.job_desc_template.format(
-            input_files=', '.join(['$(resultdir).p.gz'] + extra_input_files),
-            resultdirs=', '.join(resultdir_basenames)
-        )
+        extra_input_files = sorted(list(workingArea.extra_input_files))
+        if extra_input_files:
+            self.job_desc_dict['transfer_input_files'] += ', ' + ', '.join(extra_input_files)
+
+        job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in self.job_desc_dict.items()])
+        job_desc_queue_line = 'queue resultdir in {}'.format(', '.join(resultdir_basenames))
+
+        # TODO: delete this line as job_desc_extra will be obsolete
+        job_desc = '\n'.join([job_desc] + self.job_desc_extra)
+
+        job_desc = '\n'.join([job_desc, job_desc_queue_line])
 
         procargs = ['condor_submit']
 
