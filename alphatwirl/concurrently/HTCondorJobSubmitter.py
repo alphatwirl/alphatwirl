@@ -30,6 +30,15 @@ HTCONDOR_JOBSTATUS = {
 class HTCondorJobSubmitter(object):
     def __init__(self, job_desc_extra=[ ]):
 
+
+        ## HTCondor Manual:
+        ## 2.5 Submitting a Job
+        ## http://research.cs.wisc.edu/htcondor/manual/v8.4/2_5Submitting_Job.html
+        ##
+        ## condor_submit command manual
+        ## including complete description of submit description file
+        ## http://research.cs.wisc.edu/htcondor/manual/v8.4/condor_submit.html#man-condor-submit
+
         self.job_desc_template = """
         Executable = run.py
         output = results/$(resultdir)/stdout.$(cluster).$(process).txt
