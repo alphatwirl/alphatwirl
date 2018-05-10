@@ -15,7 +15,7 @@ from alphatwirl.concurrently import WorkingArea
 from alphatwirl import mkdir_p
 
 ##__________________________________________________________________||
-## cannot be replaced with MagicMock because MagicMock is not picklable
+## cannot be replaced with mock.Mock because mock.Mock is not picklable
 MockPackage = collections.namedtuple('MockPackage', 'name')
 MockResult = collections.namedtuple('MockResult', 'name')
 
@@ -55,6 +55,19 @@ def test_open(obj):
     assert os.path.isfile(os.path.join(obj.path, 'run.py'))
     assert os.path.isfile(os.path.join(obj.path, 'logging_levels.json.gz'))
     assert os.path.isfile(os.path.join(obj.path, 'python_modules.tar.gz'))
+
+def test_query(obj):
+    obj.open()
+    assert 'run.py' == obj.executable
+    assert set([
+        'python_modules.tar.gz',
+        'logging_levels.json.gz']) == obj.extra_input_files
+
+def test_query_no_python_module(topdir):
+    obj = WorkingArea(topdir=topdir)
+    obj.open()
+    assert 'run.py' == obj.executable
+    assert set(['logging_levels.json.gz']) == obj.extra_input_files
 
 def test_put_package(obj):
 
@@ -121,4 +134,3 @@ def test_collect_result_eoferror(obj):
     assert obj.collect_result(package_index=package_index) is None
 
 ##__________________________________________________________________||
-

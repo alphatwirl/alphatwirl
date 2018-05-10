@@ -29,11 +29,14 @@ class WorkingArea(object):
     """
 
     @atrenamed_class_method_option(old='dir', new='topdir')
-    def __init__(self, topdir, python_modules):
+    def __init__(self, topdir, python_modules=()):
         self.topdir = topdir
         self.python_modules = python_modules
         self.path = None
         self.last_package_index = -1 # so it starts from 0
+
+        self.executable = 'run.py'
+        self.extra_input_files = set()
 
     def __repr__(self):
         name_value_pairs = (
@@ -47,7 +50,7 @@ class WorkingArea(object):
 
     def open(self):
         self.path = self._prepare_dir(self.topdir)
-        self._copy_run_py(area_path=self.path)
+        self._copy_executable(area_path=self.path)
         self._save_logging_levels(area_path=self.path)
         self._put_python_modules(modules=self.python_modules, area_path=self.path)
 
@@ -104,28 +107,34 @@ class WorkingArea(object):
 
         return path
 
-    def _copy_run_py(self, area_path):
+    def _copy_executable(self, area_path):
         thisdir = os.path.dirname(__file__)
-        src = os.path.join(thisdir, 'run.py')
+        src = os.path.join(thisdir, self.executable)
         shutil.copy(src, area_path)
 
     def _save_logging_levels(self, area_path):
         logger_names = logging.Logger.manager.loggerDict.keys()
         loglevel_dict = {l: logging.getLogger(l).getEffectiveLevel() for l in logger_names}
 
+        filename = 'logging_levels.json.gz'
+        path = os.path.join(area_path, filename)
+
         json_str = json.dumps(loglevel_dict, indent=4, sort_keys=True)
         json_str = re.sub(r' *\n', '\n', json_str, flags=re.MULTILINE)
         json_str += "\n"
         json_bytes = json_str.encode('utf-8')
-        path = os.path.join(area_path, 'logging_levels.json.gz')
         with gzip.open(path, "w") as f:
             f.write(json_bytes)
+
+        self.extra_input_files.add(filename)
 
     def _put_python_modules(self, modules, area_path):
 
         if not modules: return
 
-        tar = tarfile.open(os.path.join(area_path, 'python_modules.tar.gz'), 'w:gz')
+        filename = 'python_modules.tar.gz'
+        path = os.path.join(area_path, filename)
+        tar = tarfile.open(path, 'w:gz')
 
         def tar_filter(tarinfo):
             exclude_extensions = ('.pyc', )
@@ -140,5 +149,7 @@ class WorkingArea(object):
             arcname = os.path.join('python_modules', module + imp_tuple[2][0])
             tar.add(path, arcname=arcname, filter=tar_filter)
         tar.close()
+
+        self.extra_input_files.add(filename)
 
 ##__________________________________________________________________||
