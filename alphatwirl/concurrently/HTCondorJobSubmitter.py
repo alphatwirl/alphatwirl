@@ -28,38 +28,40 @@ HTCONDOR_JOBSTATUS = {
 }
 
 ##__________________________________________________________________||
+## HTCondor Manual:
+## 2.5 Submitting a Job
+## http://research.cs.wisc.edu/htcondor/manual/v8.4/2_5Submitting_Job.html
+##
+## condor_submit command manual
+## including complete description of submit description file
+## http://research.cs.wisc.edu/htcondor/manual/v8.4/condor_submit.html#man-condor-submit
+
+## keys should be in lower case in this dict
+DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
+    ('executable', 'run.py'),
+    ('output', 'results/$(resultdir)/stdout.$(cluster).$(process).txt'),
+    ('error', 'results/$(resultdir)/stderr.$(cluster).$(process).txt'),
+    ('log', 'results/$(resultdir)/log.$(cluster).$(process).txt'),
+    ('arguments', '$(resultdir).p.gz'),
+    ('should_transfer_files', 'YES'),
+    ('when_to_transfer_output', 'ON_EXIT'),
+    ('transfer_input_files', '$(resultdir).p.gz'),
+    ('transfer_output_files', 'results'),
+    ('universe', 'vanilla'),
+    ('notification', 'Error'),
+    ('getenv', 'True'),
+])
+
+##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
 
     @atdeprecated_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
     def __init__(self, job_desc_extra=[ ], job_desc_dict={}):
 
-
-        ## HTCondor Manual:
-        ## 2.5 Submitting a Job
-        ## http://research.cs.wisc.edu/htcondor/manual/v8.4/2_5Submitting_Job.html
-        ##
-        ## condor_submit command manual
-        ## including complete description of submit description file
-        ## http://research.cs.wisc.edu/htcondor/manual/v8.4/condor_submit.html#man-condor-submit
-
-        self.job_desc_dict = collections.OrderedDict([
-            ('executable', 'run.py'),
-            ('output', 'results/$(resultdir)/stdout.$(cluster).$(process).txt'),
-            ('error', 'results/$(resultdir)/stderr.$(cluster).$(process).txt'),
-            ('log', 'results/$(resultdir)/log.$(cluster).$(process).txt'),
-            ('arguments', '$(resultdir).p.gz'),
-            ('should_transfer_files', 'YES'),
-            ('when_to_transfer_output', 'ON_EXIT'),
-            ('transfer_input_files', '$(resultdir).p.gz'),
-            ('transfer_output_files', 'results'),
-            ('universe', 'vanilla'),
-            ('notification', 'Error'),
-            ('getenv', 'True'),
-        ])
-
+        self.job_desc_dict = DEFAULT_JOB_DESC_DICT.copy()
         for k, v in job_desc_dict.items():
             self.job_desc_dict[k.lower()] = v # not using update() in case
-                                              # job_desc_extra is ordered
+                                              # job_desc_dict is ordered
 
         self.job_desc_extra = job_desc_extra
 

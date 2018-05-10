@@ -16,24 +16,6 @@ from alphatwirl.concurrently import WorkingArea
 from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
-job_desc_expected = """
-executable = run.py
-output = results/$(resultdir)/stdout.$(cluster).$(process).txt
-error = results/$(resultdir)/stderr.$(cluster).$(process).txt
-log = results/$(resultdir)/log.$(cluster).$(process).txt
-arguments = $(resultdir).p.gz
-should_transfer_files = YES
-when_to_transfer_output = ON_EXIT
-transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
-transfer_output_files = results
-universe = vanilla
-notification = Error
-getenv = True
-request_memory = 900
-queue resultdir in tpd_20161129_122841_HnpcmF
-""".strip()
-
-##__________________________________________________________________||
 @pytest.fixture()
 def proc_submit():
     ret =  mock.MagicMock(name='proc_condor_submit')
@@ -80,7 +62,25 @@ def test_repr(obj):
 def test_run(obj, workingarea, proc_submit, caplog):
     with caplog.at_level(logging.WARNING):
         assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
-    assert [mock.call(job_desc_expected)] == proc_submit.communicate.call_args_list
+
+    expected = textwrap.dedent("""
+    executable = run.py
+    output = results/$(resultdir)/stdout.$(cluster).$(process).txt
+    error = results/$(resultdir)/stderr.$(cluster).$(process).txt
+    log = results/$(resultdir)/log.$(cluster).$(process).txt
+    arguments = $(resultdir).p.gz
+    should_transfer_files = YES
+    when_to_transfer_output = ON_EXIT
+    transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
+    transfer_output_files = results
+    universe = vanilla
+    notification = Error
+    getenv = True
+    request_memory = 900
+    queue resultdir in tpd_20161129_122841_HnpcmF
+    """).strip()
+
+    assert [mock.call(expected)] == proc_submit.communicate.call_args_list
 
 ##__________________________________________________________________||
 def test_option_job_desc_dict(mocksubprocess, workingarea, proc_submit):
