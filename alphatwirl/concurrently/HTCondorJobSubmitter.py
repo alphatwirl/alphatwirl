@@ -10,6 +10,7 @@ import re
 import logging
 
 import alphatwirl
+from alphatwirl.misc.deprecation import atdeprecated_class_method_option
 
 from .exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
@@ -28,7 +29,9 @@ HTCONDOR_JOBSTATUS = {
 
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
-    def __init__(self, job_desc_extra=[ ]):
+
+    @atdeprecated_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
+    def __init__(self, job_desc_extra=[ ], job_desc_dict={}):
 
 
         ## HTCondor Manual:
@@ -53,6 +56,10 @@ class HTCondorJobSubmitter(object):
             ('notification', 'Error'),
             ('getenv', 'True'),
         ])
+
+        for k, v in job_desc_dict.items():
+            self.job_desc_dict[k.lower()] = v # not using update() in case
+                                              # job_desc_extra is ordered
 
         self.job_desc_extra = job_desc_extra
 

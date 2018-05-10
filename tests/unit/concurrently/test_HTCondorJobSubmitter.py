@@ -3,6 +3,7 @@ import os
 import sys
 import logging
 import textwrap
+import collections
 
 import pytest
 
@@ -40,21 +41,27 @@ def proc_submit():
     return ret
 
 @pytest.fixture()
-def mocksubprocess(proc_submit):
-    proc_prio = mock.MagicMock(name='proc_condor_prio')
-    proc_prio.communicate.return_value = ('', '')
-    proc_prio.returncode = 0
+def proc_prio():
+    ret = mock.MagicMock(name='proc_condor_prio')
+    ret.communicate.return_value = ('', '')
+    ret.returncode = 0
+    return ret
 
+@pytest.fixture()
+def mocksubprocess(monkeypatch, proc_submit, proc_prio):
     ret = mock.MagicMock(name='subprocess')
+
+    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
+    monkeypatch.setattr(module, 'subprocess', ret)
+
+    module = sys.modules['alphatwirl.concurrently.exec_util']
+    monkeypatch.setattr(module, 'subprocess', ret)
+
     ret.Popen.side_effect = [proc_submit, proc_prio]
     return ret
 
 @pytest.fixture()
-def obj(monkeypatch, mocksubprocess):
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module, 'subprocess', mocksubprocess)
-    module = sys.modules['alphatwirl.concurrently.exec_util']
-    monkeypatch.setattr(module, 'subprocess', mocksubprocess)
+def obj(mocksubprocess):
     job_desc_extra = ['request_memory = 900']
     return HTCondorJobSubmitter(job_desc_extra=job_desc_extra)
 
@@ -74,5 +81,32 @@ def test_run(obj, workingarea, proc_submit, caplog):
     with caplog.at_level(logging.WARNING):
         assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
     assert [mock.call(job_desc_expected)] == proc_submit.communicate.call_args_list
+
+##__________________________________________________________________||
+def test_option_job_desc_dict(mocksubprocess, workingarea, proc_submit):
+    job_desc_dict = collections.OrderedDict(
+        [('request_memory', '1200'), ('Universe', 'chocolate')]
+    )
+    obj = HTCondorJobSubmitter(job_desc_dict=job_desc_dict)
+    obj.run(workingArea=workingarea, package_index=0)
+
+    expected = textwrap.dedent("""
+    executable = run.py
+    output = results/$(resultdir)/stdout.$(cluster).$(process).txt
+    error = results/$(resultdir)/stderr.$(cluster).$(process).txt
+    log = results/$(resultdir)/log.$(cluster).$(process).txt
+    arguments = $(resultdir).p.gz
+    should_transfer_files = YES
+    when_to_transfer_output = ON_EXIT
+    transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
+    transfer_output_files = results
+    universe = chocolate
+    notification = Error
+    getenv = True
+    request_memory = 1200
+    queue resultdir in tpd_20161129_122841_HnpcmF
+    """).strip()
+
+    assert [mock.call(expected)] == proc_submit.communicate.call_args_list
 
 ##__________________________________________________________________||
