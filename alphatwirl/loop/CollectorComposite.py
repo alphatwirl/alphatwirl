@@ -3,7 +3,7 @@ import logging
 
 from ..progressbar import ProgressReport
 
-from alphatwirl.misc.deprecation import atdeprecated_class_method_option
+from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 import alphatwirl
 
@@ -20,7 +20,7 @@ class CollectorComposite(object):
 
     """
 
-    @atdeprecated_class_method_option('progressReporter')
+    @_deprecated_class_method_option('progressReporter')
     def __init__(self, progressReporter=None):
 
         self.components = [ ]

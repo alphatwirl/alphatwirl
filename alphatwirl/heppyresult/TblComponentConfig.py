@@ -3,10 +3,10 @@ from ..misc import mkdir_p
 from ..misc import list_to_aligned_text
 import os
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
+@_deprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class TblComponentConfig(object):
     def __init__(self, outPath, columnNames, keys):
         self._outPath = outPath

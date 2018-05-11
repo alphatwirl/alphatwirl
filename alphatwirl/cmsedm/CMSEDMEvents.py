@@ -8,10 +8,10 @@ except ImportError:
 
 from .load_fwlite import load_fwlite
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='alphatwirl.cmsedm has been moved to https://github.com/alphatwirl/atcmsedm.')
+@_deprecated(msg='alphatwirl.cmsedm has been moved to https://github.com/alphatwirl/atcmsedm.')
 class CMSEDMEvents(object):
     def __init__(self, paths, maxEvents = -1, start = 0):
         load_fwlite()

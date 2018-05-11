@@ -5,10 +5,10 @@ import ROOT
 
 from .EventBuilderConfig import EventBuilderConfig as HeppyEventBuilderConfig
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
+@_deprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class EventBuilderConfigMaker(object):
     def __init__(self, analyzerName, fileName, treeName):
         self.analyzerName = analyzerName

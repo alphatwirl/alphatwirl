@@ -10,7 +10,7 @@ import re
 import logging
 
 import alphatwirl
-from alphatwirl.misc.deprecation import atdeprecated_class_method_option
+from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 from .exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
@@ -55,7 +55,7 @@ DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
 
-    @atdeprecated_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
+    @_deprecated_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
     def __init__(self, job_desc_extra=[ ], job_desc_dict={}):
 
         self.job_desc_dict = DEFAULT_JOB_DESC_DICT.copy()

@@ -1,9 +1,9 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 from alphatwirl.roottree import BEventBuilder
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='use alphatwirl.roottree.BEventBuilder instead.')
+@_deprecated(msg='use alphatwirl.roottree.BEventBuilder instead.')
 class EventBuilder(object):
     def __init__(self, config):
         self.builder = BEventBuilder(config)

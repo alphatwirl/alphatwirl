@@ -3,10 +3,10 @@
 ##__________________________________________________________________||
 import os
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
+@_deprecated(msg='heppyresult has been moved to https://github.com/alphatwirl/atheppy.')
 class Analyzer(object):
     def __init__(self, path):
         self.path = path

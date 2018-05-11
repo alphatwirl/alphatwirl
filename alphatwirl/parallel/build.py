@@ -3,7 +3,7 @@ import sys
 import logging
 
 from alphatwirl import concurrently, progressbar
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 from .parallel import Parallel
 
@@ -95,7 +95,7 @@ def _build_parallel_multiprocessing(quiet, processes):
 ##__________________________________________________________________||
 
 ##__________________________________________________________________||
-@atdeprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')
+@_deprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')
 def build_parallel_multiprocessing(quiet, processes):
     return build_parallel(
         parallel_mode='multiprocessing',

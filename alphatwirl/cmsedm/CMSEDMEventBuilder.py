@@ -1,10 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 from .CMSEDMEvents import CMSEDMEvents
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='alphatwirl.cmsedm has been moved to https://github.com/alphatwirl/atcmsedm.')
+@_deprecated(msg='alphatwirl.cmsedm has been moved to https://github.com/alphatwirl/atcmsedm.')
 class CMSEDMEventBuilder(object):
     def __init__(self, config):
         self.config = config

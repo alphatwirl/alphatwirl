@@ -17,7 +17,7 @@ except:
 
 import alphatwirl
 
-from alphatwirl.misc.deprecation import atrenamed_class_method_option
+from alphatwirl.misc.deprecation import _renamed_class_method_option
 
 ##__________________________________________________________________||
 class WorkingArea(object):
@@ -28,7 +28,7 @@ class WorkingArea(object):
 
     """
 
-    @atrenamed_class_method_option(old='dir', new='topdir')
+    @_renamed_class_method_option(old='dir', new='topdir')
     def __init__(self, topdir, python_modules=()):
         self.topdir = topdir
         self.python_modules = python_modules

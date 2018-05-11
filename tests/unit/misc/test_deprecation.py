@@ -9,15 +9,15 @@ try:
 except:
    import pickle
 
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='extra message')
+@_deprecated(msg='extra message')
 def func():
     pass
 
 def test_func_logging(caplog):
-    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
+    with caplog.at_level(logging.WARNING):
         func()
 
     assert len(caplog.records) == 1
@@ -31,12 +31,12 @@ def test_func_name():
 def test_func_pickle():
     pickle.dumps(func)
 
-@atdeprecated()
+@_deprecated()
 def func_without_msg():
     pass
 
 def test_func_logging_without_msg(caplog):
-    with caplog.at_level(logging.WARNING, logger='alphatwirl'):
+    with caplog.at_level(logging.WARNING):
         func_without_msg()
 
     assert len(caplog.records) == 1
@@ -45,12 +45,12 @@ def test_func_logging_without_msg(caplog):
     assert 'func_without_msg() is deprecated.' in caplog.records[0].msg
 
 ##__________________________________________________________________||
-@atdeprecated(msg='extra message')
+@_deprecated(msg='extra message')
 class ClassWithInit(object):
     def __init__(self):
         pass
 
-@atdeprecated(msg='extra message')
+@_deprecated(msg='extra message')
 class ClassWithoutInit(object):
     pass
 

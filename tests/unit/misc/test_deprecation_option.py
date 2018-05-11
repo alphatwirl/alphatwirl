@@ -9,10 +9,11 @@ try:
 except:
    import pickle
 
-from alphatwirl.misc.deprecation import atdeprecated_func_option, atdeprecated_class_method_option
+from alphatwirl.misc.deprecation import _deprecated_func_option
+from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 ##__________________________________________________________________||
-@atdeprecated_func_option('B')
+@_deprecated_func_option('B')
 def func_01(A=123, B=456, C=None):
     pass
 
@@ -37,7 +38,7 @@ def test_func_pickle():
     pickle.dumps(func_01)
 
 ##__________________________________________________________________||
-@atdeprecated_func_option('C')
+@_deprecated_func_option('C')
 def func_02(A=123, B=456, C=None):
     pass
 
@@ -52,8 +53,8 @@ def test_func_option_used_none(caplog):
     assert 'func_02(): the option "C" is deprecated.' in caplog.records[0].msg
 
 ##__________________________________________________________________||
-@atdeprecated_func_option('B')
-@atdeprecated_func_option('C')
+@_deprecated_func_option('B')
+@_deprecated_func_option('C')
 def func_03(A=123, B=456, C=None):
     pass
 
@@ -92,7 +93,7 @@ def test_func_option_used_double_BC(caplog):
 
 ##__________________________________________________________________||
 class Class(object):
-    @atdeprecated_class_method_option('B')
+    @_deprecated_class_method_option('B')
     def __init__(A=123, B=456, C=None):
         pass
 

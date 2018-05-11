@@ -2,10 +2,10 @@
 import copy
 
 from .EventLoop import EventLoop
-from alphatwirl.misc.deprecation import atdeprecated
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
-@atdeprecated(msg='use EventDatasetReader instead.')
+@_deprecated(msg='use EventDatasetReader instead.')
 class EventsInDatasetReader(object):
     """This class manages objects involved in reading events in data sets.
 

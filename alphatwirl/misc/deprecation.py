@@ -5,7 +5,7 @@ import functools
 import logging
 
 ##__________________________________________________________________||
-def atdeprecated(msg=''):
+def _deprecated(msg=''):
 
     def _decorate_class(c, msg):
         module_name = c.__module__
@@ -47,7 +47,7 @@ def atdeprecated(msg=''):
     return _imp
 
 ##__________________________________________________________________||
-def atdeprecated_func_option(option, msg=''):
+def _deprecated_func_option(option, msg=''):
     def _imp(f):
         module_name = f.__module__
         logger = logging.getLogger(module_name)
@@ -67,7 +67,7 @@ def atdeprecated_func_option(option, msg=''):
     return _imp
 
 ##__________________________________________________________________||
-def atdeprecated_class_method_option(option, msg=''):
+def _deprecated_class_method_option(option, msg=''):
     def _imp(f):
         module_name = f.__module__
         logger = logging.getLogger(module_name)
@@ -85,7 +85,7 @@ def atdeprecated_class_method_option(option, msg=''):
     return _imp
 
 ##__________________________________________________________________||
-def atrenamed_func_option(old, new, msg=''):
+def _renamed_func_option(old, new, msg=''):
     def _imp(f):
         module_name = f.__module__
         logger = logging.getLogger(module_name)
@@ -104,7 +104,7 @@ def atrenamed_func_option(old, new, msg=''):
     return _imp
 
 ##__________________________________________________________________||
-def atrenamed_class_method_option(old, new, msg=''):
+def _renamed_class_method_option(old, new, msg=''):
     def _imp(f):
         module_name = f.__module__
         logger = logging.getLogger(module_name)
@@ -121,5 +121,26 @@ def atrenamed_class_method_option(old, new, msg=''):
             return f(*args, **kwargs)
         return g
     return _imp
+
+##__________________________________________________________________||
+@_deprecated(msg='use _deprecated() instead')
+def atdeprecated(*args, **kwargs):
+    return _deprecated(*args, **kwargs)
+
+@_deprecated(msg='use _deprecated_func_option() instead')
+def atdeprecated_func_option(*args, **kwargs):
+    return _deprecated_func_option(*args, **kwargs)
+
+@_deprecated(msg='use _deprecated_class_method_option() instead')
+def atdeprecated_class_method_option(*args, **kwargs):
+    return _deprecated_class_method_option(*args, **kwargs)
+
+@_deprecated(msg='use _renamed_func_option() instead')
+def atrenamed_func_option(*args, **kwargs):
+    return _renamed_func_option(*args, **kwargs)
+
+@_deprecated(msg='use _renamed_class_method_option() instead')
+def atrenamed_class_method_option(*args, **kwargs):
+    return _renamed_class_method_option(*args, **kwargs)
 
 ##__________________________________________________________________||

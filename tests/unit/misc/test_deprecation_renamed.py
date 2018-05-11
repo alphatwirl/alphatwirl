@@ -9,11 +9,11 @@ try:
 except:
     import pickle
 
-from alphatwirl.misc.deprecation import atrenamed_class_method_option
-from alphatwirl.misc.deprecation import atrenamed_func_option
+from alphatwirl.misc.deprecation import _renamed_class_method_option
+from alphatwirl.misc.deprecation import _renamed_func_option
 
 ##__________________________________________________________________||
-@atrenamed_func_option(old='B', new='C')
+@_renamed_func_option(old='B', new='C')
 def func_01(A=123, C=None):
     return dict(A=A, C=C)
 
@@ -46,7 +46,7 @@ def test_class_pickle():
 
 ##__________________________________________________________________||
 class Class(object):
-    @atrenamed_class_method_option(old='B', new='C')
+    @_renamed_class_method_option(old='B', new='C')
     def __init__(self, A=123, C=None):
         self.A = A
         self.C = C
