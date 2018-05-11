@@ -11,6 +11,7 @@ except ImportError:
     pass
 
 if hasROOT:
+    from .build import BuildEvents
     from .BEvents import BEvents
     from .BEventBuilder import BEventBuilder
     from .BranchBuilder import BranchBuilder
