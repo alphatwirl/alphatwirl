@@ -25,24 +25,28 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     if parallel_mode == 'multiprocessing':
         return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
 
+
+    dispatcher_options = dict()
+
+    ## TODO: to be deleted as htcondor_job_desc_extra is obsolete
+    if parallel_mode == 'htcondor':
+        if htcondor_job_desc_extra:
+            dispatcher_options['job_desc_extra'] = htcondor_job_desc_extra
+
     return _build_parallel_dropbox(
         parallel_mode=parallel_mode,
         user_modules=user_modules,
-        htcondor_job_desc_extra=htcondor_job_desc_extra
+        dispatcher_options=dispatcher_options
     )
 
 ##__________________________________________________________________||
 def _build_parallel_dropbox(parallel_mode, user_modules,
-                           htcondor_job_desc_extra=[ ]):
+                            dispatcher_options):
+
     workingarea_topdir = '_ccsp_temp'
     python_modules = set(user_modules)
     python_modules.add('alphatwirl')
     workingarea_options = dict(topdir=workingarea_topdir, python_modules=python_modules)
-
-    if parallel_mode == 'htcondor':
-        dispatcher_options = dict(job_desc_extra=htcondor_job_desc_extra)
-    else:
-        dispatcher_options = dict()
 
     if parallel_mode == 'htcondor':
         dispatcher_class = concurrently.HTCondorJobSubmitter

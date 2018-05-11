@@ -98,13 +98,14 @@ def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
 
     ## communicationChannel
     assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
-    assert 'TaskPackageDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
+    assert 'TaskPackageDropbox' == parallel.communicationChannel.dropbox.__class__.__name__
 
     ## dispatcher
     if parallel_mode == 'subprocess':
-        assert 'SubprocessRunner' ==parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+        assert 'SubprocessRunner' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
     elif parallel_mode == 'htcondor':
-        assert 'HTCondorJobSubmitter' ==parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+        assert 'HTCondorJobSubmitter' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+        assert htcondor_job_desc_extra == parallel.communicationChannel.dropbox.dispatcher.job_desc_extra
 
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 
