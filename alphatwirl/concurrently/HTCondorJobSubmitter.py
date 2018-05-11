@@ -63,7 +63,9 @@ class HTCondorJobSubmitter(object):
             self.job_desc_dict[k.lower()] = v # not using update() in case
                                               # job_desc_dict is ordered
 
-        self.job_desc_extra = job_desc_extra
+        self.user_job_desc_dict = job_desc_dict # for test
+
+        self.job_desc_extra = job_desc_extra # TODO: to be deleted
 
         self.clusterprocids_outstanding = [ ]
         self.clusterprocids_finished = [ ]

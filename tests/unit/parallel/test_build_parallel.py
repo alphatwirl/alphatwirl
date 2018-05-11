@@ -77,20 +77,16 @@ def test_build_logging_unknown_parallel_mode(caplog):
     assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
 
 ##__________________________________________________________________||
-parallel_modes = ['subprocess', 'htcondor']
-
-@pytest.mark.parametrize('htcondor_job_desc_extra', [[], ['request_memory = 250']])
+@pytest.mark.parametrize('dispatcher_options', [dict()])
 @pytest.mark.parametrize('user_modules', [[], ['scribblers']])
-@pytest.mark.parametrize('processes', [0, 1, 3])
-@pytest.mark.parametrize('parallel_mode', parallel_modes)
-def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
-                        htcondor_job_desc_extra, isatty):
+def test_build_parallel_subprocess(user_modules, dispatcher_options):
+
+    parallel_mode = 'subprocess'
 
     parallel = build_parallel(
         parallel_mode=parallel_mode,
-        processes=processes,
         user_modules=user_modules,
-        htcondor_job_desc_extra=htcondor_job_desc_extra
+        dispatcher_options=dispatcher_options
     )
 
     ## progressMonitor
@@ -101,11 +97,44 @@ def test_build_parallel_dropbox(parallel_mode, processes, user_modules,
     assert 'TaskPackageDropbox' == parallel.communicationChannel.dropbox.__class__.__name__
 
     ## dispatcher
-    if parallel_mode == 'subprocess':
-        assert 'SubprocessRunner' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
-    elif parallel_mode == 'htcondor':
-        assert 'HTCondorJobSubmitter' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
-        assert htcondor_job_desc_extra == parallel.communicationChannel.dropbox.dispatcher.job_desc_extra
+    assert 'SubprocessRunner' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+
+    assert 'WorkingArea' == parallel.workingarea.__class__.__name__
+
+    if user_modules:
+        assert set(['scribblers', 'alphatwirl']) == set(parallel.workingarea.python_modules)
+    else:
+        assert set(['alphatwirl']) == set(parallel.workingarea.python_modules)
+
+
+@pytest.mark.parametrize('dispatcher_options', [dict(), dict(job_desc_dict=dict(request_memory='120'))])
+@pytest.mark.parametrize('htcondor_job_desc_extra', [[], ['request_memory = 250']])
+@pytest.mark.parametrize('user_modules', [[], ['scribblers']])
+def test_build_parallel_htcondor(
+        user_modules, htcondor_job_desc_extra,
+        dispatcher_options):
+
+    parallel_mode = 'htcondor'
+
+    parallel = build_parallel(
+        parallel_mode=parallel_mode,
+        user_modules=user_modules,
+        htcondor_job_desc_extra=htcondor_job_desc_extra,
+        dispatcher_options=dispatcher_options
+    )
+
+    ## progressMonitor
+    assert 'NullProgressMonitor' == parallel.progressMonitor.__class__.__name__
+
+    ## communicationChannel
+    assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
+    assert 'TaskPackageDropbox' == parallel.communicationChannel.dropbox.__class__.__name__
+
+    ## dispatcher
+    assert 'HTCondorJobSubmitter' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
+    assert htcondor_job_desc_extra == parallel.communicationChannel.dropbox.dispatcher.job_desc_extra
+    if 'job_desc_dict' in dispatcher_options:
+        assert dispatcher_options['job_desc_dict'] == parallel.communicationChannel.dropbox.dispatcher.user_job_desc_dict
 
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 

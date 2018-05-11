@@ -4,12 +4,14 @@ import logging
 
 from alphatwirl import concurrently, progressbar
 from alphatwirl.misc.deprecation import _deprecated
+from alphatwirl.misc.deprecation import _deprecated_func_option
 
 from .parallel import Parallel
 
 ##__________________________________________________________________||
+@_deprecated_func_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
 def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
-                   htcondor_job_desc_extra=[ ]):
+                   htcondor_job_desc_extra=[ ], dispatcher_options=dict()):
 
     dispatchers = ('subprocess', 'htcondor')
     parallel_modes = ('multiprocessing', ) + dispatchers
@@ -25,10 +27,8 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     if parallel_mode == 'multiprocessing':
         return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
 
-
-    dispatcher_options = dict()
-
     ## TODO: to be deleted as htcondor_job_desc_extra is obsolete
+    dispatcher_options = dispatcher_options.copy()
     if parallel_mode == 'htcondor':
         if htcondor_job_desc_extra:
             dispatcher_options['job_desc_extra'] = htcondor_job_desc_extra
