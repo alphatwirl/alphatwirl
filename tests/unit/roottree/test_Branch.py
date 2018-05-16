@@ -1,35 +1,36 @@
-from alphatwirl.roottree import Branch
-import unittest
+# Tai Sakuma <tai.sakuma@gmail.com>
 import array
 
+import pytest
+
+from alphatwirl.roottree import Branch
+
 ##__________________________________________________________________||
-class TestBranch(unittest.TestCase):
+def test_repr():
+    ar = array.array('d', [112.4, 87.6, 30.2])
+    ca = array.array('i', [2])
+    obj = Branch('jet_pt', ar, ca)
+    print repr(obj)
 
-    def test_repr(self):
-        ar = array.array('d', [ 112.4, 87.6, 30.2])
-        ca = array.array('i', [ 2 ])
-        obj = Branch('jet_pt', ar, ca)
-        repr(obj)
+def test_array():
+    ar = array.array('d', [112.4, 87.6, 30.2])
+    ca = array.array('i', [2])
+    obj = Branch('jet_pt', ar, ca)
 
-    def test_array(self):
+    assert 2 == len(obj)
+    assert 112.4 == obj[0]
+    assert 87.6 == obj[1]
+    with pytest.raises(IndexError):
+        obj[2]
 
-        ar = array.array('d', [ 112.4, 87.6, 30.2])
-        ca = array.array('i', [ 2 ])
-        obj = Branch('jet_pt', ar, ca)
+def test_value():
+    ar = array.array('d', [112.4])
+    ca = None
+    obj = Branch('met_pt', ar, ca)
 
-        self.assertEqual(2, len(obj))
-        self.assertEqual(112.4, obj[0])
-        self.assertEqual(87.6, obj[1])
-        self.assertRaises(IndexError, obj.__getitem__, 2)
-
-    def test_value(self):
-
-        ar = array.array('d', [ 112.4])
-        ca = None
-        obj = Branch('met_pt', ar, ca)
-
-        self.assertEqual(1, len(obj))
-        self.assertEqual(112.4, obj[0])
-        self.assertRaises(IndexError, obj.__getitem__, 1)
+    assert 1 == len(obj)
+    assert 112.4 == obj[0]
+    with pytest.raises(IndexError):
+        obj[1]
 
 ##__________________________________________________________________||
