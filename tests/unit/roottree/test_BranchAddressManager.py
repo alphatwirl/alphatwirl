@@ -1,5 +1,15 @@
-from alphatwirl.roottree import BranchAddressManager
 import unittest
+
+##__________________________________________________________________||
+hasROOT = False
+try:
+    import ROOT
+    hasROOT = True
+except ImportError:
+    pass
+
+if hasROOT:
+    from alphatwirl.roottree import BranchAddressManager
 
 ##__________________________________________________________________||
 class MockLeaf(object):
@@ -39,6 +49,7 @@ class MockTree(object):
         self.branchaddress.append((name, address))
 
 ##__________________________________________________________________||
+@unittest.skipUnless(hasROOT, "has no ROOT")
 class TestBranchAddressManager(unittest.TestCase):
 
 

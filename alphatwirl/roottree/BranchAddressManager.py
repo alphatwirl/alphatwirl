@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import array
 
+import ROOT
+
 from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
@@ -98,6 +100,10 @@ def inspectLeaf(tree, bname):
     leafcount = leaf.GetLeafCount()
     isArray = not is_ROOT_null_pointer(leafcount)
 
+    countmax = None
+    if isArray:
+        countmax = _get_countmax(leafcount, tree, bname)
+
     return dict(
         name=leaf.GetName(),
         ROOTtype=leaf.GetTypeName(),
@@ -106,7 +112,33 @@ def inspectLeaf(tree, bname):
         countname=leafcount.GetName() if isArray else None,
         countROOTtype=leafcount.GetTypeName() if isArray else None,
         countarraytype=typedic[leafcount.GetTypeName()] if isArray else None,
-        countmax=leafcount.GetMaximum() if isArray else None
+        countmax=countmax,
         )
+
+def _get_countmax(leafcount, tree, bname):
+    # If the tree is a chain, leafcount.GetMaximum() only returns the
+    # maximum in the current file. The `countmax` needs to be the
+    # maximum in all files. Not very efficient or elegant, the current
+    # implementation opens all files in the chain and finds the
+    # maximum.
+
+    try:
+        tobjarray_files = tree.GetListOfFiles()
+    except AttributeError:
+        # the tree is not a chain
+        return leafcount.GetMaximum()
+
+    if 0 == tobjarray_files.GetLast():
+        # the chain has only one file
+        return leafcount.GetMaximum()
+
+    filepahts = (f.GetTitle() for f in tobjarray_files)
+    files = (ROOT.TFile.Open(p) for p in filepahts)
+    trees = (f.Get(tree.GetName()) for f in files)
+    leaves = (t.GetLeaf(bname) for t in trees)
+    leafcounts = (l.GetLeafCount() for l in leaves)
+    countmaxs = (l.GetMaximum() for l in leafcounts)
+    countmax = max(countmaxs)
+    return countmax
 
 ##__________________________________________________________________||

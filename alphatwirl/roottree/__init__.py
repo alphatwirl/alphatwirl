@@ -1,5 +1,4 @@
 from .Events import Events
-from .BranchAddressManager import BranchAddressManager
 from .Branch import Branch
 from .EventBuilderConfig import EventBuilderConfig
 
@@ -16,5 +15,6 @@ if hasROOT:
     from .BEventBuilder import BEventBuilder
     from .BranchBuilder import BranchBuilder
     from .EventBuilder import EventBuilder
+    from .BranchAddressManager import BranchAddressManager
     from .BranchAddressManagerForVector import BranchAddressManagerForVector
     from .inspect import inspect_tree
