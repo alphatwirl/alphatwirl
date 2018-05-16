@@ -10,7 +10,7 @@ def test_repr():
     ar = array.array('d', [112.4, 87.6, 30.2])
     ca = array.array('i', [2])
     obj = Branch('jet_pt', ar, ca)
-    print repr(obj)
+    repr(obj)
 
 def test_array():
     ar = array.array('d', [112.4, 87.6, 30.2])
