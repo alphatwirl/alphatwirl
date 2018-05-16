@@ -41,7 +41,7 @@ class Branch(object):
         self.countarray = countarray
 
     def __repr__(self):
-        return '{}(name = {!r}, array = {!r}, countarray = {!r})'.format(
+        return '{}(name={!r}, array={!r}, countarray={!r})'.format(
             self.__class__.__name__,
             self.name,
             self.array,
