@@ -27,6 +27,7 @@ def test_with_pandas():
 @pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 def test_with_ROOT():
     assert inspect.isclass(alphatwirl.roottree.BEvents)
+    assert inspect.isclass(alphatwirl.roottree.BranchAddressManager)
     assert inspect.isclass(alphatwirl.roottree.BranchAddressManagerForVector)
     assert inspect.isclass(alphatwirl.heppyresult.EventBuilder)
     assert inspect.isclass(alphatwirl.heppyresult.EventBuilderConfigMaker)
@@ -57,7 +58,6 @@ def test_classes():
     assert inspect.isclass(alphatwirl.configure.TableConfigCompleter)
     assert inspect.isclass(alphatwirl.configure.TableFileNameComposer)
     assert inspect.isclass(alphatwirl.roottree.Branch)
-    assert inspect.isclass(alphatwirl.roottree.BranchAddressManager)
     assert inspect.isclass(alphatwirl.roottree.Events)
     assert inspect.isclass(alphatwirl.heppyresult.Analyzer)
     assert inspect.isclass(alphatwirl.heppyresult.Component)
