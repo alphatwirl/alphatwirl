@@ -133,6 +133,7 @@ def test_call_ctypes_same_objects_different_builders(mockTree):
     result2 = obj2(mockTree, 'jet_pt')
     assert result1 is result2
 
+@pytest.mark.skipif(sys.version_info[0]!=2, reason="skip for Python 3")
 def test_call_stdvector(mockTree):
     obj = BranchBuilder()
     obj.register_tree(mockTree)
