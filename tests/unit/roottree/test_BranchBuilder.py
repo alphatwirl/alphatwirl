@@ -15,17 +15,16 @@ try:
 except ImportError:
     has_no_ROOT = True
 
-
 if not has_no_ROOT:
+    from alphatwirl.roottree import Branch
     from alphatwirl.roottree import BranchBuilder
+    from alphatwirl.roottree import BranchAddressManager
+    from alphatwirl.roottree import BranchAddressManagerForVector
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
-class MockFile(object):
-    pass
-
 class MockLeaf(object):
     def __init__(self, name, typename):
         self.name = name
@@ -38,31 +37,13 @@ class MockLeaf(object):
         return self.typename
 
 class MockTree(object):
-    def __init__(self, Entries = 100):
-        self.Entries = Entries
-        self.iEvent = -1
-        self.branchstatus = [ ]
-        self.getEntryCalled = False
-        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt', 'trigger_path', 'EventAuxiliary')
-        self.leafTypeNames = ('Int_t', 'Int_t', 'Int_t', 'Double_t', 'Double_t', 'vector<string>', 'edm::EventAuxiliary')
-        self.leafs = dict([(n, MockLeaf(n, t)) for n, t in zip(self.leafNames, self.leafTypeNames)])
+    def __init__(self, *_, **__):
+        self.leaf_names = ('run', 'evt', 'njet', 'jet_pt', 'met_pt', 'trigger_path', 'EventAuxiliary')
+        self.leaf_type_names = ('Int_t', 'Int_t', 'Int_t', 'Double_t', 'Double_t', 'vector<string>', 'edm::EventAuxiliary')
+        self.leafs = dict([(n, MockLeaf(n, t)) for n, t in zip(self.leaf_names, self.leaf_type_names)])
 
-    def GetDirectory(self):
-        return MockFile()
-    def GetEntries(self):
-        return self.Entries
-    def GetEntry(self, ientry):
-        self.getEntryCalled = True
-        if ientry < self.Entries:
-            nbytes = 10
-            self.iEvent = ientry
-        else:
-            nbytes = 0
-            self.iEvent = -1
-        return nbytes
-
-    def SetBranchStatus(self, bname, status):
-        self.branchstatus.append((bname, status))
+    def SetBranchStatus(self, *_, **__):
+        pass
 
     def GetListOfLeaves(self):
         return self.leafs.values()
@@ -70,138 +51,109 @@ class MockTree(object):
     def GetLeaf(self, name):
         return self.leafs[name]
 
-def test_mocktree():
-    tree = MockTree(Entries=3)
-    assert isinstance(tree.GetDirectory(), MockFile)
-    assert 3 == tree.GetEntries()
-
-    assert -1 == tree.iEvent
-
-    nbytes = 10
-    assert nbytes == tree.GetEntry(0)
-    assert 0 == tree.iEvent
-    assert nbytes == tree.GetEntry(1)
-    assert 1 == tree.iEvent
-    assert nbytes == tree.GetEntry(2)
-    assert 2 == tree.iEvent
-    assert 0 == tree.GetEntry(3)
-    assert -1 == tree.iEvent
+@pytest.fixture()
+def mockTree():
+    ret = mock.Mock(wraps=MockTree())
+    return ret
 
 ##__________________________________________________________________||
-class MockArray(object):
-    pass
-
-class MockBranchAddressManager(object):
-    def __init__(self):
-        self.leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
-    def getArrays(self, tree, branchName):
-        if branchName in self.leafNames:
-            return MockArray(), MockArray()
-        return None, None
-
-class MockVector(object): pass
-
-class MockBranchAddressManagerForVector(object):
-    def __init__(self):
-        self.leafNames = ('trigger_path', )
-    def getVector(self, tree, branchName):
-        if branchName in self.leafNames:
-            return MockVector()
-        return None
-
-class MockBranch(object):
-    def __init__(self, name, array, countarray):
-        pass
-
 @pytest.fixture(autouse=True)
-def branch_address_manager(monkeypatch):
-    ret = MockBranchAddressManager()
+def mockBranchAddressManager(monkeypatch):
+    ret = mock.Mock(spec=BranchAddressManager)
+    def getArrays(tree, branchName):
+        leafNames = ('run', 'evt', 'njet', 'jet_pt', 'met_pt')
+        if branchName in leafNames:
+            return mock.Mock(name=branchName), mock.Mock(name='{}_counter'.format(branchName))
+        return None, None
+    ret.getArrays.side_effect = getArrays
     module = sys.modules['alphatwirl.roottree.BranchBuilder']
     monkeypatch.setattr(module, 'branchAddressManager', ret)
     yield ret
 
 @pytest.fixture(autouse=True)
-def branch_address_manager_for_vector(monkeypatch):
-    ret = MockBranchAddressManagerForVector()
+def mockBranchAddressManagerForVector(monkeypatch):
+    ret = mock.Mock(spec=BranchAddressManagerForVector)
+    def getVector(tree, branchName):
+        leaf_dict = dict(trigger_path='string')
+        if branchName in leaf_dict:
+            return mock.Mock(name=branchName, spec=ROOT.vector(leaf_dict[branchName]))
+        return None
+    ret.getVector.side_effect = getVector
     module = sys.modules['alphatwirl.roottree.BranchBuilder']
     monkeypatch.setattr(module, 'branchAddressManagerForVector', ret)
     yield ret
 
-@pytest.fixture(autouse=True)
-def mock_branch(monkeypatch):
-    module = sys.modules['alphatwirl.roottree.BranchBuilder']
-    monkeypatch.setattr(module, 'Branch', MockBranch)
-    yield
-
-@pytest.fixture(autouse=True)
-def clear_dict():
-    yield
-    BranchBuilder.itsdict.clear()
-
 ##__________________________________________________________________||
-def test_init():
-    obj = BranchBuilder()
-
 def test_repr():
     obj = BranchBuilder()
     repr(obj)
 
-def test_getattr():
+def test_register_tree(mockTree):
     obj = BranchBuilder()
-    tree = MockTree()
+    obj.register_tree(mockTree)
+    assert [mock.call('*', 0)] == mockTree.SetBranchStatus.call_args_list
+    assert mockTree in obj.itsdict
 
-    jet_pt = obj(tree, 'jet_pt')
-    met_pt = obj(tree, 'met_pt')
-    assert isinstance(jet_pt, MockBranch)
-    assert isinstance(met_pt, MockBranch)
-
-def test_getattr_same_objects_different_calls():
-    obj = BranchBuilder()
-
-    tree = MockTree()
-    jet_pt1 = obj(tree, 'jet_pt')
-    met_pt1 = obj(tree, 'met_pt')
-
-    jet_pt2 = obj(tree, 'jet_pt')
-    met_pt2 = obj(tree, 'met_pt')
-
-    assert jet_pt1 is jet_pt2
-    assert met_pt1 is met_pt2
-
-def test_getattr_same_objects_different_builders():
-
+def test_register_tree_two_builders(mockTree):
     obj1 = BranchBuilder()
     obj2 = BranchBuilder()
+    obj1.register_tree(mockTree)
+    obj2.register_tree(mockTree)
+    assert 1 == mockTree.SetBranchStatus.call_count
 
-    tree = MockTree()
-    jet_pt1 = obj1(tree, "jet_pt")
-    met_pt1 = obj1(tree, "met_pt")
-
-    jet_pt2 = obj2(tree, "jet_pt")
-    met_pt2 = obj2(tree, "met_pt")
-
-    assert jet_pt1 is jet_pt2
-    assert met_pt1 is met_pt2
-
-def test_getattr_None():
+def test_call_ctypes(mockTree):
     obj = BranchBuilder()
-    tree = MockTree()
-    assert obj(tree, 'no_such_branch') is None
+    obj.register_tree(mockTree)
+    result = obj(mockTree, 'jet_pt')
+    assert isinstance(result, Branch)
 
-def test_getattr_warning(caplog):
+def test_call_not_registered(mockTree, caplog):
     obj = BranchBuilder()
-    tree = MockTree()
     with caplog.at_level(logging.WARNING):
-        assert obj(tree, 'EventAuxiliary') is None
-
-    assert len(caplog.records) == 2
+        result = obj(mockTree, 'jet_pt')
+    assert isinstance(result, Branch)
+    assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'BranchBuilder' in caplog.records[0].name
     assert 'tree is not registered' in caplog.records[0].msg
 
-def test_register_tree():
+def test_call_ctypes_same_objects_different_calls(mockTree):
     obj = BranchBuilder()
-    tree = MockTree()
-    obj.register_tree(tree)
-    assert [('*', 0)] == tree.branchstatus
+    obj.register_tree(mockTree)
+    result1 = obj(mockTree, 'jet_pt')
+    result2 = obj(mockTree, 'jet_pt')
+    assert result1 is result2
+
+def test_call_ctypes_same_objects_different_builders(mockTree):
+    obj1 = BranchBuilder()
+    obj2 = BranchBuilder()
+    obj1.register_tree(mockTree)
+    obj2.register_tree(mockTree)
+    result1 = obj1(mockTree, 'jet_pt')
+    result2 = obj2(mockTree, 'jet_pt')
+    assert result1 is result2
+
+def test_call_stdvector(mockTree):
+    obj = BranchBuilder()
+    obj.register_tree(mockTree)
+    result = obj(mockTree, 'trigger_path')
+    assert isinstance(result, ROOT.vector('string'))
+
+def test_call_unknown_type(mockTree, caplog):
+    obj = BranchBuilder()
+    obj.register_tree(mockTree)
+    with caplog.at_level(logging.WARNING):
+        result = obj(mockTree, 'EventAuxiliary')
+    assert result is None
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'BranchBuilder' in caplog.records[0].name
+    assert 'unknown leaf type' in caplog.records[0].msg
+
+def test_call_no_such_branch(mockTree):
+    obj = BranchBuilder()
+    obj.register_tree(mockTree)
+    result = obj(mockTree, 'no_such_branch')
+    assert result is None
+
 ##__________________________________________________________________||
