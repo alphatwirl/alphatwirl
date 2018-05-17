@@ -22,7 +22,15 @@ if not has_no_ROOT:
     from alphatwirl.roottree import BranchAddressManagerForVector
 
 ##__________________________________________________________________||
-pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
+pytestmark = pytest.mark.skipif(
+    has_no_ROOT or sys.version_info[0]!=2,
+    reason='has no ROOT or Python 3'
+)
+
+# if uncomment both, only the bottom is in effect
+# pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
+# pytestmark = pytest.mark.skipif(sys.version_info[0]!=2, reason="skip for Python 3")
+
 
 ##__________________________________________________________________||
 class MockLeaf(object):
