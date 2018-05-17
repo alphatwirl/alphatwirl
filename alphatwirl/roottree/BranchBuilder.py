@@ -39,7 +39,7 @@ class BranchBuilder(object):
 
         if not tree in self.__class__.itsdict:
             logger = logging.getLogger(__name__)
-            logger.warning('tree is not registered: {}'.format(tree))
+            logger.warning('tree is not registered: {!r}'.format(tree))
             self.__class__.itsdict[tree] = { }
 
         itsdict_tree = self.__class__.itsdict[tree]
@@ -79,10 +79,9 @@ class BranchBuilder(object):
         return itsVector # this can be used as a branch
 
     def _unknown_type_warning(self, tree, name):
-        import logging
         leaf = tree.GetLeaf(name)
         typename = leaf.GetTypeName()
-        logging.warning("'" + self.__class__.__name__
-            + "': unknown leaf type '" + typename + "'")
+        logger = logging.getLogger(__name__)
+        logger.warning('unknown leaf type : {}'.format(typename))
 
 ##__________________________________________________________________||
