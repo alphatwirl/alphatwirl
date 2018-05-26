@@ -30,7 +30,7 @@ _AlphaTwirl_ is a python library that loops over event data and summarizes them 
         - [Delphes trees](https://cp3.irmp.ucl.ac.be/projects/delphes/wiki/WorkBook/RootTreeDescription)
         - [Heppy trees](https://github.com/cbernet/heppy)
         - [CMS NanoAOD](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookNanoAOD)
-    - with additional code to access each class , It is also possible to read
+    - With additional code to access each class, it is also possible to read
       trees with persistent objects
         - [CMS EDM formats](https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookCMSSWFramework)
 - Users can write modules to support other formats
