@@ -72,7 +72,7 @@ class KeyValueComposer(object):
         return self._repr
 
     def begin(self, event):
-        arrays = self._collect_arrays(event,  self.attr_names)
+        arrays = self._collect_arrays(event, self.attr_names)
         self.active = True if arrays is not None else False
         if not self.active: return
         self._array_reader = self.ArrayReader(arrays, self.idxs_conf, self.backref_idxs)
@@ -84,8 +84,7 @@ class KeyValueComposer(object):
                 attr = getattr(event, varname)
             except AttributeError as e:
                 logger = logging.getLogger(__name__)
-                logger.warning(e)
-                logger.warning(self)
+                logger.warning('{!r}: {!s}'.format(self, e))
                 return None
             ret.append(attr)
         return ret
