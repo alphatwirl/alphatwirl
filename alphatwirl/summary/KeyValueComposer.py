@@ -18,8 +18,8 @@ class KeyValueComposer(object):
 
 
     """
-    def __init__(self, keyAttrNames = None, binnings = None, keyIndices = None,
-                 valAttrNames = None, valIndices = None):
+    def __init__(self, keyAttrNames=None, binnings=None, keyIndices=None,
+                 valAttrNames=None, valIndices=None):
 
         # for __repr__()
         name_value_pairs = (
@@ -41,14 +41,14 @@ class KeyValueComposer(object):
 
         if not len(key_attr_names) == len(key_idxs):
             raise ValueError(
-                "the two tuples must have the same length: key_attr_names = {}, key_idxs = {}".format(
+                "the two tuples must have the same length: key_attr_names={}, key_idxs={}".format(
                     key_attr_names, key_idxs
                 )
             )
 
         if not len(val_attr_names) == len(val_idxs):
             raise ValueError(
-                "the two tuples must have the same length: val_attr_names = {}, val_idxs = {}".format(
+                "the two tuples must have the same length: val_attr_names={}, val_idxs={}".format(
                     val_attr_names, val_idxs
                 )
             )
@@ -56,7 +56,7 @@ class KeyValueComposer(object):
         self.binnings = tuple(binnings) if binnings is not None else None
         if self.binnings is not None and not len(key_attr_names) == len(self.binnings):
             raise ValueError(
-                "the two tuples must have the same length: key_attr_names = {}, self.binnings = {}".format(
+                "the two tuples must have the same length: key_attr_names={}, self.binnings={}".format(
                     key_attr_names, self.binnings
                 )
             )
