@@ -4,11 +4,11 @@ import numbers
 
 ##__________________________________________________________________||
 class BackrefMultipleArrayReader(object):
-    def __init__(self, arrays, idxs_conf, backref_idxs = None):
+    def __init__(self, arrays, idxs_conf, backref_idxs=None):
 
         if not len(arrays) == len(idxs_conf):
             raise ValueError(
-                "these two arguments must have the same length: arrays = {}, idxs_conf = {}".format(
+                "these two arguments must have the same length: arrays={}, idxs_conf={}".format(
                     arrays, idxs_conf
                 )
             )
@@ -16,7 +16,7 @@ class BackrefMultipleArrayReader(object):
         if backref_idxs is not None:
             if not len(idxs_conf) == len(backref_idxs):
                 raise ValueError(
-                    "backref_idxs must have the same length as idxs_conf: idxs_conf = {}, backref_idxs = {}".format(
+                    "backref_idxs must have the same length as idxs_conf: idxs_conf={}, backref_idxs={}".format(
                         idxs_conf, backref_idxs
                     )
                 )
