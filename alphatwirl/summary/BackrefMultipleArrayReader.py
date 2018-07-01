@@ -6,6 +6,25 @@ import numbers
 class BackrefMultipleArrayReader(object):
     def __init__(self, arrays, idxs_conf, backref_idxs=None):
 
+        # e.g.,
+        # arrays = [[ ], [ ], [ ], [ ], [ ], [ ], [ ], [ ]]
+        # idxs_conf = (0, '*', None, '*', None, None, None, None)
+        # backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
+
+        #
+        self._check_args(arrays, idxs_conf, backref_idxs)
+
+        #
+        self.take_fast_path = not self._is_backref_used(backref_idxs)
+
+        if self.take_fast_path:
+            self._init_fast_path(arrays, idxs_conf)
+            return
+
+        self._init_full_path(arrays, idxs_conf, backref_idxs)
+
+    def _check_args(self, arrays, idxs_conf, backref_idxs):
+
         if not len(arrays) == len(idxs_conf):
             raise ValueError(
                 "these two arguments must have the same length: arrays={}, idxs_conf={}".format(
@@ -21,26 +40,26 @@ class BackrefMultipleArrayReader(object):
                     )
                 )
 
-        self.arrays = arrays
-        self.wildcard_conf = tuple(c == '*' for c in idxs_conf)
-        self.idxs_conf = tuple(c if isinstance(c, numbers.Number) else None for c in idxs_conf)
-
+    def _is_backref_used(self, backref_idxs):
         if backref_idxs is None:
-            self.use_backref = False
-        else:
-            self.use_backref = any([e is not None for e in backref_idxs])
+            return False
+        return any([e is not None for e in backref_idxs])
 
-        if not self.use_backref:
-            self._zipped = list(zip(self.arrays, self.idxs_conf, self.wildcard_conf))
-            return
+    def _init_common(self, arrays, idxs_conf):
+        self.arrays = arrays
 
-        # use backref
+        self.wildcard_conf = tuple(c == '*' for c in idxs_conf)
+        # e.g., (False, True, False, True, False, False, False, False)
 
-        # e.g.
-        # self.arrays = [[], [], [], [], [], [], [], []]
-        # self.idxs_conf = (0, None, None, None, None, None, None, None)
-        # self.wildcard_conf = (False, True, False, True, False, False, False, False)
-        # backref_idxs = [None, None, 1, None, 3, 1, 1, 3]
+        self.idxs_conf = tuple(c if isinstance(c, numbers.Number) else None for c in idxs_conf)
+        # e.g., (0, None, None, None, None, None, None, None)
+
+    def _init_fast_path(self, arrays, idxs_conf):
+        self._init_common(arrays, idxs_conf)
+        self._zipped = list(zip(self.arrays, self.idxs_conf, self.wildcard_conf))
+
+    def _init_full_path(self, arrays, idxs_conf, backref_idxs):
+        self._init_common(arrays, idxs_conf)
 
         self.uniq_idxs = [ ]
         self.ref_idxs = [ ]
@@ -54,17 +73,17 @@ class BackrefMultipleArrayReader(object):
 
         # e.g.,
         # self.uniq_idxs = [[], [], []]
-        # [id(o) for o in self.uniq_idxs] = [4738625048, 4738625480, 4738625120]
+        # [id(o) for o in self.uniq_idxs] = [048, 480, 120]
         # self.ref_idxs = [[], [], [], [], [], [], [], []]
-        # [id(o) for o in self.ref_idxs] = [4738625048, 4738625480, 4738625480, 4738625120, 4738625120, 4738625480, 4738625480, 4738625120]
+        # [id(o) for o in self.ref_idxs] = [048, 480, 480, 120, 120, 480, 480, 120]
 
         self._zipped_1 = list(zip(self.arrays, self.idxs_conf, self.wildcard_conf, self.ref_idxs))
         self._zipped_2 = list(zip(self.arrays, self.ref_idxs))
 
     def read(self):
-        if self.use_backref:
-            return self._read_with_backref()
-        return self._fast_read_without_backref()
+        if self.take_fast_path:
+            return self._fast_read_without_backref()
+        return self._read_with_backref()
 
     def _fast_read_without_backref(self):
 

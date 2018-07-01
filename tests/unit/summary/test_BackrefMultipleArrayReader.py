@@ -204,7 +204,7 @@ params_backref = (
 )
 
 @pytest.mark.parametrize('arrays, idxs_conf, backref_idxs, data', params_backref)
-def test_read_without_backref(arrays, idxs_conf, backref_idxs, data):
+def test_read_backref(arrays, idxs_conf, backref_idxs, data):
     obj = BackrefMultipleArrayReader(
         arrays=arrays, idxs_conf=idxs_conf, backref_idxs=backref_idxs)
     for d in data:
