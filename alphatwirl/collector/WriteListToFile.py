@@ -9,7 +9,7 @@ class WriteListToFile(object):
         self._outPath = outPath
 
     def __repr__(self):
-        return '{}(outPath = {!r})'.format(
+        return '{}(outPath={!r})'.format(
             self.__class__.__name__,
             self._outPath
         )
