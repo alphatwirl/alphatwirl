@@ -3,21 +3,21 @@
 ##__________________________________________________________________||
 class ToTupleListWithDatasetColumn(object):
     def __init__(self, summaryColumnNames,
-                 datasetColumnName = 'component'
+                 datasetColumnName='component'
                  ):
 
         self.summaryColumnNames = summaryColumnNames
         self.datasetColumnName = datasetColumnName
 
-    def __repr__(self):
-
-        name_value_pairs = (
+        self._repr_pairs = [
             ('summaryColumnNames', self.summaryColumnNames),
             ('datasetColumnName',  self.datasetColumnName),
-        )
+        ]
+
+    def __repr__(self):
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+            ', '.join(['{}={!r}'.format(n, v) for n, v in self._repr_pairs]),
         )
 
     def combine(self, dataset_readers_list):
