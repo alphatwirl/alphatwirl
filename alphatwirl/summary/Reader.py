@@ -16,14 +16,26 @@ class Reader(object):
         self.nevents = nevents
         self.ievent = 0
 
+        self._repr_pairs = [
+            ('keyValComposer', self.keyValComposer),
+            ('summarizer', self.summarizer),
+            ('nextKeyComposer', self.nextKeyComposer),
+            ('weightCalculator', self.weightCalculator),
+            ('nevents', self.nevents),
+        ]
+
     def __repr__(self):
-        return '{}(keyValComposer={!r}, summarizer={!r}, weightCalculator={!r}, nextKeyComposer={!r}, nevents={!r})'.format(
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.keyValComposer,
-            self.summarizer,
-            self.weightCalculator,
-            self.nextKeyComposer,
-            self.nevents
+            ', '.join(['{}={!r}'.format(n, v) for n, v in self._repr_pairs]),
+        )
+
+    def __str__(self):
+        nwidth = max(len(n) for n, _ in self._repr_pairs)
+        nwidth += 4
+        return '{}:\n{}'.format(
+            self.__class__.__name__,
+            '\n'.join(['{:>{}}: {!r}'.format(n, nwidth, v) for n, v in self._repr_pairs]),
         )
 
     def begin(self, event):
