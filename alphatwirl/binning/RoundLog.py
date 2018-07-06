@@ -6,12 +6,12 @@ from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class RoundLog(object):
-    def __init__(self, width = 0.1, aboundary = 1,
-                 min = None, underflow_bin = None,
-                 max = None, overflow_bin = None,
-                 valid = ReturnTrue()):
+    def __init__(self, width=0.1, aboundary=1,
+                 min=None, underflow_bin=None,
+                 max=None, overflow_bin=None,
+                 valid=ReturnTrue()):
 
-        self._round = Round(width = width, aboundary = math.log10(aboundary))
+        self._round = Round(width=width, aboundary=math.log10(aboundary))
         self.width = width
         self.aboundary = aboundary
         self.min = min
@@ -21,7 +21,7 @@ class RoundLog(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
             self.__class__.__name__,
             self.width,
             self.aboundary,

@@ -8,10 +8,10 @@ from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class Round(object):
-    def __init__(self, width = 1, aboundary = None,
-                 min = None, underflow_bin = None,
-                 max = None, overflow_bin = None,
-                 valid = ReturnTrue()):
+    def __init__(self, width=1, aboundary=None,
+                 min=None, underflow_bin=None,
+                 max=None, overflow_bin=None,
+                 valid=ReturnTrue()):
 
         self.width = width
         self.aboundary = aboundary
@@ -25,7 +25,7 @@ class Round(object):
         self.valid = valid
 
     def __repr__(self):
-        return '{}(width = {!r}, aboundary = {!r}, min = {!r}, underflow_bin = {!r}, max = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
             self.__class__.__name__,
             self.width,
             self.aboundary,
@@ -54,7 +54,7 @@ class Round(object):
 
         if math.isinf(val):
             logger = logging.getLogger(__name__)
-            logger.warning('val = {}. will return {}'.format(val, None))
+            logger.warning('val={}. will return {}'.format(val, None))
             return None
 
         self._update_boundaries(val)

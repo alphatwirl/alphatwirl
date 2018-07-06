@@ -17,7 +17,7 @@ class Combine(object):
         self._at = at
 
     def __repr__(self):
-        return '{}(low = {!r}, high = {!r}), at = {!r})'.format(
+        return '{}(low={!r}, high={!r}), at={!r})'.format(
             self.__class__.__name__,
             self._low, self._high, self._at
         )

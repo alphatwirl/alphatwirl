@@ -4,15 +4,15 @@ from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class Binning(object):
-    def __init__(self, boundaries = None, lows = None, ups = None,
-                 retvalue = 'lowedge', bins = None, underflow_bin = None, overflow_bin = None,
-                 valid = ReturnTrue()):
+    def __init__(self, boundaries=None, lows=None, ups=None,
+                 retvalue='lowedge', bins=None, underflow_bin=None, overflow_bin=None,
+                 valid=ReturnTrue()):
 
         if boundaries is None:
             if lows is None or ups is None:
                 raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
             if not tuple(lows[1:]) == tuple(ups[:-1]):
-                raise ValueError("Boundaries cannot be determined from lows = " + str(lows) + " and ups = " + str(ups))
+                raise ValueError("Boundaries cannot be determined from lows=" + str(lows) + " and ups=" + str(ups))
             self.boundaries = tuple(lows) + (ups[-1], )
             self.lows = tuple(lows)
             self.ups = tuple(ups)
@@ -20,7 +20,7 @@ class Binning(object):
             if lows is not None or ups is not None:
                 raise ValueError("Only either boundaries or pairs of lows and ups need to be given!")
             if len(boundaries) < 2:
-                raise ValueError("Needs at least one bin! boundaries = " + str(boundaries))
+                raise ValueError("Needs at least one bin! boundaries=" + str(boundaries))
             self.boundaries = tuple(boundaries)
             self.lows = tuple(boundaries[:-1])
             self.ups = tuple(boundaries[1:])
@@ -47,7 +47,7 @@ class Binning(object):
         self._valid = valid
 
     def __repr__(self):
-        return '{}(boundaries = {!r}, underflow_bin = {!r}, overflow_bin = {!r}, valid = {!r})'.format(
+        return '{}(boundaries={!r}, underflow_bin={!r}, overflow_bin={!r}, valid={!r})'.format(
             self.__class__.__name__,
             self.boundaries, self.underflow_bin, self.overflow_bin, self._valid
         )
