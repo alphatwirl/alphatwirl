@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import itertools
 
 ##__________________________________________________________________||
 class Base(object):
@@ -10,12 +11,31 @@ class Base(object):
         self.name = name
         self.selections = list(selections)
 
+        self._repr_pairs = [
+            ('name', self.name),
+            ('selections', self.selections),
+        ]
+
     def __repr__(self):
-        return '{}(name={!r}, selections={!r})'.format(
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.name,
-            self.selections
+            ', '.join(['{}={!r}'.format(n, v) for n, v in self._repr_pairs]),
         )
+
+    def __str__(self):
+        nwidth = max(len(n) for n, _ in self._repr_pairs)
+        nwidth += 4
+        nwidth_nested = 12
+        lines = [
+            '{}:'.format(self.__class__.__name__),
+            '{:>{}}: {!r}'.format('name', nwidth, self.name),
+            '{:>{}}:'.format('selections', nwidth),
+        ]
+        nested_lines = list(itertools.chain(*[str(s).split('\n') for s in self.selections]))
+        lines.extend(
+            ['{}{}'.format(' '*nwidth_nested, str(l)) for l in nested_lines]
+        )
+        return '\n'.join(lines)
 
     def add(self, selection):
         self.selections.append(selection)
