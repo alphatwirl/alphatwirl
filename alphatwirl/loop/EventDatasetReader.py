@@ -1,7 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import copy
 import itertools
-from operator import itemgetter
 from collections import OrderedDict
 
 from .EventLoop import EventLoop
@@ -86,7 +85,7 @@ class EventDatasetReader(object):
         runids_towait = self.runids[:]
         while runids_towait:
             runid, reader = self.eventLoopRunner.receive_one()
-            self._merge_imp_1(runid, reader)
+            self._merge(runid, reader)
             runids_towait.remove(runid)
 
         dataset_readers_list = [(d, list(rr.values())) for d, rr in self.dataset_runid_reader_map.items()]
@@ -95,12 +94,9 @@ class EventDatasetReader(object):
 
         return self.collector.collect(dataset_readers_list)
 
-    def _merge_imp_1(self, runid, reader):
+    def _merge(self, runid, reader):
         dataset = self.runid_dataset_map[runid]
         runid_reader_map = self.dataset_runid_reader_map[dataset]
-        self._merge_imp_2(runid_reader_map, runid, reader)
-
-    def _merge_imp_2(self, map_, id_, data):
-        merge_in_order(map_, id_, data)
+        merge_in_order(runid_reader_map, runid, reader)
 
 ##__________________________________________________________________||
