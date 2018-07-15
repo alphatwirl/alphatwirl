@@ -35,17 +35,19 @@ class EventDatasetReader(object):
         self.runid_dataset_map = { }
         self.dataset_runid_reader_map = OrderedDict()
 
-    def __repr__(self):
         name_value_pairs = (
-            ('eventLoopRunner',         self.eventLoopRunner),
-            ('reader',                  self.reader),
-            ('collector',               self.collector),
+            ('eventLoopRunner', self.eventLoopRunner),
+            ('reader', self.reader),
+            ('collector', self.collector),
             ('split_into_build_events', self.split_into_build_events),
         )
-        return '{}({})'.format(
+        self._repr = '{}({})'.format(
             self.__class__.__name__,
             ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
+
+    def __repr__(self):
+        return self._repr
 
     def begin(self):
         self.eventLoopRunner.begin()
