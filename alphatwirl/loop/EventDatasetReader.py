@@ -64,9 +64,21 @@ class EventDatasetReader(object):
             eventLoop = self.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
         runids = self.eventLoopRunner.run_multiple(eventLoops)
+
         self.runids.extend(runids)
+        # e.g., [0, 1, 2]
+
         self.runid_dataset_map.update({i: dataset.name for i in runids})
+        # e.g., {0: 'dataset1', 1: 'dataset1', 2: 'dataset1', 3: 'dataset3'}
+
         self.dataset_runid_reader_map[dataset.name] = OrderedDict([(i, None) for i in runids])
+        # e.g.,
+        # OrderedDict(
+        #     [
+        #         ('dataset1', OrderedDict([(0, None), (1, None), (2, None)])),
+        #         ('dataset2', OrderedDict()),
+        #         ('dataset3', OrderedDict([(3, None)]))
+        #     ])
 
     def end(self):
 
@@ -77,6 +89,8 @@ class EventDatasetReader(object):
             runids_towait.remove(runid)
 
         dataset_readers_list = [(d, list(rr.values())) for d, rr in self.dataset_runid_reader_map.items()]
+        # e.g.,
+        # [('dataset1', reader), ('dataset2', []), ('dataset3', reader)]
 
         return self.collector.collect(dataset_readers_list)
 
