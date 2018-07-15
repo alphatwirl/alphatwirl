@@ -31,8 +31,6 @@ class EventDatasetReader(object):
 
         self.EventLoop = EventLoop
 
-        self.dataset_nreaders = [ ]
-
         self.runids = [ ]
         self.runid_dataset_map = { }
         self.dataset_runid_reader_map = OrderedDict()
@@ -51,7 +49,6 @@ class EventDatasetReader(object):
 
     def begin(self):
         self.eventLoopRunner.begin()
-        self.dataset_nreaders = [ ]
 
         self.runids = [ ]
         self.runid_dataset_map = { }
@@ -59,7 +56,6 @@ class EventDatasetReader(object):
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
-        self.dataset_nreaders.append((dataset, len(build_events_list)))
         eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
