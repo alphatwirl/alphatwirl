@@ -3,10 +3,13 @@ import logging
 
 import ROOT
 
+from alphatwirl.misc.deprecation import _deprecated
+
 from .Events import Events
 from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
+@_deprecated(msg='use BuildEvents instead')
 class EventBuilder(object):
     def __init__(self, config, EventsClass=Events):
         self.config = config
