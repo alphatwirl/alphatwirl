@@ -11,12 +11,12 @@ from alphatwirl.loop import EventLoop
 from alphatwirl import progressbar
 
 ##__________________________________________________________________||
-@pytest.fixture()
-def events():
-    event1 = mock.Mock(name='event1')
-    event2 = mock.Mock(name='event2')
-    event3 = mock.Mock(name='event3')
-    return [event1, event2, event3]
+@pytest.fixture(params=[0, 3])
+def events(request):
+    nevents = request.param
+    ret = [mock.Mock(name='event{}'.format(i)) for i in range(nevents)]
+    # e.g., [mock.Mock(name='event0'), mock.Mock(name='event1'), ...]
+    return ret
 
 @pytest.fixture()
 def build_events(events):
@@ -47,12 +47,12 @@ def test_call(obj, events, reader):
 
     assert reader == obj()
 
-    assert [
-        mock.call.begin(events),
-        mock.call.event(events[0]),
-        mock.call.event(events[1]),
-        mock.call.event(events[2]),
-        mock.call.end()] == reader.method_calls
+    expected = [ ]
+    expected.append(mock.call.begin(events)) # begin will called even
+                                             # if len(events) == 0
+    expected.extend([mock.call.event(e) for e in events])
+    expected.append(mock.call.end())
+    assert expected == reader.method_calls
 
 ##__________________________________________________________________||
 @pytest.fixture()
