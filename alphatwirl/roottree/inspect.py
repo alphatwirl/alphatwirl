@@ -10,7 +10,7 @@ def is_ROOT_null_pointer(tobject):
 
 ##__________________________________________________________________||
 def inspect_tree(tree):
-    ret = {  }
+    ret = { }
     ret['leaves'] = [inspect_leaf(leaf) for leaf in tree.GetListOfLeaves()]
     return ret
 
