@@ -22,10 +22,7 @@ if not has_no_ROOT:
     from alphatwirl.roottree import BranchAddressManagerForVector
 
 ##__________________________________________________________________||
-pytestmark = [
-    pytest.mark.skipif(has_no_ROOT, reason="has no ROOT"),
-    pytest.mark.skipif(sys.version_info[0]!=2, reason="skip for Python 3"),
-]
+pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
 class MockLeaf(object):
@@ -60,17 +57,6 @@ def mockTree():
     return ret
 
 ##__________________________________________________________________||
-@pytest.fixture(autouse=True)
-def mockdict(monkeypatch):
-    ## monkey patch a class attribute
-    ## segmentation violation without this patch
-    ## TODO probably need this patch for other tests that use BranchBuilder
-    ## and any other classes with class attributes
-    ret =  { }
-    module = sys.modules['alphatwirl.roottree.BranchBuilder']
-    monkeypatch.setattr(module.BranchBuilder, 'itsdict', ret)
-    yield ret
-
 @pytest.fixture(autouse=True)
 def mockBranchAddressManager(monkeypatch):
     ret = mock.Mock(spec=BranchAddressManager)
