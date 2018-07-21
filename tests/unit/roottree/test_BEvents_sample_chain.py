@@ -25,7 +25,7 @@ def chain():
         'sample_chain_03.root',
     ]
     input_paths = [
-        os.path.join(os.path.dirname(os.path.realpath(__file__)), n)
+        os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', n)
         for n in input_file_names
     ]
     tree_name = 'tree'

@@ -21,7 +21,7 @@ pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 def tree():
     input_file_name = 'sample_04.root'
     tree_name = 'tree'
-    input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), input_file_name)
+    input_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data', input_file_name)
 
     input_file = ROOT.TFile.Open(input_path)
     yield input_file.Get(tree_name)
