@@ -64,6 +64,12 @@ def _file_nevents_list(files, func_get_nevents_in_file, max_events):
         # this can be slow
         n = func_get_nevents_in_file(f)
 
+        if n is None:
+            continue
+
+        if n == 0:
+            continue
+
         ret.append((f, n))
         total_events += n
     return ret

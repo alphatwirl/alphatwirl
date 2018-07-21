@@ -124,36 +124,92 @@ def test_apply_max_files(args, expected):
 ##__________________________________________________________________||
 @pytest.mark.parametrize(
     'files, nevents, max_events, expected_results, expected_call_args', [
-    (
+    pytest.param([ ], [ ], -1, [ ], [ ], id='empty-no-max'),
+    pytest.param([ ], [ ], 10, [ ], [ ], id='empty-with-max'),
+    pytest.param(
+        ['A.root'], [100], -1, [('A.root', 100)],
+        ['A.root'],
+        id='one-file-no-max'
+    ),
+    pytest.param(
+        ['A.root'], [100], 0, [ ],
+        [ ],
+        id='one-file-zero-max'
+    ),
+    pytest.param(
+        ['A.root'], [0], -1, [ ],
+        ['A.root'],
+        id='one-file-empty'
+    ),
+    pytest.param(
+        ['A.root'], [None], -1, [ ],
+        ['A.root'],
+        id='one-file-error'
+    ),
+    pytest.param(
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         [100, 200, 150, 180, 210],
         -1,
         [('A.root', 100), ('B.root', 200), ('C.root', 150), ('D.root', 180), ('E.root', 210)],
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='five-files-no-max'
     ),
-    (
+    pytest.param(
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         [100, 200, 150, 180, 210],
         0,
         [ ],
         [ ],
+        id='five-files-zero-max'
     ),
-    (
+    pytest.param(
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         [100, 200, 150, 180, 210],
         150,
         [('A.root', 100), ('B.root', 200)],
         ['A.root', 'B.root'],
+        id='five-files-with-max'
     ),
-    (
+    pytest.param(
         ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
         [100, 200, 150, 180, 210],
         300, # exactly the nevents in the first two files
         [('A.root', 100), ('B.root', 200)],
         ['A.root', 'B.root'],
+        id='five-files-max-exactly-first-two-files'
     ),
-    ([ ], [ ], -1, [ ], [ ]),
-    ([ ], [ ], 10, [ ], [ ]),
+    pytest.param(
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, 0, 150, 180, 210],
+        -1,
+        [('A.root', 100), ('C.root', 150), ('D.root', 180), ('E.root', 210)],
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='five-files-one-empty-file'
+    ),
+    pytest.param(
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [0, 0, 0, 0, 0],
+        -1,
+        [ ],
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='five-files-all-empty'
+    ),
+    pytest.param(
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [100, None, 150, 180, 210],
+        -1,
+        [('A.root', 100), ('C.root', 150), ('D.root', 180), ('E.root', 210)],
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='five-files-one-error-file'
+    ),
+    pytest.param(
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        [None, None, None, None, None],
+        -1,
+        [ ],
+        ['A.root', 'B.root', 'C.root', 'D.root', 'E.root'],
+        id='five-files-all-error'
+    ),
 ])
 def test_file_nevents_list_(
         files, nevents, max_events,
