@@ -1,4 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+
+import ROOT
 
 ##__________________________________________________________________||
 def is_ROOT_null_pointer(tobject):
@@ -7,6 +10,30 @@ def is_ROOT_null_pointer(tobject):
         return False
     except ReferenceError:
         return True
+
+##__________________________________________________________________||
+def get_entries_in_tree_in_file(path, tree_name):
+
+    ##
+    file_ = ROOT.TFile.Open(path)
+    if is_ROOT_null_pointer(file_) or file_.IsZombie():
+        logger = logging.getLogger(__name__)
+        logger.warning('cannot open {}'.format(path))
+        return None
+
+    ##
+    tree = file_.Get(tree_name)
+    if is_ROOT_null_pointer(tree):
+        logger = logging.getLogger(__name__)
+        logger.warning(
+            'cannot find tree "{}" '
+            'in {}'.format(tree_name, path))
+        return None
+
+    ##
+    ret = tree.GetEntriesFast()
+    file_.Close()
+    return ret
 
 ##__________________________________________________________________||
 def inspect_tree(tree):
