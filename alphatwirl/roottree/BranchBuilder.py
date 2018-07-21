@@ -5,6 +5,8 @@ from .Branch import Branch
 from .BranchAddressManager import BranchAddressManager
 from .BranchAddressManagerForVector import BranchAddressManagerForVector
 
+from .inspect import is_ROOT_null_pointer
+
 ##__________________________________________________________________||
 branchAddressManager = BranchAddressManager()
 branchAddressManagerForVector = BranchAddressManagerForVector()
@@ -64,8 +66,23 @@ class BranchBuilder(object):
         return None
 
     def _branch_exist(self, tree, name):
-        leafNames = [l.GetName() for l in tree.GetListOfLeaves()]
-        if name in leafNames: return True
+        leaves = tree.GetListOfLeaves()
+
+        try:
+            leafNames = [l.GetName() for l in leaves]
+        except TypeError:
+            logger = logging.getLogger(__name__)
+            logger.warning(
+                'cannot get leaf names of the tree: '
+                '{!r}'.format(tree))
+            if is_ROOT_null_pointer(leaves):
+                logger.warning(
+                    'tree.GetListOfLeaves() returns null pointer. '
+                    'the tree might be a TChain with no files.')
+            return False
+
+        if name in leafNames:
+            return True
         return False
 
     def _try_ctypes_or_array_of_ctypes(self, tree, name):

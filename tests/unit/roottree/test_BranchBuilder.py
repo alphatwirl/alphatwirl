@@ -158,3 +158,20 @@ def test_call_no_such_branch(mockTree):
     assert result is None
 
 ##__________________________________________________________________||
+def test_empty_chain(caplog):
+    tree_name = 'tree'
+    chain = ROOT.TChain(tree_name)
+    # add no files to the chain
+
+    obj = BranchBuilder()
+    obj.register_tree(chain)
+
+    with caplog.at_level(logging.WARNING):
+        assert obj(chain, 'var') is None
+
+    assert len(caplog.records) == 2
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'BranchBuilder' in caplog.records[0].name
+    assert 'cannot get' in caplog.records[0].msg
+
+##__________________________________________________________________||
