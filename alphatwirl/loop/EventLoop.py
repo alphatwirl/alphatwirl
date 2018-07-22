@@ -2,8 +2,7 @@
 import uuid
 
 import alphatwirl
-
-from ..progressbar import ProgressReport
+from alphatwirl.misc.deprecation import _renamed_class_method_option
 
 ##__________________________________________________________________||
 class EventLoop(object):
@@ -53,8 +52,8 @@ class EventLoop(object):
 
     def _report_progress(self, i):
         try:
-            report = ProgressReport(
-                name=self.name, done=(i),
+            report = alphatwirl.progressbar.ProgressReport(
+                name=self.progressbar_label, done=(i),
                 total=self.nevents, taskid=self.taskid
             )
             alphatwirl.progressbar.report_progress(report)

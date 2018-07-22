@@ -65,7 +65,7 @@ def report_progress(monkeypatch):
 @pytest.fixture()
 def ProgressReport(monkeypatch):
     ret = mock.Mock()
-    module = sys.modules['alphatwirl.loop.EventLoop']
+    module = sys.modules['alphatwirl.progressbar']
     monkeypatch.setattr(module, 'ProgressReport', ret)
     return ret
 
