@@ -8,6 +8,14 @@ from ..progressbar import ProgressReport
 ##__________________________________________________________________||
 class EventLoop(object):
     """An event loop
+
+    Args:
+        build_events: A picklable function to create events.
+        reader: An event reader. This must be picklable before
+            `begin()` is called and after `end` is called.
+        progressbar_label (optional): a label shown by the progress
+            bar
+
     """
     def __init__(self, build_events, reader, name=None):
         self.build_events = build_events
