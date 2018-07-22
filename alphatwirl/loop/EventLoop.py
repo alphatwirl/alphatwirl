@@ -16,14 +16,15 @@ class EventLoop(object):
             bar
 
     """
-    def __init__(self, build_events, reader, name=None):
+    @_renamed_class_method_option(old='name', new='progressbar_label')
+    def __init__(self, build_events, reader, progressbar_label=None):
         self.build_events = build_events
         self.reader = reader
 
-        if name is None:
-            self.name = self.__class__.__name__
+        if progressbar_label is None:
+            self.progressbar_label = self.__class__.__name__
         else:
-            self.name = name
+            self.progressbar_label = progressbar_label
 
         # assign a random unique id to be used by progress bar
         self.taskid = uuid.uuid4()
@@ -32,7 +33,7 @@ class EventLoop(object):
         name_value_pairs = (
             ('build_events', self.build_events),
             ('reader',       self.reader),
-            ('name',         self.name),
+            ('progressbar_label',         self.progressbar_label),
         )
         return '{}({})'.format(
             self.__class__.__name__,

@@ -33,12 +33,12 @@ def obj(build_events, reader):
     return EventLoop(build_events, reader)
 
 ##__________________________________________________________________||
-def test_name(build_events, reader):
+def test_progressbar_label(build_events, reader):
     obj = EventLoop(build_events, reader)
-    assert 'EventLoop' == obj.name
+    assert 'EventLoop' == obj.progressbar_label
 
-    obj = EventLoop(build_events, reader, name='TTJets')
-    assert 'TTJets' == obj.name
+    obj = EventLoop(build_events, reader, progressbar_label='TTJets')
+    assert 'TTJets' == obj.progressbar_label
 
 def test_repr(obj):
     repr(obj)
