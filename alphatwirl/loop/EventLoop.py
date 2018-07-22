@@ -21,24 +21,27 @@ class EventLoop(object):
         self.build_events = build_events
         self.reader = reader
 
+        # assign a random unique id to be used by progress bar
+        self.taskid = uuid.uuid4()
+
+        ##
         if progressbar_label is None:
             self.progressbar_label = self.__class__.__name__
         else:
             self.progressbar_label = progressbar_label
 
-        # assign a random unique id to be used by progress bar
-        self.taskid = uuid.uuid4()
-
-    def __repr__(self):
+        ##
         name_value_pairs = (
             ('build_events', self.build_events),
-            ('reader',       self.reader),
-            ('progressbar_label',         self.progressbar_label),
+            ('reader', self.reader),
+            ('progressbar_label', self.progressbar_label),
         )
-        return '{}({})'.format(
+        self._repr = '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
-        )
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]))
+
+    def __repr__(self):
+        return self._repr
 
     def __call__(self):
         events = self.build_events()
