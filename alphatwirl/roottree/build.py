@@ -33,7 +33,7 @@ class BuildEvents(object):
 
     def _verify_files(self, paths, skip_error_files):
         ret = [ ]
-        for path in self.config['file_paths']:
+        for path in paths:
             file_ = ROOT.TFile.Open(path)
             if is_ROOT_null_pointer(file_) or file_.IsZombie():
                 logger = logging.getLogger(__name__)
