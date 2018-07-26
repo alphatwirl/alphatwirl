@@ -24,10 +24,10 @@ def test_example(obj):
 
     reader2 = MockReader(
         MockSummarizer(
-                [
-                    (300, 2, 490, 980),
-                    (300, 3, 210, 420),
-                ]))
+            [
+                (300, 2, 490, 980),
+                (300, 3, 210, 420),
+            ]))
 
     reader3 = MockReader(
         MockSummarizer(
