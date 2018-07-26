@@ -1,139 +1,119 @@
-import unittest
-import collections
-import numpy as np
-
-from alphatwirl.collector import ToTupleList
+# Tai Sakuma <tai.sakuma@gmail.com>
+import pytest
 
 from .mock import MockReader, MockSummarizer
 
+from alphatwirl.collector import ToTupleList
+
 ##__________________________________________________________________||
-class TestToTupleList(unittest.TestCase):
+@pytest.fixture()
+def obj():
+    return ToTupleList(
+        summaryColumnNames=('htbin', 'njetbin', 'n', 'nvar')
+    )
 
-    def setUp(self):
-        self.obj = ToTupleList(
-            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar')
-        )
+def test_repr(obj):
+    repr(obj)
 
-    def tearDown(self):
-        pass
+def test_example(obj):
+    reader1 = MockReader(
+        MockSummarizer(
+            [
+                (200, 2, 120, 240),
+            ]))
 
-    def test_repr(self):
-        repr(self.obj)
-
-    def test_example(self):
-
-        reader1 = MockReader(
-            MockSummarizer(
-                [
-                    (200, 2, 120, 240),
-                ]))
-
-        reader2 = MockReader(
-            MockSummarizer(
+    reader2 = MockReader(
+        MockSummarizer(
                 [
                     (300, 2, 490, 980),
                     (300, 3, 210, 420),
                 ]))
 
-        reader3 = MockReader(
-            MockSummarizer(
-                [
-                    (300, 2, 20, 40),
-                    (300, 3, 15, 30),
-                ]))
+    reader3 = MockReader(
+        MockSummarizer(
+            [
+                (300, 2, 20, 40),
+                (300, 3, 15, 30),
+            ]))
 
-        reader4 = MockReader(MockSummarizer([]))
+    reader4 = MockReader(MockSummarizer([]))
 
-        dataset_readers_list = [
-            ('QCD', (reader1, reader2)),
-            ('TTJets', (reader3, )),
-            ('WJets', (reader4, )),
-            ('ZJets', ( )),
-        ]
+    dataset_readers_list = [
+        ('QCD', (reader1, reader2)),
+        ('TTJets', (reader3, )),
+        ('WJets', (reader4, )),
+        ('ZJets', ( )),
+    ]
 
-        expected = [
-            ('htbin', 'njetbin', 'n', 'nvar'),
-            (200, 2, 120, 240),
-            (300, 2, 490, 980),
-            (300, 3, 210, 420),
-            (300, 2, 20, 40),
-            (300, 3, 15, 30)
-        ]
+    expected = [
+        ('htbin', 'njetbin', 'n', 'nvar'),
+        (200, 2, 120, 240),
+        (300, 2, 490, 980),
+        (300, 3, 210, 420),
+        (300, 2, 20, 40),
+        (300, 3, 15, 30)
+    ]
 
-        actual = self.obj.combine(dataset_readers_list)
+    actual = obj.combine(dataset_readers_list)
 
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
-    def test_combine_oneReader(self):
+def test_combine_oneReader(obj):
 
-        obj = ToTupleList(
-            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar')
-        )
+    reader1 = MockReader(
+        MockSummarizer(
+            [
+                (200, 2, 120, 240),
+                (300, 2, 310, 620),
+            ]))
 
-        reader1 = MockReader(
-            MockSummarizer(
-                [
-                    (200, 2, 120, 240),
-                    (300, 2, 310, 620),
-                ]))
+    dataset_readers_list = [
+        ('QCD', (reader1, )),
+    ]
 
-        dataset_readers_list = [
-            ('QCD', (reader1, )),
-        ]
+    expected = [
+        ('htbin', 'njetbin', 'n', 'nvar'),
+        (200, 2, 120, 240),
+        (300, 2, 310, 620),
+    ]
 
-        expected = [
-            ('htbin', 'njetbin', 'n', 'nvar'),
-            (200, 2, 120, 240),
-            (300, 2, 310, 620),
-        ]
+    actual = obj.combine(dataset_readers_list)
 
-        actual = obj.combine(dataset_readers_list)
+    assert expected == actual
 
-        self.assertEqual(expected, actual)
+def test_combine_all_empty_contents(obj):
+    reader1 = MockReader(
+        MockSummarizer(
+            [ ]))
 
-    def test_combine_all_empty_contents(self):
+    reader2 = MockReader(
+        MockSummarizer(
+            [ ]))
 
-        obj = ToTupleList(
-            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar')
-        )
+    reader3 = MockReader(
+        MockSummarizer(
+            [ ]))
 
-        reader1 = MockReader(
-            MockSummarizer(
-                [ ]))
+    dataset_readers_list = [
+        ('QCD', (reader1, reader2)),
+        ('TTJets', (reader3, )),
+    ]
 
-        reader2 = MockReader(
-            MockSummarizer(
-                [ ]))
+    expected = [
+        ('htbin', 'njetbin', 'n', 'nvar'),
+    ]
 
-        reader3 = MockReader(
-            MockSummarizer(
-                [ ]))
+    actual = obj.combine(dataset_readers_list)
 
-        dataset_readers_list = [
-            ('QCD', (reader1, reader2)),
-            ('TTJets', (reader3, )),
-        ]
+    assert expected == actual
 
-        expected = [
-            ('htbin', 'njetbin', 'n', 'nvar'),
-        ]
+def test_combine_empty_pairs(obj):
+    dataset_readers_list = [ ]
 
-        actual = obj.combine(dataset_readers_list)
+    expected = None
 
-        self.assertEqual(expected, actual)
+    actual = obj.combine(dataset_readers_list)
 
-    def test_combine_empty_pairs(self):
-
-        obj = ToTupleList(
-            summaryColumnNames = ('htbin', 'njetbin', 'n', 'nvar')
-        )
-
-        dataset_readers_list = [ ]
-
-        expected = None
-
-        actual = obj.combine(dataset_readers_list)
-
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
 ##__________________________________________________________________||
