@@ -19,6 +19,9 @@ alphatwirl\.concurrently\.CommunicationChannel
       ~CommunicationChannel.put
       ~CommunicationChannel.put_multiple
       ~CommunicationChannel.receive
+      ~CommunicationChannel.receive_all
+      ~CommunicationChannel.receive_finished
+      ~CommunicationChannel.receive_one
       ~CommunicationChannel.terminate
    
    

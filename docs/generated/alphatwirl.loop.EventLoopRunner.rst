@@ -16,6 +16,9 @@ alphatwirl\.loop\.EventLoopRunner
       ~EventLoopRunner.__init__
       ~EventLoopRunner.begin
       ~EventLoopRunner.end
+      ~EventLoopRunner.poll
+      ~EventLoopRunner.receive
+      ~EventLoopRunner.receive_one
       ~EventLoopRunner.run
       ~EventLoopRunner.run_multiple
    

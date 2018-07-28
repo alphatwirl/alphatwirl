@@ -1,9 +1,9 @@
-alphatwirl\.roottree\.BEventBuilder
-===================================
+alphatwirl\.roottree\.BuildEvents
+=================================
 
 .. currentmodule:: alphatwirl.roottree
 
-.. autoclass:: BEventBuilder
+.. autoclass:: BuildEvents
 
    
    .. automethod:: __init__
@@ -13,7 +13,7 @@ alphatwirl\.roottree\.BEventBuilder
 
    .. autosummary::
    
-      ~BEventBuilder.__init__
+      ~BuildEvents.__init__
    
    
 

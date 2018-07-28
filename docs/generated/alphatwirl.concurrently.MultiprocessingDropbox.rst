@@ -16,9 +16,11 @@ alphatwirl\.concurrently\.MultiprocessingDropbox
       ~MultiprocessingDropbox.__init__
       ~MultiprocessingDropbox.close
       ~MultiprocessingDropbox.open
+      ~MultiprocessingDropbox.poll
       ~MultiprocessingDropbox.put
       ~MultiprocessingDropbox.put_multiple
       ~MultiprocessingDropbox.receive
+      ~MultiprocessingDropbox.receive_one
       ~MultiprocessingDropbox.terminate
    
    

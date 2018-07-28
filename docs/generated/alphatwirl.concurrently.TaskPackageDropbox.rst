@@ -16,9 +16,11 @@ alphatwirl\.concurrently\.TaskPackageDropbox
       ~TaskPackageDropbox.__init__
       ~TaskPackageDropbox.close
       ~TaskPackageDropbox.open
+      ~TaskPackageDropbox.poll
       ~TaskPackageDropbox.put
       ~TaskPackageDropbox.put_multiple
       ~TaskPackageDropbox.receive
+      ~TaskPackageDropbox.receive_one
       ~TaskPackageDropbox.terminate
    
    

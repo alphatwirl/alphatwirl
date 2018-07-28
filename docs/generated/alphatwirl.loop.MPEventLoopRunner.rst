@@ -16,6 +16,9 @@ alphatwirl\.loop\.MPEventLoopRunner
       ~MPEventLoopRunner.__init__
       ~MPEventLoopRunner.begin
       ~MPEventLoopRunner.end
+      ~MPEventLoopRunner.poll
+      ~MPEventLoopRunner.receive
+      ~MPEventLoopRunner.receive_one
       ~MPEventLoopRunner.run
       ~MPEventLoopRunner.run_multiple
    
