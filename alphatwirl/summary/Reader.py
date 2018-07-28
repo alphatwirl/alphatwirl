@@ -5,11 +5,14 @@ from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
 class Reader(object):
-    def __init__(self, keyValComposer, summarizer, nextKeyComposer=None,
+    def __init__(self, keyValComposer, summarizer,
+                 nextKeyComposer=None,
                  weightCalculator=WeightCalculatorOne(),
-                 nevents=None):
+                 collector=None, nevents=None):
+
         self.keyValComposer = keyValComposer
         self.summarizer = summarizer
+        self.collector = collector
         self.weightCalculator = weightCalculator
         self.nextKeyComposer = nextKeyComposer
 
@@ -19,6 +22,7 @@ class Reader(object):
         self._repr_pairs = [
             ('keyValComposer', self.keyValComposer),
             ('summarizer', self.summarizer),
+            ('collector', self.collector),
             ('nextKeyComposer', self.nextKeyComposer),
             ('weightCalculator', self.weightCalculator),
             ('nevents', self.nevents),
@@ -73,5 +77,8 @@ class Reader(object):
 
     def results(self):
         return self.summarizer
+
+    def collect(self):
+        return self.collector(self)
 
 ##__________________________________________________________________||

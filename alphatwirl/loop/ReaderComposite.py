@@ -30,21 +30,34 @@ class ReaderComposite(object):
 
     def begin(self, event):
         for reader in self.readers:
-            if not hasattr(reader, 'begin'): continue
+            if not hasattr(reader, 'begin'):
+                continue
             reader.begin(event)
 
     def event(self, event):
         for reader in self.readers:
-            if reader.event(event) is False: break
-
-    def merge(self, other):
-        for r, o in zip(self.readers, other.readers):
-            if not hasattr(r, 'merge'): continue
-            r.merge(o)
+            if reader.event(event) is False:
+                break
 
     def end(self):
         for reader in self.readers:
-            if not hasattr(reader, 'end'): continue
+            if not hasattr(reader, 'end'):
+                continue
             reader.end()
+
+    def merge(self, other):
+        for r, o in zip(self.readers, other.readers):
+            if not hasattr(r, 'merge'):
+                continue
+            r.merge(o)
+
+    def collect(self):
+        ret = [ ]
+        for reader in self.readers:
+            if not hasattr(reader, 'collect'):
+                ret.append(None)
+                continue
+            ret.append(reader.collect())
+        return ret
 
 ##__________________________________________________________________||
