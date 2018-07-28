@@ -1,5 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
+import alphatwirl
+
 ##__________________________________________________________________||
 class ReaderComposite(object):
 
@@ -53,7 +55,10 @@ class ReaderComposite(object):
 
     def collect(self):
         ret = [ ]
-        for reader in self.readers:
+        n = len(self.readers)
+        for i, reader in enumerate(self.readers):
+            report = alphatwirl.progressbar.ProgressReport(name='collecting results', done=(i + 1), total=n)
+            alphatwirl.progressbar.report_progress(report)
             if not hasattr(reader, 'collect'):
                 ret.append(None)
                 continue
