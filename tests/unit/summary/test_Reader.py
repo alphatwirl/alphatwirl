@@ -25,6 +25,10 @@ def mockSummarizer():
     return mock.MagicMock()
 
 @pytest.fixture()
+def mockCollector():
+    return mock.Mock()
+
+@pytest.fixture()
 def mockNextKeyComposer():
     return mock.Mock()
 
@@ -33,8 +37,18 @@ def mockWeightCalculator():
     return mock.Mock()
 
 @pytest.fixture()
-def obj(mockKeyValComposer, mockSummarizer, mockNextKeyComposer, mockWeightCalculator):
+def obj(mockKeyValComposer, mockSummarizer, mockCollector, mockNextKeyComposer, mockWeightCalculator):
     return Reader(
+        mockKeyValComposer, mockSummarizer,
+        nextKeyComposer=mockNextKeyComposer,
+        collector=mockCollector,
+        weightCalculator=mockWeightCalculator
+    )
+
+def test_init_without_collector(mockKeyValComposer, mockSummarizer, mockNextKeyComposer, mockWeightCalculator):
+    ## possible to init without collector for backward compatibility
+    ##
+    obj = Reader(
         mockKeyValComposer, mockSummarizer,
         nextKeyComposer=mockNextKeyComposer,
         weightCalculator=mockWeightCalculator
@@ -159,5 +173,10 @@ def test_merge(obj, mockSummarizer):
 
     assert [mock.call(obj1.summarizer)] == mockSummarizer.__iadd__.call_args_list
     assert obj.summarizer is mockSummarizer.__iadd__()
+
+def test_collect(obj, mockCollector):
+    result = obj.collect()
+    assert [mock.call(obj)] == mockCollector.call_args_list
+    assert mockCollector() is result
 
 ##__________________________________________________________________||
