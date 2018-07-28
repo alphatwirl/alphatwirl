@@ -18,8 +18,8 @@ class ReaderComposite(object):
 
     """
 
-    def __init__(self):
-        self.readers = []
+    def __init__(self, readers=[]):
+        self.readers = list(readers)
 
     def __repr__(self):
         return '{}({!r})'.format(

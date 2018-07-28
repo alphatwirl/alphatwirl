@@ -18,6 +18,14 @@ def obj():
 def test_repr(obj):
     repr(obj)
 
+def test_init_with_readers():
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    readers = [reader1, reader2]
+    obj = ReaderComposite(readers=readers)
+    assert readers is not obj.readers
+    assert readers == obj.readers
+
 def test_event_two_readers_two_events(obj):
     """
     composite
