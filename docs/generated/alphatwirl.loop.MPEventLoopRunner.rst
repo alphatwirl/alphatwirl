@@ -1,5 +1,5 @@
-alphatwirl\.loop\.MPEventLoopRunner
-===================================
+alphatwirl.loop.MPEventLoopRunner
+=================================
 
 .. currentmodule:: alphatwirl.loop
 

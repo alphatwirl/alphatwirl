@@ -1,5 +1,5 @@
-alphatwirl\.loop\.EventLoopProgressReportWriter
-===============================================
+alphatwirl.loop.EventLoopProgressReportWriter
+=============================================
 
 .. currentmodule:: alphatwirl.loop
 

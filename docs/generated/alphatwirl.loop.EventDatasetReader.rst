@@ -1,5 +1,5 @@
-alphatwirl\.loop\.EventDatasetReader
-====================================
+alphatwirl.loop.EventDatasetReader
+==================================
 
 .. currentmodule:: alphatwirl.loop
 

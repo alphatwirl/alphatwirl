@@ -1,5 +1,5 @@
-alphatwirl\.progressbar\.ProgressReportPickup
-=============================================
+alphatwirl.progressbar.ProgressReportPickup
+===========================================
 
 .. currentmodule:: alphatwirl.progressbar
 
@@ -23,5 +23,16 @@ alphatwirl\.progressbar\.ProgressReportPickup
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProgressReportPickup.authkey
+      ~ProgressReportPickup.daemon
+      ~ProgressReportPickup.exitcode
+      ~ProgressReportPickup.ident
+      ~ProgressReportPickup.name
+      ~ProgressReportPickup.pid
    
    

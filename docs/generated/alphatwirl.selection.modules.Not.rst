@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.Not
-===================================
+alphatwirl.selection.modules.Not
+================================
 
 .. currentmodule:: alphatwirl.selection.modules
 

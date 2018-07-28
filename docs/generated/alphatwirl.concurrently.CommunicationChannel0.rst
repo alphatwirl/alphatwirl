@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.CommunicationChannel0
-===============================================
+alphatwirl.concurrently.CommunicationChannel0
+=============================================
 
 .. currentmodule:: alphatwirl.concurrently
 

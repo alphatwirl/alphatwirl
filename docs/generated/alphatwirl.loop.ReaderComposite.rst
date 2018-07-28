@@ -1,5 +1,5 @@
-alphatwirl\.loop\.ReaderComposite
-=================================
+alphatwirl.loop.ReaderComposite
+===============================
 
 .. currentmodule:: alphatwirl.loop
 

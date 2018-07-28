@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.Worker
-================================
+alphatwirl.concurrently.Worker
+==============================
 
 .. automodule:: alphatwirl.concurrently.Worker
 

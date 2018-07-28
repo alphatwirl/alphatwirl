@@ -48,10 +48,8 @@ roottree
 .. autosummary::
    :toctree: generated
 
-   BEvents
    Branch
    Events
-   BuildEvents
 
 selection
 ---------

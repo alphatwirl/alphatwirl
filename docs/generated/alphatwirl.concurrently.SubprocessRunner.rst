@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.SubprocessRunner
-==========================================
+alphatwirl.concurrently.SubprocessRunner
+========================================
 
 .. currentmodule:: alphatwirl.concurrently
 

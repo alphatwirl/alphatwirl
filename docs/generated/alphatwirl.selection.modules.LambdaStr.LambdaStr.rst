@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.LambdaStr\.LambdaStr
-====================================================
+alphatwirl.selection.modules.LambdaStr.LambdaStr
+================================================
 
 .. currentmodule:: alphatwirl.selection.modules.LambdaStr
 

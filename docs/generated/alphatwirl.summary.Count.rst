@@ -1,5 +1,5 @@
-alphatwirl\.summary\.Count
-==========================
+alphatwirl.summary.Count
+========================
 
 .. currentmodule:: alphatwirl.summary
 

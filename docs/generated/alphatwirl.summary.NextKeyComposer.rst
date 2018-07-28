@@ -1,5 +1,5 @@
-alphatwirl\.summary\.NextKeyComposer
-====================================
+alphatwirl.summary.NextKeyComposer
+==================================
 
 .. currentmodule:: alphatwirl.summary
 

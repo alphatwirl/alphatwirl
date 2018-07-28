@@ -1,5 +1,5 @@
-alphatwirl\.binning\.Echo
-=========================
+alphatwirl.binning.Echo
+=======================
 
 .. currentmodule:: alphatwirl.binning
 

@@ -1,5 +1,5 @@
-alphatwirl\.binning\.Binning
-============================
+alphatwirl.binning.Binning
+==========================
 
 .. currentmodule:: alphatwirl.binning
 

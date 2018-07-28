@@ -1,5 +1,5 @@
-alphatwirl\.summary\.WeightCalculatorOne
-========================================
+alphatwirl.summary.WeightCalculatorOne
+======================================
 
 .. currentmodule:: alphatwirl.summary
 

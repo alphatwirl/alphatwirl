@@ -1,5 +1,5 @@
-alphatwirl\.summary\.KeyValueComposer
-=====================================
+alphatwirl.summary.KeyValueComposer
+===================================
 
 .. currentmodule:: alphatwirl.summary
 

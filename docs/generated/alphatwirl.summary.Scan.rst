@@ -1,5 +1,5 @@
-alphatwirl\.summary\.Scan
-=========================
+alphatwirl.summary.Scan
+=======================
 
 .. currentmodule:: alphatwirl.summary
 

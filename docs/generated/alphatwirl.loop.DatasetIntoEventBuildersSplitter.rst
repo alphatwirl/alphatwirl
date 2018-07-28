@@ -1,5 +1,5 @@
-alphatwirl\.loop\.DatasetIntoEventBuildersSplitter
-==================================================
+alphatwirl.loop.DatasetIntoEventBuildersSplitter
+================================================
 
 .. currentmodule:: alphatwirl.loop
 

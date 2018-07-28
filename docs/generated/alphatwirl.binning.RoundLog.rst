@@ -1,5 +1,5 @@
-alphatwirl\.binning\.RoundLog
-=============================
+alphatwirl.binning.RoundLog
+===========================
 
 .. currentmodule:: alphatwirl.binning
 

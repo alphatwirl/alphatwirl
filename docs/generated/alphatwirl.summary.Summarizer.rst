@@ -1,5 +1,5 @@
-alphatwirl\.summary\.Summarizer
-===============================
+alphatwirl.summary.Summarizer
+=============================
 
 .. currentmodule:: alphatwirl.summary
 

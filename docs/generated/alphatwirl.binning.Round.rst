@@ -1,5 +1,5 @@
-alphatwirl\.binning\.Round
-==========================
+alphatwirl.binning.Round
+========================
 
 .. currentmodule:: alphatwirl.binning
 

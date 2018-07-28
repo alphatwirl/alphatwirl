@@ -1,5 +1,5 @@
-alphatwirl\.loop\.EventLoopRunner
-=================================
+alphatwirl.loop.EventLoopRunner
+===============================
 
 .. currentmodule:: alphatwirl.loop
 

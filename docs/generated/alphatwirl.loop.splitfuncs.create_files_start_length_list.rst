@@ -1,5 +1,5 @@
-alphatwirl\.loop\.splitfuncs\.create\_files\_start\_length\_list
-================================================================
+alphatwirl.loop.splitfuncs.create\_files\_start\_length\_list
+=============================================================
 
 .. currentmodule:: alphatwirl.loop.splitfuncs
 

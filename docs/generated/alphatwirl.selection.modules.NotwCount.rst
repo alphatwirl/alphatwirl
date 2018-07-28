@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.NotwCount
-=========================================
+alphatwirl.selection.modules.NotwCount
+======================================
 
 .. currentmodule:: alphatwirl.selection.modules
 

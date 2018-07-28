@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.MultiprocessingDropbox
-================================================
+alphatwirl.concurrently.MultiprocessingDropbox
+==============================================
 
 .. currentmodule:: alphatwirl.concurrently
 

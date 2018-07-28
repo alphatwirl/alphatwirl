@@ -1,5 +1,5 @@
-alphatwirl\.roottree\.Branch
-============================
+alphatwirl.roottree.Branch
+==========================
 
 .. currentmodule:: alphatwirl.roottree
 

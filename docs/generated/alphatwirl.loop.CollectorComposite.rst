@@ -1,5 +1,5 @@
-alphatwirl\.loop\.CollectorComposite
-====================================
+alphatwirl.loop.CollectorComposite
+==================================
 
 .. currentmodule:: alphatwirl.loop
 

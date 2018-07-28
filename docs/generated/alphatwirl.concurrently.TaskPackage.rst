@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.TaskPackage
-=====================================
+alphatwirl.concurrently.TaskPackage
+===================================
 
 .. currentmodule:: alphatwirl.concurrently
 
@@ -19,5 +19,13 @@ alphatwirl\.concurrently\.TaskPackage
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskPackage.args
+      ~TaskPackage.kwargs
+      ~TaskPackage.task
    
    

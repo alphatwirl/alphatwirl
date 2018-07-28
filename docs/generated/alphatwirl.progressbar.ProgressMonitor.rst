@@ -1,5 +1,5 @@
-alphatwirl\.progressbar\.ProgressMonitor
-========================================
+alphatwirl.progressbar.ProgressMonitor
+======================================
 
 .. currentmodule:: alphatwirl.progressbar
 

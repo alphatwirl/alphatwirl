@@ -1,5 +1,5 @@
-alphatwirl\.loop\.NullCollector
-===============================
+alphatwirl.loop.NullCollector
+=============================
 
 .. currentmodule:: alphatwirl.loop
 

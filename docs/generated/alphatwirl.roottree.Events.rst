@@ -1,5 +1,5 @@
-alphatwirl\.roottree\.Events
-============================
+alphatwirl.roottree.Events
+==========================
 
 .. currentmodule:: alphatwirl.roottree
 

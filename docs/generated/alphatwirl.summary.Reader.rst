@@ -1,5 +1,5 @@
-alphatwirl\.summary\.Reader
-===========================
+alphatwirl.summary.Reader
+=========================
 
 .. currentmodule:: alphatwirl.summary
 

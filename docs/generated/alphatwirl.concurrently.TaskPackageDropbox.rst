@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.TaskPackageDropbox
-============================================
+alphatwirl.concurrently.TaskPackageDropbox
+==========================================
 
 .. currentmodule:: alphatwirl.concurrently
 

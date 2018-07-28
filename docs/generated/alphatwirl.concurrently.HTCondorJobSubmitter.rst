@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.HTCondorJobSubmitter
-==============================================
+alphatwirl.concurrently.HTCondorJobSubmitter
+============================================
 
 .. currentmodule:: alphatwirl.concurrently
 

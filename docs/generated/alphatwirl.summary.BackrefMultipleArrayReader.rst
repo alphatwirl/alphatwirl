@@ -1,5 +1,5 @@
-alphatwirl\.summary\.BackrefMultipleArrayReader
-===============================================
+alphatwirl.summary.BackrefMultipleArrayReader
+=============================================
 
 .. currentmodule:: alphatwirl.summary
 

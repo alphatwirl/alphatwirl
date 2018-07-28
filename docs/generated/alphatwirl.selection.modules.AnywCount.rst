@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.AnywCount
-=========================================
+alphatwirl.selection.modules.AnywCount
+======================================
 
 .. currentmodule:: alphatwirl.selection.modules
 

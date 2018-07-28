@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.Count\.Count
-============================================
+alphatwirl.selection.modules.Count.Count
+========================================
 
 .. currentmodule:: alphatwirl.selection.modules.Count
 

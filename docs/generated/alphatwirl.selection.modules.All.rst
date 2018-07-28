@@ -1,5 +1,5 @@
-alphatwirl\.selection\.modules\.All
-===================================
+alphatwirl.selection.modules.All
+================================
 
 .. currentmodule:: alphatwirl.selection.modules
 

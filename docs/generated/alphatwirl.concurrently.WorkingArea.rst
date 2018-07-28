@@ -1,5 +1,5 @@
-alphatwirl\.concurrently\.WorkingArea
-=====================================
+alphatwirl.concurrently.WorkingArea
+===================================
 
 .. currentmodule:: alphatwirl.concurrently
 
