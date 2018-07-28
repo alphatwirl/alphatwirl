@@ -186,3 +186,22 @@ def test_merge(obj):
     assert [mock.call(obj1.readers[2])] == reader3.merge.call_args_list
 
 ##__________________________________________________________________||
+def test_collect(obj):
+    """
+    composite
+        |- reader1
+        |- reader2 (no collect)
+        |- reader3
+    """
+    reader1 = mock.Mock()
+    reader2 = mock.Mock()
+    reader3 = mock.Mock()
+    del reader2.collect
+
+    obj.add(reader1)
+    obj.add(reader2)
+    obj.add(reader3)
+
+    assert [reader1.collect(), None, reader3.collect()] == obj.collect()
+
+##__________________________________________________________________||

@@ -51,4 +51,13 @@ class ReaderComposite(object):
                 continue
             r.merge(o)
 
+    def collect(self):
+        ret = [ ]
+        for reader in self.readers:
+            if not hasattr(reader, 'collect'):
+                ret.append(None)
+                continue
+            ret.append(reader.collect())
+        return ret
+
 ##__________________________________________________________________||
