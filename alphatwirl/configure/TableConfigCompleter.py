@@ -26,10 +26,10 @@ class TableConfigCompleter(object):
 
     """
     def __init__(self,
-                 defaultSummaryClass = Count,
-                 defaultWeight = WeightCalculatorOne(),
-                 defaultOutDir = '.',
-                 createOutFileName = TableFileNameComposer()):
+                 defaultSummaryClass=Count,
+                 defaultWeight=WeightCalculatorOne(),
+                 defaultOutDir='.',
+                 createOutFileName=TableFileNameComposer()):
 
         self.defaultSummaryClass = defaultSummaryClass
         self.defaultWeight = defaultWeight
@@ -45,7 +45,7 @@ class TableConfigCompleter(object):
         )
         return '{}({})'.format(
             self.__class__.__name__,
-            ', '.join(['{} = {!r}'.format(n, v) for n, v in name_value_pairs]),
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
         )
 
     def complete(self, tblcfg):
@@ -87,7 +87,7 @@ class TableConfigCompleter(object):
                     ret['outFileName'] = self.createOutFileName(
                         keyOutColumnNames + valOutColumnNames,
                         keyIndices + valIndices,
-                        prefix = 'tbl_{}'.format(ret['summaryClass'].__name__)
+                        prefix='tbl_{}'.format(ret['summaryClass'].__name__)
                     )
             if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
         return ret
