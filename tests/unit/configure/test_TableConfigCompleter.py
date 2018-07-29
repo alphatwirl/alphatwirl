@@ -264,6 +264,6 @@ binning2 = MockBinning()
 def test_complete(obj, arg, expected):
     actual = obj.complete(arg)
     assert expected == actual
-    assert expected is not actual
+    assert arg is not actual
 
 ##__________________________________________________________________||
