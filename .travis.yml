@@ -58,4 +58,4 @@ deploy:
   on:
     tags: true
     python: 3.6
-    env: ROOT=6.05 PANDAS=0.22
+    condition: $ROOT == '6.05' && $TRAVIS_TAG =~ ^v[0-9]+\.[0-9]+\.[0-9]+$
