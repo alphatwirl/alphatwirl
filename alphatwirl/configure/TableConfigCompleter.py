@@ -36,6 +36,19 @@ class TableConfigCompleter(object):
         self.defaultOutDir = defaultOutDir
         self.createOutFileName = createOutFileName
 
+        self.default_cfg = dict(
+            keyAttrNames=( ),
+            binnings=None,
+            keyIndices=None,
+            valAttrNames=None,
+            valIndices=None,
+            summaryClass=defaultSummaryClass,
+            weight=defaultWeight,
+            outFile=True,
+            sort=True,
+            nevents=None,
+        )
+
     def __repr__(self):
         name_value_pairs = (
             ('defaultSummaryClass', self.defaultSummaryClass),
@@ -49,18 +62,14 @@ class TableConfigCompleter(object):
         )
 
     def complete(self, tblcfg):
-        ret = tblcfg.copy()
+        ret = self.default_cfg.copy()
+        ret.update(tblcfg)
 
-        if 'keyAttrNames' not in ret: ret['keyAttrNames'] = ( )
-        if 'binnings' not in ret: ret['binnings'] = None
+        use_defaultSummaryClass = 'summaryClass' not in tblcfg
 
-        use_defaultSummaryClass = 'summaryClass' not in ret
-        if use_defaultSummaryClass:
-            ret['summaryClass'] = self.defaultSummaryClass
-
-        if 'keyOutColumnNames' not in ret: ret['keyOutColumnNames'] = ret['keyAttrNames']
-        if 'keyIndices' not in ret: ret['keyIndices'] = None
-        if 'valAttrNames' not in ret: ret['valAttrNames'] = None
+        ret['keyOutColumnNames'] = ret.get('keyOutColumnNames', ret['keyAttrNames'])
+        # TODO: this line is not tested well. The following code also passes the tests
+        # ret['keyOutColumnNames'] = ret.get('keyAttrNames', ret['keyAttrNames'])
 
         if 'valOutColumnNames' not in ret:
             if use_defaultSummaryClass:
@@ -68,11 +77,6 @@ class TableConfigCompleter(object):
             else:
                 ret['valOutColumnNames'] = ret['valAttrNames'] if ret['valAttrNames'] is not None else ()
 
-        if 'valIndices' not in ret: ret['valIndices'] = None
-        if 'outFile' not in ret: ret['outFile'] = True
-        if 'weight' not in ret: ret['weight'] = self.defaultWeight
-        if 'sort' not in ret: ret['sort'] = True
-        if 'nevents' not in ret: ret['nevents'] = None
         if ret['outFile']:
             if 'outFileName' not in ret:
                 if use_defaultSummaryClass:
@@ -89,7 +93,8 @@ class TableConfigCompleter(object):
                         keyIndices + valIndices,
                         prefix='tbl_{}'.format(ret['summaryClass'].__name__)
                     )
-            if 'outFilePath' not in ret: ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
+            if 'outFilePath' not in ret:
+                ret['outFilePath'] = os.path.join(self.defaultOutDir, ret['outFileName'])
         return ret
 
 ##__________________________________________________________________||
