@@ -1,5 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
+import alphatwirl
+
 ##__________________________________________________________________||
 class ReaderComposite(object):
 
@@ -16,8 +18,8 @@ class ReaderComposite(object):
 
     """
 
-    def __init__(self):
-        self.readers = []
+    def __init__(self, readers=[]):
+        self.readers = list(readers)
 
     def __repr__(self):
         return '{}({!r})'.format(
@@ -30,21 +32,37 @@ class ReaderComposite(object):
 
     def begin(self, event):
         for reader in self.readers:
-            if not hasattr(reader, 'begin'): continue
+            if not hasattr(reader, 'begin'):
+                continue
             reader.begin(event)
 
     def event(self, event):
         for reader in self.readers:
-            if reader.event(event) is False: break
-
-    def merge(self, other):
-        for r, o in zip(self.readers, other.readers):
-            if not hasattr(r, 'merge'): continue
-            r.merge(o)
+            if reader.event(event) is False:
+                break
 
     def end(self):
         for reader in self.readers:
-            if not hasattr(reader, 'end'): continue
+            if not hasattr(reader, 'end'):
+                continue
             reader.end()
+
+    def merge(self, other):
+        for r, o in zip(self.readers, other.readers):
+            if not hasattr(r, 'merge'):
+                continue
+            r.merge(o)
+
+    def collect(self):
+        ret = [ ]
+        n = len(self.readers)
+        for i, reader in enumerate(self.readers):
+            report = alphatwirl.progressbar.ProgressReport(name='collecting results', done=(i + 1), total=n)
+            alphatwirl.progressbar.report_progress(report)
+            if not hasattr(reader, 'collect'):
+                ret.append(None)
+                continue
+            ret.append(reader.collect())
+        return ret
 
 ##__________________________________________________________________||
