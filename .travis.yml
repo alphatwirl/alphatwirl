@@ -40,7 +40,6 @@ script:
   - pytest --cov
 
 after_success:
-  - rm miniconda.sh
   - coverage combine
   - codecov
 
