@@ -8,6 +8,22 @@ from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class Round(object):
+    """Equal width binning
+
+    Parameters
+    ----------
+    width : float or int, default 1
+        The width.
+    aboundary : float or int, optional
+        A boundary. If not given, width/2 will be used.
+    min : float or int, optional
+    underflow_bin : optional
+    max : float or int, optional
+    overflow_bin : optional
+    valid : function
+
+
+    """
     def __init__(self, width=1, aboundary=None,
                  min=None, underflow_bin=None,
                  max=None, overflow_bin=None,
