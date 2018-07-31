@@ -15,9 +15,10 @@ class Round(object):
 
         self.width = width
         self.aboundary = aboundary
-        self.halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
-        if aboundary is None: aboundary = self.halfWidth
-        self.boundaries = collections.deque([aboundary - width, aboundary, aboundary + width])
+        halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
+        if aboundary is None:
+            aboundary = halfWidth
+        self.boundaries = collections.deque([aboundary])
         self.min = min
         self.underflow_bin = underflow_bin
         self.max = max
