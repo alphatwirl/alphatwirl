@@ -124,7 +124,7 @@ def test_min_float_a_boundary():
     # as a result, obj(1.0) returns
     # 2.0 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 = 0.8000000000000003.
     if 1.0 <= obj(1.0):
-        assert 1.0 == obj(1.0)
+        assert obj(1.1) == obj(1.0)
         assert obj(0.9) is None
     else:
         assert obj(0.9) is not None
