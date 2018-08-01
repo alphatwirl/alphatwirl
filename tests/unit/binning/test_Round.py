@@ -9,7 +9,7 @@ def test_repr():
     obj = Round()
     repr(obj)
 
-def test_call():
+def test_default():
     obj = Round()
     assert 0.5 == obj(0.5)
     assert 0.5 == obj(1.4)
@@ -20,7 +20,7 @@ def test_call():
     assert -1.5 == obj(-1.5)
     assert -2.5 == obj(-1.6)
 
-def test_call_width_2():
+def test_width_2():
     obj = Round(2)
     assert -3 == obj( -2.9)
     assert -3 == obj( -2  )
@@ -32,7 +32,7 @@ def test_call_width_2():
     assert  1 == obj(  2  )
     assert  1 == obj(  2.9)
 
-def test_call_width_2_aboundary_0():
+def test_width_2_aboundary_0():
     obj = Round(2, 0)
     assert -2 == obj( -1.9)
     assert -2 == obj( -1  )
@@ -44,7 +44,7 @@ def test_call_width_2_aboundary_0():
     assert  2 == obj(  3  )
     assert  2 == obj(  3.9)
 
-def test_call_decimal_width():
+def test_decimal_width():
     obj = Round(0.02, 0.005)
     assert  0.005 == pytest.approx(obj(  0.005))
     assert  0.025 == pytest.approx(obj(  0.025))
