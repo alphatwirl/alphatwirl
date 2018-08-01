@@ -206,7 +206,7 @@ def test_max_float_on_a_boundary(width, max_, overflow_bin):
     # the last bin and bin(max) is overflow because the upper edge is
     # open. Otherwise, bin(max) is in the last bin.
     if max_ == obj.boundaries[-1]:
-        assert obj(max_) is overflow_bin
+        assert obj(max_) == overflow_bin
     else:
         assert obj.boundaries[-2] == obj(max_)
 
