@@ -48,6 +48,8 @@ class Round(object):
 
         if self.max is not None:
             self._update_boundaries(self.max)
+            if self.overflow_bin is True:
+                self.overflow_bin = self.boundaries[-1]
 
     def __repr__(self):
         return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
