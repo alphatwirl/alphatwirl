@@ -115,42 +115,52 @@ def test_min_float_not_a_boundary():
 
     assert obj(0.95) is None
 
-def test_min_float_a_boundary():
+@pytest.mark.parametrize('width', [0.1, 0.2])
+@pytest.mark.parametrize('underflow_bin', [None, -1, 0, 0.1])
+def test_min_on_a_boundary(width, underflow_bin):
     # this test is related to
     # the issue 43
     # https://github.com/alphatwirl/alphatwirl/issues/43
 
-    obj = Round(0.2, 2.0, min=1.0)
-    # boundaries = [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0]
+    min_ = 1.0 # on a boundary (within rounding of float)
+    obj = Round(width, 2.0, min=min_, underflow_bin=underflow_bin)
 
-    assert 2.0 == obj(2.0) # this is always true because
-                           # 2.0 is the given boundary.
+    # example boundaries (depending on the architecture)
+    # when width = 1.0:
+    #     boundaries = [
+    #         0.9999999999999992, 1.0999999999999992,
+    #         1.1999999999999993, 1.2999999999999994, 1.3999999999999995,
+    #         1.4999999999999996, 1.5999999999999996, 1.6999999999999997,
+    #         1.7999999999999998, 1.9, 2.0]
+    #   min=1.0 is the 1st element. but the precise value is slightly
+    #   less than 1.0
+    #
+    # when width = 2.0:
+    # boundaries = [
+    #     0.8000000000000003, 1.0000000000000002,
+    #     1.2000000000000002, 1.4000000000000001, 1.6, 1.8, 2.0]
+    #   min=1.0 is the 2nd element, slightly greater than 1.0.
+
+    assert 2.0 == obj(2.0)
+    # this is always true because 2.0 is the given boundary.
 
     # min=1.0 is a boundary, but not necessarily exact.
-    # For example, if
-    # 2.0 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 = 1.0000000000000002
-    # then, 1.0 < 1.0000000000000002
-    # as a result, obj(1.0) returns
-    # 2.0 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 = 0.8000000000000003.
-    if 1.0 == pytest.approx(obj(1.0)):
-        assert obj(1.1) == obj(1.0)
-        assert obj(0.9) is None
+    if min_ == pytest.approx(obj(min_)):
+        assert obj(1.05) == obj(min_)
+        assert obj(0.95) is underflow_bin
     else:
-        assert obj(0.9) is not None
-        assert obj(0.9) == obj(1.0)
+        assert obj(0.95) is not underflow_bin
+        assert obj(0.95) == obj(min_) # in the same bin as min
     # the results depend on the architecture.
     # it is wise to not set min a boundary.
 
-    assert obj(0.7) is None
+    assert obj(0.7) is underflow_bin
 
-def test_min_int_underflow_bin():
-    obj = Round(10, 100, min=30, underflow_bin=0)
-    assert   100 == obj( 100)
-    assert    30 == obj(  30)
-    assert     0 == obj(  29)
-
-    assert  obj(30) == obj.next( 0) # the next to the underflow
-                                    # bin is the bin for the min
+    if underflow_bin is None:
+        assert obj.next(underflow_bin) is None
+    else:
+        assert obj(min_) == obj.next(underflow_bin)
+        # the next to the underflow bin is the bin for the min
 
 def test_max_int():
     obj = Round(10, 100, max=150)
