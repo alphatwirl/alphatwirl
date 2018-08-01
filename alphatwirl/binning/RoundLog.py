@@ -108,13 +108,14 @@ class RoundLog(object):
 
     def next(self, bin):
 
-        bin = self._valid_underflow_overflow(bin)
-
         if bin is None:
             return None
 
         if bin == self.underflow_bin:
             return self.__call__(self.min)
+
+        if bin < 0:
+            return None
 
         if bin == 0:
             return 0
