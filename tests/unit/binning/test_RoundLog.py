@@ -44,7 +44,7 @@ def test_on_boundary():
 @pytest.mark.parametrize('width', [0.1, 0.2])
 @pytest.mark.parametrize('underflow_bin', [None, -1, 0, 0.001])
 def test_min_on_a_boundary(width, underflow_bin):
-    min_ = 10
+    min_ = 10 # on a boundary
     obj = RoundLog(width, 100, min=min_, underflow_bin=underflow_bin)
     # boundaries (on a computer)
     # when width = 0.1:
@@ -76,15 +76,6 @@ def test_min_on_a_boundary(width, underflow_bin):
     else:
         assert obj(min_) == obj.next(underflow_bin)
         # the next to the underflow bin is the bin for the min
-
-def test_min_underflow_bin():
-    obj = RoundLog(0.1, 100, min=10, underflow_bin=0)
-    assert 100 == obj(100)
-    assert 10 == pytest.approx(obj(10))
-    assert 0 == obj(   9)
-
-    assert obj(10) == obj.next(0) # the next to the underflow
-                                   # bin is the bin for the min
 
 def test_max():
     obj = RoundLog(0.1, 100, max=1000)
