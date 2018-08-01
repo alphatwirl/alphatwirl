@@ -15,9 +15,11 @@ class Round(object):
     width : float or int, default 1
         The width.
     aboundary : float or int, optional
-        A boundary. If not given, width/2 will be used.
+        A boundary. If not given, `width`/2 will be used.
     min : float or int, optional
+        The lowest bin will be the bin that `min` falls in.
     underflow_bin : optional
+        The underflow bin
     max : float or int, optional
     overflow_bin : optional
     valid : function
