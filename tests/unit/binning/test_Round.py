@@ -126,7 +126,7 @@ def test_min_on_a_boundary(width, underflow_bin):
     obj = Round(width, 2.0, min=min_, underflow_bin=underflow_bin)
 
     # example boundaries (depending on the architecture)
-    # when width = 1.0:
+    # when width = 0.1:
     #     boundaries = [
     #         0.9999999999999992, 1.0999999999999992,
     #         1.1999999999999993, 1.2999999999999994, 1.3999999999999995,
@@ -135,10 +135,10 @@ def test_min_on_a_boundary(width, underflow_bin):
     #   min=1.0 is the 1st element. but the precise value is slightly
     #   less than 1.0
     #
-    # when width = 2.0:
-    # boundaries = [
-    #     0.8000000000000003, 1.0000000000000002,
-    #     1.2000000000000002, 1.4000000000000001, 1.6, 1.8, 2.0]
+    # when width = 0.2:
+    #     boundaries = [
+    #         0.8000000000000003, 1.0000000000000002,
+    #         1.2000000000000002, 1.4000000000000001, 1.6, 1.8, 2.0]
     #   min=1.0 is the 2nd element, slightly greater than 1.0.
 
     assert 2.0 == obj(2.0)
@@ -149,8 +149,8 @@ def test_min_on_a_boundary(width, underflow_bin):
         assert obj(1.05) == obj(min_)
         assert obj(0.95) is underflow_bin
     else:
+        assert obj(0.95) == obj(min_)
         assert obj(0.95) is not underflow_bin
-        assert obj(0.95) == obj(min_) # in the same bin as min
     # the results depend on the architecture.
     # it is wise to not set min a boundary.
 
@@ -169,92 +169,72 @@ def test_max_int():
     assert  None == obj( 500)
 
     assert  None == obj.next(140) # the next to the last bin is
-                                           # the overflow bin
+                                  # the overflow bin
 
-def test_max_float():
-    obj = Round(0.2, 2.0, max=2.5)
-    # boundaries = [2.0, 2.2, 2.4, 2.6]
-    # max=2.5 is not a boundary
+@pytest.mark.parametrize('width', [0.1, 0.2])
+@pytest.mark.parametrize('max_', [1.6, 2.4])
+@pytest.mark.parametrize('overflow_bin', [None, True, 3.0])
+def test_max_float_on_a_boundary(width, max_, overflow_bin):
 
-    assert 2.0 == obj(2.0)
-    # this is always true because 2.0 is the given boundary.
+    # max_ on a boundary (within rounding of float)
+    obj = Round(width, 1.0, max=max_, overflow_bin=overflow_bin)
 
-    assert 2.4 == pytest.approx(obj(2.5))
-    assert 2.4 == pytest.approx(obj(2.55))
+    # example boundaries (depending on the architecture)
+    # when width = 0.1:
+    #     boundaries = [
+    #         1.0, 1.1, 1.2000000000000002, 1.3000000000000003,
+    #         1.4000000000000004, 1.5000000000000004, 1.6000000000000005,
+    #         1.7000000000000006, 1.8000000000000007, 1.9000000000000008,
+    #         2.000000000000001, 2.100000000000001, 2.200000000000001,
+    #         2.300000000000001, 2.4000000000000012]
+    #   slightly greater than 1.6 and 2.4
+    #
+    # when width = 0.2:
+    #     boundaries = [
+    #         1.0, 1.2, 1.4, 1.5999999999999999, 1.7999999999999998,
+    #         1.9999999999999998, 2.1999999999999997, 2.4]
+    #   slightly less than 1.6, exactly 2.4!
 
-    assert obj(2.61) is None
+    #
+    if overflow_bin is True:
+        overflow_bin = obj.boundaries[-1]
 
-def test_max_not_on_a_boundary_overflow_bin():
-    obj = Round(10, 100, max=145, overflow_bin=150)
-    assert   100 == obj( 100)
-    assert   140 == obj( 149) # the last bin
-    assert   150 == obj( 150) # overflow
-    assert   150 == obj( 500) # overflow
+    assert 1.0 == obj(1.0)
+    # this is always true because 1.0 is the given boundary.
 
-    assert  150 == obj.next(140) # the next to the last
-                                          # bin is the overflow
-                                          # bin
+    # If the max is exactly a boundary, the max is the upper edge of
+    # the last bin and bin(max) is overflow because the upper edge is
+    # open. Otherwise, bin(max) is in the last bin.
+    if max_ == obj.boundaries[-1]:
+        assert obj(max_) is overflow_bin
+    else:
+        assert obj.boundaries[-2] == obj(max_)
 
-    assert  150 == obj.next(150) # the next to the overflow
-                                          # bin is the overflow bin
+    # The max is either the upper or lower edge of the last bin, but
+    # not necessarily exact.
+    if not max_ == pytest.approx(obj.boundaries[-1]):
+        assert max_ == pytest.approx(obj.boundaries[-2])
 
-def test_max_on_a_boundary_overflow_bin():
-    obj = Round(10, 100, max=150, overflow_bin=150)
-    assert   100 == obj( 100)
-    assert   140 == obj( 149) # the last bin
-    assert   150 == obj( 150) # overflow
-    assert   150 == obj( 500) # overflow
+    # the next to the last bin is the overflow bin
+    assert obj.next(obj.boundaries[-2]) is overflow_bin
 
-    assert  150 == obj.next(140) # the next to the last
-                                          # bin is the overflow
-                                          # bin
+    # the next to the overflow bin is the overflow bin
+    assert obj.next(overflow_bin) is overflow_bin
 
-    assert  150 == obj.next(150) # the next to the overflow
-                                          # bin is the overflow bin
+@pytest.mark.parametrize('overflow_bin', [None, True, 150, 300])
+def test_max_int_on_a_boundary(overflow_bin):
+    # max is always exactly a boundary
+    max_ = 150
+    obj = Round(10, 100, max=max_, overflow_bin=overflow_bin)
+    assert 100 == obj(100)
 
-def test_max_not_on_a_boundary_overflow_bin_true():
-    obj = Round(10, 100, max=145, overflow_bin=True)
-    print(obj.boundaries)
-    assert   100 == obj( 100)
-    assert   140 == obj( 149) # the last bin
-    assert   150 == obj( 150) # overflow
-    assert   150 == obj( 500) # overflow
+    if overflow_bin is True:
+        overflow_bin = obj.boundaries[-1]
 
-    assert  150 == obj.next(140) # the next to the last
-                                          # bin is the overflow
-                                          # bin
-
-    assert  150 == obj.next(150) # the next to the overflow
-                                          # bin is the overflow bin
-
-def test_max_on_a_boundary_overflow_bin_true():
-    obj = Round(10, 100, max=150, overflow_bin=True)
-    print(obj.boundaries)
-    assert   100 == obj( 100)
-    assert   140 == obj( 149) # the last bin
-    assert   150 == obj( 150) # overflow
-    assert   150 == obj( 500) # overflow
-
-    assert  150 == obj.next(140) # the next to the last
-                                          # bin is the overflow
-                                          # bin
-
-    assert  150 == obj.next(150) # the next to the overflow
-                                          # bin is the overflow bin
-
-def test_max_overflow_bin_999():
-    obj = Round(10, 100, max=150, overflow_bin=999)
-    assert   100 == obj( 100)
-    assert   140 == obj( 149) # the last bin
-    assert   999 == obj( 150) # overflow
-    assert   999 == obj( 500) # overflow
-
-    assert  999 == obj.next(140) # the next to the last
-                                          # bin is the overflow
-                                          # bin
-
-    assert  999 == obj.next(999) # the next to the overflow
-                                          # bin is the overflow bin
+    assert max_ == obj.boundaries[-1]
+    assert obj(max_) is overflow_bin
+    assert obj.next(obj.boundaries[-2]) is overflow_bin
+    assert obj.next(overflow_bin) is overflow_bin
 
 def test_inf():
     obj = Round(10, 100)
