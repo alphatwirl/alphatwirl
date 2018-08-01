@@ -29,7 +29,6 @@ class RoundLog(object):
         the overflow bin if the `val` is greater than or equal to the upper
         edge of the highest bin.
     overflow_bin : optional
-
         The overflow bin if `overflow_bin` is any value other than `True`. If
         `overflow_bin` is `True`, the overflow bin will be the upper edge of
         the highest bin. When `max` is given, the `__call__(val)` returns the
