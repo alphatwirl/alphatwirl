@@ -141,16 +141,16 @@ def test_min_float_a_boundary():
     # the results depend on the architecture.
     # it is wise to not set min a boundary.
 
-def test_min_underflow_bin():
+def test_min_int_underflow_bin():
     obj = Round(10, 100, min=30, underflow_bin=0)
     assert   100 == obj( 100)
     assert    30 == obj(  30)
     assert     0 == obj(  29)
 
     assert  obj(30) == obj.next( 0) # the next to the underflow
-                                             # bin is the bin for the min
+                                    # bin is the bin for the min
 
-def test_max():
+def test_max_int():
     obj = Round(10, 100, max=150)
     assert   100 == obj( 100)
     assert  None == obj( 150)
