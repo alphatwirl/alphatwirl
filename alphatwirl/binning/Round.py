@@ -83,6 +83,9 @@ class Round(object):
 
     def _lower_boundary(self, val):
 
+        if val is None:
+            return None
+
         if not self.valid(val):
             return None
 
