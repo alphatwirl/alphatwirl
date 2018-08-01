@@ -83,19 +83,48 @@ def test_min_on_a_boundary(width, underflow_bin):
         # the next to the underflow bin is the bin for the min
 
 def test_max():
-    obj = RoundLog(0.1, 100, max=1000)
-    assert 100 == obj(100)
-    assert obj(1000) is None
-    assert obj(5000) is None
+    obj = RoundLog(0.1, 100, max=900)
+    # max=900 is not a boundary
 
-def test_max_overflow_bin():
-    obj = RoundLog(0.1, 100, max=1000, overflow_bin=1000)
     assert 100 == obj(100)
-    assert 1000 == obj(1000)
-    assert 1000 == obj(5000)
 
-    assert 1000 == obj.next(1000) # the next to the overflow bin
-                                  # is the overflow bin
+    assert obj(900) is not None
+    assert obj(1100) is None
+
+@pytest.mark.parametrize('width', [0.1, 0.2])
+@pytest.mark.parametrize('log10_max', [1.6, 2.4])
+@pytest.mark.parametrize('overflow_bin', [None, True, 1000])
+def test_max_float_on_a_boundary(width, log10_max, overflow_bin):
+
+    max_ = 10**log10_max # max_ on a boundary (within rounding of float)
+    obj = RoundLog(width, 10.0, max=max_, overflow_bin=overflow_bin)
+
+    log10_boundaries = obj._round.boundaries
+
+    if overflow_bin is True:
+        overflow_bin = 10**log10_boundaries[-1]
+
+    assert 10.0 == obj(10.0)
+    # this is always true because it is the given boundary.
+
+    # If the max is exactly a boundary, the max is the upper edge of
+    # the last bin and bin(max) is overflow because the upper edge is
+    # open. Otherwise, bin(max) is in the last bin.
+    if log10_max == log10_boundaries[-1]:
+        assert obj(max_) == overflow_bin
+    else:
+        assert 10**log10_boundaries[-2] == obj(max_)
+
+    # The max is either the upper or lower edge of the last bin, but
+    # not necessarily exact.
+    if not log10_max == pytest.approx(log10_boundaries[-1]):
+        assert log10_max == pytest.approx(log10_boundaries[-2])
+
+    # the next to the last bin is the overflow bin
+    assert obj.next(10**log10_boundaries[-2]) == overflow_bin
+
+    # the next to the overflow bin is the overflow bin
+    assert obj.next(overflow_bin) == overflow_bin
 
 def test_inf():
     obj = RoundLog(0.1, 100)

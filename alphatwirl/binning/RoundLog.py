@@ -58,6 +58,14 @@ class RoundLog(object):
         else:
             self.min_bin_log10_lowedge = self._round(math.log10(self.min))
 
+        if self.max is None:
+            self.max_bin_log10_upedge = None
+        else:
+            self._round(math.log10(self.max)) # = self._round.boundaries[-2]
+            self.max_bin_log10_upedge = self._round.boundaries[-1]
+            if self.overflow_bin is True:
+                self.overflow_bin = 10**self.max_bin_log10_upedge
+
     def __repr__(self):
         return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
             self.__class__.__name__,
@@ -100,8 +108,8 @@ class RoundLog(object):
             if not self.min_bin_log10_lowedge <= math.log10(val):
                 return self.underflow_bin
 
-        if self.max is not None:
-            if not val < self.max:
+        if self.max_bin_log10_upedge:
+            if not math.log10(val) < self.max_bin_log10_upedge:
                 return self.overflow_bin
 
         return val
@@ -123,12 +131,17 @@ class RoundLog(object):
         if bin == self.overflow_bin:
             return self.overflow_bin
 
-        bin = math.log10(bin)
-        bin = self._round(bin)
+        log10_bin = self._round(math.log10(bin))
 
-        if bin is None:
+        if log10_bin is None:
             return None
 
-        return 10**self._round.next(bin)
+        log10_next = self._round.next(log10_bin)
+
+        if self.max_bin_log10_upedge:
+            if log10_next == self.max_bin_log10_upedge:
+                return self.overflow_bin
+
+        return 10**log10_next
 
 ##__________________________________________________________________||
