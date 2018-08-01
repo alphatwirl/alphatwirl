@@ -44,8 +44,13 @@ def test_on_boundary():
 @pytest.mark.parametrize('width', [0.1, 0.2])
 @pytest.mark.parametrize('underflow_bin', [None, -1, 0, 0.001])
 def test_min_on_a_boundary(width, underflow_bin):
+    # this test is related to
+    # the issue 43
+    # https://github.com/alphatwirl/alphatwirl/issues/43
+
     min_ = 10 # on a boundary
     obj = RoundLog(width, 100, min=min_, underflow_bin=underflow_bin)
+
     # boundaries (on a computer)
     # when width = 0.1:
     #   [10.00, 12.59, 15.85, 19.95, 25.12, 31.62,
