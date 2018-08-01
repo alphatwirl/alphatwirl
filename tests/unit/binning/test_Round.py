@@ -159,6 +159,19 @@ def test_max_int():
     assert  None == obj.next(140) # the next to the last bin is
                                            # the overflow bin
 
+def test_max_float():
+    obj = Round(0.2, 2.0, max=2.5)
+    # boundaries = [2.0, 2.2, 2.4, 2.6]
+    # max=2.5 is not a boundary
+
+    assert 2.0 == obj(2.0)
+    # this is always true because 2.0 is the given boundary.
+
+    assert 2.4 == pytest.approx(obj(2.5))
+    assert 2.4 == pytest.approx(obj(2.55))
+
+    assert obj(2.61) is None
+
 def test_max_overflow_bin():
     obj = Round(10, 100, max=150, overflow_bin=150)
     assert   100 == obj( 100)
