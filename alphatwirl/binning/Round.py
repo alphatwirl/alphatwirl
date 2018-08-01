@@ -17,13 +17,28 @@ class Round(object):
     aboundary : float or int, optional
         A boundary. If not given, `width`/2 will be used.
     min : float or int, optional
-        The lowest bin will be the bin that `min` falls in.
+        The lowest bin will be the bin that `min` falls in. If given,
+        `__call__(val)` returns `underflow_bin` if the `val` is less than the
+        lower edge of the lowest bin.
     underflow_bin : optional
-        The underflow bin
+        The underflow bin. When `min` is given, the `__call__(val)` returns
+        `underflow_bin` if the `val` is less than the lower edge of the lowest
+        bin.
     max : float or int, optional
+        The highest bin will be the bin that `max` falls in except when `max`
+        is one of boundaries. When `max` is one of boundaries, the highest bin
+        is the bin whose upper edge is `max`. If given, `__call__(val)` returns
+        the overflow bin if the `val` is greater than or equal to the upper
+        edge of the highest bin.
     overflow_bin : optional
-    valid : function
 
+        The overflow bin if `overflow_bin` is any value other than `True`. If
+        `overflow_bin` is `True`, the overflow bin will be the upper edge of
+        the highest bin. When `max` is given, the `__call__(val)` returns the
+        overflow bin if the `val` is greater than or equal to the upper edge of
+        the highest bin.
+    valid : function, optional
+        Boolean function to test if value is valid
 
     """
     def __init__(self, width=1, aboundary=None,

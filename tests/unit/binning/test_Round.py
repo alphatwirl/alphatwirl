@@ -200,6 +200,36 @@ def test_max_on_a_boundary_overflow_bin():
     assert  150 == obj.next(150) # the next to the overflow
                                           # bin is the overflow bin
 
+def test_max_not_on_a_boundary_overflow_bin_true():
+    obj = Round(10, 100, max=145, overflow_bin=True)
+    print(obj.boundaries)
+    assert   100 == obj( 100)
+    assert   140 == obj( 149) # the last bin
+    assert   150 == obj( 150) # overflow
+    assert   150 == obj( 500) # overflow
+
+    assert  150 == obj.next(140) # the next to the last
+                                          # bin is the overflow
+                                          # bin
+
+    assert  150 == obj.next(150) # the next to the overflow
+                                          # bin is the overflow bin
+
+def test_max_on_a_boundary_overflow_bin_true():
+    obj = Round(10, 100, max=150, overflow_bin=True)
+    print(obj.boundaries)
+    assert   100 == obj( 100)
+    assert   140 == obj( 149) # the last bin
+    assert   150 == obj( 150) # overflow
+    assert   150 == obj( 500) # overflow
+
+    assert  150 == obj.next(140) # the next to the last
+                                          # bin is the overflow
+                                          # bin
+
+    assert  150 == obj.next(150) # the next to the overflow
+                                          # bin is the overflow bin
+
 def test_max_overflow_bin_999():
     obj = Round(10, 100, max=150, overflow_bin=999)
     assert   100 == obj( 100)
