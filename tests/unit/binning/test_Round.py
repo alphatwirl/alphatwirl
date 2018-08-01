@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import numbers
 import pytest
 
 from alphatwirl.binning import Round
@@ -51,7 +52,15 @@ def test_call_decimal_width():
     assert -0.055 == pytest.approx(obj( -0.048))
     assert -0.015 == pytest.approx(obj( -0.015))
 
-def test_onBoundary():
+def test_keep_aboundary_int():
+    # This test is to make sure boundaries are int
+    # width/2 is int in both python 2 and 3
+    # https://www.python.org/dev/peps/pep-0238/
+    obj = Round(4)
+    assert 2 == (obj(4))
+    assert isinstance(obj(4), numbers.Integral)
+
+def test_on_boundary():
     obj = Round()
     assert  -1.5 == obj( -1.5)
     assert  -0.5 == obj( -0.5)

@@ -31,8 +31,8 @@ class Round(object):
 
         self.width = width
         self.aboundary = aboundary
-        halfWidth = self.width/2 if self.width % 2 == 0 else float(self.width)/2
         if aboundary is None:
+            halfWidth = self.width//2 if self.width % 2 == 0 else float(self.width)/2
             aboundary = halfWidth
         self.boundaries = collections.deque([aboundary])
         self.min = min
