@@ -20,6 +20,11 @@ class RoundLog(object):
         self.overflow_bin = overflow_bin
         self.valid = valid
 
+        if self.min is None:
+            self.min_bin_log10_lowedge = None
+        else:
+            self.min_bin_log10_lowedge = self._round(math.log10(self.min))
+
     def __repr__(self):
         return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
             self.__class__.__name__,
@@ -58,8 +63,8 @@ class RoundLog(object):
         if val == 0:
             return 0
 
-        if self.min is not None:
-            if not self.min <= val:
+        if self.min_bin_log10_lowedge:
+            if not self.min_bin_log10_lowedge <= math.log10(val):
                 return self.underflow_bin
 
         if self.max is not None:

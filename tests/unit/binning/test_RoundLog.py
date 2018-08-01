@@ -40,12 +40,21 @@ def test_valid():
 def test_onBoundary():
     obj = RoundLog(0.1, 100)
     assert 100 == obj(100)
-#
-def test_min():
-    obj = RoundLog(0.1, 100, min=10)
+
+def test_min_float_a_boundary():
+    obj = RoundLog(0.2, 100, min=10)
+    # boundaries = [6.31, 10.00, 15.85, 25.12, 39.81,  63.10, 100.0]
+
     assert 100 == obj(100)
-    assert 10 == pytest.approx(obj(  10))
-    assert obj(9) is None
+    # 100 is the given boundary
+
+    # min=10 is a boundaries, but not necessarily exact.
+    if 10 <= obj(10):
+        assert obj(11) == obj(10)
+        assert obj(9) is None
+    else:
+        assert obj(9) is not None
+        assert obj(9) == obj(10)
 
 def test_min_underflow_bin():
     obj = RoundLog(0.1, 100, min=10, underflow_bin=0)
