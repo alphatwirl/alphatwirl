@@ -132,7 +132,7 @@ def test_min_float_a_boundary():
     # then, 1.0 < 1.0000000000000002
     # as a result, obj(1.0) returns
     # 2.0 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 - 0.2 = 0.8000000000000003.
-    if 1.0 <= obj(1.0):
+    if 1.0 == pytest.approx(obj(1.0)):
         assert obj(1.1) == obj(1.0)
         assert obj(0.9) is None
     else:
@@ -140,6 +140,8 @@ def test_min_float_a_boundary():
         assert obj(0.9) == obj(1.0)
     # the results depend on the architecture.
     # it is wise to not set min a boundary.
+
+    assert obj(0.7) is None
 
 def test_min_int_underflow_bin():
     obj = Round(10, 100, min=30, underflow_bin=0)
