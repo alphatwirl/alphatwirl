@@ -12,22 +12,28 @@ def is_ROOT_null_pointer(tobject):
         return True
 
 ##__________________________________________________________________||
-def get_entries_in_tree_in_file(path, tree_name):
+def get_entries_in_tree_in_file(path, tree_name, raises=False):
 
     ##
     file_ = ROOT.TFile.Open(path)
     if is_ROOT_null_pointer(file_) or file_.IsZombie():
         logger = logging.getLogger(__name__)
-        logger.warning('cannot open {}'.format(path))
+        msg = 'cannot open {}'.format(path)
+        if raises:
+            logger.error(msg)
+            raise OSError(msg)
+        logger.warning(msg)
         return None
 
     ##
     tree = file_.Get(tree_name)
     if is_ROOT_null_pointer(tree):
         logger = logging.getLogger(__name__)
-        logger.warning(
-            'cannot find tree "{}" '
-            'in {}'.format(tree_name, path))
+        msg = 'cannot find tree "{}" in {}'.format(tree_name, path)
+        if raises:
+            logger.error(msg)
+            raise ReferenceError(msg)
+        logger.warning(msg)
         return None
 
     ##
