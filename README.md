@@ -8,7 +8,25 @@
 A python library for summarizing event data into multi-dimensional categorical data
 
 ### Description
-_AlphaTwirl_ is a python library that loops over event data and summarizes them into multi-dimensional categorical data as data frames. Event data, input to AlphaTwirl, are data with one entry (or row) for one event: for example, data in [ROOT](https://root.cern.ch/) [TTrees](https://root.cern.ch/doc/master/classTTree.html) with one entry per collision event of an [LHC](https://home.cern/topics/large-hadron-collider) experiment at [CERN](http://home.cern/). Event data are often large&mdash;too large to be loaded in memory&mdash;because they have as many entries as events. Multi-dimensional categorical data, the output of AlphaTwirl, have one row for one category. They are usually small&mdash;small enough to be loaded in memory&mdash;because they only have as many rows as categories. Users can, for example, import them as data frames into [R](https://www.r-project.org/) and [pandas](http://pandas.pydata.org/), which usually load all data in memory, and can perform categorical data analyses with a rich set of data operations available in R and pandas.
+_AlphaTwirl_ is a python library that summarizes event data into multi-dimensional categorical data as data frames. Event data, input to AlphaTwirl, are data with one entry (or row) for one event: for example, data in [ROOT](https://root.cern.ch/) [TTrees](https://root.cern.ch/doc/master/classTTree.html) with one entry per collision event of an [LHC](https://home.cern/topics/large-hadron-collider) experiment at [CERN](http://home.cern/). Event data are often large&mdash;too large to be loaded in memory&mdash;because they have as many entries as events. Multi-dimensional categorical data, the output of AlphaTwirl, have one row for one category. They are usually small&mdash;small enough to be loaded in memory&mdash;because they only have as many rows as categories. Users can, for example, import them as data frames into [R](https://www.r-project.org/) and [pandas](http://pandas.pydata.org/), which usually load all data in memory, and can perform categorical data analyses with a rich set of data operations available in R and pandas.
+
+****
+
+### Quick start
+
+- Jupyter Notebook: [*Quick start of AlphaTwirl with qtwirl*](https://github.com/alphatwirl/notebook-tutorial-2018-08/blob/master/tutorial_01.ipynb)<br />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[<img src="https://swanserver.web.cern.ch/swanserver/images/badge_swan_white_150.png" width="150">](https://cern.ch/swanserver/cgi-bin/go?projurl=https://github.com/alphatwirl/notebook-tutorial-2018-08.git)
+
+****
+
+### CHEP 2018
+
+- Tai Sakuma, *"AlphaTwirl: a python library for summarizing event data into
+  multi-dimensional categorical data"*, **CHEP 2018**, 9-13 July 2018
+  Sofia, Bulgaria, ([indico](https://indico.cern.ch/event/587955/contributions/2937634/))
+
+[<img src="images/tai_20180709_CHEP2018_corrected_01_1900.png" width="200">](https://indico.cern.ch/event/587955/contributions/2937634/)
 
 ****
 
