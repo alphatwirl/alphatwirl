@@ -22,13 +22,11 @@ _AlphaTwirl_ is a python library that summarizes event data into multi-dimension
 
 ### CHEP 2018
 
-[<img src="images/tai_20180709_CHEP2018_corrected_01_1900.png" style="border: 1px solid #b0b0b0; float:right;" width="200">](https://indico.cern.ch/event/587955/contributions/2937634/)
-
 - Tai Sakuma, *"AlphaTwirl: a python library for summarizing event data into
   multi-dimensional categorical data"*, **CHEP 2018**, 9-13 July 2018
   Sofia, Bulgaria, ([indico](https://indico.cern.ch/event/587955/contributions/2937634/))
 
-<div style="clear:both;"></div>
+[<img src="images/tai_20180709_CHEP2018_corrected_01_1900.png" width="200">](https://indico.cern.ch/event/587955/contributions/2937634/)
 
 ****
 
