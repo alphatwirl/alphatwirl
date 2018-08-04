@@ -5,14 +5,20 @@ language: python
 matrix:
     include:
         - python: 2.7
+          env: ROOT=6.04 PANDAS=0.23.4
+        - python: 2.7
           env: ROOT=6.04 PANDAS=0.22
         - python: 2.7
           env: ROOT=None PANDAS=None
+        - python: 3.6
+          env: ROOT=6.05 PANDAS=0.23.4
         - python: 3.6
           env: ROOT=6.05 PANDAS=0.22
         - python: 3.6
           env: ROOT=None PANDAS=None
     allow_failures:
+        - python: 2.7
+          env: ROOT=6.04 PANDAS=0.23.4
         - python: 2.7
           env: ROOT=6.04 PANDAS=0.22
         
