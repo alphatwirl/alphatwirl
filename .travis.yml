@@ -34,9 +34,10 @@ install:
   - conda info -a
   - conda config --add channels http://conda.anaconda.org/NLeSC  
   - conda config --set show_channel_urls yes
-  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION} $([ "$ROOT" != "None" ] && echo "root=${ROOT}") $([ "$PANDAS" != "None" ] && echo "pandas=${PANDAS}") sphinx numpy
+  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION} $([ "$ROOT" != "None" ] && echo "root=${ROOT}")
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
+  - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
   - pip install pytest
   - pip install codecov
   - pip install pytest-cov
