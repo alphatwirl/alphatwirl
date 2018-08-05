@@ -101,24 +101,24 @@ class RoundLog(object):
                 return None
 
         if val <= 0.0:
-            if self.min:
+            if self.min is not None:
                 return self.underflow_bin
             elif val == 0.0:
                 return 0
             else:
                 return None
 
-        if self.min:
+        if self.min is not None:
             if math.log10(val) < self.min_bin_log10_lowedge:
                 return self.underflow_bin
 
         if math.isinf(val):
-            if self.max:
+            if self.max is not None:
                 return self.overflow_bin
             else:
                 return None
 
-        if self.max:
+        if self.max is not None:
             if self.max_bin_log10_upedge <= math.log10(val):
                 return self.overflow_bin
 
@@ -148,7 +148,7 @@ class RoundLog(object):
 
         log10_next = self._round.next(log10_bin)
 
-        if self.max_bin_log10_upedge:
+        if self.max is not None:
             if log10_next == self.max_bin_log10_upedge:
                 return self.overflow_bin
 
