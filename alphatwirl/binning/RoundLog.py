@@ -1,6 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import math
-import logging
 
 from .Round import Round
 
@@ -101,25 +100,26 @@ class RoundLog(object):
             if not self.valid(val):
                 return None
 
-        if self.min_bin_log10_lowedge:
-            if not val > 0.0:
+        if val <= 0.0:
+            if self.min:
                 return self.underflow_bin
-            if not self.min_bin_log10_lowedge <= math.log10(val):
+            elif val == 0.0:
+                return 0
+            else:
+                return None
+
+        if self.min:
+            if math.log10(val) < self.min_bin_log10_lowedge:
                 return self.underflow_bin
 
-        if val < 0.0: # faster than val < 0 (comparing with int)
-            return None
-
-        if val == 0.0:  # faster than val == 0 (comparing with int)
-            return 0
-
-        if self.max_bin_log10_upedge:
-            if math.isinf(val):
-                logger = logging.getLogger(__name__)
-                msg = 'val={}. will return the overflow bin {}'.format(val, self.overflow_bin)
-                logger.warning(msg)
+        if math.isinf(val):
+            if self.max:
                 return self.overflow_bin
-            if not math.log10(val) < self.max_bin_log10_upedge:
+            else:
+                return None
+
+        if self.max:
+            if self.max_bin_log10_upedge <= math.log10(val):
                 return self.overflow_bin
 
         return val
