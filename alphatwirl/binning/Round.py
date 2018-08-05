@@ -5,7 +5,7 @@ import collections
 import logging
 
 from .ReturnTrue import ReturnTrue
-from .search import linear_search
+from .search import binary_search
 
 ##__________________________________________________________________||
 class Round(object):
@@ -104,7 +104,7 @@ class Round(object):
 
         self._update_boundaries(val)
 
-        idx = linear_search(val, self.boundaries)
+        idx = binary_search(val, self.boundaries)
         return self.boundaries[idx]
 
 
