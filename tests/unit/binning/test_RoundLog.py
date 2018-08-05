@@ -153,12 +153,23 @@ def test_max_float_on_a_boundary(width, log10_max, overflow_bin):
     # the next to the overflow bin is the overflow bin
     assert obj.next(overflow_bin) == overflow_bin
 
-def test_inf():
-    obj = RoundLog(0.1, 100)
-    assert obj(float('inf')) is None
-    assert obj(float('-inf')) is None
-    assert obj.next(float('inf')) is None
-    assert obj.next(float('-inf')) is None
+@pytest.mark.parametrize('max_', [None, 1000])
+@pytest.mark.parametrize('overflow_bin', [None, True, 1000])
+def test_inf(max_, overflow_bin):
+    obj = RoundLog(0.1, 10.0, max=max_, overflow_bin=overflow_bin)
+
+    log10_boundaries = obj._round.boundaries
+    if overflow_bin is True:
+        overflow_bin = 10**log10_boundaries[-1]
+
+    if max_ is None:
+        assert obj(float('inf')) is None
+        assert obj(float('-inf')) is None
+        assert obj.next(float('inf')) is None
+        assert obj.next(float('-inf')) is None
+    else:
+        assert obj(float('inf')) == overflow_bin
+        assert obj(float('-inf')) is None
 
 ##__________________________________________________________________||
 def to_be_benchmarked(obj):

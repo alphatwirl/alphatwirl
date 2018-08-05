@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import math
+import logging
 
 from .Round import Round
 
@@ -50,21 +51,22 @@ class RoundLog(object):
         self.valid = valid
 
         if self.min is None:
-            self.underflow_bin = None
             self.min_bin_log10_lowedge = None
+            self.underflow_bin = None
         else:
-            self.underflow_bin = underflow_bin
             self.min_bin_log10_lowedge = self._round(math.log10(self.min))
+            self.underflow_bin = underflow_bin
 
         if self.max is None:
-            self.overflow_bin = None
             self.max_bin_log10_upedge = None
+            self.overflow_bin = None
         else:
-            self.overflow_bin = overflow_bin
             self._round(math.log10(self.max)) # = self._round.boundaries[-2]
             self.max_bin_log10_upedge = self._round.boundaries[-1]
-            if self.overflow_bin is True:
+            if overflow_bin is True:
                 self.overflow_bin = 10**self.max_bin_log10_upedge
+            else:
+                self.overflow_bin = overflow_bin
 
     def __repr__(self):
         return '{}(width={!r}, aboundary={!r}, min={!r}, underflow_bin={!r}, max={!r}, overflow_bin={!r}, valid={!r})'.format(
@@ -112,6 +114,11 @@ class RoundLog(object):
             return 0
 
         if self.max_bin_log10_upedge:
+            if math.isinf(val):
+                logger = logging.getLogger(__name__)
+                msg = 'val={}. will return the overflow bin {}'.format(val, self.overflow_bin)
+                logger.warning(msg)
+                return self.overflow_bin
             if not math.log10(val) < self.max_bin_log10_upedge:
                 return self.overflow_bin
 
