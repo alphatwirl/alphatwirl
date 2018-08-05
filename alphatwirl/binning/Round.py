@@ -5,6 +5,7 @@ import collections
 import logging
 
 from .ReturnTrue import ReturnTrue
+from .search import binary_search
 
 ##__________________________________________________________________||
 class Round(object):
@@ -103,14 +104,9 @@ class Round(object):
 
         self._update_boundaries(val)
 
-        bin = self.boundaries[0]
-        for b in self.boundaries:
-            if b <= val:
-                bin = b
-            else:
-                break
+        idx = binary_search(val, self.boundaries)
+        return self.boundaries[idx]
 
-        return bin
 
     def _update_boundaries(self, val):
 

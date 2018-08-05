@@ -43,6 +43,7 @@ install:
   - pip install pytest-cov
   - pip install pytest-mock
   - pip install pytest-console-scripts
+  - pip install pytest-benchmark
 
 script:
   - pytest --cov
