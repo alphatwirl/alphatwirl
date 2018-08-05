@@ -103,14 +103,18 @@ class Round(object):
 
         self._update_boundaries(val)
 
-        bin = self.boundaries[0]
-        for b in self.boundaries:
-            if b <= val:
-                bin = b
+        idx = self._linear_search(val, self.boundaries)
+        return self.boundaries[idx]
+
+    def _linear_search(self, val, boundaries):
+        ret = 0
+        for i, low in enumerate(boundaries):
+            if low <= val:
+                ret = i
             else:
                 break
+        return ret
 
-        return bin
 
     def _update_boundaries(self, val):
 
