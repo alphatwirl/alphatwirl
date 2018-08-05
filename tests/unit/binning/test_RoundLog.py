@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import numpy as np
 import pytest
 
 from alphatwirl.binning import RoundLog
@@ -132,5 +133,29 @@ def test_inf():
     assert obj(float('-inf')) is None
     assert obj.next(float('inf')) is None
     assert obj.next(float('-inf')) is None
+
+##__________________________________________________________________||
+def to_be_benchmarked(obj):
+    val = np.random.exponential(scale=100)
+    obj(val)
+
+@pytest.mark.skip(reason='for optimizing for speed')
+def test_benchmark(benchmark):
+    np.random.seed(0)
+    obj = RoundLog(0.1, 100)
+    benchmark(to_be_benchmarked, obj)
+
+##__________________________________________________________________||
+def to_be_profiled():
+    obj = RoundLog(0.1, 100)
+    for i in range(500000):
+        val = np.random.exponential(scale=100)
+        obj(val)
+
+@pytest.mark.skip(reason='for optimizing for speed')
+def test_profile():
+    np.random.seed(0)
+    from alphatwirl.misc import profile_func
+    print(profile_func(to_be_profiled))
 
 ##__________________________________________________________________||
