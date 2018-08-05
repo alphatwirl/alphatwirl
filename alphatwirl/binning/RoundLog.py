@@ -97,10 +97,10 @@ class RoundLog(object):
             if not self.valid(val):
                 return None
 
-        if val < 0:
+        if val < 0.0: # faster than val < 0 (comparing with int)
             return None
 
-        if val == 0:
+        if val == 0.0:  # faster than val == 0 (comparing with int)
             return 0
 
         if self.min_bin_log10_lowedge:

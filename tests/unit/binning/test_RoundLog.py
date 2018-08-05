@@ -25,6 +25,9 @@ def test_next():
 def test_zero():
     obj = RoundLog()
     assert 0 == obj(0)
+    assert 0 == obj(-0)
+    assert 0 == obj(0.0)
+    assert 0 == obj(-0.0)
 
     assert 0 == obj.next(0) # next to 0 is 0 unless 0 is the
                             # underflow bin
