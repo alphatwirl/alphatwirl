@@ -2,7 +2,6 @@
 import math
 
 from .Round import Round
-from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
 class RoundLog(object):
@@ -41,7 +40,7 @@ class RoundLog(object):
     def __init__(self, width=0.1, aboundary=1,
                  min=None, underflow_bin=None,
                  max=None, overflow_bin=None,
-                 valid=ReturnTrue()):
+                 valid=None):
 
         self._round = Round(width=width, aboundary=math.log10(aboundary))
         self.width = width
@@ -94,8 +93,9 @@ class RoundLog(object):
 
     def _valid_underflow_overflow(self, val):
 
-        if not self.valid(val):
-            return None
+        if self.valid:
+            if not self.valid(val):
+                return None
 
         if val < 0:
             return None

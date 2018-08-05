@@ -4,7 +4,6 @@ import math
 import collections
 import logging
 
-from .ReturnTrue import ReturnTrue
 from .search import binary_search
 
 ##__________________________________________________________________||
@@ -44,7 +43,7 @@ class Round(object):
     def __init__(self, width=1, aboundary=None,
                  min=None, underflow_bin=None,
                  max=None, overflow_bin=None,
-                 valid=ReturnTrue()):
+                 valid=None):
 
         self.width = width
         self.aboundary = aboundary
@@ -86,8 +85,9 @@ class Round(object):
         if val is None:
             return None
 
-        if not self.valid(val):
-            return None
+        if self.valid:
+            if not self.valid(val):
+                return None
 
         if self.min is not None:
             if not self.boundaries[0] <= val:
