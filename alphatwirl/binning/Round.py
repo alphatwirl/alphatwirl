@@ -5,6 +5,7 @@ import collections
 import logging
 
 from .ReturnTrue import ReturnTrue
+from .search import linear_search
 
 ##__________________________________________________________________||
 class Round(object):
@@ -103,17 +104,8 @@ class Round(object):
 
         self._update_boundaries(val)
 
-        idx = self._linear_search(val, self.boundaries)
+        idx = linear_search(val, self.boundaries)
         return self.boundaries[idx]
-
-    def _linear_search(self, val, boundaries):
-        ret = 0
-        for i, low in enumerate(boundaries):
-            if low <= val:
-                ret = i
-            else:
-                break
-        return ret
 
 
     def _update_boundaries(self, val):
