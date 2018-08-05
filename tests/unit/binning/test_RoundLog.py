@@ -22,19 +22,41 @@ def test_next():
     assert 25.11886431509581 == pytest.approx(obj.next(22.3872113856834))
     assert 251.18864315095848 == pytest.approx(obj.next(223.872113856834))
 
-def test_zero():
-    obj = RoundLog()
-    assert 0 == obj(0)
-    assert 0 == obj(-0)
-    assert 0 == obj(0.0)
-    assert 0 == obj(-0.0)
+@pytest.mark.parametrize('min_', [None, 10])
+@pytest.mark.parametrize('underflow_bin', [None, -1, 0, 0.001])
+def test_zero(min_, underflow_bin):
+    obj = RoundLog(0.1, 100, min_, underflow_bin)
+    if min_ is None:
+        assert 0 == obj(0)
+        assert 0 == obj(-0)
+        assert 0 == obj(0.0)
+        assert 0 == obj(-0.0)
+    else:
+        assert obj(0) is underflow_bin
+        assert obj(-0) is underflow_bin
+        assert obj(0.0) is underflow_bin
+        assert obj(-0.0) is underflow_bin
 
-    assert 0 == obj.next(0) # next to 0 is 0 unless 0 is the
-                            # underflow bin
+    if min_ is None:
+        assert 0 == obj.next(0) # next to 0 is 0 unless 0 is the
+                                # underflow bin
+    else:
+        if underflow_bin is None:
+            assert obj.next(underflow_bin) is None
+        else:
+            assert obj(min_) == obj.next(underflow_bin)
+            # the next to the underflow bin is the bin for the min
 
-def test_negative():
-    obj = RoundLog()
-    assert obj(-1) is None
+@pytest.mark.parametrize('min_', [None, 10])
+@pytest.mark.parametrize('underflow_bin', [None, -1, 0, 0.001])
+def test_negative(min_, underflow_bin):
+    obj = RoundLog(0.1, 100, min_, underflow_bin)
+    if min_ is None:
+        assert obj(-2.1) is None
+        assert obj(float('-inf')) is None
+    else:
+        assert obj(-2.1) is underflow_bin
+        assert obj(float('-inf')) is underflow_bin
 
 def test_valid():
     obj = RoundLog(valid=lambda x: x >= 10)
