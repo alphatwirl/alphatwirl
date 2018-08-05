@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import numpy as np
+import functools
 import pytest
 
 from alphatwirl.binning import RoundLog
@@ -146,16 +147,16 @@ def test_benchmark(benchmark):
     benchmark(to_be_benchmarked, obj)
 
 ##__________________________________________________________________||
-def to_be_profiled():
-    obj = RoundLog(0.1, 100)
-    for i in range(500000):
-        val = np.random.exponential(scale=100)
+def to_be_profiled(obj, vals):
+    for val in vals:
         obj(val)
 
 @pytest.mark.skip(reason='for optimizing for speed')
 def test_profile():
     np.random.seed(0)
     from alphatwirl.misc import profile_func
-    print(profile_func(to_be_profiled))
+    obj = RoundLog(0.05, 100)
+    vals = np.random.exponential(scale=100, size=500000)
+    print(profile_func(functools.partial(to_be_profiled, obj, vals)))
 
 ##__________________________________________________________________||
