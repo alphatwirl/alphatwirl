@@ -17,29 +17,26 @@ matrix:
         - python: 3.6
           env: ROOT=None PANDAS=None
     allow_failures:
-        # - python: 2.7
-        #   env: ROOT=6.04 PANDAS=0.23.3
-        # - python: 2.7
-        #   env: ROOT=6.04 PANDAS=0.22
+        - python: 2.7
+          env: ROOT=6.04 PANDAS=0.23.3
+        - python: 2.7
+          env: ROOT=6.04 PANDAS=0.22
         
 install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda2-4.1.11-Linux-x86_64.sh -O miniconda.sh; fi
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
 
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
-  - conda info -a
   - conda config --set always_yes yes --set changeps1 no
-  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION}
+  - conda update -q conda
+  - conda info -a
+  - conda config --add channels http://conda.anaconda.org/NLeSC  
+  - conda config --set show_channel_urls yes
+  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION} $([ "$ROOT" != "None" ] && echo "root=${ROOT}") numpy
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
-  - conda install -q psutil
-  - conda config --add channels http://conda.anaconda.org/NLeSC
-  - conda config --set show_channel_urls yes
-  - if [ "$ROOT" != "None" ]; then conda install -q root=="${ROOT}"; fi
-  - conda install -q numpy
-  - pip install -U pip
   - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
   - pip install -r requirements/test.txt
 
@@ -54,12 +51,6 @@ cache: apt
 # branches:
 #   only:
 #     - v0.9.x
-
-addons:
-  apt:
-    packages:
-    - build-essential
-    - python-psutil
 
 deploy:
   provider: pypi
