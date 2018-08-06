@@ -39,6 +39,7 @@ install:
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
   - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
+  - pip install -U pip
   - pip install -r requirements/test.txt
 
 script:
