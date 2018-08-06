@@ -53,6 +53,12 @@ cache: apt
 #   only:
 #     - v0.9.x
 
+addons:
+  apt:
+    packages:
+    - build-essential
+    - python-psutil
+
 deploy:
   provider: pypi
   user: tai.sakuma
