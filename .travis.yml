@@ -29,17 +29,18 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  # - conda update -q conda
   - conda info -a
-  - conda install -y -q psutil
-  - conda config --add channels http://conda.anaconda.org/NLeSC
-  - conda config --set show_channel_urls yes
-  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION} $([ "$ROOT" != "None" ] && echo "root=${ROOT}") numpy
+  - conda config --set always_yes yes --set changeps1 no
+  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION}
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
-  - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
+  - conda install -q psutil
+  - conda config --add channels http://conda.anaconda.org/NLeSC
+  - conda config --set show_channel_urls yes
+  - if [ "$ROOT" != "None" ]; then conda install -q root=="${ROOT}"; fi
+  - conda install -q numpy
   - pip install -U pip
+  - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
   - pip install -r requirements/test.txt
 
 script:
