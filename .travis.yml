@@ -38,12 +38,7 @@ install:
   - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
   - source activate testenv
   - if [ "$PANDAS" != "None" ]; then pip install pandas=="${PANDAS}"; fi
-  - pip install pytest
-  - pip install codecov
-  - pip install pytest-cov
-  - pip install pytest-mock
-  - pip install pytest-console-scripts
-  - pip install pytest-benchmark
+  - pip install -r requirements/test.txt
 
 script:
   - pytest --cov
