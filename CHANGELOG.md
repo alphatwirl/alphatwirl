@@ -13,6 +13,9 @@
 - optimized `RoundLog` and `Round` for speed, e.g., replacing linear
   search with binary search
 - updated zenodo badge, using all-versions badge
+- organized requirements [\#35](https://github.com/alphatwirl/alphatwirl/issues/35)
+    - requirements/doc.txt for sphinx doc, used at Read the Docs
+    - requirements/test.txt for test, used at travis-ci
 - added CHANGELOG.md
 
 ## [0.18.6] - 2018-08-05
