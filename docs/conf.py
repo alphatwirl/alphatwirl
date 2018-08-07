@@ -51,7 +51,7 @@ pygments_style = 'sphinx'
 
 todo_include_todos = True
 
-autodoc_mock_imports = ['ROOT']
+autodoc_mock_imports = ['numpy', 'ROOT']
 
 ##__________________________________________________________________||
 html_theme = "sphinx_rtd_theme"
