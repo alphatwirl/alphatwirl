@@ -36,12 +36,22 @@ project = u'AlphaTwirl'
 copyright = u'2018, Tai Sakuma'
 author = u'Tai Sakuma'
 
-import alphatwirl
-version = '.'.join(alphatwirl.__version__.split('.')[0:2])
+##__________________________________________________________________||
+# import alphatwirl/_version.py without importing alphatwirl
+path = os.path.dirname(os.path.abspath('.'))
+path = os.path.join(path, 'alphatwirl')
+sys.path.insert(0, path)
+del path
+from _version import get_versions
+sys.path.pop()
+
+version = '.'.join(get_versions()['version'].split('.')[0:2])
 # e.g., '0.11'
 
-release = '.'.join(alphatwirl.__version__.split('+')[0:1])
+release = '.'.join(get_versions()['version'].split('+')[0:1])
 # e.g., '0.11.0.dev'
+
+##__________________________________________________________________||
 
 language = None
 
@@ -51,7 +61,7 @@ pygments_style = 'sphinx'
 
 todo_include_todos = True
 
-autodoc_mock_imports = ['ROOT']
+autodoc_mock_imports = ['numpy', 'ROOT']
 
 ##__________________________________________________________________||
 html_theme = "sphinx_rtd_theme"
