@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
-[diff from the previous release](https://github.com/alphatwirl/alphatwirl/compare/v0.18.6...master)
+[diff from the previous release](https://github.com/alphatwirl/alphatwirl/compare/v0.18.7...master)
+
+## [0.18.7] - 2018-08-07
+
+[diff from the previous release](https://github.com/alphatwirl/alphatwirl/compare/v0.18.6...v0.18.7)
 
 - changed behavior of `RoundLog`
     - returns the underflow bin for `0` and negative values if `min`
