@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changs from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.18.7...master))
+- fixed an import error at rtd
 
 ## [0.18.7] - 2018-08-07
 
