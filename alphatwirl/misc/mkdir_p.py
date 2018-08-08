@@ -13,11 +13,12 @@ def mkdir_p(path):
         os.makedirs(path)
         logger.info('created a directory, {}'.format(path))
 
-    except OSError as exc: # Python >2.5
+    except OSError as exc:
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             loglevel = logging.getLevelName('DEBUG') - 1 # one level below DEBUG
             logger.log(loglevel, 'tried to create a directory, {}. already existed'.format(path))
             pass
-        else: raise
+        else:
+            raise
 
 ##__________________________________________________________________||
