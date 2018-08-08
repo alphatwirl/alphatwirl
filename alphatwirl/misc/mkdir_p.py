@@ -6,6 +6,9 @@ import logging
 ##__________________________________________________________________||
 def mkdir_p(path):
 
+    if not path:
+        return
+
     logger = logging.getLogger(__name__)
 
     # http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
