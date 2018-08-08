@@ -3,6 +3,12 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.18.8...master))
+- removed deprecated sub-packages: `cmsedm`, `delphes`, `heppyresult`.
+    - the contents of these packages can be found, respectively, in
+      the following repositories:
+        - https://github.com/alphatwirl/atcmsedm
+        - https://github.com/alphatwirl/atdelphes
+        - https://github.com/alphatwirl/atheppy
 
 ## [0.18.8] - 2018-08-08
 

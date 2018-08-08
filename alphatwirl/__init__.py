@@ -15,14 +15,11 @@ from . import concurrently
 from . import configure
 from . import roottree
 from . import selection
-from . import heppyresult
 from . import datasetloop
 from . import loop
 from . import parallel
 from . import progressbar
 from . import summary
-from . import delphes
-from . import cmsedm
 from .misc import mkdir_p
 from .misc import list_to_aligned_text
 from .misc import quote_string
