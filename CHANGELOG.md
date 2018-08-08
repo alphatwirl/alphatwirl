@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.18.8...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.19.0...master))
+
+## [0.19.0] - 2018-08-08
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.19.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.18.8...v0.19.0))
 - removed deprecated sub-packages: `cmsedm`, `delphes`, `heppyresult`.
     - the contents of these packages can be found, respectively, in
       the following repositories:
