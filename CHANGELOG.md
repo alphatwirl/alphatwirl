@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.19.0...master))
+- `mkdir_p()` checks if `path` is empty
+- added unittest for `mkdir_p()`
 
 ## [0.19.0] - 2018-08-08
 
