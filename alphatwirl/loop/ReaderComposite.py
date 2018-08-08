@@ -18,7 +18,9 @@ class ReaderComposite(object):
 
     """
 
-    def __init__(self, readers=[]):
+    def __init__(self, readers=None):
+        if readers is None:
+            readers = [ ]
         self.readers = list(readers)
 
     def __repr__(self):
