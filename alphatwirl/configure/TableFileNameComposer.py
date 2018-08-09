@@ -11,19 +11,19 @@ class TableFileNameComposer(object):
 
     """
     def __init__(self,
-                 default_prefix = 'tbl_n',
-                 default_suffix = 'txt',
-                 default_var_separator = '.',
-                 default_idx_separator = '-',
+                 default_prefix='tbl_n',
+                 default_suffix='txt',
+                 default_var_separator='.',
+                 default_idx_separator='-',
     ):
         self.default_prefix = default_prefix
         self.default_suffix = default_suffix
         self.default_var_separator = default_var_separator
         self.default_idx_separator = default_idx_separator
 
-    def __call__(self, columnNames, indices = None,
-                 prefix = None, suffix = None,
-                 var_separator = None, idx_separator = None
+    def __call__(self, columnNames, indices=None,
+                 prefix=None, suffix=None,
+                 var_separator=None, idx_separator=None
     ):
         prefix = self.default_prefix if prefix is None else prefix
         suffix = self.default_suffix if suffix is None else suffix
