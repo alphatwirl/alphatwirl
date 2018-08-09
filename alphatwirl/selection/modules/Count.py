@@ -26,12 +26,26 @@ class Count(object):
         return copy.deepcopy(self)
 
     def add(self, selection):
+        init_result = self._init_result_for_selection(selection)
+        self._results.append(init_result)
+
+    def _init_result_for_selection(self, selection):
+        #
         class_name = selection.__class__.__name__
-        selection_name = selection.name if hasattr(selection, 'name') and selection.name is not None else ''
+
+        #
+        if hasattr(selection, 'name') and selection.name is not None:
+            selection_name = selection.name
+        else:
+            selection_name = ''
+
+        #
         depth = 1
         pass_ = 0
         total = 0
-        self._results.append([depth, class_name, selection_name, pass_, total])
+
+        #
+        return [depth, class_name, selection_name, pass_, total]
 
     def count(self, pass_):
         for r, p in zip(self._results, pass_):
