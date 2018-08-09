@@ -136,8 +136,7 @@ class NotwCount(object):
             name = 'Not'
         self.name = name
         self.selection = selection
-        self.count = Count()
-        self.count.add(selection)
+        self.count = Count(selections=[self.selection])
         self.collector = collector
 
     def __repr__(self):
