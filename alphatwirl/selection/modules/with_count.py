@@ -9,12 +9,13 @@ class WithCountBase(object):
 
     """
 
-    def __init__(self, name, selections):
+    def __init__(self, name, selections, collector):
         self.name = name
         if selections is None:
             selections = [ ]
         self.selections = list(selections)
         self.count = Count()
+        self.collector = collector
 
         self._repr_pairs = [
             ('name', self.name),
@@ -86,10 +87,10 @@ class AllwCount(WithCountBase):
 
     """
 
-    def __init__(self, name='All', selections=None):
+    def __init__(self, name='All', selections=None, collector=None):
         if name is None:
             name = 'All'
-        super(AllwCount, self).__init__(name, selections)
+        super(AllwCount, self).__init__(name, selections, collector)
 
     def __call__(self, event):
         ret = True
@@ -108,10 +109,10 @@ class AnywCount(WithCountBase):
 
     """
 
-    def __init__(self, name='Any', selections=None):
+    def __init__(self, name='Any', selections=None, collector=None):
         if name is None:
             name = 'Any'
-        super(AnywCount, self).__init__(name, selections)
+        super(AnywCount, self).__init__(name, selections, collector)
 
     def __call__(self, event):
         ret = False
@@ -130,13 +131,14 @@ class NotwCount(object):
 
     """
 
-    def __init__(self, selection, name='Not'):
+    def __init__(self, selection, name='Not', collector=None):
         if name is None:
             name = 'Not'
         self.name = name
         self.selection = selection
         self.count = Count()
         self.count.add(selection)
+        self.collector = collector
 
     def __repr__(self):
         return '{}(name={!r}, selection={!r}), count={!r}'.format(

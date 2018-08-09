@@ -9,6 +9,24 @@ except ImportError:
 from alphatwirl.selection.modules import AllwCount, AnywCount, NotwCount
 
 ##__________________________________________________________________||
+@pytest.mark.parametrize('Class', [AllwCount, AnywCount],
+                         ids=[AllwCount.__name__, AnywCount.__name__])
+def test_allany_init_collector(Class):
+    obj = Class()
+    assert obj.collector is None
+    col = mock.sentinel.col
+    obj = Class(collector=col)
+    assert obj.collector is col
+
+def test_not_init_collector():
+    sel = mock.Mock()
+    obj = NotwCount(selection=sel)
+    assert obj.collector is None
+    col = mock.sentinel.col
+    obj = NotwCount(selection=sel, collector=col)
+    assert obj.collector is col
+
+##__________________________________________________________________||
 class MockEventSelection(object):
     def begin(self, event): pass
     def __call__(self, event): pass
