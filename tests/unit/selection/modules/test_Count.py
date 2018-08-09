@@ -13,6 +13,27 @@ from alphatwirl.selection.modules.Count import Count
 def obj():
     return Count()
 
+@pytest.fixture()
+def sel1():
+    ret= mock.Mock()
+    ret.name ='sel1'
+    ret.__class__.__name__ = 'MockEventSelection'
+    return ret
+
+@pytest.fixture()
+def sel2():
+    ret= mock.Mock()
+    ret.name ='sel2'
+    ret.__class__.__name__ = 'MockEventSelection'
+    return ret
+
+@pytest.fixture()
+def sel3():
+    ret= mock.Mock()
+    ret.name = '' # empty string
+    ret.__class__.__name__ = 'MockEventSelection'
+    return ret
+
 def test_repr(obj):
     repr(obj)
 
@@ -90,10 +111,7 @@ def test_insert_at_end(obj):
 def test_empty(obj):
     obj.count(pass_=[ ])
 
-def test_one(obj):
-    sel1 = mock.Mock()
-    sel1.name ='sel1'
-    sel1.__class__.__name__ = 'MockEventSelection'
+def test_one(obj, sel1):
     obj.add(sel1)
 
     assert [
@@ -110,19 +128,7 @@ def test_one(obj):
         [1, 'MockEventSelection', 'sel1', 1, 2],
     ] == obj._results
 
-def test_three(obj):
-    sel1 = mock.Mock()
-    sel1.name ='sel1'
-    sel1.__class__.__name__ = 'MockEventSelection'
-
-    sel2 = mock.Mock()
-    sel2.name ='sel2'
-    sel2.__class__.__name__ = 'MockEventSelection'
-
-    sel3 = mock.Mock()
-    sel3.name =''
-    sel3.__class__.__name__ = 'MockEventSelection'
-
+def test_three(obj, sel1, sel2, sel3):
     obj.add(sel1)
     obj.add(sel2)
     obj.add(sel3)
