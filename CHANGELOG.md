@@ -9,6 +9,7 @@
 - added unittest for `mkdir_p()`
 - avoided mutable default of `ReaderComposite`, `AllwCount`,
   `AnywCount`.
+- added a decorator `_removed()`
 
 ## [0.19.0] - 2018-08-08
 
