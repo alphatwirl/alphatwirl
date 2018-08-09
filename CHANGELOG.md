@@ -10,9 +10,11 @@
 - avoided mutable default of `ReaderComposite`, `AllwCount`,
   `AnywCount`.
 - removed the implementation of
-  `build_progressMonitor_communicationChannel()`
-    - was deprecated
-    - now, raises `RuntimeError` if it is called
+  `build_progressMonitor_communicationChannel()`, `atdeprecated()`,
+  `atdeprecated_func_option()`, `atdeprecated_class_method_option()`,
+  `atrenamed_func_option()`, `atrenamed_class_method_option()`
+    - were deprecated
+    - now, raise `RuntimeError` if called
 - added a decorator `_removed()`
 
 ## [0.19.0] - 2018-08-08
