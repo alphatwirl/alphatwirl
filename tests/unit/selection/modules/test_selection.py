@@ -25,7 +25,7 @@ allany_classe_ids = all_classe_ids + any_classe_ids
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('Class', allany_classes, ids=allany_classe_ids)
-def test_allany_init(Class):
+def test_allany_init_name(Class):
     obj = Class()
     assert obj.name is not None
     obj = Class(name='name_of_object')
@@ -33,6 +33,10 @@ def test_allany_init(Class):
     obj = Class(name=None)
     assert obj.name is not None
 
+@pytest.mark.parametrize('Class', allany_classes, ids=allany_classe_ids)
+def test_allany_init_selection(Class):
+    obj = Class()
+    assert [ ] == obj.selections
     sel1 = mock.sentinel.sel1
     sel2 = mock.sentinel.sel2
     obj = Class(selections=(sel1, sel2))

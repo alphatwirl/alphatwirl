@@ -11,6 +11,8 @@ class WithCountBase(object):
 
     def __init__(self, name, selections):
         self.name = name
+        if selections is None:
+            selections = [ ]
         self.selections = list(selections)
         self.count = Count()
 
@@ -84,7 +86,7 @@ class AllwCount(WithCountBase):
 
     """
 
-    def __init__(self, name='All', selections=[ ]):
+    def __init__(self, name='All', selections=None):
         if name is None:
             name = 'All'
         super(AllwCount, self).__init__(name, selections)
@@ -106,7 +108,7 @@ class AnywCount(WithCountBase):
 
     """
 
-    def __init__(self, name='Any', selections=[ ]):
+    def __init__(self, name='Any', selections=None):
         if name is None:
             name = 'Any'
         super(AnywCount, self).__init__(name, selections)
