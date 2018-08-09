@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import functools
 
 ##__________________________________________________________________||
 class TableFileNameComposer(object):
@@ -14,65 +15,76 @@ class TableFileNameComposer(object):
                  default_prefix='tbl_n',
                  default_suffix='txt',
                  default_var_separator='.',
-                 default_idx_separator='-',
-    ):
-        self.default_prefix = default_prefix
-        self.default_suffix = default_suffix
-        self.default_var_separator = default_var_separator
-        self.default_idx_separator = default_idx_separator
+                 default_idx_separator='-'):
+
+        self._imp = functools.partial(
+            _imp, prefix=default_prefix, suffix=default_suffix,
+            var_separator=default_var_separator,
+            idx_separator=default_idx_separator)
 
     def __call__(self, columnNames, indices=None,
                  prefix=None, suffix=None,
-                 var_separator=None, idx_separator=None
-    ):
-        prefix = self.default_prefix if prefix is None else prefix
-        suffix = self.default_suffix if suffix is None else suffix
-        var_separator = self.default_var_separator if var_separator is None else var_separator
-        idx_separator = self.default_idx_separator if idx_separator is None else idx_separator
+                 var_separator=None, idx_separator=None):
 
-        if not columnNames:
-            return prefix + '.' + suffix # e.g. "tbl_n_component.txt"
+        kwargs = { }
+        if prefix is not None:
+            kwargs['prefix'] = prefix
+        if suffix is not suffix:
+            kwargs['suffix'] = suffix
+        if var_separator is not None:
+            kwargs['var_separator'] = var_separator
+        if idx_separator is not None:
+            kwargs['idx_separator'] = idx_separator
 
-        if indices is None:
-            colidxs = columnNames
-            # e.g., ('var1', 'var2', 'var3'),
+        return self._imp(columnNames, indices=indices, **kwargs)
 
-            middle = var_separator.join(colidxs)
-            # e.g., 'var1.var2.var3'
 
-            ret = prefix + var_separator + middle + '.' + suffix
-            # e.g., 'tbl_n_component.var1.var2.var3.txt'
+def _imp(columnNames, indices=None, prefix=None, suffix=None,
+         var_separator=None, idx_separator=None):
 
-            return ret
+    if not columnNames:
+        return prefix + '.' + suffix # e.g. "tbl_n_component.txt"
 
-        # e.g.,
-        # columnNames = ('var1', 'var2', 'var3', 'var4', 'var5'),
-        # indices = (1, None, '*', '(*)', '\\1')
-
-        idx_str = indices
-        # e.g., (1, None, '*', '(*)', '\\1')
-
-        idx_str = ['w' if i == '*' else i for i in idx_str]
-        # e..g, [1, None, 'w', '(*)', '\\1']
-
-        idx_str = ['wp' if i == '(*)' else i for i in idx_str]
-        # e.g., [1, None, 'w', 'wp', '\\1']
-
-        idx_str = ['b{}'.format(i[1:]) if isinstance(i, str) and i.startswith('\\') else i for i in idx_str]
-        # e.g., [1, None, 'w', 'wp', 'b1']
-
-        idx_str = ['' if i is None else '{}{}'.format(idx_separator, i) for i in idx_str]
-        # e.g., ['-1', '', '-w', '-wp', '-b1']
-
-        colidxs = [n + i for n, i in zip(columnNames, idx_str)]
-        # e.g., ['var1-1', 'var2', 'var3-w', 'var4-wp', 'var5-b1']
+    if indices is None:
+        colidxs = columnNames
+        # e.g., ('var1', 'var2', 'var3'),
 
         middle = var_separator.join(colidxs)
-        # e.g., 'var1-1.var2.var3-w.var4-wp.var5-b1'
+        # e.g., 'var1.var2.var3'
 
-        ret =  prefix + var_separator + middle + '.' + suffix
-        # e.g., tbl_n_component.var1-1.var2.var3-w.var4-wp.var5-b1.txt
+        ret = prefix + var_separator + middle + '.' + suffix
+        # e.g., 'tbl_n_component.var1.var2.var3.txt'
 
         return ret
+
+    # e.g.,
+    # columnNames = ('var1', 'var2', 'var3', 'var4', 'var5'),
+    # indices = (1, None, '*', '(*)', '\\1')
+
+    idx_str = indices
+    # e.g., (1, None, '*', '(*)', '\\1')
+
+    idx_str = ['w' if i == '*' else i for i in idx_str]
+    # e..g, [1, None, 'w', '(*)', '\\1']
+
+    idx_str = ['wp' if i == '(*)' else i for i in idx_str]
+    # e.g., [1, None, 'w', 'wp', '\\1']
+
+    idx_str = ['b{}'.format(i[1:]) if isinstance(i, str) and i.startswith('\\') else i for i in idx_str]
+    # e.g., [1, None, 'w', 'wp', 'b1']
+
+    idx_str = ['' if i is None else '{}{}'.format(idx_separator, i) for i in idx_str]
+    # e.g., ['-1', '', '-w', '-wp', '-b1']
+
+    colidxs = [n + i for n, i in zip(columnNames, idx_str)]
+    # e.g., ['var1-1', 'var2', 'var3-w', 'var4-wp', 'var5-b1']
+
+    middle = var_separator.join(colidxs)
+    # e.g., 'var1-1.var2.var3-w.var4-wp.var5-b1'
+
+    ret =  prefix + var_separator + middle + '.' + suffix
+    # e.g., tbl_n_component.var1-1.var2.var3-w.var4-wp.var5-b1.txt
+
+    return ret
 
 ##__________________________________________________________________||
