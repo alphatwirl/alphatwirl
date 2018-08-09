@@ -3,9 +3,12 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.19.0...master))
+- added `collect()` to `AllwCount`, `AnywCount`, `NotwCount`
+  [\#33](https://github.com/alphatwirl/alphatwirl/issues/33)
 - `mkdir_p()` checks if `path` is empty
 - added unittest for `mkdir_p()`
-- avoided mutable default in `ReaderComposite`
+- avoided mutable default of `ReaderComposite`, `AllwCount`,
+  `AnywCount`.
 
 ## [0.19.0] - 2018-08-08
 
