@@ -123,24 +123,26 @@ def _renamed_class_method_option(old, new, msg=''):
     return _imp
 
 ##__________________________________________________________________||
-@_deprecated(msg='use _deprecated() instead')
+from .removal import _removed
+
+@_removed(msg='use _deprecated() instead')
 def atdeprecated(*args, **kwargs):
-    return _deprecated(*args, **kwargs)
+    pass
 
-@_deprecated(msg='use _deprecated_func_option() instead')
+@_removed(msg='use _deprecated_func_option() instead')
 def atdeprecated_func_option(*args, **kwargs):
-    return _deprecated_func_option(*args, **kwargs)
+    pass
 
-@_deprecated(msg='use _deprecated_class_method_option() instead')
+@_removed(msg='use _deprecated_class_method_option() instead')
 def atdeprecated_class_method_option(*args, **kwargs):
-    return _deprecated_class_method_option(*args, **kwargs)
+    pass
 
-@_deprecated(msg='use _renamed_func_option() instead')
+@_removed(msg='use _renamed_func_option() instead')
 def atrenamed_func_option(*args, **kwargs):
-    return _renamed_func_option(*args, **kwargs)
+    pass
 
-@_deprecated(msg='use _renamed_class_method_option() instead')
+@_removed(msg='use _renamed_class_method_option() instead')
 def atrenamed_class_method_option(*args, **kwargs):
-    return _renamed_class_method_option(*args, **kwargs)
+    pass
 
 ##__________________________________________________________________||
