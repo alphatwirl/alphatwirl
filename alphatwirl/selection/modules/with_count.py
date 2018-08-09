@@ -14,7 +14,7 @@ class WithCountBase(object):
         if selections is None:
             selections = [ ]
         self.selections = list(selections)
-        self.count = Count()
+        self.count = Count(selections=self.selections)
         self.collector = collector
 
         self._repr_pairs = [

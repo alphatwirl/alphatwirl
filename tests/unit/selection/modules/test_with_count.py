@@ -33,15 +33,22 @@ class MockEventSelection(object):
     def end(self): pass
 
 ##__________________________________________________________________||
-def test_all():
+@pytest.mark.parametrize('method', [1, 2, 3])
+def test_all(method):
     sel1 = mock.Mock(spec=MockEventSelection)
     sel2 = mock.Mock(spec=MockEventSelection)
     sel1.name ='sel1'
     sel2.name =''
 
-    obj = AllwCount()
-    obj.add(sel1)
-    obj.add(sel2)
+    if method == 1:
+        obj = AllwCount()
+        obj.add(sel1)
+        obj.add(sel2)
+    elif method == 2:
+        obj = AllwCount(selections=[sel1, sel2])
+    elif method == 3:
+        obj = AllwCount(selections=[sel1])
+        obj.add(sel2)
 
     event = mock.Mock()
 
@@ -79,15 +86,22 @@ def test_all():
     ] == count._results
 
 ##__________________________________________________________________||
-def test_any():
+@pytest.mark.parametrize('method', [1, 2, 3])
+def test_any(method):
     sel1 = mock.Mock(spec=MockEventSelection)
     sel2 = mock.Mock(spec=MockEventSelection)
     sel1.name ='sel1'
     sel2.name =''
 
-    obj = AnywCount()
-    obj.add(sel1)
-    obj.add(sel2)
+    if method == 1:
+        obj = AnywCount()
+        obj.add(sel1)
+        obj.add(sel2)
+    elif method == 2:
+        obj = AnywCount(selections=[sel1, sel2])
+    elif method == 3:
+        obj = AnywCount(selections=[sel1])
+        obj.add(sel2)
 
     event = mock.Mock()
 
