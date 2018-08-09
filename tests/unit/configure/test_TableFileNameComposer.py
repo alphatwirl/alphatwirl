@@ -50,6 +50,20 @@ from alphatwirl.configure import TableFileNameComposer
         ),
         'tbl_n.var1-1.var2.var3-w.var4-wp.var5-b1.txt',
         id='backref'),
+    pytest.param(
+        dict(default_var_separator='#'), dict(
+            columnNames=('var1', 'var2', 'var3', 'var4', 'var5'),
+            indices=(1, None, '*', '(*)', '\\1')
+        ),
+        'tbl_n#var1-1#var2#var3-w#var4-wp#var5-b1.txt',
+        id='default-var-separator'),
+    pytest.param(
+        dict(default_idx_separator='#'), dict(
+            columnNames=('var1', 'var2', 'var3', 'var4', 'var5'),
+            indices=(1, None, '*', '(*)', '\\1')
+        ),
+        'tbl_n.var1#1.var2.var3#w.var4#wp.var5#b1.txt',
+        id='default-idx-separator'),
 ])
 def test_complete(init_arg, call_arg, expected):
     obj = TableFileNameComposer(**init_arg)
