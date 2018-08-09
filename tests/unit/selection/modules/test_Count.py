@@ -34,6 +34,16 @@ def sel3():
     ret.__class__.__name__ = 'MockEventSelection'
     return ret
 
+##__________________________________________________________________||
+def test_add(sel1, sel2, sel3):
+    obj = Count()
+    assert 0 == len(obj._results)
+
+    obj = Count(selections=[sel1, sel2])
+    assert 2 == len(obj._results)
+    obj.add(sel3)
+    assert 3 == len(obj._results)
+
 def test_repr(obj):
     repr(obj)
 

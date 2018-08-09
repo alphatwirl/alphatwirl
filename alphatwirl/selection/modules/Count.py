@@ -10,8 +10,14 @@ IDX_TOTAL = 4
 
 ##__________________________________________________________________||
 class Count(object):
-    def __init__(self):
+    def __init__(self, selections=None):
+        if selections is None:
+            selections = [ ]
+
         self._results = [ ]
+
+        for sel in selections:
+            self.add(sel)
 
     def __repr__(self):
         return '{}({!r})'.format(self.__class__.__name__, self._results)
