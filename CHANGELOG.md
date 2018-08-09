@@ -16,6 +16,7 @@
     - were deprecated
     - now, raise `RuntimeError` if called
 - added a decorator `_removed()`
+- reimplemented `TableFileNameComposer`
 
 ## [0.19.0] - 2018-08-08
 
