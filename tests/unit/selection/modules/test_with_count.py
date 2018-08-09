@@ -186,3 +186,28 @@ def test_any_empty():
     assert [ ] == count._results
 
 ##__________________________________________________________________||
+@pytest.mark.parametrize(
+    'Class', [AllwCount, AnywCount],
+    ids=[AllwCount.__name__, AnywCount.__name__])
+def test_allany_collector(Class):
+    obj = Class()
+    obj.collect()
+
+    collector = mock.Mock()
+    obj = Class(collector=collector)
+    result = obj.collect()
+    assert [mock.call(obj)] == collector.call_args_list
+    assert result is collector()
+
+def test_not_collector():
+    sel = mock.Mock()
+    obj = NotwCount(selection=sel)
+    obj.collect()
+
+    collector = mock.Mock()
+    obj = NotwCount(selection=sel, collector=collector)
+    result = obj.collect()
+    assert [mock.call(obj)] == collector.call_args_list
+    assert result is collector()
+
+##__________________________________________________________________||

@@ -81,6 +81,10 @@ class WithCountBase(object):
 
         return ret
 
+    def collect(self):
+        if self.collector is not None:
+            return self.collector(self)
+
 ##__________________________________________________________________||
 class AllwCount(WithCountBase):
     """select events that meet all conditions
@@ -174,5 +178,9 @@ class NotwCount(object):
         if increment:
             ret.increment_depth(by=1)
         return ret
+
+    def collect(self):
+        if self.collector is not None:
+            return self.collector(self)
 
 ##__________________________________________________________________||
