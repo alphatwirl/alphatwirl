@@ -9,6 +9,10 @@
 - added unittest for `mkdir_p()`
 - avoided mutable default of `ReaderComposite`, `AllwCount`,
   `AnywCount`.
+- removed the implementation of
+  `build_progressMonitor_communicationChannel()`
+    - was deprecated
+    - now, raises `RuntimeError` if it is called
 - added a decorator `_removed()`
 
 ## [0.19.0] - 2018-08-08
