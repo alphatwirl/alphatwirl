@@ -17,6 +17,9 @@
     - now, raise `RuntimeError` if called
 - added a decorator `_removed()`
 - reimplemented `TableFileNameComposer`
+- fix `ProgressPrint` for Python 3 for the error
+  [qtwirl Build #70](https://travis-ci.org/alphatwirl/qtwirl/builds/415141087)
+
 
 ## [0.19.0] - 2018-08-08
 
