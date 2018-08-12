@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.19.0...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.0...master))
+
+## [0.20.0] - 2018-08-12
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.20.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.19.0...v0.20.0))
 - added `collect()` to `AllwCount`, `AnywCount`, `NotwCount`
   [\#33](https://github.com/alphatwirl/alphatwirl/issues/33)
 - `mkdir_p()` checks if `path` is empty
@@ -17,9 +23,7 @@
     - now, raise `RuntimeError` if called
 - added a decorator `_removed()`
 - reimplemented `TableFileNameComposer`
-- fix `ProgressPrint` for Python 3 for the error
-  [qtwirl Build #70](https://travis-ci.org/alphatwirl/qtwirl/builds/415141087)
-
+- fixed `ProgressPrint`, avoiding changing dict during iteration
 
 ## [0.19.0] - 2018-08-08
 
