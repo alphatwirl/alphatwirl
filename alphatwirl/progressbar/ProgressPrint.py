@@ -28,13 +28,16 @@ class ProgressPrint(object):
 
     def _create_lines(self):
         self.lines = [ ]
+        taskids_to_delete = [ ]
         for taskid, report in self.reports.items():
             line = self.createLine(report)
             if report.done >= report.total:
-                del self.reports[report.taskid]
+                taskids_to_delete.append(report.taskid)
                 self.last.append(line)
             else:
                 self.lines.append(line)
+        for taskid in taskids_to_delete:
+            del self.reports[taskid]
 
     def _print_lines(self):
         sys.stdout.write("\n")
