@@ -71,7 +71,8 @@ class EventDatasetReader(object):
         self.runid_dataset_map.update({i: dataset.name for i in runids})
         # e.g., {0: 'dataset1', 1: 'dataset1', 2: 'dataset1', 3: 'dataset3'}
 
-        self.dataset_runid_reader_map[dataset.name] = OrderedDict([(i, None) for i in runids])
+        self.dataset_runid_reader_map[dataset.name] = self.dataset_runid_reader_map.get(dataset.name, OrderedDict())
+        self.dataset_runid_reader_map[dataset.name].update(((i, None) for i in runids))
         # e.g.,
         # OrderedDict(
         #     [
