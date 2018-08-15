@@ -2,7 +2,14 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.0...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...master))
+
+## [0.20.1] - 2018-08-15
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.20.1/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.0...v0.20.1))
+- allowed duplicate dataset names in `EventDatasetReader` [\#50](https://github.com/alphatwirl/alphatwirl/issues/50)
 
 ## [0.20.0] - 2018-08-12
 
