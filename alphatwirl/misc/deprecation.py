@@ -16,7 +16,7 @@ def _deprecated(msg=''):
         if msg:
             text += ' ' + msg
 
-            original_init = c.__init__
+        original_init = c.__init__
 
         def init(*args, **kwargs):
             logger.warning(text)

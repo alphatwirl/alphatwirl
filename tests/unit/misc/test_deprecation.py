@@ -54,6 +54,15 @@ class ClassWithInit(object):
 class ClassWithoutInit(object):
     pass
 
+@_deprecated()
+class ClassWithInitNoMsg(object):
+    def __init__(self):
+        pass
+
+@_deprecated()
+class ClassWithoutInitNoMsg(object):
+    pass
+
 @pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
 def test_class_logging(Class, caplog):
     with caplog.at_level(logging.WARNING):
@@ -64,7 +73,19 @@ def test_class_logging(Class, caplog):
     expected = '{} is deprecated. extra message'.format(Class.__name__)
     assert expected in caplog.records[0].msg
 
-@pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
+@pytest.mark.parametrize('Class', (ClassWithInitNoMsg, ClassWithoutInitNoMsg))
+def test_class_logging_no_msg(Class, caplog):
+    with caplog.at_level(logging.WARNING):
+        c = Class()
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'test_deprecation' in caplog.records[0].name
+    expected = '{} is deprecated'.format(Class.__name__)
+    assert expected in caplog.records[0].msg
+
+@pytest.mark.parametrize(
+   'Class',
+   (ClassWithInit, ClassWithoutInit, ClassWithInitNoMsg, ClassWithoutInitNoMsg))
 def test_class_pickle(Class):
     c = Class()
     pickle.dumps(c)
