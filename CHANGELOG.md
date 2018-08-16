@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...master))
+- fix a bug in `_deprecated(msg)`. didn't work correctly when `msg` is
+  not given.
 
 ## [0.20.1] - 2018-08-15
 
