@@ -56,6 +56,15 @@ class ClassWithInit(object):
 class ClassWithoutInit(object):
     pass
 
+@_removed()
+class ClassWithInitNoMsg(object):
+    def __init__(self):
+        pass
+
+@_removed()
+class ClassWithoutInitNoMsg(object):
+    pass
+
 @pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
 def test_class_logging(Class, caplog):
     with pytest.raises(RuntimeError):
@@ -65,6 +74,17 @@ def test_class_logging(Class, caplog):
     assert caplog.records[0].levelname == 'ERROR'
     assert 'test_removal' in caplog.records[0].name
     expected = '{} is removed. extra message'.format(Class.__name__)
+    assert expected in caplog.records[0].msg
+
+@pytest.mark.parametrize('Class', (ClassWithInitNoMsg, ClassWithoutInitNoMsg))
+def test_class_logging_no_msg(Class, caplog):
+    with pytest.raises(RuntimeError):
+       with caplog.at_level(logging.ERROR):
+          c = Class()
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'ERROR'
+    assert 'test_removal' in caplog.records[0].name
+    expected = '{} is removed.'.format(Class.__name__)
     assert expected in caplog.records[0].msg
 
 ##__________________________________________________________________||

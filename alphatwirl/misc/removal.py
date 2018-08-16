@@ -15,12 +15,9 @@ def _removed(msg=''):
         if msg:
             text += ' ' + msg
 
-            original_init = c.__init__
-
         def init(*args, **kwargs):
             logger.error(text)
             raise RuntimeError(msg)
-            return original_init(*args, **kwargs)
 
         c.__init__ = init
         return c
