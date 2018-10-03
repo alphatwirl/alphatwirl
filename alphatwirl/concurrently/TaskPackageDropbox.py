@@ -103,6 +103,10 @@ class TaskPackageDropbox(object):
             if pkgidx_result_pair and not pkgidx_result_pair[1]:
                 pkgidx_result_pair = None
 
+            # early break to avoid sleeping
+            if pkgidx_result_pair:
+                break
+
             time.sleep(self.sleep)
 
         return pkgidx_result_pair
@@ -118,6 +122,11 @@ class TaskPackageDropbox(object):
             pkgidx_result_pairs.extend(
                 self._collect_all_finished_pkgidx_result_pairs()
             )
+
+            # early break to avoid sleeping
+            if not self.runid_pkgidx_map:
+                break
+
             time.sleep(self.sleep)
 
         # remove failed results and sort in the order of pkgidx
