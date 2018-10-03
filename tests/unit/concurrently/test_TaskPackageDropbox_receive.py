@@ -87,10 +87,7 @@ def test_receive(obj, pkgidx_result_pairs):
 
 def test_receive_dispatcher_received_failed_runids(obj, dispatcher):
     obj.receive()
-    assert [
-        mock.call([]), mock.call([]), mock.call([1002]),
-        mock.call([1005]), mock.call([])
-    ] == dispatcher.failed_runids.call_args_list
+    assert [mock.call([1002]), mock.call([1005])] == dispatcher.failed_runids.call_args_list
 
 def test_receive_logging_resubmission(obj, caplog):
     with caplog.at_level(logging.WARNING):
