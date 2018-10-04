@@ -34,24 +34,6 @@ class TaskPackageDropbox(object):
         self.runid_pkgidx_map = { }
         self.runid_to_return = deque() # finished runids
 
-    def run(self, pkgidx):
-        runid = self.dispatcher.run(self.workingArea, pkgidx)
-        self.runid_pkgidx_map[runid] = pkgidx
-        return pkgidx
-
-    def run_multiple(self, pkgidxs):
-        runids = self.dispatcher.run_multiple(self.workingArea, pkgidxs)
-        self.runid_pkgidx_map.update(zip(runids, pkgidxs))
-        return pkgidxs
-
-    def resubmit(self, runid, pkgidx):
-        self.dispatcher.failed_runids([runid])
-        return self.run(pkgidx)
-
-    def resubmit_multiple(self, runids, pkgidxs):
-        self.dispatcher.failed_runids(runids)
-        return self.run_multiple(pkgidxs)
-
     def put(self, package):
         """Put a package. Return a package index.
         """
@@ -61,7 +43,9 @@ class TaskPackageDropbox(object):
         logger = logging.getLogger(__name__)
         logger.info('submitting {}'.format(self.workingArea.package_path(pkgidx)))
 
-        return self.run(pkgidx)
+        runid = self.dispatcher.run(self.workingArea, pkgidx)
+        self.runid_pkgidx_map[runid] = pkgidx
+        return pkgidx
 
     def put_multiple(self, packages):
         """Put multiple packages. Return package indices.
@@ -73,7 +57,9 @@ class TaskPackageDropbox(object):
             ', '.join(['{}'.format(self.workingArea.package_path(i)) for i in pkgidxs])
         ))
 
-        return self.run_multiple(pkgidxs)
+        runids = self.dispatcher.run_multiple(self.workingArea, pkgidxs)
+        self.runid_pkgidx_map.update(zip(runids, pkgidxs))
+        return pkgidxs
 
     def poll(self):
         """Return pairs of package indices and results of finished tasks.
@@ -165,7 +151,9 @@ class TaskPackageDropbox(object):
             logger.warning('resubmitting {}'.format(
                 self.workingArea.package_path(pkgidx)
             ))
-            self.resubmit(runid, pkgidx)
+            self.dispatcher.failed_runids([runid])
+            runid = self.dispatcher.run(self.workingArea, pkgidx)
+            self.runid_pkgidx_map[runid] = pkgidx
 
         return (pkgidx, result)
 

@@ -51,41 +51,10 @@ def test_open_terminate_close(workingarea, dispatcher):
     assert 1 == workingarea.close.call_count
     assert 1 == dispatcher.terminate.call_count
 
-def test_run(obj, workingarea, dispatcher):
-
-    dispatcher.run.side_effect = [1001, 1002] # runid
-
-    assert 0 == obj.run(0)
-    assert 1 == obj.run(1)
-
-    assert {1001: 0, 1002: 1} == obj.runid_pkgidx_map
-    assert [mock.call(workingarea, 0), mock.call(workingarea, 1)] == dispatcher.run.call_args_list
-
-def test_run_multiple(obj, workingarea, dispatcher):
-
-    dispatcher.run_multiple.return_value = [1001, 1002] # runid
-
-    assert [0, 1] == obj.run_multiple([0, 1])
-
-    assert {1001: 0, 1002: 1} == obj.runid_pkgidx_map
-    assert [mock.call(workingarea, [0, 1])] == dispatcher.run_multiple.call_args_list
-
-def test_resubmit(obj, dispatcher):
-
-    assert 0 == obj.resubmit(1001, 0)
-    assert 1 == obj.resubmit(1002, 1)
-
-    assert [mock.call([1001]), mock.call([1002])] == dispatcher.failed_runids.call_args_list
-
-def test_resubmit_multiple(obj, dispatcher):
-
-    assert [0, 1] == obj.resubmit_multiple([1001, 1002], [0, 1])
-
-    assert [mock.call([1001, 1002])] == dispatcher.failed_runids.call_args_list
-
-def test_put(obj, workingarea):
+def test_put(obj, workingarea, dispatcher):
 
     workingarea.put_package.side_effect = [0, 1] # pkgidx
+    dispatcher.run.side_effect = [1001, 1002] # runid
 
     package0 = mock.MagicMock(name='package0')
     package1 = mock.MagicMock(name='package1')
@@ -94,10 +63,12 @@ def test_put(obj, workingarea):
     assert 1 == obj.put(package1)
 
     assert [mock.call(package0), mock.call(package1)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, 0), mock.call(workingarea, 1)] == dispatcher.run.call_args_list
 
-def test_put_multiple(obj, workingarea):
+def test_put_multiple(obj, workingarea, dispatcher):
 
     workingarea.put_package.side_effect = [0, 1] # pkgidx
+    dispatcher.run_multiple.return_value = [1001, 1002] # runid
 
     package0 = mock.MagicMock(name='package0')
     package1 = mock.MagicMock(name='package1')
@@ -105,5 +76,6 @@ def test_put_multiple(obj, workingarea):
     assert [0, 1] == obj.put_multiple([package0, package1])
 
     assert [mock.call(package0), mock.call(package1)] == workingarea.put_package.call_args_list
+    assert [mock.call(workingarea, [0, 1])] == dispatcher.run_multiple.call_args_list
 
 ##__________________________________________________________________||
