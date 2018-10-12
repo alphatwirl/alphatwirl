@@ -9,11 +9,11 @@
 **PyPI**: https://pypi.org/project/alphatwirl/0.20.2/
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...v0.20.2))
-- stop letting `receive_one()` in `TaskPackageDropbox` unnecessarily
+- stopped letting `receive_one()` in `TaskPackageDropbox` unnecessarily
   unpickle all available results, which was needlessly consuming
   memory [\#51](https://github.com/alphatwirl/alphatwirl/pull/51)
-- fix a bug in `_deprecated(msg)`. didn't work correctly when `msg` is
-  not given.
+- fixed a bug in `_deprecated(msg)`. didn't work correctly when `msg`
+  was not given.
 
 ## [0.20.1] - 2018-08-15
 
