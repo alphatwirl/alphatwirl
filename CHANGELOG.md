@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.2...master))
+
+## [0.20.2] - 2018-10-12
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.20.2/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...v0.20.2))
 - stop letting `receive_one()` in `TaskPackageDropbox` unnecessarily
   unpickle all available results, which was needlessly consuming
   memory [\#51](https://github.com/alphatwirl/alphatwirl/pull/51)
