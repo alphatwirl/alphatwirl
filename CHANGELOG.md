@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.1...master))
+- stop letting `receive_one()` in `TaskPackageDropbox` unnecessarily
+  unpickle all available results, which was needlessly consuming
+  memory [\#51](https://github.com/alphatwirl/alphatwirl/pull/51)
 - fix a bug in `_deprecated(msg)`. didn't work correctly when `msg` is
   not given.
 
