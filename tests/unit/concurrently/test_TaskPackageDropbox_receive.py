@@ -149,6 +149,13 @@ def test_receive_one(obj, pkgidx_result_pairs):
         assert sorted(pkgidx_result_pairs) == sorted(actual)
         assert [mock.call(0.01)]*4 == sleep.call_args_list
 
+def test_receive_one_single_call(obj, pkgidx_result_pairs, workingarea):
+    with mock.patch('time.sleep') as sleep:
+        pair = obj.receive_one()
+        assert pair in pkgidx_result_pairs
+        assert [mock.call(pair[0])] == workingarea.collect_result.call_args_list
+        assert [] == sleep.call_args_list
+
 @pytest.mark.parametrize('dispatcher_poll', [
     pytest.param(
         [[1001, 1003], [ ], [1002], [1000, 1005], [1006, 1004]],
