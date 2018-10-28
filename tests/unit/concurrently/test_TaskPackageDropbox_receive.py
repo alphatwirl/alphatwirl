@@ -83,58 +83,71 @@ def obj(workingarea, dispatcher, packages):
 
 ##__________________________________________________________________||
 def test_receive(obj, pkgidx_result_pairs):
-    assert pkgidx_result_pairs == obj.receive()
+    with mock.patch('time.sleep') as sleep:
+        assert pkgidx_result_pairs == obj.receive()
+        assert [mock.call(0.01)]*4 == sleep.call_args_list
 
 def test_receive_dispatcher_received_failed_runids(obj, dispatcher):
-    obj.receive()
-    assert [mock.call([1002]), mock.call([1005])] == dispatcher.failed_runids.call_args_list
+    with mock.patch('time.sleep') as sleep:
+        obj.receive()
+        assert [mock.call([1002]), mock.call([1005])] == dispatcher.failed_runids.call_args_list
+        assert [mock.call(0.01)]*4 == sleep.call_args_list
 
 def test_receive_logging_resubmission(obj, caplog):
-    with caplog.at_level(logging.WARNING):
-        obj.receive()
-    assert len(caplog.records) == 2
-    assert caplog.records[0].levelname == 'WARNING'
-    assert caplog.records[1].levelname == 'WARNING'
-    assert 'TaskPackageDropbox' in caplog.records[0].name
-    assert 'TaskPackageDropbox' in caplog.records[1].name
-    assert 'resubmitting' in caplog.records[0].msg
-    assert 'resubmitting' in caplog.records[1].msg
+    with mock.patch('time.sleep') as sleep:
+        with caplog.at_level(logging.WARNING):
+            obj.receive()
+        assert len(caplog.records) == 2
+        assert caplog.records[0].levelname == 'WARNING'
+        assert caplog.records[1].levelname == 'WARNING'
+        assert 'TaskPackageDropbox' in caplog.records[0].name
+        assert 'TaskPackageDropbox' in caplog.records[1].name
+        assert 'resubmitting' in caplog.records[0].msg
+        assert 'resubmitting' in caplog.records[1].msg
+        assert [mock.call(0.01)]*4 == sleep.call_args_list
 
 def test_receive_in_one_step(obj, pkgidx_result_pairs, dispatcher, collect_results):
+    with mock.patch('time.sleep') as sleep:
+        # make all jobs finish by the first poll
+        dispatcher.poll.side_effect = [[1000, 1001, 1002, 1003, 1004]]
 
-    # make all jobs finish by the first poll
-    dispatcher.poll.side_effect = [[1000, 1001, 1002, 1003, 1004]]
+        # make the 3rd job successful by removing two None's
+        collect_results[2].popleft() # deque([None, result2])
+        collect_results[2].popleft() # deque([result2])
 
-    # make the 3rd job successful by removing two None's
-    collect_results[2].popleft() # deque([None, result2])
-    collect_results[2].popleft() # deque([result2])
-
-    assert pkgidx_result_pairs == obj.receive()
+        assert pkgidx_result_pairs == obj.receive()
+        assert [] == sleep.call_args_list
 
 ##__________________________________________________________________||
 def test_poll(obj, pkgidx_result_pairs):
-    actual = [ ]
-    while len(actual) < len(pkgidx_result_pairs):
-        actual.extend(obj.poll())
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+    with mock.patch('time.sleep') as sleep:
+        actual = [ ]
+        while len(actual) < len(pkgidx_result_pairs):
+            actual.extend(obj.poll())
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [] == sleep.call_args_list
 
 def test_poll_then_receive(obj, pkgidx_result_pairs):
-    actual = [ ]
-    actual.extend(obj.poll())
-    actual.extend(obj.receive())
+    with mock.patch('time.sleep') as sleep:
+        actual = [ ]
+        actual.extend(obj.poll())
+        actual.extend(obj.receive())
 
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [mock.call(0.01)]*3 == sleep.call_args_list
 
 ##__________________________________________________________________||
 def test_receive_one(obj, pkgidx_result_pairs):
-    actual = [ ]
-    while len(actual) < len(pkgidx_result_pairs):
-        pair = obj.receive_one()
-        if pair is None:
-            break
-        actual.append(pair)
-    assert obj.receive_one() is None
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+    with mock.patch('time.sleep') as sleep:
+        actual = [ ]
+        while len(actual) < len(pkgidx_result_pairs):
+            pair = obj.receive_one()
+            if pair is None:
+                break
+            actual.append(pair)
+        assert obj.receive_one() is None
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [mock.call(0.01)]*4 == sleep.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', [
     pytest.param(
@@ -151,36 +164,43 @@ def test_receive_one(obj, pkgidx_result_pairs):
     ),
 ])
 def test_receive_one_param(obj, pkgidx_result_pairs, dispatcher, dispatcher_poll):
-    dispatcher.poll.side_effect = dispatcher_poll
+    with mock.patch('time.sleep') as sleep:
+        dispatcher.poll.side_effect = dispatcher_poll
 
-    actual = [ ]
-    while len(actual) < len(pkgidx_result_pairs):
-        pair = obj.receive_one()
-        if pair is None:
-            break
-        actual.append(pair)
-    assert obj.receive_one() is None
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+        actual = [ ]
+        while len(actual) < len(pkgidx_result_pairs):
+            pair = obj.receive_one()
+            if pair is None:
+                break
+            actual.append(pair)
+        assert obj.receive_one() is None
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [mock.call(0.01)]*(len(dispatcher_poll)-1) == sleep.call_args_list
 
 def test_receive_one_then_receive(obj, pkgidx_result_pairs):
-    actual = [ ]
+    with mock.patch('time.sleep') as sleep:
+        actual = [ ]
 
-    actual.append(obj.receive_one())
+        actual.append(obj.receive_one())
 
-    actual.extend(obj.receive())
+        actual.extend(obj.receive())
 
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [mock.call(0.01)]*4 == sleep.call_args_list
 
 def test_receive_one_then_poll(obj, pkgidx_result_pairs):
-    actual = [ ]
+    with mock.patch('time.sleep') as sleep:
+        actual = [ ]
 
-    actual.append(obj.receive_one())
+        actual.append(obj.receive_one())
+        actual.append(obj.receive_one())
 
-    actual.extend(obj.poll())
-    actual.extend(obj.poll())
-    actual.extend(obj.poll())
-    actual.extend(obj.poll())
+        actual.extend(obj.poll())
+        actual.extend(obj.poll())
+        actual.extend(obj.poll())
+        actual.extend(obj.poll())
 
-    assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert sorted(pkgidx_result_pairs) == sorted(actual)
+        assert [mock.call(0.01)] == sleep.call_args_list
 
 ##__________________________________________________________________||
