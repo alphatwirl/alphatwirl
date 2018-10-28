@@ -141,10 +141,7 @@ def test_receive_one(obj, pkgidx_result_pairs):
     with mock.patch('time.sleep') as sleep:
         actual = [ ]
         while len(actual) < len(pkgidx_result_pairs):
-            pair = obj.receive_one()
-            if pair is None:
-                break
-            actual.append(pair)
+            actual.append(obj.receive_one())
         assert obj.receive_one() is None
         assert sorted(pkgidx_result_pairs) == sorted(actual)
         assert [mock.call(0.01)]*4 == sleep.call_args_list
@@ -176,10 +173,7 @@ def test_receive_one_param(obj, pkgidx_result_pairs, dispatcher, dispatcher_poll
 
         actual = [ ]
         while len(actual) < len(pkgidx_result_pairs):
-            pair = obj.receive_one()
-            if pair is None:
-                break
-            actual.append(pair)
+            actual.append(obj.receive_one())
         assert obj.receive_one() is None
         assert sorted(pkgidx_result_pairs) == sorted(actual)
         assert [mock.call(0.01)]*(len(dispatcher_poll)-1) == sleep.call_args_list

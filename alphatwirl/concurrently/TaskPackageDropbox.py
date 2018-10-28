@@ -129,10 +129,6 @@ class TaskPackageDropbox(object):
         return pkgidx_result_pairs
 
     def _collect_next_finished_pkgidx_result_pair(self):
-        # No runs remaining
-        if not self.runid_pkgidx_map:
-            return None
-
         if not self.runid_to_return:
             self.runid_to_return.extend(self.dispatcher.poll())
 
