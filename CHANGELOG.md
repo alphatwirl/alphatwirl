@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.2...master))
+- stop sleeping needlessly in `TaskPackageDropbox` [\#54](https://github.com/alphatwirl/alphatwirl/pull/54)
 
 ## [0.20.2] - 2018-10-12
 
