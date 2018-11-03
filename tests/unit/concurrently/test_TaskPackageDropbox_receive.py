@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import time
 import logging
 import pytest
 from collections import deque
@@ -74,7 +75,13 @@ def dispatcher():
     return ret
 
 @pytest.fixture()
-def obj(workingarea, dispatcher, packages):
+def mock_sleep(monkeypatch):
+    ret = mock.Mock()
+    monkeypatch.setattr(time, 'sleep', ret)
+    return ret
+
+@pytest.fixture()
+def obj(workingarea, dispatcher, packages, mock_sleep):
     ret = TaskPackageDropbox(workingArea=workingarea, dispatcher=dispatcher, sleep=0.01)
     ret.open()
     ret.put_multiple(packages)
@@ -82,14 +89,16 @@ def obj(workingarea, dispatcher, packages):
     ret.close()
 
 ##__________________________________________________________________||
-def test_receive(obj, pkgidx_result_pairs):
+def test_receive(obj, mock_sleep, pkgidx_result_pairs):
     assert pkgidx_result_pairs == obj.receive()
+    assert [mock.call(0.01)]*4 == mock_sleep.call_args_list
 
-def test_receive_dispatcher_received_failed_runids(obj, dispatcher):
+def test_receive_dispatcher_received_failed_runids(obj, mock_sleep, dispatcher):
     obj.receive()
+    assert [mock.call(0.01)]*4 == mock_sleep.call_args_list
     assert [mock.call([1002]), mock.call([1005])] == dispatcher.failed_runids.call_args_list
 
-def test_receive_logging_resubmission(obj, caplog):
+def test_receive_logging_resubmission(obj, mock_sleep, caplog):
     with caplog.at_level(logging.WARNING):
         obj.receive()
     assert len(caplog.records) == 2
@@ -99,9 +108,9 @@ def test_receive_logging_resubmission(obj, caplog):
     assert 'TaskPackageDropbox' in caplog.records[1].name
     assert 'resubmitting' in caplog.records[0].msg
     assert 'resubmitting' in caplog.records[1].msg
+    assert [mock.call(0.01)]*4 == mock_sleep.call_args_list
 
-def test_receive_in_one_step(obj, pkgidx_result_pairs, dispatcher, collect_results):
-
+def test_receive_in_one_step(obj, mock_sleep, pkgidx_result_pairs, dispatcher, collect_results):
     # make all jobs finish by the first poll
     dispatcher.poll.side_effect = [[1000, 1001, 1002, 1003, 1004]]
 
@@ -110,31 +119,38 @@ def test_receive_in_one_step(obj, pkgidx_result_pairs, dispatcher, collect_resul
     collect_results[2].popleft() # deque([result2])
 
     assert pkgidx_result_pairs == obj.receive()
+    assert [ ] == mock_sleep.call_args_list
 
 ##__________________________________________________________________||
-def test_poll(obj, pkgidx_result_pairs):
+def test_poll(obj, mock_sleep, pkgidx_result_pairs):
     actual = [ ]
     while len(actual) < len(pkgidx_result_pairs):
         actual.extend(obj.poll())
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [ ] == mock_sleep.call_args_list
 
-def test_poll_then_receive(obj, pkgidx_result_pairs):
+def test_poll_then_receive(obj, mock_sleep, pkgidx_result_pairs):
     actual = [ ]
     actual.extend(obj.poll())
     actual.extend(obj.receive())
 
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [mock.call(0.01)]*3 == mock_sleep.call_args_list
 
 ##__________________________________________________________________||
-def test_receive_one(obj, pkgidx_result_pairs):
+def test_receive_one(obj, mock_sleep, pkgidx_result_pairs):
     actual = [ ]
     while len(actual) < len(pkgidx_result_pairs):
-        pair = obj.receive_one()
-        if pair is None:
-            break
-        actual.append(pair)
+        actual.append(obj.receive_one())
     assert obj.receive_one() is None
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [mock.call(0.01)]*4 == mock_sleep.call_args_list
+
+def test_receive_one_single_call(obj, mock_sleep, pkgidx_result_pairs, workingarea):
+    pair = obj.receive_one()
+    assert pair in pkgidx_result_pairs
+    assert [mock.call(pair[0])] == workingarea.collect_result.call_args_list
+    assert [] == mock_sleep.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', [
     pytest.param(
@@ -150,19 +166,17 @@ def test_receive_one(obj, pkgidx_result_pairs):
         id='empty_first'
     ),
 ])
-def test_receive_one_param(obj, pkgidx_result_pairs, dispatcher, dispatcher_poll):
+def test_receive_one_param(obj, mock_sleep, pkgidx_result_pairs, dispatcher, dispatcher_poll):
     dispatcher.poll.side_effect = dispatcher_poll
 
     actual = [ ]
     while len(actual) < len(pkgidx_result_pairs):
-        pair = obj.receive_one()
-        if pair is None:
-            break
-        actual.append(pair)
+        actual.append(obj.receive_one())
     assert obj.receive_one() is None
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [mock.call(0.01)]*(len(dispatcher_poll)-1) == mock_sleep.call_args_list
 
-def test_receive_one_then_receive(obj, pkgidx_result_pairs):
+def test_receive_one_then_receive(obj, mock_sleep, pkgidx_result_pairs):
     actual = [ ]
 
     actual.append(obj.receive_one())
@@ -170,10 +184,12 @@ def test_receive_one_then_receive(obj, pkgidx_result_pairs):
     actual.extend(obj.receive())
 
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [mock.call(0.01)]*4 == mock_sleep.call_args_list
 
-def test_receive_one_then_poll(obj, pkgidx_result_pairs):
+def test_receive_one_then_poll(obj, mock_sleep, pkgidx_result_pairs):
     actual = [ ]
 
+    actual.append(obj.receive_one())
     actual.append(obj.receive_one())
 
     actual.extend(obj.poll())
@@ -182,5 +198,6 @@ def test_receive_one_then_poll(obj, pkgidx_result_pairs):
     actual.extend(obj.poll())
 
     assert sorted(pkgidx_result_pairs) == sorted(actual)
+    assert [mock.call(0.01)] == mock_sleep.call_args_list
 
 ##__________________________________________________________________||

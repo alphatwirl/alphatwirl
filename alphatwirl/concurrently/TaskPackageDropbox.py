@@ -89,11 +89,9 @@ class TaskPackageDropbox(object):
             if pkgidx_result_pair and not pkgidx_result_pair[1]:
                 pkgidx_result_pair = None
 
-            # early break to avoid sleeping
-            if pkgidx_result_pair:
-                break
-
-            time.sleep(self.sleep)
+            # Only sleep if there are no pending runs
+            if not self.runid_to_return and self.runid_pkgidx_map:
+                time.sleep(self.sleep)
 
         return pkgidx_result_pair
 
@@ -109,11 +107,9 @@ class TaskPackageDropbox(object):
                 self._collect_all_finished_pkgidx_result_pairs()
             )
 
-            # early break to avoid sleeping
-            if not self.runid_pkgidx_map:
-                break
-
-            time.sleep(self.sleep)
+            # Only sleep if we're waiting for runs
+            if self.runid_pkgidx_map:
+                time.sleep(self.sleep)
 
         # remove failed results and sort in the order of pkgidx
         pkgidx_result_pairs = filter(itemgetter(1), pkgidx_result_pairs)
@@ -125,19 +121,18 @@ class TaskPackageDropbox(object):
         pkgidx_result_pairs = []
 
         pairs = self._collect_next_finished_pkgidx_result_pair()
-        while pairs:
-            pkgidx_result_pairs.append(pairs)
+        while self.runid_to_return:
+            if pairs: pkgidx_result_pairs.append(pairs)
             pairs = self._collect_next_finished_pkgidx_result_pair()
+        if pairs: pkgidx_result_pairs.append(pairs)
 
         return pkgidx_result_pairs
 
     def _collect_next_finished_pkgidx_result_pair(self):
-        if not self.runid_pkgidx_map:
-            return None
-
         if not self.runid_to_return:
             self.runid_to_return.extend(self.dispatcher.poll())
 
+        # No finished runs remaining
         if not self.runid_to_return:
             return None
 
