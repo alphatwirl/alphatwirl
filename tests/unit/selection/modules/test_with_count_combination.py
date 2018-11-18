@@ -17,8 +17,7 @@ class MockEventSelection(object):
     def end(self): pass
 
 ##__________________________________________________________________||
-@pytest.fixture()
-def tree():
+def mk_tree():
     # all0 - all1 --- all2 --- sel1
     #              |        +- sel2
     #              +- not1 --- any1 --- all3 --- sel3
@@ -65,7 +64,9 @@ def tree():
     )
 
 ##__________________________________________________________________||
-def test_combination(tree):
+def test_combination():
+
+    tree = mk_tree()
 
     all0 = tree['alls'][0]
     sels = tree['sels']
@@ -112,11 +113,11 @@ def test_merge():
     # deep.copy() is not used because it will be difficult to access
     # to copied sels
 
-    tree0 = tree()
+    tree0 = mk_tree()
     all0 = tree0['alls'][0]
 
-    tree0_copy1 = tree()
-    tree0_copy2 = tree()
+    tree0_copy1 = mk_tree()
+    tree0_copy2 = mk_tree()
 
     all0_copy1 = tree0_copy1['alls'][0]
     all0_copy2 = tree0_copy2['alls'][0]
