@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.2...master))
+- made the default format for `float` in the output data frame the
+  same in python 2 and 3.
 - updated the test for pytest 4
 - updated the tag line, replacing "multi-dimensional" with "multivariate"
 - stopped sleeping needlessly in `TaskPackageDropbox` [\#54](https://github.com/alphatwirl/alphatwirl/pull/54)
