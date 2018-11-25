@@ -1,23 +1,21 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
 from alphatwirl import list_to_aligned_text
-import unittest
 
 ##__________________________________________________________________||
-class TestListToAlignedText(unittest.TestCase):
+def test_one():
 
-    def test_one(self):
+    src = [
+        ('component', 'v1', 'nvar', 'n'),
+        ('data1',  100, 6.0,   40),
+        ('data1',    2, 9.0, 3.3),
+        ('data1', 3124, 3.0, 0.0000001),
+        ('data2',  333, 6.0, 300909234),
+        ('data2',   11, 2.0, 323432.2234),
+    ]
 
-        src = [
-            ('component', 'v1', 'nvar', 'n'),
-            ('data1',  100, 6.0,   40),
-            ('data1',    2, 9.0, 3.3),
-            ('data1', 3124, 3.0, 0.0000001),
-            ('data2',  333, 6.0, 300909234),
-            ('data2',   11, 2.0, 323432.2234),
-        ]
+    actual = list_to_aligned_text(src)
 
-        actual = list_to_aligned_text(src)
-
-        expected = """\
+    expected = """\
  component   v1 nvar           n
      data1  100    6          40
      data1    2    9         3.3
@@ -26,46 +24,47 @@ class TestListToAlignedText(unittest.TestCase):
      data2   11    2 323432.2234
 """
 
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
-    def test_quote(self):
+def test_quote():
 
-        src = [
-            ('component', 'v1', 'v2'),
-            ('data1',      100, ''),
-            ('data1',        2, 'abc def'),
-            ('data1',     3124, '"AAA"'),
-            ('data2',      333, ' abc "de fg" hij '),
-            ('data2',       11, 'xyz'),
-        ]
+    src = [
+        ('component', 'v1', 'v2'),
+        ('data1',      100, ''),
+        ('data1',        2, 'abc def'),
+        ('data1',     3124, '"AAA"'),
+        ('data2',      333, ' abc "de fg" hij '),
+        ('data2',       11, 'xyz'),
+    ]
 
-        actual = list_to_aligned_text(src)
+    actual = list_to_aligned_text(src)
 
-        expected = r""" component   v1                    v2
+    expected = r""" component   v1                    v2
      data1  100                    ""
      data1    2             "abc def"
      data1 3124             "\"AAA\""
      data2  333 " abc \"de fg\" hij "
      data2   11                   xyz
 """
-        self.assertEqual(expected, actual)
 
-    def test_formatDict_01(self):
+    assert expected == actual
 
-        src = [
-            ('component', 'v1', 'nvar', 'n'),
-            ('data1',  100, 6.0,   40),
-            ('data1',    2, 9.0, 3.3),
-            ('data1', 3124, 3.0, 0.0000001),
-            ('data2',  333, 6.0, 300909234),
-            ('data2',   11, 2.0, 323432.2234),
-        ]
+def test_formatDict_01():
 
-        format_dict = dict(n = '{:.2f}')
+    src = [
+        ('component', 'v1', 'nvar', 'n'),
+        ('data1',  100, 6.0,   40),
+        ('data1',    2, 9.0, 3.3),
+        ('data1', 3124, 3.0, 0.0000001),
+        ('data2',  333, 6.0, 300909234),
+        ('data2',   11, 2.0, 323432.2234),
+    ]
 
-        actual = list_to_aligned_text(src, format_dict)
+    format_dict = dict(n = '{:.2f}')
 
-        expected = """\
+    actual = list_to_aligned_text(src, format_dict)
+
+    expected = """\
  component   v1 nvar            n
      data1  100    6        40.00
      data1    2    9         3.30
@@ -74,24 +73,24 @@ class TestListToAlignedText(unittest.TestCase):
      data2   11    2    323432.22
 """
 
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
-    def test_formatDict_left_align_last_column(self):
+def test_formatDict_left_align_last_column():
 
-        src = [
-            ('component', 'v1', 'nvar', 'n'),
-            ('data1',  100, 6.0,   40),
-            ('data1',    2, 9.0, 3.3),
-            ('data1', 3124, 3.0, 0.0000001),
-            ('data2',  333, 6.0, 300909234),
-            ('data2',   11, 2.0, 323432.2234),
-        ]
+    src = [
+        ('component', 'v1', 'nvar', 'n'),
+        ('data1',  100, 6.0,   40),
+        ('data1',    2, 9.0, 3.3),
+        ('data1', 3124, 3.0, 0.0000001),
+        ('data2',  333, 6.0, 300909234),
+        ('data2',   11, 2.0, 323432.2234),
+    ]
 
-        format_dict = dict(n = '{}')
+    format_dict = dict(n = '{}')
 
-        actual = list_to_aligned_text(src, format_dict, left_align_last_column = True)
+    actual = list_to_aligned_text(src, format_dict, left_align_last_column = True)
 
-        expected = """\
+    expected = """\
  component   v1 nvar n
      data1  100    6 40
      data1    2    9 3.3
@@ -100,35 +99,35 @@ class TestListToAlignedText(unittest.TestCase):
      data2   11    2 323432.2234
 """
 
-        self.assertEqual(expected, actual)
+    assert expected == actual
 
-    def test_headonly(self):
+def test_headonly():
 
-        src = [
-            ('component', 'v1', 'nvar', 'n'),
-        ]
+    src = [
+        ('component', 'v1', 'nvar', 'n'),
+    ]
 
-        actual = list_to_aligned_text(src)
+    actual = list_to_aligned_text(src)
 
-        expected = " component v1 nvar n\n"
-        self.assertEqual(expected, actual)
+    expected = " component v1 nvar n\n"
+    assert expected == actual
 
-    def test_empty_one(self):
-        src = [ ]
-        actual = list_to_aligned_text(src)
-        expected = ""
-        self.assertEqual(expected, actual)
+def test_empty_one():
+    src = [ ]
+    actual = list_to_aligned_text(src)
+    expected = ""
+    assert expected == actual
 
-    def test_empty_two(self):
-        src = [()]
-        actual = list_to_aligned_text(src)
-        expected = ""
-        self.assertEqual(expected, actual)
+def test_empty_two():
+    src = [()]
+    actual = list_to_aligned_text(src)
+    expected = ""
+    assert expected == actual
 
-    def test_empty_three(self):
-        src = [(), (), ()]
-        actual = list_to_aligned_text(src)
-        expected = ""
-        self.assertEqual(expected, actual)
+def test_empty_three():
+    src = [(), (), ()]
+    actual = list_to_aligned_text(src)
+    expected = ""
+    assert expected == actual
 
 ##__________________________________________________________________||
