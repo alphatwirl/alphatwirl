@@ -40,7 +40,13 @@ def list_to_aligned_text(src, format_dict = None, left_align_last_column = False
             column[:] = [column[0]] + [colum_format.format(c) for c in column[1:]]
             # e.g., .['n', '40.00', '3.30', '0.00', '300909234.00', '323432.22']
 
-    transposed = [[int(e) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
+    # https://stackoverflow.com/questions/25898733/why-does-strfloat-return-more-digits-in-python-3-than-python-2
+    # str(0.41999999999999993) is 0.42 in python2 but is 0.41999999999999993 in python3
+    # use this format to make the output in python 3 as in python 2
+    default_float_format = '{:.12g}'
+
+    transposed = [[str(int(e)) if isinstance(e, float) and e.is_integer() else e for e in r] for r in transposed]
+    transposed = [[default_float_format.format(e) if isinstance(e, float) else e for e in r] for r in transposed]
     transposed = [[str(e) for e in r] for r in transposed]
 
     transposed = [[quote_string(e) for e in r] for r in transposed]
