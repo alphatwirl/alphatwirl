@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.2...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.3...master))
+
+## [0.20.3] - 2019-01-25
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.20.3/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.2...v0.20.3))
 - made the default format for `float` in the output data frame the
   same in python 2 and 3.
 - updated the test for pytest 4
