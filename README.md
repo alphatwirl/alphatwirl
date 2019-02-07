@@ -14,7 +14,7 @@ _AlphaTwirl_ is a python library that summarizes event data into multivariate ca
 
 ### Quick start
 
-- Jupyter Notebook: [*Quick start of AlphaTwirl with qtwirl*](https://github.com/alphatwirl/notebook-tutorial-2019-02)<br />
+- Jupyter Notebook: [*Quick start of AlphaTwirl*](https://github.com/alphatwirl/notebook-tutorial-2019-02)<br />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/alphatwirl/notebook-tutorial-2019-02/master?filepath=tutorial_01.ipynb)
 
