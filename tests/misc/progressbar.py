@@ -8,6 +8,7 @@ import uuid
 import argparse
 
 import alphatwirl
+from alphatwirl.progressbar import atpbar
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()
@@ -17,20 +18,15 @@ parser.add_argument('-q', '--quiet', default=False, action='store_true', help='q
 args = parser.parse_args()
 
 ##__________________________________________________________________||
-from alphatwirl.progressbar import ProgressReport
-
 class Task(object):
     def __init__(self, name):
         self.name = name
     def __call__(self):
         ## n = random.randint(5, 1000000)
         n = random.randint(5, 100000)
-        taskid = uuid.uuid4()
         time.sleep(random.randint(0, 3))
-        for i in range(n):
+        for i in atpbar(range(n), name=self.name):
             time.sleep(0.0001)
-            report = ProgressReport(name=self.name, done=(i + 1), total=n, taskid=taskid)
-            alphatwirl.progressbar.report_progress(report)
         return None
 
 ##__________________________________________________________________||
