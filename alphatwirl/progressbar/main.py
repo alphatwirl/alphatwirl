@@ -6,7 +6,7 @@ import alphatwirl
 from .ProgressReport import ProgressReport
 
 ##__________________________________________________________________||
-def atpbar(iterable, **kwargs):
+def atpbar(iterable, name=None):
     """Progress bar
 
     """
@@ -18,7 +18,9 @@ def atpbar(iterable, **kwargs):
         logging.warning('atpbar is turned off')
         return iterable
 
-    name = repr(iterable)
+    if name is None:
+        name = repr(iterable)
+
     return Atpbar(iterable, name=name, len_=len_)
 
 ##__________________________________________________________________||
