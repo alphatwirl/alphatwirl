@@ -32,14 +32,18 @@ class Atpbar(object):
         self.id_ = uuid.uuid4()
 
     def __iter__(self):
+        self._report_progress(-1)
         for i, e in enumerate(self. iterable):
-            try:
-                report = ProgressReport(
-                    name=self.name, done=(i + 1),
-                    total=self.len_, taskid=self.id_)
-                alphatwirl.progressbar.report_progress(report)
-            except:
-                pass
             yield e
+            self._report_progress(i)
+
+    def _report_progress(self, i):
+        try:
+            report = ProgressReport(
+                name=self.name, done=(i+1),
+                total=self.len_, taskid=self.id_)
+            alphatwirl.progressbar.report_progress(report)
+        except:
+            pass
 
 ##__________________________________________________________________||

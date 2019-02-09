@@ -70,11 +70,11 @@ def test_atpbar_iterables(mock_report_progress, iterable_class, content):
     assert content == returned
 
     ##
-    assert len(content) == len(mock_report_progress.call_args_list)
+    assert len(content) + 1 == len(mock_report_progress.call_args_list)
     for i, c in enumerate(mock_report_progress.call_args_list):
         args, kwargs = c
         report = args[0]
-        assert i + 1 == report.done
+        assert i == report.done
         assert len(content) == report.total
 
 ##__________________________________________________________________||
@@ -92,11 +92,11 @@ def test_atpbar_enumerate(mock_report_progress, iterable_class, content):
     assert content == returned
 
     ##
-    assert len(content) == len(mock_report_progress.call_args_list)
+    assert len(content) + 1 == len(mock_report_progress.call_args_list)
     for i, c in enumerate(mock_report_progress.call_args_list):
         args, kwargs = c
         report = args[0]
-        assert i + 1 == report.done
+        assert i == report.done
         assert len(content) == report.total
 
 
