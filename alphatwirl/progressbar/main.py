@@ -33,10 +33,13 @@ class Atpbar(object):
 
     def __iter__(self):
         for i, e in enumerate(self. iterable):
-            report = ProgressReport(
-                name=self.name, done=(i + 1),
-                total=self.len_, taskid=self.id_)
-            alphatwirl.progressbar.report_progress(report)
+            try:
+                report = ProgressReport(
+                    name=self.name, done=(i + 1),
+                    total=self.len_, taskid=self.id_)
+                alphatwirl.progressbar.report_progress(report)
+            except:
+                pass
             yield e
 
 ##__________________________________________________________________||

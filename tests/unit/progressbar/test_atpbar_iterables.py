@@ -58,7 +58,7 @@ def test_iterable(iterable_class, content):
 ##__________________________________________________________________||
 @pytest.mark.parametrize('content', contents, ids=contents_ids)
 @pytest.mark.parametrize('iterable_class', iterable_classes)
-def test_atpbar(mock_report_progress, iterable_class, content):
+def test_atpbar_iterables(mock_report_progress, iterable_class, content):
     iterable = iterable_class(content)
 
     ##
@@ -76,5 +76,28 @@ def test_atpbar(mock_report_progress, iterable_class, content):
         report = args[0]
         assert i + 1 == report.done
         assert len(content) == report.total
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('content', contents, ids=contents_ids)
+@pytest.mark.parametrize('iterable_class', iterable_classes)
+def test_atpbar_enumerate(mock_report_progress, iterable_class, content):
+    iterable = iterable_class(content)
+
+    ##
+    returned = [ ]
+    for i, e in enumerate(atpbar(iterable)):
+        returned.append(e)
+
+    ##
+    assert content == returned
+
+    ##
+    assert len(content) == len(mock_report_progress.call_args_list)
+    for i, c in enumerate(mock_report_progress.call_args_list):
+        args, kwargs = c
+        report = args[0]
+        assert i + 1 == report.done
+        assert len(content) == report.total
+
 
 ##__________________________________________________________________||
