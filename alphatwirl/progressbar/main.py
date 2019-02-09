@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import uuid
+import logging
 
 import alphatwirl
 from .ProgressReport import ProgressReport
@@ -9,8 +10,14 @@ def atpbar(iterable, **kwargs):
     """Progress bar
 
     """
+    try:
+        len_ = len(iterable)
+    except TypeError:
+        logger = logging.getLogger(__name__)
+        logging.warning('length is unknown: {!r}'.format(iterable))
+        logging.warning('atpbar is turned off')
+        return iterable
 
-    len_ = len(iterable)
     name = repr(iterable)
     return Atpbar(iterable, name=name, len_=len_)
 
