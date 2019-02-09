@@ -3,6 +3,11 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.3...master))
+- added function `atpbar`, which initializes `Atpbar`
+- added iterable `Atpbar`, which wraps another iterable and reports
+  progress during iterations, inspired by tqdm
+- added a link to a quick start tutorial on Jupyter Notebook
+  mybinder.org in README.md
 
 ## [0.20.3] - 2019-01-25
 
