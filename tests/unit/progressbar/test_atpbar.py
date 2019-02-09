@@ -18,21 +18,63 @@ def mock_report_progress(monkeypatch):
     return ret
 
 ##__________________________________________________________________||
-def test_iteration(mock_report_progress):
+class Iter(object):
+    def __init__(self, content):
+        self.content = content
 
-    iterable = range(4)
+    def __len__(self):
+        return len(self.content)
+
+    def __iter__(self):
+        for e in self.content:
+            yield e
+
+class GetItem(object):
+    def __init__(self, content):
+        self.content = content
+
+    def __len__(self):
+        return len(self.content)
+
+    def __getitem__(self, i):
+        return self.content[i]
+
+##__________________________________________________________________||
+iterable_classes = [list, Iter, GetItem]
+
+empty = [ ]
+one = [mock.sentinel.item1]
+three = [mock.sentinel.item1, mock.sentinel.item2, mock.sentinel.item3]
+contents = [empty, one, three]
+contents_ids = ['empty', 'one', 'three']
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('content', contents, ids=contents_ids)
+@pytest.mark.parametrize('iterable_class', iterable_classes)
+def test_iterable(iterable_class, content):
+    iterable = iterable_class(content)
+    assert content == [e for e in iterable]
+
+##__________________________________________________________________||
+@pytest.mark.parametrize('content', contents, ids=contents_ids)
+@pytest.mark.parametrize('iterable_class', iterable_classes)
+def test_atpbar(mock_report_progress, iterable_class, content):
+    iterable = iterable_class(content)
+
+    ##
     returned = [ ]
-
     for e in atpbar(iterable):
         returned.append(e)
 
-    assert [0, 1, 2, 3] == returned
-    assert 4 == len(mock_report_progress.call_args_list)
+    ##
+    assert content == returned
 
+    ##
+    assert len(content) == len(mock_report_progress.call_args_list)
     for i, c in enumerate(mock_report_progress.call_args_list):
         args, kwargs = c
         report = args[0]
         assert i + 1 == report.done
-        assert 4 == report.total
+        assert len(content) == report.total
 
 ##__________________________________________________________________||
