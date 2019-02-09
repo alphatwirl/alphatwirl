@@ -1,0 +1,33 @@
+# Tai Sakuma <tai.sakuma@gmail.com>
+import uuid
+
+import alphatwirl
+from .ProgressReport import ProgressReport
+
+##__________________________________________________________________||
+def atpbar(iterable, **kwargs):
+    """Progress bar
+
+    """
+
+    len_ = len(iterable)
+    name = repr(iterable)
+    return Atpbar(iterable, name=name, len_=len_)
+
+##__________________________________________________________________||
+class Atpbar(object):
+    def __init__(self, iterable, name, len_):
+        self.iterable = iterable
+        self.name = name
+        self.len_ = len_
+        self.id_ = uuid.uuid4()
+
+    def __iter__(self):
+        for i, e in enumerate(self. iterable):
+            report = ProgressReport(
+                name=self.name, done=(i + 1),
+                total=self.len_, taskid=self.id_)
+            alphatwirl.progressbar.report_progress(report)
+            yield e
+
+##__________________________________________________________________||
