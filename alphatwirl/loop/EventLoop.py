@@ -1,8 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import uuid
-
-import alphatwirl
 from alphatwirl.misc.deprecation import _renamed_class_method_option
+from alphatwirl.progressbar import atpbar
 
 ##__________________________________________________________________||
 class EventLoop(object):
@@ -20,9 +18,6 @@ class EventLoop(object):
     def __init__(self, build_events, reader, progressbar_label=None):
         self.build_events = build_events
         self.reader = reader
-
-        # assign a random unique id to be used by progress bar
-        self.taskid = uuid.uuid4()
 
         ##
         if progressbar_label is None:
@@ -46,22 +41,10 @@ class EventLoop(object):
     def __call__(self):
         events = self.build_events()
         self.nevents = len(events)
-        self._report_progress(0)
         self.reader.begin(events)
-        for i, event in enumerate(events):
-            self._report_progress(i+1)
+        for event in atpbar(events, name=self.progressbar_label):
             self.reader.event(event)
         self.reader.end()
         return self.reader
-
-    def _report_progress(self, i):
-        try:
-            report = alphatwirl.progressbar.ProgressReport(
-                name=self.progressbar_label, done=(i),
-                total=self.nevents, taskid=self.taskid
-            )
-            alphatwirl.progressbar.report_progress(report)
-        except:
-            pass
 
 ##__________________________________________________________________||

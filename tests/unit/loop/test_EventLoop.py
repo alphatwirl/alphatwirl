@@ -8,7 +8,7 @@ except ImportError:
     import mock
 
 from alphatwirl.loop import EventLoop
-from alphatwirl import progressbar
+from alphatwirl.progressbar import atpbar
 
 ##__________________________________________________________________||
 @pytest.fixture(params=[0, 3])
@@ -31,6 +31,13 @@ def reader():
 @pytest.fixture()
 def obj(build_events, reader):
     return EventLoop(build_events, reader)
+
+@pytest.fixture()
+def mock_atpbar(monkeypatch):
+    ret = mock.Mock(wraps=atpbar)
+    module = sys.modules['alphatwirl.loop.EventLoop']
+    monkeypatch.setattr(module, 'atpbar', ret)
+    return ret
 
 ##__________________________________________________________________||
 def test_progressbar_label(build_events, reader):
@@ -55,29 +62,9 @@ def test_call(obj, events, reader):
     assert expected == reader.method_calls
 
 ##__________________________________________________________________||
-@pytest.fixture()
-def report_progress(monkeypatch):
-    ret = mock.Mock()
-    module = sys.modules['alphatwirl.progressbar']
-    monkeypatch.setattr(module, 'report_progress', ret)
-    return ret
-
-@pytest.fixture()
-def ProgressReport(monkeypatch):
-    ret = mock.Mock()
-    module = sys.modules['alphatwirl.progressbar']
-    monkeypatch.setattr(module, 'ProgressReport', ret)
-    return ret
-
-def test_report_progress(obj, report_progress, ProgressReport):
-    obj()
-    expected = [
-        mock.call(ProgressReport(taskid=obj.taskid, name='EventLoop', done=0, total=3)),
-        mock.call(ProgressReport(taskid=obj.taskid, name='EventLoop', done=1, total=3)),
-        mock.call(ProgressReport(taskid=obj.taskid, name='EventLoop', done=2, total=3)),
-        mock.call(ProgressReport(taskid=obj.taskid, name='EventLoop', done=3, total=3))
-    ]
-    actual = report_progress.call_args_list
-    assert expected[0] == actual[0]
+def test_atpbar(obj, mock_atpbar, events, reader):
+    assert reader == obj()
+    expected = [mock.call(events, name='EventLoop')]
+    assert expected == mock_atpbar.call_args_list
 
 ##__________________________________________________________________||
