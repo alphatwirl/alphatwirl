@@ -40,7 +40,6 @@ class EventLoop(object):
 
     def __call__(self):
         events = self.build_events()
-        self.nevents = len(events)
         self.reader.begin(events)
         for event in atpbar(events, name=self.progressbar_label):
             self.reader.event(event)
