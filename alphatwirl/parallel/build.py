@@ -100,7 +100,13 @@ def _build_parallel_multiprocessing(quiet, processes):
 
 ##__________________________________________________________________||
 def is_jupyter_notebook():
-    return True
+    try:
+        from IPython import get_ipython
+        if 'IPKernelApp' in get_ipython().config:
+            return True
+    except:
+        pass
+    return False
 
 ##__________________________________________________________________||
 @_deprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')
