@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.1...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...master))
+
+## [0.21.2] - 2019-02-10
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.21.2/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.1...v0.21.2))
 - implemented `is_jupyter_notebook()`
 
 ## [0.21.1] - 2019-02-10
