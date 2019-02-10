@@ -1,11 +1,11 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import multiprocessing
+import threading
 import time
 
 ##__________________________________________________________________||
-class ProgressReportPickup(multiprocessing.Process):
+class ProgressReportPickup(threading.Thread):
     def __init__(self, queue, presentation):
-        multiprocessing.Process.__init__(self)
+        threading.Thread.__init__(self)
         self.queue = queue
         self.presentation = presentation
         self.last_wait_time = 1.0 # [second]
