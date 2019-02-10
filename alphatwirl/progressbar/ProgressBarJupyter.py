@@ -1,6 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import time
-import sys, collections
 
 import ipywidgets as widgets
 from IPython.display import display
