@@ -9,6 +9,13 @@ try:
 except ImportError:
     import mock
 
+has_jupyter_notebook = False
+try:
+    from alphatwirl.progressbar import ProgressBarJupyter
+    has_jupyter_notebook = True
+except ImportError:
+    pass
+
 from alphatwirl.parallel import build_parallel
 from alphatwirl.parallel.build import build_parallel_multiprocessing
 
@@ -27,9 +34,13 @@ def isatty(request, monkeypatch):
     monkeypatch.setattr(module, 'sys', f)
     return ret
 
-@pytest.fixture(
-    params=[True, False]
-)
+##__________________________________________________________________||
+if has_jupyter_notebook:
+    is_jupyter_notebook_parames = [True, False]
+else:
+    is_jupyter_notebook_parames = [False]
+
+@pytest.fixture(params=is_jupyter_notebook_parames)
 def is_jupyter_notebook(request, monkeypatch):
     ret = request.param
     f = mock.Mock()
