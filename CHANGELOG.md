@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.0...master))
+- removed an unrecognized option (`step`) of `IntProgress`
 
 ## [0.21.0] - 2019-02-10
 
