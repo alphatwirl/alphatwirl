@@ -83,6 +83,8 @@ def _build_parallel_multiprocessing(quiet, processes):
         progressBar = None
     elif sys.stdout.isatty():
         progressBar = progressbar.ProgressBar()
+    elif is_jupyter_notebook():
+        progressBar = progressbar.ProgressBarJupyter()
     else:
         progressBar = progressbar.ProgressPrint()
 
@@ -97,6 +99,8 @@ def _build_parallel_multiprocessing(quiet, processes):
     return Parallel(progressMonitor, communicationChannel)
 
 ##__________________________________________________________________||
+def is_jupyter_notebook():
+    return True
 
 ##__________________________________________________________________||
 @_deprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')

@@ -27,10 +27,21 @@ def isatty(request, monkeypatch):
     monkeypatch.setattr(module, 'sys', f)
     return ret
 
+@pytest.fixture(
+    params=[True, False]
+)
+def is_jupyter_notebook(request, monkeypatch):
+    ret = request.param
+    f = mock.Mock()
+    f.return_value = ret
+    module = sys.modules['alphatwirl.parallel.build']
+    monkeypatch.setattr(module, 'is_jupyter_notebook', f)
+    return ret
+
 ##__________________________________________________________________||
 @pytest.mark.parametrize('processes', [0, 1, 3])
 @pytest.mark.parametrize('quiet', [True, False])
-def test_build_parallel_multiprocessing(quiet, processes, isatty):
+def test_build_parallel_multiprocessing(quiet, processes, isatty, is_jupyter_notebook):
 
     parallel_mode = 'multiprocessing'
     parallel = build_parallel(
@@ -50,6 +61,8 @@ def test_build_parallel_multiprocessing(quiet, processes, isatty):
     if not quiet:
         if isatty:
             assert 'ProgressBar' == parallel.progressMonitor.presentation.__class__.__name__
+        elif is_jupyter_notebook:
+            assert 'ProgressBarJupyter' == parallel.progressMonitor.presentation.__class__.__name__
         else:
             assert 'ProgressPrint' == parallel.progressMonitor.presentation.__class__.__name__
 
