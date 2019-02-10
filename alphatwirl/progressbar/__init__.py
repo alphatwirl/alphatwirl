@@ -9,6 +9,12 @@ from .ProgressReporter import ProgressReporter
 from .main import atpbar
 
 ##__________________________________________________________________||
+try:
+    from .ProgressBarJupyter import ProgressBarJupyter
+except ImportError:
+    pass
+
+##__________________________________________________________________||
 _progress_reporter = None
 
 def report_progress(report):
