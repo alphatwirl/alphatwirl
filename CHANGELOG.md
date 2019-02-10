@@ -3,6 +3,9 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.3...master))
+- added progress bars for Jupyter Notebook
+- replaced `multiprocessing` with `threading` for progress bars as
+  Jupyter Notebook doesn't let a fork to display progress bars
 - added function `atpbar`, which initializes `Atpbar`
   - used in `EventLoop` and `ReaderComposite`
 - added iterable `Atpbar`, which wraps another iterable and reports
