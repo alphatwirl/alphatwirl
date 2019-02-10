@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.3...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.0...master))
+
+## [0.21.0] - 2019-02-10
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.21.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.20.3...v0.21.0))
 - added progress bars for Jupyter Notebook
 - replaced `multiprocessing` with `threading` for progress bars as
   Jupyter Notebook doesn't let a fork to display progress bars
