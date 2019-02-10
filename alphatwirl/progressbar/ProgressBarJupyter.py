@@ -44,7 +44,7 @@ class ProgressBarJupyter(object):
 
     def _create_widget(self, report):
         bar = widgets.IntProgress(
-            value=report.done, min=0, max=report.total, step=1,
+            value=report.done, min=0, max=report.total,
             description='',
             bar_style='', # 'success', 'info', 'warning', 'danger' or ''
             orientation='horizontal'
