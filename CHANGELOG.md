@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.1...master))
+- implemented `is_jupyter_notebook()`
 
 ## [0.21.1] - 2019-02-10
 
