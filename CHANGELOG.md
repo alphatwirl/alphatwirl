@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...master))
+- updated tests for `progressbar`
 
 ## [0.21.2] - 2019-02-10
 
