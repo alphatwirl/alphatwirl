@@ -32,7 +32,6 @@ loop
    EventLoop
    DatasetIntoEventBuildersSplitter
    EventDatasetReader
-   EventLoopProgressReportWriter
    EventLoopRunner
    MPEventLoopRunner
    ReaderComposite

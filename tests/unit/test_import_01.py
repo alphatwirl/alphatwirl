@@ -62,7 +62,6 @@ def test_classes():
     assert inspect.isclass(alphatwirl.loop.CollectorComposite)
     assert inspect.isclass(alphatwirl.loop.DatasetIntoEventBuildersSplitter)
     assert inspect.isclass(alphatwirl.loop.EventLoop)
-    assert inspect.isclass(alphatwirl.loop.EventLoopProgressReportWriter)
     assert inspect.isclass(alphatwirl.loop.EventLoopRunner)
     assert inspect.isclass(alphatwirl.loop.EventsInDatasetReader)
     assert inspect.isclass(alphatwirl.loop.MPEventLoopRunner)
