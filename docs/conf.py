@@ -43,7 +43,7 @@ path = os.path.join(path, 'alphatwirl')
 sys.path.insert(0, path)
 del path
 from _version import get_versions
-sys.path.pop()
+sys.path.pop(0)
 
 version = '.'.join(get_versions()['version'].split('.')[0:2])
 # e.g., '0.11'
