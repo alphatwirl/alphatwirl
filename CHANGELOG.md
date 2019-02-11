@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...master))
+- updated requirements for docs (for readthedocs)
+- removed deprecated objects: `EventBuilder`, `BEventBuilder`,
+  `EventBuilderConfig`
+- removed an unused object: `EventLoopProgressReportWriter`
 - updated tests for `progressbar`
 
 ## [0.21.2] - 2019-02-10
