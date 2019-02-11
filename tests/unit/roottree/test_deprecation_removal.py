@@ -15,7 +15,10 @@ if not has_no_ROOT:
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
-removed_classes = [EventBuilder, BEventBuilder]
+if has_no_ROOT:
+    removed_classes = [ ]
+else:
+    removed_classes = [EventBuilder, BEventBuilder]
 
 @pytest.mark.parametrize('Class', removed_classes)
 def test_removed(Class, caplog):
