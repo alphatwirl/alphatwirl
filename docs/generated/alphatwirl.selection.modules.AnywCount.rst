@@ -16,6 +16,7 @@ alphatwirl.selection.modules.AnywCount
       ~AnywCount.__init__
       ~AnywCount.add
       ~AnywCount.begin
+      ~AnywCount.collect
       ~AnywCount.end
       ~AnywCount.event
       ~AnywCount.merge

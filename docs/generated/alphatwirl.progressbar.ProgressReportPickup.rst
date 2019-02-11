@@ -14,11 +14,15 @@ alphatwirl.progressbar.ProgressReportPickup
    .. autosummary::
    
       ~ProgressReportPickup.__init__
+      ~ProgressReportPickup.getName
+      ~ProgressReportPickup.isAlive
+      ~ProgressReportPickup.isDaemon
       ~ProgressReportPickup.is_alive
       ~ProgressReportPickup.join
       ~ProgressReportPickup.run
+      ~ProgressReportPickup.setDaemon
+      ~ProgressReportPickup.setName
       ~ProgressReportPickup.start
-      ~ProgressReportPickup.terminate
    
    
 
@@ -28,11 +32,8 @@ alphatwirl.progressbar.ProgressReportPickup
 
    .. autosummary::
    
-      ~ProgressReportPickup.authkey
       ~ProgressReportPickup.daemon
-      ~ProgressReportPickup.exitcode
       ~ProgressReportPickup.ident
       ~ProgressReportPickup.name
-      ~ProgressReportPickup.pid
    
    

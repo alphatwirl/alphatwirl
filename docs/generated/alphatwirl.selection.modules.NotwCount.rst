@@ -15,6 +15,7 @@ alphatwirl.selection.modules.NotwCount
    
       ~NotwCount.__init__
       ~NotwCount.begin
+      ~NotwCount.collect
       ~NotwCount.end
       ~NotwCount.event
       ~NotwCount.merge

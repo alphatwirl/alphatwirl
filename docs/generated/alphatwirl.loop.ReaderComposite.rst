@@ -16,6 +16,7 @@ alphatwirl.loop.ReaderComposite
       ~ReaderComposite.__init__
       ~ReaderComposite.add
       ~ReaderComposite.begin
+      ~ReaderComposite.collect
       ~ReaderComposite.end
       ~ReaderComposite.event
       ~ReaderComposite.merge

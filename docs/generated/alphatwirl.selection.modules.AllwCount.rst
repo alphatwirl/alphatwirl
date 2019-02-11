@@ -16,6 +16,7 @@ alphatwirl.selection.modules.AllwCount
       ~AllwCount.__init__
       ~AllwCount.add
       ~AllwCount.begin
+      ~AllwCount.collect
       ~AllwCount.end
       ~AllwCount.event
       ~AllwCount.merge

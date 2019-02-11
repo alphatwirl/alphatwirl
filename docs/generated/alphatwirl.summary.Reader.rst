@@ -15,6 +15,7 @@ alphatwirl.summary.Reader
    
       ~Reader.__init__
       ~Reader.begin
+      ~Reader.collect
       ~Reader.end
       ~Reader.event
       ~Reader.merge
