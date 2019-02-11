@@ -2,7 +2,17 @@
 import logging
 import pytest
 
-from alphatwirl.roottree import EventBuilder, BEventBuilder
+has_no_ROOT = False
+try:
+    import ROOT
+except ImportError:
+    has_no_ROOT = True
+
+if not has_no_ROOT:
+    from alphatwirl.roottree import EventBuilder, BEventBuilder
+
+##__________________________________________________________________||
+pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
 removed_classes = [EventBuilder, BEventBuilder]
