@@ -33,7 +33,6 @@ def test_with_ROOT():
 def test_functions():
     assert inspect.isfunction(alphatwirl.mkdir_p)
     assert inspect.isfunction(alphatwirl.configure.build_counter_collector_pair)
-    assert inspect.isfunction(alphatwirl.configure.build_progressMonitor_communicationChannel)
 
 def test_classes():
     assert inspect.isclass(alphatwirl.binning.Binning)
