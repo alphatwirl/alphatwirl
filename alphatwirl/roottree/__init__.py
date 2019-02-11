@@ -1,6 +1,5 @@
 from .Events import Events
 from .Branch import Branch
-from .EventBuilderConfig import EventBuilderConfig
 
 hasROOT = False
 try:
