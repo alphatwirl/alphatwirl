@@ -8,3 +8,9 @@ class EventBuilder(object):
     pass
 
 ##__________________________________________________________________||
+# removed after v0.21.0 (2019-02-11)
+@_removed(msg='use BuildEvents instead')
+class BEventBuilder(object):
+    pass
+
+##__________________________________________________________________||

@@ -11,9 +11,9 @@ except ImportError:
 if hasROOT:
     from .build import BuildEvents
     from .BEvents import BEvents
-    from .BEventBuilder import BEventBuilder
     from .BranchBuilder import BranchBuilder
-    from .EventBuilder import EventBuilder
     from .BranchAddressManager import BranchAddressManager
     from .BranchAddressManagerForVector import BranchAddressManagerForVector
     from .inspect import inspect_tree
+    from .removed import EventBuilder
+    from .removed import BEventBuilder
