@@ -11,6 +11,11 @@ from alphatwirl.progressbar import ProgressReport
 from alphatwirl.progressbar.presentation import Presentation
 
 ##__________________________________________________________________||
+class MockProgressBar(Presentation):
+    def _present(self):
+        pass
+
+##__________________________________________________________________||
 @pytest.fixture()
 def mock_time(monkeypatch):
     ret = mock.Mock()
@@ -20,11 +25,26 @@ def mock_time(monkeypatch):
 
 @pytest.fixture()
 def obj(mock_time):
-    return Presentation()
+    return MockProgressBar()
 
 ##__________________________________________________________________||
 def test_repr(obj):
     repr(obj)
+
+##__________________________________________________________________||
+def test_present(obj):
+    obj.present(ProgressReport('task1', 0, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 2, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 0, 10, 2))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 2, 10, 2))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 10, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 10, 10, 2))
+    assert not obj.active()
 
 ##__________________________________________________________________||
 params = [

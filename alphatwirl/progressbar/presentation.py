@@ -22,6 +22,11 @@ class Presentation(object):
     def nreports(self):
         return len(self._active_taskids)
 
+    def active(self):
+        if self._active_taskids:
+            return True
+        return False
+
     def present(self, report):
 
         if not self._register_report(report):
