@@ -30,7 +30,7 @@ class ProgressReportPickup(threading.Thread):
 
     def _run_until_reports_stop_coming(self):
         self._read_time()
-        while self.presentation.nreports() > 0:
+        while self.presentation.active():
             if self._time() - self.last_time > self.last_wait_time: break
             while not self.queue.empty():
                 report = self.queue.get()

@@ -2,13 +2,19 @@
 import pytest
 
 from alphatwirl.progressbar import BProgressMonitor, NullProgressMonitor, ProgressMonitor
+from alphatwirl.progressbar.presentation import Presentation
+
+##__________________________________________________________________||
+class MockProgressBar(Presentation):
+    def _present(self):
+        pass
 
 ##__________________________________________________________________||
 def build_BProgressMonitor():
-    return BProgressMonitor(presentation=None)
+    return BProgressMonitor(presentation=MockProgressBar())
 
 def build_ProgressMonitor():
-    return ProgressMonitor(presentation=None)
+    return ProgressMonitor(presentation=MockProgressBar)
 
 def build_NullProgressMonitor():
     return NullProgressMonitor()

@@ -19,9 +19,6 @@ class Presentation(object):
         self.interval = 1.0 # [second]
         self._read_time()
 
-    def nreports(self):
-        return len(self._active_taskids)
-
     def active(self):
         if self._active_taskids:
             return True
