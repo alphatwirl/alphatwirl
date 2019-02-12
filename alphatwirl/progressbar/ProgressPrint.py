@@ -1,9 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import time
-import sys, collections
+import sys
 
 ##__________________________________________________________________||
-class ProgressPrint(object):
+class Presentation(object):
+
     def __init__(self):
 
         self._new_taskids = [ ]
@@ -12,16 +13,8 @@ class ProgressPrint(object):
         self._complete_taskids = [ ] # in order of completion
         self._report_dict = { }
 
-        self.lines = [ ]
-        self.last = [ ]
-
-        self.interval = 60.0 # [second]
+        self.interval = 1.0 # [second]
         self._read_time()
-
-    def __repr__(self):
-        return '{}()'.format(
-            self.__class__.__name__
-        )
 
     def nreports(self):
         return len(self._active_taskids)
@@ -94,18 +87,36 @@ class ProgressPrint(object):
 
         return False
 
+    def _time(self):
+        return time.time()
+
+    def _read_time(self):
+        self.last_time = self._time()
+
+
+##__________________________________________________________________||
+class ProgressPrint(Presentation):
+    def __init__(self):
+        super(ProgressPrint, self).__init__()
+        self.lines = [ ]
+        self.last = [ ]
+        self.interval = 60.0 # [second]
+
+    def __repr__(self):
+        return '{}()'.format(
+            self.__class__.__name__
+        )
+
     def _present(self):
         self._create_lines()
         self._print_lines()
 
     def _create_lines(self):
-
         self.lines = [ ]
         for taskid in self._active_taskids + self._new_taskids:
             report = self._report_dict[taskid]
             line = self._create_line(report)
             self.lines.append(line)
-
         for taskid in self._finishing_taskids:
             report = self._report_dict[taskid]
             line = self._create_line(report)
@@ -123,11 +134,5 @@ class ProgressPrint(object):
         percent = float(report.done)/report.total if report.total > 0 else 1
         percent = round(percent * 100, 2)
         return " {1:8d} / {2:8d} ({0:6.2f}%) {3} ".format(percent, report.done, report.total, report.name)
-
-    def _time(self):
-        return time.time()
-
-    def _read_time(self):
-        self.last_time = self._time()
 
 ##__________________________________________________________________||
