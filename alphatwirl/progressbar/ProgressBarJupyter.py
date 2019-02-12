@@ -1,13 +1,14 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import time
-
 import ipywidgets as widgets
 from IPython.display import display
 
+from .presentation import Presentation
+
 ##__________________________________________________________________||
-class ProgressBarJupyter(object):
+class ProgressBarJupyter(Presentation):
     def __init__(self):
-        self.interval = 0.1 # [second]
+        super(ProgressBarJupyter, self).__init__()
+        self.interval = 0.05 # [second]
 
         self.container_widget = None
         self.active_box_list = [ ]
@@ -21,26 +22,18 @@ class ProgressBarJupyter(object):
             self.__class__.__name__
         )
 
-    def nreports(self):
-        return len(self.active_box_list)
+    def _present(self):
+        self._create_widgets()
+        self._update_widgets()
 
-    def present(self, report):
-
-        if not self._need_to_update(report):
-            return
-
+    def _create_widgets(self):
         if self.container_widget is None:
             self.container_widget = widgets.VBox()
             display(self.container_widget)
 
-        if report.taskid not in self.widget_dict:
+        for taskid in self._new_taskids:
+            report = self._report_dict[taskid]
             self._create_widget(report)
-
-        self._update_widget(report)
-
-        self._reorder_widgets(report)
-
-        self._read_time()
 
     def _create_widget(self, report):
         bar = widgets.IntProgress(
@@ -54,6 +47,13 @@ class ProgressBarJupyter(object):
         self.active_box_list.append(box)
         self.container_widget.children = self.complete_box_list + self.active_box_list
         self.widget_dict[report.taskid] = [box, bar, label]
+
+    def _update_widgets(self):
+        for taskid in self._finishing_taskids + self._active_taskids + self._new_taskids:
+            report = self._report_dict[taskid]
+            self._update_widget(report)
+
+        self._reorder_widgets(report)
 
     def _update_widget(self, report):
 
@@ -79,26 +79,11 @@ class ProgressBarJupyter(object):
         label.value = '<pre> | {:8d} / {:8d} |:  {:<{}s}</pre>'.format(report.done, report.total, name, name_field_length)
 
     def _reorder_widgets(self, report):
-        if report.done >= report.total:
-            box, bar, label = self.widget_dict[report.taskid]
+        for taskid in self._finishing_taskids:
+            box, bar, label = self.widget_dict[taskid]
             if box in self.active_box_list:
                 self.active_box_list.remove(box)
                 self.complete_box_list.append(box)
                 self.container_widget.children = self.complete_box_list + self.active_box_list
-
-    def _need_to_update(self, report):
-        if self._time() - self.last_time > self.interval:
-            return True
-        if report.done == report.total:
-            return True
-        if report.done == 0:
-            return True
-        return False
-
-    def _time(self):
-        return time.time()
-
-    def _read_time(self):
-        self.last_time = self._time()
 
 ##__________________________________________________________________||
