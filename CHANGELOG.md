@@ -10,7 +10,7 @@
 - removed an unused class: `EventLoopProgressReportWriter`
 - removed `build_progressMonitor_communicationChannel()`, the
   implementation of which had been already removed
-- updated tests for `progressbar`
+- cleaned code in `progressbar`
 
 ## [0.21.2] - 2019-02-10
 
