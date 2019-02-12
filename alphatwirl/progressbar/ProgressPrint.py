@@ -13,10 +13,9 @@ class ProgressPrint(object):
         self._report_dict = { }
 
         self.lines = [ ]
-        ## self.interval = 60.0 # [second]
         self.last = [ ]
 
-        self.interval = 1.0 # [second]
+        self.interval = 60.0 # [second]
         self._read_time()
 
     def __repr__(self):
