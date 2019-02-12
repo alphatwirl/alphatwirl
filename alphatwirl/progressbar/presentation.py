@@ -3,6 +3,10 @@ import time
 
 ##__________________________________________________________________||
 class Presentation(object):
+    """A base class of the progress presentation.
+
+    A subclass of this class should implement ``_present()``.
+    """
 
     def __init__(self):
 
