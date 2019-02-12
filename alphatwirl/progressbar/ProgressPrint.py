@@ -8,8 +8,9 @@ class ProgressPrint(object):
         self.reports = collections.OrderedDict()
         self.lines = [ ]
         self.interval = 60.0 # [second]
-        self._readTime()
         self.last = [ ]
+
+        self._read_time()
 
     def __repr__(self):
         return '{}()'.format(
@@ -24,7 +25,7 @@ class ProgressPrint(object):
         if not self._need_to_update(report): return
         self._create_lines()
         self._print_lines()
-        self._readTime()
+        self._read_time()
 
     def _create_lines(self):
         self.lines = [ ]
@@ -54,12 +55,18 @@ class ProgressPrint(object):
         return " {1:8d} / {2:8d} ({0:6.2f}%) {3} ".format(percent, report.done, report.total, report.name)
 
     def _need_to_update(self, report):
-        if self._time() - self.lastTime > self.interval: return True
-        if report.done == report.total: return True
-        if report.done == 0: return True
+        if self._time() - self.last_time > self.interval:
+            return True
+        if report.done == report.total:
+            return True
+        if report.done == 0:
+            return True
         return False
 
-    def _time(self): return time.time()
-    def _readTime(self): self.lastTime = self._time()
+    def _time(self):
+        return time.time()
+
+    def _read_time(self):
+        self.last_time = self._time()
 
 ##__________________________________________________________________||
