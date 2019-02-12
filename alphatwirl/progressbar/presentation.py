@@ -27,7 +27,7 @@ class Presentation(object):
         if not self._register_report(report):
             return
 
-        if not self._need_to_present(report):
+        if not self._need_to_present():
             return
 
         self._present()
@@ -77,7 +77,7 @@ class Presentation(object):
         self._complete_taskids.extend(self._finishing_taskids)
         del self._finishing_taskids[:]
 
-    def _need_to_present(self, report):
+    def _need_to_present(self):
 
         if self._new_taskids:
             return True
