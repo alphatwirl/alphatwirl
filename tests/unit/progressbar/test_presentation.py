@@ -198,3 +198,29 @@ def test_update_registry(
     assert expected_complete_taskids == obj._complete_taskids
 
 ##__________________________________________________________________||
+params = [
+    pytest.param([ ], [ ], 4.0, 2.0, 1.0, True),
+    pytest.param([1], [ ], 4.0, 2.0, 1.0, True),
+    pytest.param([ ], [1], 4.0, 2.0, 1.0, True),
+    pytest.param([ ], [ ], 4.0, 2.0, 3.0, False),
+]
+param_names = (
+    'new_taskids, finishing_taskids, '
+    'current_time, last_time, interval, expected'
+)
+
+@pytest.mark.parametrize(param_names, params)
+def test_need_to_present(
+        obj, mock_time, new_taskids, finishing_taskids,
+        current_time, last_time, interval, expected):
+
+    obj._new_taskids[:] = new_taskids
+    obj._finishing_taskids[:] = finishing_taskids
+
+    mock_time.return_value = current_time
+    obj.last_time = last_time
+    obj.interval = interval
+
+    assert expected == obj._need_to_present()
+
+##__________________________________________________________________||
