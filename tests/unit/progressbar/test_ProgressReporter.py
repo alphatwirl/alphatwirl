@@ -7,100 +7,71 @@ try:
 except ImportError:
     import mock
 
+from alphatwirl.progressbar import ProgressReport
 from alphatwirl.progressbar import ProgressReporter
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def queue():
-    return mock.MagicMock()
+def mock_queue():
+    return mock.Mock()
 
 @pytest.fixture()
-def mocktime():
-    return mock.MagicMock(return_value = 1000.0)
-
-@pytest.fixture()
-def reporter(queue, mocktime, monkeypatch):
-    monkeypatch.setattr(time, 'time', mocktime)
-    ret = ProgressReporter(queue)
+def mock_time(monkeypatch):
+    ret = mock.Mock()
+    monkeypatch.setattr(time, 'time', ret)
     return ret
 
 @pytest.fixture()
-def report():
-    return mock.MagicMock(**{'last.return_value': False, 'first.return_value': False})
-
-@pytest.fixture()
-def report_last():
-    return mock.MagicMock(**{'last.return_value': True, 'first.return_value': False})
-
-@pytest.fixture()
-def report_first():
-    return mock.MagicMock(**{'last.return_value': False, 'first.return_value': True})
+def obj(mock_queue, mock_time):
+    ret = ProgressReporter(mock_queue)
+    return ret
 
 ##__________________________________________________________________||
-def test_repr(reporter):
-    repr(reporter)
+def test_repr(obj):
+    repr(obj)
 
 ##__________________________________________________________________||
-def test_report_no_need_to_report(reporter, monkeypatch, report):
+def test_report_need_to_report(obj, monkeypatch, mock_queue, mock_time):
+    current_time = 15324.345
+    taskid = 234
+    mock_time.return_value = current_time
+    monkeypatch.setattr(obj, '_need_to_report', mock.Mock(return_value=True))
+    report = ProgressReport('task1', 0, 10, taskid)
+    obj.report(report)
+    assert [mock.call(report)] == mock_queue.put.call_args_list
+    assert {taskid: current_time} == obj.last_time
 
-    mock_report = mock.MagicMock()
-    monkeypatch.setattr(reporter, '_report', mock_report)
-
-    mock_need_to_report = mock.MagicMock()
-    mock_need_to_report.return_value = False
-    monkeypatch.setattr(reporter, '_need_to_report', mock_need_to_report)
-
-    reporter.report(report)
-
-    mock_report.assert_not_called()
-
-def test_report_need_to_report(reporter, monkeypatch, report):
-
-    mock_report = mock.MagicMock()
-    monkeypatch.setattr(reporter, '_report', mock_report)
-
-    mock_need_to_report = mock.MagicMock()
-    mock_need_to_report.return_value = True
-    monkeypatch.setattr(reporter, '_need_to_report', mock_need_to_report)
-
-    reporter.report(report)
-
-    mock_report.assert_called_once_with(report)
+def test_report_no_need_to_report(obj, monkeypatch, mock_queue, mock_time):
+    current_time = 15324.345
+    taskid = 234
+    mock_time.return_value = current_time
+    monkeypatch.setattr(obj, '_need_to_report', mock.Mock(return_value=False))
+    report = ProgressReport('task1', 0, 10, taskid)
+    obj.report(report)
+    assert [ ] == mock_queue.put.call_args_list
+    assert { } == obj.last_time
 
 ##__________________________________________________________________||
-def test__report(reporter, queue, mocktime, report):
+params = [
+    pytest.param(ProgressReport('task1', 0, 10, 1), {}, 10.0, True),
+    pytest.param(ProgressReport('task1', 10, 10, 1), {}, 10.0, True),
+    pytest.param(ProgressReport('task1', 0, 10, 1), {1: 10.0}, 10.0, True),
+    pytest.param(ProgressReport('task1', 1, 10, 1), {1: 10.0}, 30.0, True),
+    pytest.param(ProgressReport('task1', 1, 10, 1), {1: 10.0}, 15.0, False),
+]
+param_names = (
+    'report, last_time, current_time, '
+    'expected'
+)
 
-    assert 1000.0 == reporter.last_time
+@pytest.mark.parametrize(param_names, params)
+def test_need_to_report(
+        obj, mock_time, report,
+        last_time, current_time, expected):
 
-    mocktime.return_value = 1000.2
-    reporter._report(report)
-
-    assert [mock.call(report)] == queue.put.call_args_list
-
-    assert 1000.2 == reporter.last_time
-
-def test_need_to_report(reporter, queue, mocktime, report, report_last,
-                      report_first):
-
-    interval = reporter.interval
-    assert 0.1 == interval
-
-    assert 1000.0 == reporter.last_time
-
-    # before the interval passes
-    mocktime.return_value += 0.1*interval
-    assert not reporter._need_to_report(report)
-
-    # the first report before the interval passes
-    assert reporter._need_to_report(report_first)
-
-    # the last report before the interval passes
-    assert reporter._need_to_report(report_last)
-
-    # after the interval passes
-    mocktime.return_value += 1.2*interval
-    assert reporter._need_to_report(report)
-
-    assert 1000.0 == reporter.last_time
+    obj.interval = 10
+    obj.last_time = last_time
+    mock_time.return_value = current_time
+    assert expected == obj._need_to_report(report)
 
 ##__________________________________________________________________||
