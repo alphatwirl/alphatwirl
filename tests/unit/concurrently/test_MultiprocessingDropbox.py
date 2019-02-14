@@ -83,7 +83,7 @@ class MockProgressReporter(object):
 @pytest.fixture()
 def mock_progressmonitor():
     ret = mock.MagicMock()
-    ret.createReporter.return_value = MockProgressReporter()
+    ret.create_reporter.return_value = MockProgressReporter()
     return ret
 
 @pytest.fixture()

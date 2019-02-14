@@ -15,7 +15,7 @@ alphatwirl.progressbar.BProgressMonitor
    
       ~BProgressMonitor.__init__
       ~BProgressMonitor.begin
-      ~BProgressMonitor.createReporter
+      ~BProgressMonitor.create_reporter
       ~BProgressMonitor.end
    
    

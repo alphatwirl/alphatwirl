@@ -69,8 +69,8 @@ def test_begin_end(monitor, MockReporter):
     monitor.end()
     assert progressbar._progress_reporter is None
 
-def test_createReporter(monitor, mock_reporter, MockReporter, presentation):
-    reporter = monitor.createReporter()
+def test_create_reporter(monitor, mock_reporter, MockReporter, presentation):
+    reporter = monitor.create_reporter()
     assert [mock.call(queue = monitor.queue)] == MockReporter.call_args_list
     assert reporter is mock_reporter
 

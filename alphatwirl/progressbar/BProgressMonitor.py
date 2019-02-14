@@ -38,9 +38,9 @@ class BProgressMonitor(object):
       Then, create as many reporters (`ProgressReporter`) as the
       number of the tasks whose progresses need to be monitored::
 
-        reporter1 = monitor.createReporter()
-        reporter2 = monitor.createReporter()
-        reporter3 = monitor.createReporter()
+        reporter1 = monitor.create_reporter()
+        reporter2 = monitor.create_reporter()
+        reporter3 = monitor.create_reporter()
 
       These reporters can be given to objects which execute the tasks.
       These objects can be in other processes as long as the reporters
@@ -76,7 +76,7 @@ class BProgressMonitor(object):
     def begin(self):
         self.pickup = ProgressReportPickup(self.queue, self.presentation)
         self.pickup.start()
-        reporter = self.createReporter()
+        reporter = self.create_reporter()
         alphatwirl.progressbar._progress_reporter = reporter
 
     def end(self):

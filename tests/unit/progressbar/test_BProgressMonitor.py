@@ -34,14 +34,14 @@ def test_begin_end(monitor, presentation):
     monitor.end()
     assert alphatwirl.progressbar._progress_reporter is None
 
-def test_createReporter(monitor):
-    reporter = monitor.createReporter()
+def test_create_reporter(monitor):
+    reporter = monitor.create_reporter()
     assert isinstance(reporter, ProgressReporter)
 
 def test_send_report(monitor, presentation):
     presentation.active.return_value = True
     monitor.begin()
-    reporter = monitor.createReporter()
+    reporter = monitor.create_reporter()
     report = ProgressReport('task1', 0, 3)
     reporter.report(report)
     monitor.end()

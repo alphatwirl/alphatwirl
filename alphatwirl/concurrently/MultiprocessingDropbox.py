@@ -67,7 +67,7 @@ class MultiprocessingDropbox(object):
                 task_queue=self.task_queue,
                 result_queue=self.result_queue,
                 logging_queue=self.logging_queue,
-                progressReporter=self.progressMonitor.createReporter(),
+                progressReporter=self.progressMonitor.create_reporter(),
                 lock=self.lock
             )
             worker.start()
