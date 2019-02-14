@@ -15,35 +15,34 @@ import alphatwirl
 ##__________________________________________________________________||
 @pytest.fixture()
 def presentation():
-    ret = mock.MagicMock()
+    ret = mock.Mock()
     return ret
 
 @pytest.fixture()
-def monitor(presentation):
+def obj(presentation):
     return BProgressMonitor(presentation)
 
-
 ##__________________________________________________________________||
-def test_repr(monitor):
-    repr(monitor)
+def test_repr(obj):
+    repr(obj)
 
-def test_begin_end(monitor, presentation):
+def test_begin_end(obj, presentation):
     presentation.active.return_value = False
-    monitor.begin()
+    obj.begin()
     assert isinstance(alphatwirl.progressbar._progress_reporter, ProgressReporter)
-    monitor.end()
+    obj.end()
     assert alphatwirl.progressbar._progress_reporter is None
 
-def test_create_reporter(monitor):
-    reporter = monitor.create_reporter()
+def test_create_reporter(obj):
+    reporter = obj.create_reporter()
     assert isinstance(reporter, ProgressReporter)
 
-def test_send_report(monitor, presentation):
+def test_send_report(obj, presentation):
     presentation.active.return_value = True
-    monitor.begin()
-    reporter = monitor.create_reporter()
+    obj.begin()
+    reporter = obj.create_reporter()
     report = ProgressReport('task1', 0, 3)
     reporter.report(report)
-    monitor.end()
+    obj.end()
 
 ##__________________________________________________________________||
