@@ -12,6 +12,7 @@
 - removed `build_progressMonitor_communicationChannel()`, the
   implementation of which had been already removed
 - cleaned code in `progressbar`
+- updated the log message in '_deprecated()'
 
 ## [0.21.2] - 2019-02-10
 
