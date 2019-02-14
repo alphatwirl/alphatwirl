@@ -26,6 +26,12 @@ def obj(presentation):
 def test_repr(obj):
     repr(obj)
 
+def test_daemon(obj, presentation):
+    presentation.active.return_value = False
+    obj.begin()
+    assert obj.pickup.daemon
+    # end() doesn't need to be called because the pickup is a daemon
+
 def test_begin_end(obj, presentation):
     presentation.active.return_value = False
     obj.begin()

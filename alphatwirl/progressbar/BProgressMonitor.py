@@ -75,6 +75,9 @@ class BProgressMonitor(object):
 
     def begin(self):
         self.pickup = ProgressReportPickup(self.queue, self.presentation)
+        self.pickup.daemon = True # this makes the functions
+                                  # registered at atexit called even
+                                  # if the pickup is still running
         self.pickup.start()
         reporter = self.create_reporter()
         alphatwirl.progressbar._progress_reporter = reporter
