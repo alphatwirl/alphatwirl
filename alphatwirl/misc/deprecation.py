@@ -28,8 +28,11 @@ def _deprecated(msg=''):
     def _decorate_func(f, msg):
         module_name = f.__module__
         logger = logging.getLogger(module_name)
-        name = f.__name__
-        name = '{}.{}'.format(module_name, name)
+        try: # python 3
+            name = f.__qualname__
+            name = '{}.{}'.format(module_name, name)
+        except AttributeError: # python 2
+            name = f.__name__
         text = '{}() is deprecated.'.format(name)
         if msg:
             text += ' ' + msg
@@ -44,6 +47,7 @@ def _deprecated(msg=''):
         if inspect.isclass(f):
             return _decorate_class(f, msg)
         return _decorate_func(f, msg)
+
     return _imp
 
 ##__________________________________________________________________||
