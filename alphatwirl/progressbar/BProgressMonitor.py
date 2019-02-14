@@ -5,6 +5,7 @@ from .ProgressReporter import ProgressReporter
 from .ProgressReportPickup import ProgressReportPickup
 
 import alphatwirl
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
 class BProgressMonitor(object):
@@ -83,7 +84,11 @@ class BProgressMonitor(object):
         self.queue.put(None)
         self.pickup.join()
 
-    def createReporter(self):
+    def create_reporter(self):
         return ProgressReporter(queue=self.queue)
+
+    @_deprecated(msg='use create_reporter() instead')
+    def createReporter(self):
+        return self.create_reporter()
 
 ##__________________________________________________________________||
