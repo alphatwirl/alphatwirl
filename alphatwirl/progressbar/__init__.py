@@ -15,12 +15,10 @@ except ImportError:
     pass
 
 ##__________________________________________________________________||
-_progress_reporter = None
-
 def report_progress(report):
-    if _progress_reporter is None:
+    if _reporter is None:
         return
-    _progress_reporter.report(report)
+    _reporter.report(report)
 
 ##__________________________________________________________________||
 _reporter = None
