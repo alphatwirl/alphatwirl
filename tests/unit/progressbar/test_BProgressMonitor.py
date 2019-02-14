@@ -10,8 +10,6 @@ except ImportError:
 
 from alphatwirl.progressbar import BProgressMonitor, ProgressReporter, ProgressReport
 
-import alphatwirl
-
 ##__________________________________________________________________||
 @pytest.fixture()
 def presentation():
@@ -35,9 +33,7 @@ def test_daemon(obj, presentation):
 def test_begin_end(obj, presentation):
     presentation.active.return_value = False
     obj.begin()
-    assert isinstance(alphatwirl.progressbar._progress_reporter, ProgressReporter)
     obj.end()
-    assert alphatwirl.progressbar._progress_reporter is None
 
 def test_create_reporter(obj):
     reporter = obj.create_reporter()
