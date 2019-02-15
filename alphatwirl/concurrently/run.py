@@ -81,6 +81,7 @@ def print_logs(error):
 def setup():
     setup_logging()
     setup_python_modules()
+    disable_progressbar()
 
 def setup_logging():
     path = 'logging_levels.json.gz'
@@ -117,6 +118,10 @@ def setup_python_modules():
     if not os.path.exists(dirname): return
 
     sys.path.insert(0, dirname)
+
+def disable_progressbar():
+    import alphatwirl
+    alphatwirl.progressbar.do_not_start_monitor = True
 
 ##_______________________________________________________________||
 # http://stackoverflow.com/questions/33223564/atomically-creating-a-file-if-it-doesnt-exist-in-python
