@@ -57,7 +57,6 @@ def _end_monitor():
 
 def _create_presentation():
     if sys.stdout.isatty():
-
         return ProgressBar()
     if is_jupyter_notebook():
         return ProgressBarJupyter()
