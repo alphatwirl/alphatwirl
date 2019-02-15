@@ -2,7 +2,7 @@
 import sys
 import logging
 
-from alphatwirl import concurrently, progressbar
+from alphatwirl import concurrently
 from alphatwirl.misc.deprecation import _deprecated
 from alphatwirl.misc.deprecation import _deprecated_func_option
 
@@ -72,41 +72,17 @@ def _build_parallel_dropbox_(workingarea_options,
         dropbox=dropbox
     )
 
-    progressMonitor = progressbar.NullProgressMonitor()
-
-    return Parallel(progressMonitor, communicationChannel, workingarea)
+    return Parallel(None, communicationChannel, workingarea)
 
 ##__________________________________________________________________||
 def _build_parallel_multiprocessing(quiet, processes):
 
-    if quiet:
-        progressBar = None
-    elif sys.stdout.isatty():
-        progressBar = progressbar.ProgressBar()
-    elif is_jupyter_notebook():
-        progressBar = progressbar.ProgressBarJupyter()
-    else:
-        progressBar = progressbar.ProgressPrint()
-
     if processes is None or processes == 0:
-        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.ProgressMonitor(presentation = progressBar)
-        communicationChannel = concurrently.CommunicationChannel0()
+        communicationChannel = concurrently.CommunicationChannel0(progressbar=not quiet)
     else:
-        progressMonitor = progressbar.NullProgressMonitor() if quiet else progressbar.BProgressMonitor(presentation = progressBar)
-        dropbox = concurrently.MultiprocessingDropbox(processes, progressMonitor)
-        communicationChannel = concurrently.CommunicationChannel(dropbox = dropbox)
-
-    return Parallel(progressMonitor, communicationChannel)
-
-##__________________________________________________________________||
-def is_jupyter_notebook():
-    try:
-        from IPython import get_ipython
-        if 'IPKernelApp' in get_ipython().config:
-            return True
-    except:
-        pass
-    return False
+        dropbox = concurrently.MultiprocessingDropbox(processes, progressbar=not quiet)
+        communicationChannel = concurrently.CommunicationChannel(dropbox=dropbox)
+    return Parallel(None, communicationChannel)
 
 ##__________________________________________________________________||
 @_deprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')

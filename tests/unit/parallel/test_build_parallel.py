@@ -52,7 +52,7 @@ def is_jupyter_notebook(request, monkeypatch):
 ##__________________________________________________________________||
 @pytest.mark.parametrize('processes', [0, 1, 3])
 @pytest.mark.parametrize('quiet', [True, False])
-def test_build_parallel_multiprocessing(quiet, processes, isatty, is_jupyter_notebook):
+def test_build_parallel_multiprocessing(quiet, processes):
 
     parallel_mode = 'multiprocessing'
     parallel = build_parallel(
@@ -61,28 +61,13 @@ def test_build_parallel_multiprocessing(quiet, processes, isatty, is_jupyter_not
         processes=processes,
     )
 
-    ## progressMonitor
-    if quiet:
-        assert 'NullProgressMonitor' == parallel.progressMonitor.__class__.__name__
-    elif processes == 0:
-        assert 'ProgressMonitor' == parallel.progressMonitor.__class__.__name__
-    else:
-        assert 'BProgressMonitor' == parallel.progressMonitor.__class__.__name__
-
-    if not quiet:
-        if isatty:
-            assert 'ProgressBar' == parallel.progressMonitor.presentation.__class__.__name__
-        elif is_jupyter_notebook:
-            assert 'ProgressBarJupyter' == parallel.progressMonitor.presentation.__class__.__name__
-        else:
-            assert 'ProgressPrint' == parallel.progressMonitor.presentation.__class__.__name__
-
     ## communicationChannel
     if processes == 0:
         assert 'CommunicationChannel0' == parallel.communicationChannel.__class__.__name__
     else:
         assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
         assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
+        assert quiet == (not parallel.communicationChannel.dropbox.progressbar)
 
     ## workingarea
     assert parallel.workingarea is None
@@ -112,9 +97,6 @@ def test_build_parallel_subprocess(user_modules, dispatcher_options):
         user_modules=user_modules,
         dispatcher_options=dispatcher_options
     )
-
-    ## progressMonitor
-    assert 'NullProgressMonitor' == parallel.progressMonitor.__class__.__name__
 
     ## communicationChannel
     assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
@@ -147,9 +129,6 @@ def test_build_parallel_htcondor(
         dispatcher_options=dispatcher_options
     )
 
-    ## progressMonitor
-    assert 'NullProgressMonitor' == parallel.progressMonitor.__class__.__name__
-
     ## communicationChannel
     assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
     assert 'TaskPackageDropbox' == parallel.communicationChannel.dropbox.__class__.__name__
@@ -175,9 +154,7 @@ def test_build_depricated(caplog):
     with caplog.at_level(logging.WARNING):
         parallel = build_parallel_multiprocessing(quiet=True, processes=4)
 
-    progressMonitor = parallel.progressMonitor
     communicationChannel = parallel.communicationChannel
-    assert 'NullProgressMonitor' == progressMonitor.__class__.__name__
     assert 'CommunicationChannel' == communicationChannel.__class__.__name__
     assert 'MultiprocessingDropbox' == communicationChannel.dropbox.__class__.__name__
 
