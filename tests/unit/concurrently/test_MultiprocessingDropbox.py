@@ -44,7 +44,6 @@ class MockTask(object):
 
     def __call__(self, *args, **kwargs):
         time.sleep(self.time)
-        assert isinstance(progressbar._reporter, MockProgressReporter)
         return MockResult(name=self.name, args=args, kwargs=kwargs)
 
 ##__________________________________________________________________||

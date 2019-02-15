@@ -12,6 +12,9 @@ from .TaskPackage import TaskPackage
 
 from .Worker import Worker
 
+from alphatwirl.misc.deprecation import _deprecated_class_method_option
+import alphatwirl
+
 ##__________________________________________________________________||
 # https://docs.python.org/3/howto/logging-cookbook.html#logging-to-a-single-file-from-multiple-processes
 def logger_thread(queue):
@@ -24,11 +27,26 @@ def logger_thread(queue):
 
 ##__________________________________________________________________||
 class MultiprocessingDropbox(object):
-    def __init__(self, nprocesses=16, progressMonitor=None):
+    """A drop box for task packages.
+
+    The tasks will be executed in multiprocessing
+
+    Parameters
+    ----------
+    nprocesses : int
+        The number of processes
+    progressbar : bool
+        Progress bars from atpbar can be used in spawned processes if
+        True.
+
+    """
+    @_deprecated_class_method_option('progressMonitor')
+    def __init__(self, nprocesses=16, progressMonitor=None, progressbar=True):
 
         if nprocesses <= 0:
             raise ValueError("nprocesses must be at least one: {} is given".format(nprocesses))
 
+        self.progressbar = progressbar
         self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
 
         self.n_max_workers = nprocesses
@@ -40,13 +58,15 @@ class MultiprocessingDropbox(object):
         self.n_ongoing_tasks = 0
         self.task_idx = -1 # so it starts from 0
 
+        self._repr_pairs = [
+            ('nprocesses', nprocesses),
+            ('progressbar', progressbar),
+        ]
+
     def __repr__(self):
-        return '{}(progressMonitor={!r}, n_max_workers={!r}, n_ongoing_tasks={!r}, task_idx={!r})'.format(
+        return '{}({})'.format(
             self.__class__.__name__,
-            self.progressMonitor,
-            self.n_max_workers,
-            self.n_ongoing_tasks,
-            self.task_idx
+            ', '.join(['{}={!r}'.format(n, v) for n, v in self._repr_pairs]),
         )
 
     def open(self):
@@ -61,13 +81,20 @@ class MultiprocessingDropbox(object):
         )
         self.loggingListener.start()
 
+        # start progress monitor
+        if self.progressbar:
+            alphatwirl.progressbar._start_monitor_if_necessary()
+            reporter = alphatwirl.progressbar._reporter
+        else:
+            reporter = None
+
         # start workers
         for i in range(self.n_max_workers):
             worker = Worker(
                 task_queue=self.task_queue,
                 result_queue=self.result_queue,
                 logging_queue=self.logging_queue,
-                progressReporter=self.progressMonitor.create_reporter(),
+                progressReporter=reporter,
                 lock=self.lock
             )
             worker.start()
