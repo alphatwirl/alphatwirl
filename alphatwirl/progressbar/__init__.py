@@ -37,8 +37,7 @@ def _start_monitor_if_necessary():
     if _monitor:
         # This shouldn't happen.
         # But if it does, end the old monitor.
-        _monitor.end()
-        _monitor = None
+        _end_monitor()
 
     presentation = _create_presentation()
     monitor = BProgressMonitor(presentation=presentation)
@@ -46,17 +45,19 @@ def _start_monitor_if_necessary():
     _reporter = monitor.create_reporter()
     _monitor = monitor
 
-    def _end_monitor():
-        global _monitor
-        if _monitor:
-            _monitor.end()
-            _monitor = None
-        _reporter = None
-
     atexit.register(_end_monitor)
+
+def _end_monitor():
+    global _reporter
+    global _monitor
+    if _monitor:
+        _monitor.end()
+        _monitor = None
+    _reporter = None
 
 def _create_presentation():
     if sys.stdout.isatty():
+
         return ProgressBar()
     if is_jupyter_notebook():
         return ProgressBarJupyter()
