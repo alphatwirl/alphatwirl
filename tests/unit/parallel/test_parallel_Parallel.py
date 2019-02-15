@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
+
 import pytest
 
 try:
@@ -10,10 +12,6 @@ from alphatwirl.parallel import Parallel
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def progressMonitor():
-    return mock.Mock()
-
-@pytest.fixture()
 def communicationChannel():
     return mock.Mock()
 
@@ -22,11 +20,11 @@ def workingarea():
     return mock.Mock()
 
 @pytest.fixture()
-def obj(progressMonitor, communicationChannel, workingarea):
+def obj(communicationChannel, workingarea):
     return Parallel(
-        progressMonitor = progressMonitor,
-        communicationChannel = communicationChannel,
-        workingarea = workingarea
+        progressMonitor=None,
+        communicationChannel=communicationChannel,
+        workingarea=workingarea
     )
 
 def test_repr(obj):
@@ -35,17 +33,25 @@ def test_repr(obj):
 def test_workingarea(obj, workingarea):
     assert workingarea is obj.workingarea
 
-def test_begin_terminate_end(obj, progressMonitor, communicationChannel):
+def test_begin_terminate_end(obj, communicationChannel):
 
     obj.begin()
-    assert [mock.call()] == progressMonitor.begin.call_args_list
     assert [mock.call()] == communicationChannel.begin.call_args_list
 
     obj.terminate()
     assert [mock.call()] == communicationChannel.terminate.call_args_list
 
     obj.end()
-    assert [mock.call()] == progressMonitor.end.call_args_list
     assert [mock.call()] == communicationChannel.end.call_args_list
+
+##__________________________________________________________________||
+def test_deprectated(caplog):
+    with caplog.at_level(logging.WARNING):
+        Parallel(mock.Mock(), mock.Mock(), mock.Mock())
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'parallel' in caplog.records[0].name
+    assert 'deprecated' in caplog.records[0].msg
 
 ##__________________________________________________________________||

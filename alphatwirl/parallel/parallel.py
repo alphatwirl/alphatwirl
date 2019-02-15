@@ -1,15 +1,22 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import logging
 
 ##__________________________________________________________________||
 class Parallel(object):
-    def __init__(self, progressMonitor, communicationChannel, workingarea=None):
-        self.progressMonitor = progressMonitor
+    def __init__(self, progressMonitor=None, communicationChannel=None, workingarea=None):
         self.communicationChannel = communicationChannel
         self.workingarea = workingarea
 
+        if progressMonitor is not None:
+            # Not using @_deprecated_class_method_option() because
+            # progressMonitor is usually given as a position argument
+            # rather than a keyword argument.
+            logger = logging.getLogger(__name__)
+            logger.warning('progressMonitor is given. This is deprecated and will be ignored.')
+
+
     def __repr__(self):
         name_value_pairs = (
-            ('progressMonitor',      self.progressMonitor),
             ('communicationChannel', self.communicationChannel),
             ('workingarea',          self.workingarea)
 
@@ -20,14 +27,12 @@ class Parallel(object):
         )
 
     def begin(self):
-        self.progressMonitor.begin()
         self.communicationChannel.begin()
 
     def terminate(self):
         self.communicationChannel.terminate()
 
     def end(self):
-        self.progressMonitor.end()
         self.communicationChannel.end()
 
 ##__________________________________________________________________||
