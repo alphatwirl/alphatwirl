@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import itertools
+
 import pytest
 
 try:
@@ -36,13 +38,10 @@ def MockBProgressMonitor(monkeypatch):
 
 @pytest.fixture(
     autouse=True,
-    params=[ # were there _reporter and _monitor already there
-        (False, False), (False, True),
-        (True, False), (True, True),
-    ]
+    params=itertools.product([True, False], [True, False], [True, False])
 )
 def global_variables(monkeypatch, request):
-    was_reporter, was_monitor = request.param
+    was_reporter, was_monitor, do_not_start_monitor = request.param
 
     if was_reporter:
         mock_reporter = mock.Mock()
@@ -56,13 +55,23 @@ def global_variables(monkeypatch, request):
 
     monkeypatch.setattr(alphatwirl.progressbar, '_reporter', mock_reporter)
     monkeypatch.setattr(alphatwirl.progressbar, '_monitor', mock_monitor)
+    monkeypatch.setattr(alphatwirl.progressbar, 'do_not_start_monitor', do_not_start_monitor)
 
 def test_start_monitor_if_necessary(mock_atexit, MockBProgressMonitor, mock_presentation):
 
     org_reporter = alphatwirl.progressbar._reporter
     org_monitor = alphatwirl.progressbar._monitor
+    org_do_not_start_monitor = alphatwirl.progressbar.do_not_start_monitor
 
     _start_monitor_if_necessary()
+
+    assert org_do_not_start_monitor == alphatwirl.progressbar.do_not_start_monitor
+
+    if org_do_not_start_monitor:
+        assert alphatwirl.progressbar._reporter is org_reporter
+        assert alphatwirl.progressbar._monitor is org_monitor
+        assert not mock_atexit.register.call_args_list
+        return
 
     if org_reporter:
         assert alphatwirl.progressbar._reporter is org_reporter

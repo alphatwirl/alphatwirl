@@ -21,6 +21,7 @@ def report_progress(report):
     _reporter.report(report)
 
 ##__________________________________________________________________||
+do_not_start_monitor = False
 _reporter = None
 _monitor = None
 
@@ -30,6 +31,9 @@ import atexit
 def _start_monitor_if_necessary():
     global _reporter
     global _monitor
+
+    if do_not_start_monitor:
+        return
 
     if _reporter:
         return
