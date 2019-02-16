@@ -123,7 +123,7 @@ class HTCondorJobSubmitter(object):
         for l in stdout.rstrip().split('\n'):
             logger.debug(l)
 
-        regex = re.compile("(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
+        regex = re.compile(r"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
         njobs = int(regex.search(stdout).groups()[0])
         clusterid = regex.search(stdout).groups()[1]
         # e.g., '3158626'
