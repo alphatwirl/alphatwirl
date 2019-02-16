@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.22.0...master))
+
+## [0.22.0] - 2019-02-16
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.22.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...v0.22.0))
 - updated progress bars
     - made them properly work for nested loops
     - unnecessitated manual initialization of the progress monitor
