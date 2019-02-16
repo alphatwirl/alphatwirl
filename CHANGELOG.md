@@ -17,6 +17,7 @@
       implementation of which had been already removed
 - updated the log message in '_deprecated()'
 - updated requirements for docs (for readthedocs)
+- used raw string for regex in `HTCondorJobSubmitter`
 - cleaned code
 
 ## [0.21.2] - 2019-02-10
