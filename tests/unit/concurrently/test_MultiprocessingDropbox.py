@@ -44,7 +44,6 @@ class MockTask(object):
 
     def __call__(self, *args, **kwargs):
         time.sleep(self.time)
-        assert isinstance(progressbar._progress_reporter, MockProgressReporter)
         return MockResult(name=self.name, args=args, kwargs=kwargs)
 
 ##__________________________________________________________________||
@@ -83,7 +82,7 @@ class MockProgressReporter(object):
 @pytest.fixture()
 def mock_progressmonitor():
     ret = mock.MagicMock()
-    ret.createReporter.return_value = MockProgressReporter()
+    ret.create_reporter.return_value = MockProgressReporter()
     return ret
 
 @pytest.fixture()

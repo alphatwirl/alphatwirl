@@ -10,40 +10,41 @@ except ImportError:
 
 from alphatwirl.progressbar import BProgressMonitor, ProgressReporter, ProgressReport
 
-import alphatwirl
-
 ##__________________________________________________________________||
 @pytest.fixture()
 def presentation():
-    ret = mock.MagicMock()
+    ret = mock.Mock()
     return ret
 
 @pytest.fixture()
-def monitor(presentation):
+def obj(presentation):
     return BProgressMonitor(presentation)
 
-
 ##__________________________________________________________________||
-def test_repr(monitor):
-    repr(monitor)
+def test_repr(obj):
+    repr(obj)
 
-def test_begin_end(monitor, presentation):
-    presentation.nreports.return_value = 0
-    monitor.begin()
-    assert isinstance(alphatwirl.progressbar._progress_reporter, ProgressReporter)
-    monitor.end()
-    assert alphatwirl.progressbar._progress_reporter is None
+def test_daemon(obj, presentation):
+    presentation.active.return_value = False
+    obj.begin()
+    assert obj.pickup.daemon
+    # end() doesn't need to be called because the pickup is a daemon
 
-def test_createReporter(monitor):
-    reporter = monitor.createReporter()
+def test_begin_end(obj, presentation):
+    presentation.active.return_value = False
+    obj.begin()
+    obj.end()
+
+def test_create_reporter(obj):
+    reporter = obj.create_reporter()
     assert isinstance(reporter, ProgressReporter)
 
-def test_send_report(monitor, presentation):
-    presentation.nreports.return_value = 10
-    monitor.begin()
-    reporter = monitor.createReporter()
+def test_send_report(obj, presentation):
+    presentation.active.return_value = True
+    obj.begin()
+    reporter = obj.create_reporter()
     report = ProgressReport('task1', 0, 3)
     reporter.report(report)
-    monitor.end()
+    obj.end()
 
 ##__________________________________________________________________||

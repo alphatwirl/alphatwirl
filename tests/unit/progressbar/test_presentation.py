@@ -11,6 +11,11 @@ from alphatwirl.progressbar import ProgressReport
 from alphatwirl.progressbar.presentation import Presentation
 
 ##__________________________________________________________________||
+class MockProgressBar(Presentation):
+    def _present(self):
+        pass
+
+##__________________________________________________________________||
 @pytest.fixture()
 def mock_time(monkeypatch):
     ret = mock.Mock()
@@ -20,11 +25,26 @@ def mock_time(monkeypatch):
 
 @pytest.fixture()
 def obj(mock_time):
-    return Presentation()
+    return MockProgressBar()
 
 ##__________________________________________________________________||
 def test_repr(obj):
     repr(obj)
+
+##__________________________________________________________________||
+def test_present(obj):
+    obj.present(ProgressReport('task1', 0, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 2, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 0, 10, 2))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 2, 10, 2))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 10, 10, 1))
+    assert obj.active()
+    obj.present(ProgressReport('task1', 10, 10, 2))
+    assert not obj.active()
 
 ##__________________________________________________________________||
 params = [
@@ -196,5 +216,31 @@ def test_update_registry(
     assert expected_active_taskids == obj._active_taskids
     assert expected_finishing_taskids == obj._finishing_taskids
     assert expected_complete_taskids == obj._complete_taskids
+
+##__________________________________________________________________||
+params = [
+    pytest.param([ ], [ ], 4.0, 2.0, 1.0, True),
+    pytest.param([1], [ ], 4.0, 2.0, 1.0, True),
+    pytest.param([ ], [1], 4.0, 2.0, 1.0, True),
+    pytest.param([ ], [ ], 4.0, 2.0, 3.0, False),
+]
+param_names = (
+    'new_taskids, finishing_taskids, '
+    'current_time, last_time, interval, expected'
+)
+
+@pytest.mark.parametrize(param_names, params)
+def test_need_to_present(
+        obj, mock_time, new_taskids, finishing_taskids,
+        current_time, last_time, interval, expected):
+
+    obj._new_taskids[:] = new_taskids
+    obj._finishing_taskids[:] = finishing_taskids
+
+    mock_time.return_value = current_time
+    obj.last_time = last_time
+    obj.interval = interval
+
+    assert expected == obj._need_to_present()
 
 ##__________________________________________________________________||

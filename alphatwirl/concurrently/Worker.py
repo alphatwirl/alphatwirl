@@ -36,7 +36,8 @@ class Worker(multiprocessing.Process):
         logger.addHandler(handler)
 
     def _configure_progressbar(self):
-        progressbar._progress_reporter = self.progressReporter
+        progressbar._reporter = self.progressReporter
+        progressbar.do_not_start_monitor = True
 
     def _run_tasks(self):
         while True:

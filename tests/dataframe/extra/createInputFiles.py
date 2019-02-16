@@ -65,7 +65,7 @@ tblcfg = [tableConfigCompleter.complete(c) for c in tblcfg]
 
 reader_collector_pair = [alphatwirl.configure.build_counter_collector_pair(c) for c in tblcfg]
 reader = alphatwirl.loop.ReaderComposite()
-collector = alphatwirl.loop.CollectorComposite(alphaTwirl.progressMonitor.createReporter())
+collector = alphatwirl.loop.CollectorComposite(alphaTwirl.progressMonitor.create_reporter())
 for r, c in reader_collector_pair:
     reader.add(r)
     collector.add(c)

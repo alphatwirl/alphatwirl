@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import alphatwirl
 
 ##__________________________________________________________________||
 class CommunicationChannel0(object):
@@ -13,19 +14,33 @@ class CommunicationChannel0(object):
     for `CommunicationChannel`, the tasks will be sequentially
     executed in the foreground.
 
+    Parameters
+    ----------
+    progressbar : bool
+        Progress bars from atpbar will be turned off if False.
+
     """
 
-    def __init__(self):
+    def __init__(self, progressbar=True):
+        self.progressbar = progressbar
+
         self.taskidx = -1 # so it starts from 0
         self.taskidx_result_pairs = [ ]
 
+        self._repr_pairs = [
+            ('progressbar', progressbar),
+        ]
+
     def __repr__(self):
-        return '{}()'.format(
+        return '{}({})'.format(
             self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in self._repr_pairs]),
         )
 
     def begin(self):
-        pass
+        if not self.progressbar:
+            alphatwirl.progressbar._end_monitor()
+            alphatwirl.progressbar.do_not_start_monitor = True
 
     def put(self, task, *args, **kwargs):
         self.taskidx += 1

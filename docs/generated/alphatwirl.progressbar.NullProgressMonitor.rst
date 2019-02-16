@@ -14,7 +14,7 @@ alphatwirl.progressbar.NullProgressMonitor
    .. autosummary::
    
       ~NullProgressMonitor.begin
-      ~NullProgressMonitor.createReporter
+      ~NullProgressMonitor.create_reporter
       ~NullProgressMonitor.end
    
    

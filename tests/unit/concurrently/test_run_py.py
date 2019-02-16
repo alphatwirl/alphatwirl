@@ -13,6 +13,7 @@ import pytest
 import alphatwirl
 import alphatwirl.concurrently
 from alphatwirl.concurrently import TaskPackage
+from alphatwirl.progressbar import atpbar
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -63,6 +64,39 @@ def test_run_task_null(script_runner, workingarea_path, package_rel_path_task_nu
    ret = script_runner.run(script_path, *args, cwd=workingarea_path, env=env)
    assert ret.success
    assert '' == ret.stderr
+   assert '' == ret.stdout
+
+##__________________________________________________________________||
+def task_atpbar(*args, **kwargs):
+   for i in atpbar(range(100), name='task'):
+      pass
+   return
+
+@pytest.fixture()
+def package_rel_path_task_atpbar(workingarea_path):
+
+   ret = 'task_00009.p.gz'
+
+   package = TaskPackage(
+      task = task_atpbar,
+      args = [ ],
+      kwargs =   { }
+   )
+
+   path = os.path.join(workingarea_path, ret)
+   with gzip.open(path, 'wb') as f:
+      pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
+
+   return ret
+
+@pytest.mark.script_launch_mode('subprocess')
+def test_run_task_atpbar(script_runner, workingarea_path, package_rel_path_task_atpbar, env):
+
+   script_path = os.path.join('.', 'run.py')
+   args = [package_rel_path_task_atpbar]
+   ret = script_runner.run(script_path, *args, cwd=workingarea_path, env=env)
+   assert ret.success
+   assert '' == ret.stderr # progress shouldn't be printed
    assert '' == ret.stdout
 
 ##__________________________________________________________________||

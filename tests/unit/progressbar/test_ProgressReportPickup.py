@@ -26,7 +26,7 @@ def pickup(queue, presentation):
 
 ##__________________________________________________________________||
 def test_start_join(pickup, queue, presentation):
-    presentation.nreports.return_value = 10
+    presentation.active.return_value = True
     pickup.start()
     queue.put(None)
     pickup.join()
@@ -86,12 +86,12 @@ def mocktime(monkeypatch):
     return ret
 
 def test_run_until_reports_stop_coming_no_report(pickup0, mock_queue, presentation, mocktime):
-    presentation.nreports.side_effect = [0]
+    presentation.active.side_effect = [False]
     pickup0._run_until_reports_stop_coming()
     assert [] == presentation.present.mock_calls
 
 def test_run_until_reports_stop_coming_one_report(pickup0, mock_queue, presentation, mocktime):
-    presentation.nreports.side_effect = [1, 0]
+    presentation.active.side_effect = [True, False]
     report = mock.MagicMock()
     mock_queue.empty.side_effect = [False, False, True]
     mock_queue.get.side_effect = [report, None]
@@ -99,7 +99,7 @@ def test_run_until_reports_stop_coming_one_report(pickup0, mock_queue, presentat
     assert [mock.call(report)] == presentation.present.mock_calls
 
 def test_run_until_reports_stop_coming_one_report_timeout(pickup0, mock_queue, presentation, mocktime):
-    presentation.nreports.return_value = 1
+    presentation.active.return_value = True
     report = mock.MagicMock()
     mock_queue.empty.return_value = True
     mock_queue.get.side_effect = [report, None]

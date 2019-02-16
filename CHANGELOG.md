@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.21.2...master))
+- made progress bars properly work for nested loops
 - updated requirements for docs (for readthedocs)
 - removed a deprecated object: `EventBuilderConfig`
 - removed the implementation of deprecated classes:
@@ -11,6 +12,7 @@
 - removed `build_progressMonitor_communicationChannel()`, the
   implementation of which had been already removed
 - cleaned code in `progressbar`
+- updated the log message in '_deprecated()'
 
 ## [0.21.2] - 2019-02-10
 

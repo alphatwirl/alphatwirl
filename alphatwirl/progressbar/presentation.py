@@ -3,6 +3,10 @@ import time
 
 ##__________________________________________________________________||
 class Presentation(object):
+    """A base class of the progress presentation.
+
+    A subclass of this class should implement ``_present()``.
+    """
 
     def __init__(self):
 
@@ -15,15 +19,17 @@ class Presentation(object):
         self.interval = 1.0 # [second]
         self._read_time()
 
-    def nreports(self):
-        return len(self._active_taskids)
+    def active(self):
+        if self._active_taskids:
+            return True
+        return False
 
     def present(self, report):
 
         if not self._register_report(report):
             return
 
-        if not self._need_to_present(report):
+        if not self._need_to_present():
             return
 
         self._present()
@@ -73,7 +79,7 @@ class Presentation(object):
         self._complete_taskids.extend(self._finishing_taskids)
         del self._finishing_taskids[:]
 
-    def _need_to_present(self, report):
+    def _need_to_present(self):
 
         if self._new_taskids:
             return True

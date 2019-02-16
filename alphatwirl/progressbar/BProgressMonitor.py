@@ -5,6 +5,7 @@ from .ProgressReporter import ProgressReporter
 from .ProgressReportPickup import ProgressReportPickup
 
 import alphatwirl
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
 class BProgressMonitor(object):
@@ -37,9 +38,9 @@ class BProgressMonitor(object):
       Then, create as many reporters (`ProgressReporter`) as the
       number of the tasks whose progresses need to be monitored::
 
-        reporter1 = monitor.createReporter()
-        reporter2 = monitor.createReporter()
-        reporter3 = monitor.createReporter()
+        reporter1 = monitor.create_reporter()
+        reporter2 = monitor.create_reporter()
+        reporter3 = monitor.create_reporter()
 
       These reporters can be given to objects which execute the tasks.
       These objects can be in other processes as long as the reporters
@@ -74,16 +75,20 @@ class BProgressMonitor(object):
 
     def begin(self):
         self.pickup = ProgressReportPickup(self.queue, self.presentation)
+        self.pickup.daemon = True # this makes the functions
+                                  # registered at atexit called even
+                                  # if the pickup is still running
         self.pickup.start()
-        reporter = self.createReporter()
-        alphatwirl.progressbar._progress_reporter = reporter
 
     def end(self):
-        alphatwirl.progressbar._progress_reporter = None
         self.queue.put(None)
         self.pickup.join()
 
-    def createReporter(self):
+    def create_reporter(self):
         return ProgressReporter(queue=self.queue)
+
+    @_deprecated(msg='use create_reporter() instead')
+    def createReporter(self):
+        return self.create_reporter()
 
 ##__________________________________________________________________||

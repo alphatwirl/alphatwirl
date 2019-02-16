@@ -32,6 +32,7 @@ class Atpbar(object):
         self.id_ = uuid.uuid4()
 
     def __iter__(self):
+        alphatwirl.progressbar._start_monitor_if_necessary()
         self._report_progress(-1)
         for i, e in enumerate(self. iterable):
             yield e
