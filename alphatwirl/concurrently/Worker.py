@@ -8,7 +8,7 @@ try:
 except ImportError:
     from .queuehandler import QueueHandler
 
-from alphatwirl import progressbar
+from atpbar import register_reporter
 
 ##__________________________________________________________________||
 class Worker(multiprocessing.Process):
@@ -36,8 +36,7 @@ class Worker(multiprocessing.Process):
         logger.addHandler(handler)
 
     def _configure_progressbar(self):
-        progressbar._reporter = self.progressReporter
-        progressbar.do_not_start_monitor = True
+        register_reporter(self.progressReporter)
 
     def _run_tasks(self):
         while True:

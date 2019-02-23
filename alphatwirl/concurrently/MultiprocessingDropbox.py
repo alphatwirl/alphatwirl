@@ -7,6 +7,8 @@ import threading
 from operator import itemgetter
 from collections import deque
 
+from atpbar import find_reporter
+
 from .TaskPackage import TaskPackage
 
 from .Worker import Worker
@@ -81,8 +83,7 @@ class MultiprocessingDropbox(object):
 
         # start progress monitor
         if self.progressbar:
-            alphatwirl.progressbar._start_monitor_if_necessary()
-            reporter = alphatwirl.progressbar._reporter
+            reporter = find_reporter()
         else:
             reporter = None
 

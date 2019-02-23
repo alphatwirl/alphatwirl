@@ -1,4 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import atpbar
+
 import alphatwirl
 
 ##__________________________________________________________________||
@@ -39,8 +41,7 @@ class CommunicationChannel0(object):
 
     def begin(self):
         if not self.progressbar:
-            alphatwirl.progressbar._end_monitor()
-            alphatwirl.progressbar.do_not_start_monitor = True
+            atpbar.funcs._do_not_start_pickup = True
 
     def put(self, task, *args, **kwargs):
         self.taskidx += 1

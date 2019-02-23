@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 from alphatwirl.misc.deprecation import _renamed_class_method_option
-from alphatwirl.progressbar import atpbar
+from atpbar import atpbar
 
 ##__________________________________________________________________||
 class EventLoop(object):
