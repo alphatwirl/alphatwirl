@@ -7,7 +7,6 @@ import threading
 from operator import itemgetter
 from collections import deque
 
-from ..progressbar import NullProgressMonitor
 from .TaskPackage import TaskPackage
 
 from .Worker import Worker
@@ -47,7 +46,6 @@ class MultiprocessingDropbox(object):
             raise ValueError("nprocesses must be at least one: {} is given".format(nprocesses))
 
         self.progressbar = progressbar
-        self.progressMonitor = NullProgressMonitor() if progressMonitor is None else progressMonitor
 
         self.n_max_workers = nprocesses
         self.workers = [ ]
