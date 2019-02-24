@@ -9,45 +9,8 @@ try:
 except ImportError:
     import mock
 
-has_jupyter_notebook = False
-try:
-    from alphatwirl.progressbar import ProgressBarJupyter
-    has_jupyter_notebook = True
-except ImportError:
-    pass
-
 from alphatwirl.parallel import build_parallel
 from alphatwirl.parallel.build import build_parallel_multiprocessing
-
-##__________________________________________________________________||
-@pytest.fixture(
-    params=[True, False]
-)
-def isatty(request, monkeypatch):
-    ret = request.param
-    org_stdout = sys.stdout
-    f = mock.Mock(**{
-        'stdout.isatty.return_value': ret,
-        'stdout.write.side_effect': lambda x : org_stdout.write(x)
-    })
-    module = sys.modules['alphatwirl.parallel.build']
-    monkeypatch.setattr(module, 'sys', f)
-    return ret
-
-##__________________________________________________________________||
-if has_jupyter_notebook:
-    is_jupyter_notebook_parames = [True, False]
-else:
-    is_jupyter_notebook_parames = [False]
-
-@pytest.fixture(params=is_jupyter_notebook_parames)
-def is_jupyter_notebook(request, monkeypatch):
-    ret = request.param
-    f = mock.Mock()
-    f.return_value = ret
-    module = sys.modules['alphatwirl.parallel.build']
-    monkeypatch.setattr(module, 'is_jupyter_notebook', f)
-    return ret
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('processes', [0, 1, 3])
