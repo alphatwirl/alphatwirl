@@ -2,7 +2,15 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.0...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.1...master))
+
+## [0.23.1] - 2019-02-24
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.23.1/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.0...v0.23.1))
+- updated `README.md`, using the full URLs for image files
+- used `README.md` as the long description in `setup.py`
 
 ## [0.23.0] - 2019-02-24
 
@@ -12,7 +20,7 @@
 - promoted the sub-package `progressbar` to an independent package
   [atpbar](https://github.com/alphatwirl/atpbar)
     - added `atpbar` to the default user modules in `parallel`
-    - added `atpbar` to `install_requires` in `setup.py'
+    - added `atpbar` to `install_requires` in `setup.py`
     - updated `.travis.yml` to install `atpbar`
     - the sub-package `progressbar`, still in `alphatwirl`, is deprecated.
 
