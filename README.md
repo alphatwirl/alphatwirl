@@ -1,7 +1,7 @@
 [![PyPI version](https://badge.fury.io/py/alphatwirl.svg)](https://badge.fury.io/py/alphatwirl) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597010.svg)](https://doi.org/10.5281/zenodo.597010) [![Build Status](https://travis-ci.org/alphatwirl/alphatwirl.svg?branch=master)](https://travis-ci.org/alphatwirl/alphatwirl) [![codecov](https://codecov.io/gh/alphatwirl/alphatwirl/branch/master/graph/badge.svg)](https://codecov.io/gh/alphatwirl/alphatwirl)
 
 
-[<img src="images/AlphaTwirl_logo_black.png" width="500">](images/AlphaTwirl_logo_black.png?raw=true)
+<img src="https://raw.githubusercontent.com/alphatwirl/alphatwirl/v0.11.0/images/AlphaTwirl_logo_black.png" width="500">
 
 ---
 
@@ -26,7 +26,7 @@ _AlphaTwirl_ is a python library that summarizes event data into multivariate ca
   multi-dimensional categorical data"*, **CHEP 2018**, 9-13 July 2018
   Sofia, Bulgaria, ([indico](https://indico.cern.ch/event/587955/contributions/2937634/))
 
-[<img src="images/tai_20180709_CHEP2018_corrected_01_1900.png" width="200">](https://indico.cern.ch/event/587955/contributions/2937634/)
+[<img src="https://raw.githubusercontent.com/alphatwirl/alphatwirl/v0.18.6/images/tai_20180709_CHEP2018_corrected_01_1900.png" width="200">](https://indico.cern.ch/event/587955/contributions/2937634/attachments/1680105/2731035/tai_20180709_CHEP2018_corrected_01.pdf)
 
 ****
 
