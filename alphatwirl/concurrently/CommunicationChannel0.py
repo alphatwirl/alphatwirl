@@ -1,8 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import atpbar
 
-import alphatwirl
-
 ##__________________________________________________________________||
 class CommunicationChannel0(object):
     """A communication channel for the single process mode
