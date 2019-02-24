@@ -13,7 +13,7 @@ import pytest
 import alphatwirl
 import alphatwirl.concurrently
 from alphatwirl.concurrently import TaskPackage
-from alphatwirl.progressbar import atpbar
+from atpbar import atpbar
 
 ##__________________________________________________________________||
 @pytest.fixture()
