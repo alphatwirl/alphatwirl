@@ -2,8 +2,10 @@
 import sys, time
 
 from .presentation import Presentation
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 class ProgressPrint(Presentation):
     def __init__(self):
         super(ProgressPrint, self).__init__()

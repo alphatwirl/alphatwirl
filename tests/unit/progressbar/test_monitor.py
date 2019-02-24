@@ -33,14 +33,13 @@ def test_monitor(build):
 
 ##__________________________________________________________________||
 @pytest.mark.parametrize('build', builds, ids=build_ids)
-def test_deprecated_createReporter(caplog, build):
-    obj = build()
+def test_deprecated(build, caplog):
     with caplog.at_level(logging.WARNING):
-        obj.createReporter()
+        obj = build()
 
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'progressbar' in caplog.records[0].name
-    assert 'deprecated. use create_reporter() instead' in caplog.records[0].msg
+    assert 'deprecated' in caplog.records[0].msg
 
 ##__________________________________________________________________||
