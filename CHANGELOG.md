@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.22.0...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.0...master))
+
+## [0.23.0] - 2019-02-24
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.23.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.22.0...v0.23.0))
 - promoted the sub-package `progressbar` to an independent package
   [atpbar](https://github.com/alphatwirl/atpbar)
     - added `atpbar` to the default user modules in `parallel`
