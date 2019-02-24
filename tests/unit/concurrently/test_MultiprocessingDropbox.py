@@ -12,7 +12,6 @@ except ImportError:
 
 from alphatwirl.concurrently import MultiprocessingDropbox
 from alphatwirl.concurrently import TaskPackage
-from alphatwirl import progressbar
 
 ##__________________________________________________________________||
 def test_init_raise():
