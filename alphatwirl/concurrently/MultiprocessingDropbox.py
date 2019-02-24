@@ -7,7 +7,7 @@ import threading
 from operator import itemgetter
 from collections import deque
 
-from atpbar import find_reporter
+import atpbar
 
 from .TaskPackage import TaskPackage
 
@@ -83,7 +83,7 @@ class MultiprocessingDropbox(object):
 
         # start progress monitor
         if self.progressbar:
-            reporter = find_reporter()
+            reporter = atpbar.find_reporter()
         else:
             reporter = None
 
@@ -193,5 +193,8 @@ class MultiprocessingDropbox(object):
         # end logging listener
         self.logging_queue.put(None)
         self.loggingListener.join()
+
+        if self.progressbar:
+            atpbar.flush()
 
 ##__________________________________________________________________||
