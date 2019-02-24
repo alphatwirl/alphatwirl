@@ -5,7 +5,10 @@ import logging
 import alphatwirl
 from .ProgressReport import ProgressReport
 
+from alphatwirl.misc.deprecation import _deprecated
+
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 def atpbar(iterable, name=None):
     """Progress bar
 

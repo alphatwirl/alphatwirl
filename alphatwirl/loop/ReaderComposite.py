@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
-from alphatwirl.progressbar import atpbar
+from atpbar import atpbar
 
 ##__________________________________________________________________||
 class ReaderComposite(object):

@@ -1,7 +1,10 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import time
 
+from alphatwirl.misc.deprecation import _deprecated
+
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 class ProgressReporter(object):
     """A progress reporter
 

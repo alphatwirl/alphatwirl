@@ -14,6 +14,7 @@ class Queue(object):
         self.presentation.present(report)
 
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 class ProgressMonitor(object):
     def __init__(self, presentation):
         self.presentation = presentation

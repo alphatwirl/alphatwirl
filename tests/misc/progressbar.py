@@ -8,7 +8,7 @@ import uuid
 import argparse
 
 import alphatwirl
-from alphatwirl.progressbar import atpbar
+from atpbar import atpbar
 
 ##__________________________________________________________________||
 parser = argparse.ArgumentParser()

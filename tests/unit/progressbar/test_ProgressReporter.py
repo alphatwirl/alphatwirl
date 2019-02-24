@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import sys
 import pytest
-import time
 
 try:
     import unittest.mock as mock
@@ -18,7 +18,10 @@ def mock_queue():
 @pytest.fixture()
 def mock_time(monkeypatch):
     ret = mock.Mock()
-    monkeypatch.setattr(time, 'time', ret)
+    mock_time_module = mock.Mock()
+    mock_time_module.time = ret
+    module = sys.modules['alphatwirl.progressbar.ProgressReporter']
+    monkeypatch.setattr(module, 'time', mock_time_module)
     return ret
 
 @pytest.fixture()

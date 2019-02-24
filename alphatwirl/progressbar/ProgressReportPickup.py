@@ -2,7 +2,10 @@
 import threading
 import time
 
+from alphatwirl.misc.deprecation import _deprecated
+
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 class ProgressReportPickup(threading.Thread):
     def __init__(self, queue, presentation):
         threading.Thread.__init__(self)

@@ -3,8 +3,10 @@ import ipywidgets as widgets
 from IPython.display import display
 
 from .presentation import Presentation
+from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
+@_deprecated(msg='use https://github.com/alphatwirl/atpbar instead.')
 class ProgressBarJupyter(Presentation):
     def __init__(self):
         super(ProgressBarJupyter, self).__init__()
