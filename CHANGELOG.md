@@ -3,9 +3,12 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.22.0...master))
-- promoted the sub-package `progressbar` as an independent package
+- promoted the sub-package `progressbar` to an independent package
   [atpbar](https://github.com/alphatwirl/atpbar)
-    - the sub-package `progressbar` in `alphatwirl` is deprecated.
+    - added `atpbar` to the default user modules in `parallel`
+    - added `atpbar` to `install_requires` in `setup.py'
+    - updated `.travis.yml` to install `atpbar`
+    - the sub-package `progressbar`, still in `alphatwirl`, is deprecated.
 
 ## [0.22.0] - 2019-02-16
 
