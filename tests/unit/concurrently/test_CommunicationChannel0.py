@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import sys
 import logging
 import pytest
 
@@ -8,43 +9,37 @@ except ImportError:
     import mock
 
 from alphatwirl.concurrently import CommunicationChannel0
-from alphatwirl.progressbar import atpbar
-import alphatwirl
 
 ##__________________________________________________________________||
 @pytest.fixture(autouse=True)
-def global_variables(monkeypatch):
-    monkeypatch.setattr(alphatwirl.progressbar, 'do_not_start_monitor', False)
-    monkeypatch.setattr(alphatwirl.progressbar, '_reporter', None)
-    monkeypatch.setattr(alphatwirl.progressbar, '_monitor', None)
+def mock_atpbar(monkeypatch):
+    ret = mock.Mock()
+    ret.funcs._do_not_start_pickup = False
+    module = sys.modules['alphatwirl.concurrently.CommunicationChannel0']
+    monkeypatch.setattr(module, 'atpbar', ret)
+    return ret
 
 ##__________________________________________________________________||
-def task_atpbar(*args, **kwargs):
-   for i in atpbar(range(100), name='task'):
-      pass
-   return
+def task(*args, **kwargs):
+    return
 
 ##__________________________________________________________________||
-def test_progressbar_on(capsys):
+def test_progressbar_on(mock_atpbar):
     obj = CommunicationChannel0(progressbar=True)
     obj.begin()
-    obj.put(task_atpbar)
+    obj.put(task)
     obj.receive()
     obj.end()
-    alphatwirl.progressbar._end_monitor()
+    assert mock_atpbar.funcs._do_not_start_pickup is False
 
-    captured = capsys.readouterr()
-    assert ('        0 /      100 (  0.00%) task' in captured.out)
 
-def test_progressbar_off(capsys):
+def test_progressbar_off(mock_atpbar):
     obj = CommunicationChannel0(progressbar=False)
     obj.begin()
-    obj.put(task_atpbar)
+    obj.put(task)
     obj.receive()
     obj.end()
-    alphatwirl.progressbar._end_monitor()
+    assert mock_atpbar.funcs._do_not_start_pickup is True
 
-    captured = capsys.readouterr()
-    assert '' == captured.out
 
 ##__________________________________________________________________||
