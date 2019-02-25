@@ -26,5 +26,8 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     packages=find_packages(exclude=['docs', 'images', 'tests']),
-    install_requires=['atpbar>=0.9.7'],
+    install_requires=[
+        'numpy',
+        'atpbar>=0.9.7'
+    ],
 )
