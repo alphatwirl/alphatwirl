@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.1...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.2...master))
+
+## [0.23.2] - 2019-02-25
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.23.2/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.1...v0.23.2))
 - updated `setup.py`, `.travis.yml`
 
 ## [0.23.1] - 2019-02-24
