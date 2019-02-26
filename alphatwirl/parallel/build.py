@@ -12,6 +12,33 @@ from .parallel import Parallel
 @_deprecated_func_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
 def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
                    htcondor_job_desc_extra=[ ], dispatcher_options=dict()):
+    """initializes `Parallel`
+
+    Parameters
+    ----------
+    parallel_mode : str
+        "multiprocessing" (default), "htcondor" or "subprocess"
+    quiet : bool, optional
+        if True, progress bars will not be shown
+    process : int, optional
+        The number of processes when ``parallel_mode`` is
+        "multiprocessing"
+    user_modules : list, optional
+        The names of modules to be sent to worker nodes when
+        parallel_mode is "htcondor"
+    htcondor_job_desc_extra : list
+        deprecated. use `dispatcher_options`; add this option as the
+        value of the key 'job_desc_extra' of `dispatcher_options`,
+        i.e., `dispatcher_options['job_desc_extra'] = htcondor_job_desc_extra`
+    dispatcher_options : dict, optional
+        Options to dispatcher
+
+    Returns
+    -------
+    parallel
+        an instance of the class `Parallel`
+
+    """
 
     dispatchers = ('subprocess', 'htcondor')
     parallel_modes = ('multiprocessing', ) + dispatchers
