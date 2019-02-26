@@ -94,7 +94,7 @@ def test_func_option_used_double_BC(caplog):
 ##__________________________________________________________________||
 class Class(object):
     @_deprecated_class_method_option('B')
-    def __init__(A=123, B=456, C=None):
+    def __init__(self, A=123, B=456, C=None):
         pass
 
 def test_class_init_option_used(caplog):
