@@ -3,8 +3,8 @@ import sys
 import logging
 
 from alphatwirl import concurrently
-from alphatwirl.misc.deprecation import _deprecated
 from alphatwirl.misc.deprecation import _deprecated_func_option
+from alphatwirl.misc.removal import _removed
 
 from .parallel import Parallel
 
@@ -113,11 +113,10 @@ def _build_parallel_multiprocessing(quiet, processes):
     return Parallel(None, communicationChannel)
 
 ##__________________________________________________________________||
-@_deprecated(msg='use alphatwirl.parallel.build.build_parallel() instead.')
+# deprecated at v0.15.0 (2018-02-28)
+# removed after v0.23.2 (2019-02-27)
+@_removed(msg='use alphatwirl.parallel.build.build_parallel() instead.')
 def build_parallel_multiprocessing(quiet, processes):
-    return build_parallel(
-        parallel_mode='multiprocessing',
-        quiet=quiet, processes=processes
-    )
+    pass
 
 ##__________________________________________________________________||
