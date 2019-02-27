@@ -14,44 +14,43 @@ from alphatwirl.misc.deprecation import _deprecated
 
 ##__________________________________________________________________||
 @_deprecated(msg='extra message')
-def func():
-    pass
-
-def test_func_logging(caplog):
-    with caplog.at_level(logging.WARNING):
-        func()
-
-    assert len(caplog.records) == 1
-    assert caplog.records[0].levelname == 'WARNING'
-    assert 'test_deprecation' in caplog.records[0].name
-
-    if sys.version_info >= (3, 0):
-        assert 'tests.unit.misc.test_deprecation.func() is deprecated. extra message' in caplog.records[0].msg
-    else: # python 2
-        assert 'func() is deprecated. extra message' in caplog.records[0].msg
-
-def test_func_name():
-    assert  'func' == func.__name__
-
-def test_func_pickle():
-    pickle.dumps(func)
+def func_deprecated():
+    return 'run'
 
 @_deprecated()
-def func_without_msg():
-    pass
+def func_deprecated_without_msg():
+    return 'run'
 
-def test_func_logging_without_msg(caplog):
+@pytest.mark.parametrize('func, func_name, msg', [
+    (func_deprecated, 'func_deprecated', 'extra message'),
+    (func_deprecated_without_msg, 'func_deprecated_without_msg', ''),
+])
+def test_func_deprecated_logging(caplog, func, func_name, msg):
     with caplog.at_level(logging.WARNING):
-        func_without_msg()
+        assert 'run' == func()
 
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'test_deprecation' in caplog.records[0].name
 
+    module_name = 'tests.unit.misc.test_deprecation'
     if sys.version_info >= (3, 0):
-        assert 'tests.unit.misc.test_deprecation.func_without_msg() is deprecated.' in caplog.records[0].msg
+        expected_msg = '{}.{}() is deprecated.'.format(module_name, func_name)
     else: # python 2
-        assert 'func_without_msg() is deprecated.' in caplog.records[0].msg
+        expected_msg = '{}() is deprecated.'.format(func_name)
+
+    if msg:
+        expected_msg += ' ' + msg
+
+    assert expected_msg in caplog.records[0].msg
+
+def test_func_deprecated_name():
+    assert 'func_deprecated' == func_deprecated.__name__
+
+def test_func_deprecated_pickle():
+    p = pickle.dumps(func_deprecated)
+    o = pickle.loads(p)
+    assert 'run' == o()
 
 ##__________________________________________________________________||
 @_deprecated(msg='extra message')
@@ -76,6 +75,7 @@ class ClassWithoutInitNoMsg(object):
 def test_class_logging(Class, caplog):
     with caplog.at_level(logging.WARNING):
         c = Class()
+    assert isinstance(c, Class)
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'test_deprecation' in caplog.records[0].name
@@ -86,6 +86,7 @@ def test_class_logging(Class, caplog):
 def test_class_logging_no_msg(Class, caplog):
     with caplog.at_level(logging.WARNING):
         c = Class()
+    assert isinstance(c, Class)
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
     assert 'test_deprecation' in caplog.records[0].name
@@ -97,18 +98,19 @@ def test_class_logging_no_msg(Class, caplog):
    (ClassWithInit, ClassWithoutInit, ClassWithInitNoMsg, ClassWithoutInitNoMsg))
 def test_class_pickle(Class):
     c = Class()
-    pickle.dumps(c)
+    p = pickle.dumps(c)
+    o = pickle.loads(p)
 
 ##__________________________________________________________________||
 class ClassWithDeprecatedMethod(object):
     @_deprecated(msg='extra message')
     def method(self):
-        pass
+        return 'run'
 
 def test_method_logging(caplog):
     c = ClassWithDeprecatedMethod()
     with caplog.at_level(logging.WARNING):
-        c.method()
+        assert 'run' == c.method()
 
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
