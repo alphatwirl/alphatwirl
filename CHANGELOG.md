@@ -7,6 +7,7 @@
   `_removed_class_method_option()`
 - removed
     - a deprecated functions: `build_parallel_multiprocessing()`
+- updated tests
 
 ## [0.23.2] - 2019-02-25
 
