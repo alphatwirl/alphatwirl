@@ -1,5 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 from __future__ import print_function
+import sys
 import logging
 
 import pytest
@@ -86,5 +87,30 @@ def test_class_logging_no_msg(Class, caplog):
     assert 'test_removal' in caplog.records[0].name
     expected = '{} is removed.'.format(Class.__name__)
     assert expected in caplog.records[0].msg
+
+##__________________________________________________________________||
+class ClassWithRemovedMethod(object):
+    @_removed(msg='extra message')
+    def method(self):
+       pass
+
+def test_method_logging(caplog):
+    c = ClassWithRemovedMethod()
+    with pytest.raises(RuntimeError):
+       with caplog.at_level(logging.ERROR):
+          c.method()
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'ERROR'
+    assert 'test_removal' in caplog.records[0].name
+
+    if sys.version_info >= (3, 0):
+        assert 'tests.unit.misc.test_removal.ClassWithRemovedMethod.method() is removed. extra message' in caplog.records[0].msg
+    else: # python 2 - not sure how to distinguish a function from an
+          # unbound method
+          # print(ClassWithDeprecatedMethod.method) shows
+          #   <unbound method ClassWithDeprecatedMethod.method>
+          # However, in the decorator, it is just <function method at 0x111ecb9b0>
+        assert 'method() is removed. extra message' in caplog.records[0].msg
 
 ##__________________________________________________________________||

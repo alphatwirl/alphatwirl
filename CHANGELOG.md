@@ -5,6 +5,7 @@
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.2...master))
 - added private functions: `_removed_func_option()`,
   `_removed_class_method_option()`
+- updated the log message in '_removed()'
 - removed
     - a deprecated functions: `build_parallel_multiprocessing()`
 - updated tests
