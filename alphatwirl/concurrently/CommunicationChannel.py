@@ -100,11 +100,36 @@ class CommunicationChannel(object):
         )
 
     def begin(self):
+        """begin
+
+        """
         if self.isopen: return
         self.dropbox.open()
         self.isopen = True
 
     def put(self, task, *args, **kwargs):
+        """put a task and its arguments
+
+        If you need to put multiple tasks, it can be faster to put
+        multiple tasks with `put_multiple()` than to use this method
+        multiple times.
+
+        Parameters
+        ----------
+        task : a function
+            A function to be executed
+        args : list
+            A list of positional arguments to the `task`
+        kwargs : dict
+            A dict with keyword arguments to the `task`
+
+        Returns
+        -------
+        int, str, or any hashable and sortable
+            A task ID. IDs are sortable in the order in which the
+            corresponding tasks are put.
+
+        """
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
@@ -113,6 +138,25 @@ class CommunicationChannel(object):
         return self.dropbox.put(package)
 
     def put_multiple(self, task_args_kwargs_list):
+        """put a list of tasks and their arguments
+
+        This method can be used to put multiple tasks at once. Calling
+        this method once with multiple tasks can be much faster than
+        calling `put()` multiple times.
+
+        Parameters
+        ----------
+        task_args_kwargs_list : list
+
+            A list of lists with three items that can be parameters of
+            `put()`, i.e., `task`, `args`, `kwargs`.
+
+        Returns
+        -------
+        list
+            A list of task IDs.
+
+        """
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
@@ -131,6 +175,17 @@ class CommunicationChannel(object):
         return self.dropbox.put_multiple(packages)
 
     def receive_finished(self):
+        """return a list of pairs of IDs and results of finished tasks.
+
+        This method doesn't wait for tasks to finish. It returns IDs
+        and results which have already finished.
+
+        Returns
+        -------
+        list
+            A list of pairs of IDs and results
+
+        """
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
@@ -138,6 +193,15 @@ class CommunicationChannel(object):
         return self.dropbox.poll()
 
     def receive_one(self):
+        """return a pair of an ID and a result of a task.
+
+        This method waits for a task to finish.
+
+        Returns
+        -------
+        An ID and a result of a task. `None` if no task is running.
+
+        """
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
@@ -145,6 +209,16 @@ class CommunicationChannel(object):
         return self.dropbox.receive_one()
 
     def receive_all(self):
+        """return a list of pairs of IDs and results of all tasks.
+
+        This method waits for all tasks to finish.
+
+        Returns
+        -------
+        list
+            A list of pairs of IDs and results
+
+        """
         if not self.isopen:
             logger = logging.getLogger(__name__)
             logger.warning('the drop box is not open')
@@ -152,6 +226,17 @@ class CommunicationChannel(object):
         return self.dropbox.receive()
 
     def receive(self):
+        """return a list results of all tasks.
+
+        This method waits for all tasks to finish.
+
+        Returns
+        -------
+        list
+            A list of results of the tasks. The results are sorted in
+            the order in which the tasks are put.
+
+        """
         pkgidx_result_pairs = self.receive_all()
         if pkgidx_result_pairs is None:
             return
@@ -159,9 +244,15 @@ class CommunicationChannel(object):
         return results
 
     def terminate(self):
+        """terminate
+
+        """
         self.dropbox.terminate()
 
     def end(self):
+        """end
+
+        """
         if not self.isopen: return
         self.dropbox.close()
         self.isopen = False
