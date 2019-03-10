@@ -28,6 +28,6 @@ setup(
     packages=find_packages(exclude=['docs', 'images', 'tests']),
     install_requires=[
         'numpy',
-        'atpbar>=0.9.7'
+        'atpbar>=1.0.2'
     ],
 )
