@@ -2,13 +2,20 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.2...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.3...master))
+
+## [0.23.3] - 2019-03-10
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.23.3/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.1...v0.23.3))
 - added private functions: `_removed_func_option()`,
   `_removed_class_method_option()`
 - updated the log message in '_removed()'
 - removed
     - a deprecated functions: `build_parallel_multiprocessing()`
-- updated tests
+- updated required `atpbar` version from 0.9.7 to 1.0.2
+- updated `MANIFEST.in`, tests
 
 ## [0.23.2] - 2019-02-25
 
