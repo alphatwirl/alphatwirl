@@ -1,2 +1,3 @@
+include LICENSE
 include versioneer.py
 include alphatwirl/_version.py
