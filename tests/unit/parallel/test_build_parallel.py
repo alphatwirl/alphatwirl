@@ -13,9 +13,17 @@ from alphatwirl.parallel import build_parallel
 from alphatwirl.parallel.build import build_parallel_multiprocessing
 
 ##__________________________________________________________________||
+@pytest.fixture(autouse=True)
+def mock_atpbar(monkeypatch):
+    module = sys.modules['alphatwirl.parallel.build']
+    ret = mock.Mock()
+    monkeypatch.setattr(module, 'atpbar', ret)
+    yield ret
+
+##__________________________________________________________________||
 @pytest.mark.parametrize('processes', [0, 1, 3])
 @pytest.mark.parametrize('quiet', [True, False])
-def test_build_parallel_multiprocessing(quiet, processes):
+def test_build_parallel_multiprocessing(quiet, processes, mock_atpbar):
 
     parallel_mode = 'multiprocessing'
     parallel = build_parallel(
@@ -31,6 +39,11 @@ def test_build_parallel_multiprocessing(quiet, processes):
         assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
         assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
         assert quiet == (not parallel.communicationChannel.dropbox.progressbar)
+
+    if quiet:
+        assert [mock.call()] == mock_atpbar.disable.call_args_list
+    else:
+        assert [ ] == mock_atpbar.disable.call_args_list
 
     ## workingarea
     assert parallel.workingarea is None
