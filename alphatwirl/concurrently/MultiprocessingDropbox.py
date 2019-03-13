@@ -41,13 +41,12 @@ class MultiprocessingDropbox(object):
         True.
 
     """
+    @_deprecated_class_method_option('progressbar', msg='use atpbar.disable() instead to turn off progress bars') # after v0.23.3 (2019-03-13)
     @_deprecated_class_method_option('progressMonitor')
     def __init__(self, nprocesses=16, progressMonitor=None, progressbar=True):
 
         if nprocesses <= 0:
             raise ValueError("nprocesses must be at least one: {} is given".format(nprocesses))
-
-        self.progressbar = progressbar
 
         self.n_max_workers = nprocesses
         self.workers = [ ]
@@ -60,7 +59,6 @@ class MultiprocessingDropbox(object):
 
         self._repr_pairs = [
             ('nprocesses', nprocesses),
-            ('progressbar', progressbar),
         ]
 
     def __repr__(self):
@@ -81,11 +79,8 @@ class MultiprocessingDropbox(object):
         )
         self.loggingListener.start()
 
-        # start progress monitor
-        if self.progressbar:
-            reporter = atpbar.find_reporter()
-        else:
-            reporter = None
+        #
+        reporter = atpbar.find_reporter()
 
         # start workers
         for i in range(self.n_max_workers):
@@ -194,7 +189,7 @@ class MultiprocessingDropbox(object):
         self.logging_queue.put(None)
         self.loggingListener.join()
 
-        if self.progressbar:
-            atpbar.flush()
+        #
+        atpbar.flush()
 
 ##__________________________________________________________________||
