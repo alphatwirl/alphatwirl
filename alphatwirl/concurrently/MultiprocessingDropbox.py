@@ -36,9 +36,6 @@ class MultiprocessingDropbox(object):
     ----------
     nprocesses : int
         The number of processes
-    progressbar : bool
-        Progress bars from atpbar can be used in spawned processes if
-        True.
 
     """
     @_deprecated_class_method_option('progressbar', msg='use atpbar.disable() instead to turn off progress bars') # after v0.23.3 (2019-03-13)
