@@ -1,4 +1,4 @@
-[![PyPI version](https://badge.fury.io/py/alphatwirl.svg)](https://badge.fury.io/py/alphatwirl) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597010.svg)](https://doi.org/10.5281/zenodo.597010) [![Build Status](https://travis-ci.org/alphatwirl/alphatwirl.svg?branch=master)](https://travis-ci.org/alphatwirl/alphatwirl) [![codecov](https://codecov.io/gh/alphatwirl/alphatwirl/branch/master/graph/badge.svg)](https://codecov.io/gh/alphatwirl/alphatwirl)
+[![PyPI version](https://badge.fury.io/py/alphatwirl.svg)](https://badge.fury.io/py/alphatwirl) [![Anaconda-Server Badge](https://anaconda.org/conda-forge/alphatwirl/badges/version.svg)](https://anaconda.org/conda-forge/alphatwirl) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.597010.svg)](https://doi.org/10.5281/zenodo.597010) [![Build Status](https://travis-ci.org/alphatwirl/alphatwirl.svg?branch=master)](https://travis-ci.org/alphatwirl/alphatwirl) [![codecov](https://codecov.io/gh/alphatwirl/alphatwirl/branch/master/graph/badge.svg)](https://codecov.io/gh/alphatwirl/alphatwirl)
 
 <br />
 
