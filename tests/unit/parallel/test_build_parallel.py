@@ -38,7 +38,6 @@ def test_build_parallel_multiprocessing(quiet, processes, mock_atpbar):
     else:
         assert 'CommunicationChannel' == parallel.communicationChannel.__class__.__name__
         assert 'MultiprocessingDropbox' ==  parallel.communicationChannel.dropbox.__class__.__name__
-        assert quiet == (not parallel.communicationChannel.dropbox.progressbar)
 
     if quiet:
         assert [mock.call()] == mock_atpbar.disable.call_args_list
