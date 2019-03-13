@@ -3,7 +3,15 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.3...master))
-- updated `README.md`
+- replaced code in `concurrently` with
+  [`mantichora`](https://github.com/alphatwirl/mantichora).
+- changed how indices are assigned in `CommunicationChannel0` and
+  `CommunicationChannel`
+    - the index starts from `0` again after `end()` and `begin()` are called
+- changed the way to turn off progress bars
+    - call `atpbar.disable()`
+- updated `README.md`, `setup.py`
+- cleaned code
 
 ## [0.23.3] - 2019-03-10
 

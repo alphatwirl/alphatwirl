@@ -1,5 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import atpbar
+from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 ##__________________________________________________________________||
 class CommunicationChannel0(object):
@@ -14,22 +14,14 @@ class CommunicationChannel0(object):
     for `CommunicationChannel`, the tasks will be sequentially
     executed in the foreground.
 
-    Parameters
-    ----------
-    progressbar : bool
-        Progress bars from atpbar will be turned off if False.
-
     """
 
+    @_deprecated_class_method_option('progressbar', msg='use atpbar.disable() instead to turn off progress bars') # after v0.23.3 (2019-03-13)
     def __init__(self, progressbar=True):
-        self.progressbar = progressbar
-
         self.taskidx = -1 # so it starts from 0
         self.taskidx_result_pairs = [ ]
 
-        self._repr_pairs = [
-            ('progressbar', progressbar),
-        ]
+        self._repr_pairs = [ ]
 
     def __repr__(self):
         return '{}({})'.format(
@@ -38,8 +30,7 @@ class CommunicationChannel0(object):
         )
 
     def begin(self):
-        if not self.progressbar:
-            atpbar.funcs._do_not_start_pickup = True
+        pass
 
     def put(self, task, *args, **kwargs):
         self.taskidx += 1
@@ -81,6 +72,6 @@ class CommunicationChannel0(object):
         pass
 
     def end(self):
-        pass
+        self.taskidx = -1 # so it starts from 0
 
 ##__________________________________________________________________||

@@ -28,6 +28,7 @@ setup(
     packages=find_packages(exclude=['docs', 'images', 'tests']),
     install_requires=[
         'numpy',
-        'atpbar>=1.0.2'
+        'atpbar>=1.0.2',
+        'mantichora>=0.9.3',
     ],
 )

@@ -2,6 +2,8 @@
 import sys
 import logging
 
+import atpbar
+
 from alphatwirl import concurrently
 from alphatwirl.misc.deprecation import _deprecated_func_option
 from alphatwirl.misc.removal import _removed
@@ -19,7 +21,7 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     parallel_mode : str
         "multiprocessing" (default), "htcondor" or "subprocess"
     quiet : bool, optional
-        if True, progress bars will not be shown
+        if True, progress bars will not be shown in the "multiprocessing" mode.
     process : int, optional
         The number of processes when ``parallel_mode`` is
         "multiprocessing"
@@ -52,7 +54,9 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
         parallel_mode = default_parallel_mode
 
     if parallel_mode == 'multiprocessing':
-        return _build_parallel_multiprocessing(quiet=quiet, processes=processes)
+        if quiet:
+            atpbar.disable()
+        return _build_parallel_multiprocessing(processes=processes)
 
     ## TODO: to be deleted as htcondor_job_desc_extra is obsolete
     dispatcher_options = dispatcher_options.copy()
@@ -103,12 +107,12 @@ def _build_parallel_dropbox_(workingarea_options,
     return Parallel(None, communicationChannel, workingarea)
 
 ##__________________________________________________________________||
-def _build_parallel_multiprocessing(quiet, processes):
+def _build_parallel_multiprocessing(processes):
 
     if processes is None or processes == 0:
-        communicationChannel = concurrently.CommunicationChannel0(progressbar=not quiet)
+        communicationChannel = concurrently.CommunicationChannel0()
     else:
-        dropbox = concurrently.MultiprocessingDropbox(processes, progressbar=not quiet)
+        dropbox = concurrently.MultiprocessingDropbox(processes)
         communicationChannel = concurrently.CommunicationChannel(dropbox=dropbox)
     return Parallel(None, communicationChannel)
 
