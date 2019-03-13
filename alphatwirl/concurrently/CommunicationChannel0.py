@@ -72,6 +72,6 @@ class CommunicationChannel0(object):
         pass
 
     def end(self):
-        pass
+        self.taskidx = -1 # so it starts from 0
 
 ##__________________________________________________________________||

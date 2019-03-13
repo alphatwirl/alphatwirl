@@ -113,8 +113,8 @@ def test_put_receive_end_repeat(obj):
     assert [result1, result2] == obj.receive()
     obj.end()
     obj.begin()
-    assert 2 == obj.put(task3, *task3_args, **task3_kwargs)
-    assert 3 == obj.put(task4, *task4_args, **task4_kwargs)
+    assert 0 == obj.put(task3, *task3_args, **task3_kwargs)
+    assert 1 == obj.put(task4, *task4_args, **task4_kwargs)
     assert [result3, result4] == obj.receive()
 
 ##__________________________________________________________________||
@@ -153,7 +153,7 @@ def test_put_multiple_receive_end_repeat(obj):
     assert [result1, result2] == obj.receive()
     obj.end()
     obj.begin()
-    assert [2, 3] == obj.put_multiple([
+    assert [0, 1] == obj.put_multiple([
         dict(task=task3, args=task3_args, kwargs=task3_kwargs),
         dict(task=task4, args=task4_args, kwargs=task4_kwargs),
     ])
@@ -195,11 +195,11 @@ def test_put_multiple_receive_all_end_repeat(obj):
     assert [(0, result1), (1, result2)] == obj.receive_all()
     obj.end()
     obj.begin()
-    assert [2, 3] == obj.put_multiple([
+    assert [0, 1] == obj.put_multiple([
         dict(task=task3, args=task3_args, kwargs=task3_kwargs),
         dict(task=task4, args=task4_args, kwargs=task4_kwargs),
     ])
-    assert [(2, result3), (3, result4)] == obj.receive_all()
+    assert [(0, result3), (1, result4)] == obj.receive_all()
 
 ##__________________________________________________________________||
 def test_receive_finished_four_tasks(obj):
