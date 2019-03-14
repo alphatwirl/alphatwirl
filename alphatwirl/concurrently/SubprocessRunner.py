@@ -6,6 +6,15 @@ import collections
 
 ##__________________________________________________________________||
 class SubprocessRunner(object):
+    """An example dispatcher which runs tasks in subprocesses
+
+    This class is an example of a dispatcher.
+
+    Note: This class is not for practical use as it doesn't limit the
+    number of subprocesses running concurrently.
+
+    """
+
     def __init__(self, pipe=False):
         self.running_procs = collections.deque()
         self.pipe = pipe
