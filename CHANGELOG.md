@@ -2,8 +2,14 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.3...master))
-- replaced code in `concurrently` with
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.0...master))
+
+## [0.24.0] - 2019-03-15
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.24.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.23.3...v0.24.0))
+- replaced part of code in `concurrently` with
   [`mantichora`](https://github.com/alphatwirl/mantichora).
 - changed how indices are assigned in `CommunicationChannel0` and
   `CommunicationChannel`
