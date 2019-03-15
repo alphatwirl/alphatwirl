@@ -105,16 +105,24 @@ class HTCondorJobSubmitter(object):
         command_display = compose_shortened_command_for_logging(procargs)
         logger.debug('execute: {!r}'.format(command_display))
 
-        proc = subprocess.Popen(
-            procargs,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+        try:
+            proc = subprocess.Popen(
+                procargs,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding='utf-8'
+            )
+        except TypeError:
+            # no `encoding` option in Python 2
+            proc = subprocess.Popen(
+                procargs,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
 
         stdout, stderr = proc.communicate(job_desc)
-        stdout = stdout.decode()
-        stderr = stderr.decode()
 
         for l in stdout.rstrip().split('\n'):
             logger.debug(l)
@@ -198,11 +206,20 @@ class HTCondorJobSubmitter(object):
             command_display = compose_shortened_command_for_logging(procargs)
             logger = logging.getLogger(__name__)
             logger.debug('execute: {}'.format(command_display))
-            proc = subprocess.Popen(
-                procargs,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
+            try:
+                proc = subprocess.Popen(
+                    procargs,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    encoding='utf-8'
+                )
+            except TypeError:
+                # no `encoding` option in Python 2
+                proc = subprocess.Popen(
+                    procargs,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
             stdout, stderr = proc.communicate()
 
 ##__________________________________________________________________||
