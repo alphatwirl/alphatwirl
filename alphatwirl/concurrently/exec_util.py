@@ -4,7 +4,7 @@ import subprocess
 import time
 
 ##__________________________________________________________________||
-def try_executing_until_succeed(procargs, sleep=2):
+def try_executing_until_succeed(procargs, input_=None, sleep=2):
 
     logger = logging.getLogger(__name__)
 
@@ -18,6 +18,7 @@ def try_executing_until_succeed(procargs, sleep=2):
         try:
             proc = subprocess.Popen(
                 procargs,
+                stdin = subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 encoding='utf-8'
@@ -26,11 +27,12 @@ def try_executing_until_succeed(procargs, sleep=2):
             # no `encoding` option in Python 2
             proc = subprocess.Popen(
                 procargs,
+                stdin = subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
             )
 
-        stdout, stderr = proc.communicate()
+        stdout, stderr = proc.communicate(input_)
         success = not (proc.returncode or stderr)
 
         #

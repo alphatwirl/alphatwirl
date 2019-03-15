@@ -13,9 +13,14 @@ from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compo
 ##__________________________________________________________________||
 def test_without_monkeypatch_subproces(caplog):
     procargs = ['echo', 'abc\ndef']
-    with caplog.at_level(logging.DEBUG):
-        stdout = try_executing_until_succeed(procargs)
+    stdout = try_executing_until_succeed(procargs)
     assert ['abc', 'def'] == stdout # shouldn't be [b'abc', b'def']
+
+def test_without_monkeypatch_subproces_with_stdin(caplog):
+    procargs = ['cat']
+    input_ = 'abc'
+    stdout = try_executing_until_succeed(procargs, input_=input_)
+    assert ['abc'] == stdout # shouldn't be [b'abc']
 
 ##__________________________________________________________________||
 @pytest.fixture()
