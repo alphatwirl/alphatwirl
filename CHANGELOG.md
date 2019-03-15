@@ -2,7 +2,17 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.0...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.1...master))
+
+## [0.24.1] - 2019-03-15
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.24.1/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.0...v0.24.1))
+updated `build_parallel()`
+    - removed the deprecated option `htcondor_job_desc_extra`
+    - changed default `user_modules` and `dispatcher_options`,
+      avoiding mutable default
 - updated `HTCondorJobSubmitter`
     - removed the deprecated option `job_desc_extra`
     - changed the default `job_desc_dict` to `None`, avoiding mutable
