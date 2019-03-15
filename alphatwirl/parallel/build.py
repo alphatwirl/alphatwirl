@@ -67,6 +67,7 @@ def _build_parallel_dropbox(parallel_mode, user_modules,
     python_modules = set(user_modules)
     python_modules.add('alphatwirl')
     python_modules.add('atpbar')
+    python_modules.add('mantichora')
     workingarea_options = dict(topdir=workingarea_topdir, python_modules=python_modules)
 
     if parallel_mode == 'htcondor':

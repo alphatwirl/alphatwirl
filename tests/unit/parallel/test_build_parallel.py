@@ -83,9 +83,9 @@ def test_build_parallel_subprocess(user_modules, dispatcher_options):
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 
     if user_modules:
-        assert set(['scribblers', 'alphatwirl', 'atpbar']) == set(parallel.workingarea.python_modules)
+        assert set(['scribblers', 'alphatwirl', 'atpbar', 'mantichora']) == set(parallel.workingarea.python_modules)
     else:
-        assert set(['alphatwirl', 'atpbar']) == set(parallel.workingarea.python_modules)
+        assert set(['alphatwirl', 'atpbar', 'mantichora']) == set(parallel.workingarea.python_modules)
 
 
 @pytest.mark.parametrize('dispatcher_options', [dict(), dict(job_desc_dict=dict(request_memory='120'))])
@@ -112,9 +112,9 @@ def test_build_parallel_htcondor(user_modules, dispatcher_options):
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 
     if user_modules:
-        assert set(['scribblers', 'alphatwirl', 'atpbar']) == set(parallel.workingarea.python_modules)
+        assert set(['scribblers', 'alphatwirl', 'atpbar', 'mantichora']) == set(parallel.workingarea.python_modules)
     else:
-        assert set(['alphatwirl', 'atpbar']) == set(parallel.workingarea.python_modules)
+        assert set(['alphatwirl', 'atpbar', 'mantichora']) == set(parallel.workingarea.python_modules)
 
 
 ##__________________________________________________________________||
