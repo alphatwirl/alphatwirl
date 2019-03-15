@@ -122,7 +122,7 @@ def setup_python_modules():
 def disable_progressbar():
     try:
         import atpbar
-        atpbar.funcs._do_not_start_pickup = True
+        atpbar.disable()
     except:
         pass
 
