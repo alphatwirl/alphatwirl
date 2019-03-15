@@ -19,6 +19,7 @@ from alphatwirl.concurrently import HTCondorJobSubmitter
 @pytest.fixture()
 def mock_proc_condor_submit():
     ret =  mock.Mock(name='submit')
+    ret.returncode = 0
     return ret
 
 @pytest.fixture()
