@@ -11,6 +11,7 @@ except ImportError:
 
 from alphatwirl.parallel import build_parallel
 from alphatwirl.parallel.build import build_parallel_multiprocessing
+from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
 @pytest.fixture(autouse=True)
@@ -18,6 +19,13 @@ def mock_atpbar(monkeypatch):
     module = sys.modules['alphatwirl.parallel.build']
     ret = mock.Mock()
     monkeypatch.setattr(module, 'atpbar', ret)
+    yield ret
+
+@pytest.fixture()
+def wrap_HTCondorJobSubmitter(monkeypatch):
+    ret = mock.Mock(wraps=HTCondorJobSubmitter)
+    module = sys.modules['alphatwirl.parallel.build']
+    monkeypatch.setattr(module.concurrently, 'HTCondorJobSubmitter', ret)
     yield ret
 
 ##__________________________________________________________________||
@@ -90,7 +98,7 @@ def test_build_parallel_subprocess(user_modules, dispatcher_options):
 
 @pytest.mark.parametrize('dispatcher_options', [dict(), dict(job_desc_dict=dict(request_memory='120'))])
 @pytest.mark.parametrize('user_modules', [[], ['scribblers']])
-def test_build_parallel_htcondor(user_modules, dispatcher_options):
+def test_build_parallel_htcondor(user_modules, dispatcher_options, wrap_HTCondorJobSubmitter):
 
     parallel_mode = 'htcondor'
 
@@ -107,7 +115,7 @@ def test_build_parallel_htcondor(user_modules, dispatcher_options):
     ## dispatcher
     assert 'HTCondorJobSubmitter' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
     if 'job_desc_dict' in dispatcher_options:
-        assert dispatcher_options['job_desc_dict'] == parallel.communicationChannel.dropbox.dispatcher.user_job_desc_dict
+        assert [mock.call(job_desc_dict={'request_memory': '120'})] == wrap_HTCondorJobSubmitter.call_args_list
 
     assert 'WorkingArea' == parallel.workingarea.__class__.__name__
 

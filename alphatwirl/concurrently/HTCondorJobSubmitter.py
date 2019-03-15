@@ -58,8 +58,6 @@ class HTCondorJobSubmitter(object):
     @_removed_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
     def __init__(self, job_desc_dict=None):
 
-        self.user_job_desc_dict = job_desc_dict # for test
-
         if job_desc_dict is None:
             job_desc_dict = dict()
 
