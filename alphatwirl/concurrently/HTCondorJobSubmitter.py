@@ -10,7 +10,7 @@ import re
 import logging
 
 import alphatwirl
-from alphatwirl.misc.deprecation import _deprecated_class_method_option
+from alphatwirl.misc.removal import _removed_class_method_option
 
 from .exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
@@ -55,8 +55,8 @@ DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
 
-    @_deprecated_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
-    def __init__(self, job_desc_extra=[ ], job_desc_dict={}):
+    @_removed_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
+    def __init__(self, job_desc_dict={}):
 
         self.job_desc_dict = DEFAULT_JOB_DESC_DICT.copy()
         for k, v in job_desc_dict.items():
@@ -64,8 +64,6 @@ class HTCondorJobSubmitter(object):
                                               # job_desc_dict is ordered
 
         self.user_job_desc_dict = job_desc_dict # for test
-
-        self.job_desc_extra = job_desc_extra # TODO: to be deleted
 
         self.clusterprocids_outstanding = [ ]
         self.clusterprocids_finished = [ ]
@@ -97,9 +95,6 @@ class HTCondorJobSubmitter(object):
 
         job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in self.job_desc_dict.items()])
         job_desc_queue_line = 'queue resultdir in {}'.format(', '.join(resultdir_basenames))
-
-        # TODO: delete this line as job_desc_extra will be obsolete
-        job_desc = '\n'.join([job_desc] + self.job_desc_extra)
 
         job_desc = '\n'.join([job_desc, job_desc_queue_line])
 

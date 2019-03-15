@@ -44,8 +44,8 @@ def mocksubprocess(monkeypatch, proc_submit, proc_prio):
 
 @pytest.fixture()
 def obj(mocksubprocess):
-    job_desc_extra = ['request_memory = 900']
-    return HTCondorJobSubmitter(job_desc_extra=job_desc_extra)
+    job_desc_dict = dict([('request_memory', '900')])
+    return HTCondorJobSubmitter(job_desc_dict=job_desc_dict)
 
 @pytest.fixture()
 def workingarea(tmpdir_factory):
