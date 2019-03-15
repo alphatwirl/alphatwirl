@@ -96,7 +96,7 @@ def test_run_multiple(
         mock_proc_condor_submit, caplog):
 
     package_indices = [0, 1, 2]
-    mock_proc_condor_submit.communicate.return_value = (b'3 job(s) submitted to cluster 3764858.', b'')
+    mock_proc_condor_submit.communicate.return_value = ('3 job(s) submitted to cluster 3764858.', '')
 
     with caplog.at_level(logging.DEBUG):
         clusterprocids = obj.run_multiple(
@@ -106,16 +106,20 @@ def test_run_multiple(
 
     # assert 6 == len(caplog.records)
 
+    #
+    assert [mock.call(expected_job_desc)] == mock_proc_condor_submit.communicate.call_args_list
+
+    #
     expected = ['3764858.0', '3764858.1', '3764858.2']
     assert expected == clusterprocids
 
+    #
     expected = [
-        mock.call(['condor_submit'], stderr=mock_pipe, stdin=mock_pipe, stdout=mock_pipe),
-        mock.call(['condor_prio', '-p', '10', '3764858'], stderr=mock_pipe, stdout=mock_pipe)
+        ['condor_submit'],
+        ['condor_prio', '-p', '10', '3764858'],
     ]
-    assert expected == mock_popen.call_args_list
-
-    assert [mock.call(expected_job_desc)] == mock_proc_condor_submit.communicate.call_args_list
+    procargs_list = [args[0] for args, kwargs in mock_popen.call_args_list]
+    assert expected == procargs_list
 
 ##__________________________________________________________________||
 @pytest.fixture()
