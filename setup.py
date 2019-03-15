@@ -29,6 +29,6 @@ setup(
     install_requires=[
         'numpy',
         'atpbar>=1.0.2',
-        'mantichora>=0.9.3',
+        'mantichora>=0.9.4',
     ],
 )
