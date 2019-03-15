@@ -19,7 +19,6 @@ from alphatwirl.concurrently import HTCondorJobSubmitter
 @pytest.fixture()
 def mock_proc_condor_submit():
     ret =  mock.Mock(name='submit')
-    ret.communicate.return_value = (b'3 job(s) submitted to cluster 3764858.', b'')
     return ret
 
 @pytest.fixture()
@@ -74,12 +73,30 @@ def test_repr(obj):
     repr(obj)
 
 ##__________________________________________________________________||
+expected_job_desc = textwrap.dedent("""
+executable = run.py
+output = results/$(resultdir)/stdout.$(cluster).$(process).txt
+error = results/$(resultdir)/stderr.$(cluster).$(process).txt
+log = results/$(resultdir)/log.$(cluster).$(process).txt
+arguments = $(resultdir).p.gz
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
+transfer_output_files = results
+universe = chocolate
+notification = Error
+getenv = True
+request_memory = 250
+queue resultdir in task_00000, task_00001, task_00002
+""").strip()
+
 def test_run_multiple(
         obj, mock_workingarea,
         mock_popen, mock_pipe,
         mock_proc_condor_submit, caplog):
 
     package_indices = [0, 1, 2]
+    mock_proc_condor_submit.communicate.return_value = (b'3 job(s) submitted to cluster 3764858.', b'')
 
     with caplog.at_level(logging.DEBUG):
         clusterprocids = obj.run_multiple(
@@ -98,24 +115,7 @@ def test_run_multiple(
     ]
     assert expected == mock_popen.call_args_list
 
-    expected = textwrap.dedent("""
-    executable = run.py
-    output = results/$(resultdir)/stdout.$(cluster).$(process).txt
-    error = results/$(resultdir)/stderr.$(cluster).$(process).txt
-    log = results/$(resultdir)/log.$(cluster).$(process).txt
-    arguments = $(resultdir).p.gz
-    should_transfer_files = YES
-    when_to_transfer_output = ON_EXIT
-    transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
-    transfer_output_files = results
-    universe = chocolate
-    notification = Error
-    getenv = True
-    request_memory = 250
-    queue resultdir in task_00000, task_00001, task_00002
-    """).strip()
-
-    assert [mock.call(expected)] == mock_proc_condor_submit.communicate.call_args_list
+    assert [mock.call(expected_job_desc)] == mock_proc_condor_submit.communicate.call_args_list
 
 ##__________________________________________________________________||
 @pytest.fixture()
