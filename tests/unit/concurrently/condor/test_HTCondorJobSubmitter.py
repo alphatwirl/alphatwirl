@@ -17,41 +17,55 @@ from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def proc_submit():
-    ret =  mock.MagicMock(name='proc_condor_submit')
-    ret.communicate.return_value = (b'1 job(s) submitted to cluster 1012.', b'')
+def mock_proc_condor_submit():
+    ret =  mock.Mock(name='submit')
+    ret.communicate.return_value = (b'3 job(s) submitted to cluster 3764858.', b'')
     return ret
 
 @pytest.fixture()
-def proc_prio():
-    ret = mock.MagicMock(name='proc_condor_prio')
+def mock_proc_ondor_prio():
+    ret = mock.Mock()
     ret.communicate.return_value = ('', '')
     ret.returncode = 0
     return ret
 
 @pytest.fixture()
-def mocksubprocess(monkeypatch, proc_submit, proc_prio):
-    ret = mock.MagicMock(name='subprocess')
+def mock_pipe(monkeypatch):
+    ret = mock.Mock()
 
     module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module, 'subprocess', ret)
+    monkeypatch.setattr(module.subprocess, 'PIPE', ret)
 
     module = sys.modules['alphatwirl.concurrently.exec_util']
-    monkeypatch.setattr(module, 'subprocess', ret)
+    monkeypatch.setattr(module.subprocess, 'PIPE', ret)
 
-    ret.Popen.side_effect = [proc_submit, proc_prio]
     return ret
 
 @pytest.fixture()
-def obj(mocksubprocess):
-    job_desc_dict = dict([('request_memory', '900')])
+def mock_popen(monkeypatch, mock_proc_condor_submit, mock_proc_ondor_prio):
+    ret = mock.Mock()
+    ret.side_effect = [mock_proc_condor_submit, mock_proc_ondor_prio]
+
+    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
+    monkeypatch.setattr(module.subprocess, 'Popen', ret)
+
+    module = sys.modules['alphatwirl.concurrently.exec_util']
+    monkeypatch.setattr(module.subprocess, 'Popen', ret)
+
+    return ret
+
+@pytest.fixture()
+def obj(mock_popen):
+    job_desc_dict = collections.OrderedDict(
+        [('request_memory', '250'), ('Universe', 'chocolate')]
+    )
     return HTCondorJobSubmitter(job_desc_dict=job_desc_dict)
 
 @pytest.fixture()
-def workingarea(tmpdir_factory):
+def mock_workingarea(tmpdir_factory):
     ret = mock.Mock(spec=WorkingArea)
     ret.path = str(tmpdir_factory.mktemp(''))
-    ret.package_path.return_value = 'tpd_20161129_122841_HnpcmF'
+    ret.package_path.side_effect = ['task_00000', 'task_00001', 'task_00002']
     ret.executable = 'run.py'
     ret.extra_input_files = set(['python_modules.tar.gz', 'logging_levels.json.gz'])
     return ret
@@ -59,36 +73,30 @@ def workingarea(tmpdir_factory):
 def test_repr(obj):
     repr(obj)
 
-def test_run(obj, workingarea, proc_submit, caplog):
-    with caplog.at_level(logging.WARNING):
-        assert '1012.0' == obj.run(workingArea=workingarea, package_index=0)
-
-    expected = textwrap.dedent("""
-    executable = run.py
-    output = results/$(resultdir)/stdout.$(cluster).$(process).txt
-    error = results/$(resultdir)/stderr.$(cluster).$(process).txt
-    log = results/$(resultdir)/log.$(cluster).$(process).txt
-    arguments = $(resultdir).p.gz
-    should_transfer_files = YES
-    when_to_transfer_output = ON_EXIT
-    transfer_input_files = $(resultdir).p.gz, logging_levels.json.gz, python_modules.tar.gz
-    transfer_output_files = results
-    universe = vanilla
-    notification = Error
-    getenv = True
-    request_memory = 900
-    queue resultdir in tpd_20161129_122841_HnpcmF
-    """).strip()
-
-    assert [mock.call(expected)] == proc_submit.communicate.call_args_list
-
 ##__________________________________________________________________||
-def test_option_job_desc_dict(mocksubprocess, workingarea, proc_submit):
-    job_desc_dict = collections.OrderedDict(
-        [('request_memory', '1200'), ('Universe', 'chocolate')]
-    )
-    obj = HTCondorJobSubmitter(job_desc_dict=job_desc_dict)
-    obj.run(workingArea=workingarea, package_index=0)
+def test_run_multiple(
+        obj, mock_workingarea,
+        mock_popen, mock_pipe,
+        mock_proc_condor_submit, caplog):
+
+    package_indices = [0, 1, 2]
+
+    with caplog.at_level(logging.DEBUG):
+        clusterprocids = obj.run_multiple(
+            workingArea=mock_workingarea,
+            package_indices=package_indices
+        )
+
+    # assert 6 == len(caplog.records)
+
+    expected = ['3764858.0', '3764858.1', '3764858.2']
+    assert expected == clusterprocids
+
+    expected = [
+        mock.call(['condor_submit'], stderr=mock_pipe, stdin=mock_pipe, stdout=mock_pipe),
+        mock.call(['condor_prio', '-p', '10', '3764858'], stderr=mock_pipe, stdout=mock_pipe)
+    ]
+    assert expected == mock_popen.call_args_list
 
     expected = textwrap.dedent("""
     executable = run.py
@@ -103,10 +111,23 @@ def test_option_job_desc_dict(mocksubprocess, workingarea, proc_submit):
     universe = chocolate
     notification = Error
     getenv = True
-    request_memory = 1200
-    queue resultdir in tpd_20161129_122841_HnpcmF
+    request_memory = 250
+    queue resultdir in task_00000, task_00001, task_00002
     """).strip()
 
-    assert [mock.call(expected)] == proc_submit.communicate.call_args_list
+    assert [mock.call(expected)] == mock_proc_condor_submit.communicate.call_args_list
+
+##__________________________________________________________________||
+@pytest.fixture()
+def mock_run_multiple(monkeypatch, obj):
+    ret = mock.Mock()
+    ret.return_value = ['3764858.0']
+    monkeypatch.setattr(obj, 'run_multiple', ret)
+    return ret
+
+def test_run(obj, mock_run_multiple, mock_workingarea):
+    assert '3764858.0' == obj.run(workingArea=mock_workingarea, package_index=0)
+    expected = [mock.call(mock_workingarea, [0])]
+    assert expected == mock_run_multiple.call_args_list
 
 ##__________________________________________________________________||
