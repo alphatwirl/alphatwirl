@@ -204,7 +204,7 @@ class HTCondorJobSubmitter(object):
 
 ##__________________________________________________________________||
 def clusterprocids2clusterids(clusterprocids):
-    return list(set([i.split('.')[0] for i in clusterprocids]))
+    return sorted(list(set([i.split('.')[0] for i in clusterprocids])))
 
 ##__________________________________________________________________||
 def query_status_for(ids, n_at_a_time=500):
