@@ -12,7 +12,7 @@ from .parallel import Parallel
 ##__________________________________________________________________||
 @_removed_func_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
 def build_parallel(parallel_mode, quiet=True, processes=4,
-                   user_modules=[ ], dispatcher_options=dict()):
+                   user_modules=None, dispatcher_options=None):
     """initializes `Parallel`
 
     Parameters
@@ -36,6 +36,12 @@ def build_parallel(parallel_mode, quiet=True, processes=4,
         an instance of the class `Parallel`
 
     """
+
+    if user_modules is None:
+        user_modules = [ ]
+
+    if dispatcher_options is None:
+        dispatcher_options = dict()
 
     dispatchers = ('subprocess', 'htcondor')
     parallel_modes = ('multiprocessing', ) + dispatchers
