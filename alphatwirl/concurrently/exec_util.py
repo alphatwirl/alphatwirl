@@ -13,6 +13,7 @@ def try_executing_until_succeed(procargs, input_=None, sleep=2):
         #
         command_display = compose_shortened_command_for_logging(procargs)
         logger.debug('execute: {!r}'.format(command_display))
+        logger.debug('stdin: {!r}'.format(input_))
 
         #
         try:
@@ -35,13 +36,14 @@ def try_executing_until_succeed(procargs, input_=None, sleep=2):
         stdout, stderr = proc.communicate(input_)
         success = not (proc.returncode or stderr)
 
+        logger.debug('stdout: {!r}'.format(stdout.strip()))
+        logger.debug('stderr: {!r}'.format(stderr.strip()))
+
         #
         if success:
             break
 
         #
-        if stderr:
-            logger.warning(stderr.strip())
         logger.warning('the command failed: {!r}. will try again in {} seconds'.format(command_display, sleep))
 
         #
