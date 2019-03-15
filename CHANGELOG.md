@@ -9,7 +9,7 @@
 **PyPI**: https://pypi.org/project/alphatwirl/0.24.1/
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.0...v0.24.1))
-updated `build_parallel()`
+- updated `build_parallel()`
     - removed the deprecated option `htcondor_job_desc_extra`
     - changed default `user_modules` and `dispatcher_options`,
       avoiding mutable default
