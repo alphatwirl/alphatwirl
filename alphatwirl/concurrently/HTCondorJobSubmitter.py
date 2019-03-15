@@ -56,7 +56,10 @@ DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
 class HTCondorJobSubmitter(object):
 
     @_removed_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
-    def __init__(self, job_desc_dict={}):
+    def __init__(self, job_desc_dict=None):
+
+        if job_desc_dict is None:
+            job_desc_dict = dict()
 
         self.job_desc_dict = DEFAULT_JOB_DESC_DICT.copy()
         for k, v in job_desc_dict.items():
