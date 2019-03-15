@@ -101,36 +101,17 @@ class HTCondorJobSubmitter(object):
 
         procargs = ['condor_submit']
 
-        logger = logging.getLogger(__name__)
-        command_display = compose_shortened_command_for_logging(procargs)
-        logger.debug('execute: {!r}'.format(command_display))
-
-        try:
-            proc = subprocess.Popen(
-                procargs,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                encoding='utf-8'
-            )
-        except TypeError:
-            # no `encoding` option in Python 2
-            proc = subprocess.Popen(
-                procargs,
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-
-        stdout, stderr = proc.communicate(job_desc)
-
-        for l in stdout.rstrip().split('\n'):
-            logger.debug(l)
+        stdout = try_executing_until_succeed(procargs, input_=job_desc)
+        stdout = '\n'.join(stdout)
+        # e.g., '3 job(s) submitted to cluster 3158626.'
 
         regex = re.compile(r"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
-        njobs = int(regex.search(stdout).groups()[0])
-        clusterid = regex.search(stdout).groups()[1]
-        # e.g., '3158626'
+        match = regex.search(stdout)
+        groups = match.groups()
+        # e.g., ('3', '3158626')
+
+        njobs, clusterid = groups
+        njobs = int(njobs)
 
         change_job_priority([clusterid], 10) ## need to make configurable
 
