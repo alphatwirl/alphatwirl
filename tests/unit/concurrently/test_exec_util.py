@@ -12,9 +12,10 @@ from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compo
 
 ##__________________________________________________________________||
 def test_without_monkeypatch_subproces(caplog):
-    procargs = ['ls']
-    with caplog.at_level(logging.DEBUG, logger = 'alphatwirl'):
-        try_executing_until_succeed(procargs)
+    procargs = ['echo', 'abc\ndef']
+    with caplog.at_level(logging.DEBUG):
+        stdout = try_executing_until_succeed(procargs)
+    assert ['abc', 'def'] == stdout # shouldn't be [b'abc', b'def']
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -28,27 +29,32 @@ def test_success(subprocess):
     procargs = ['ls']
 
     proc = mock.MagicMock(name='ls')
-    proc.communicate.return_value = (b'aaa bbb', b'')
+    proc.communicate.return_value = ('aaa bbb', '')
     proc.returncode = 0
     subprocess.Popen.side_effect = [proc]
 
-    assert [b'aaa bbb'] == try_executing_until_succeed(procargs)
+    assert ['aaa bbb'] == try_executing_until_succeed(procargs)
 
 def test_fail_success(subprocess, caplog):
     procargs = ['ls']
 
     proc0 = mock.MagicMock(name='ls')
-    proc0.communicate.return_value = (b'', b'')
+    proc0.communicate.return_value = ('', '')
     proc0.returncode = 1
 
     proc1 = mock.MagicMock(name='ls')
-    proc1.communicate.return_value = (b'aaa bbb', b'')
+    proc1.communicate.return_value = ('aaa bbb', '')
     proc1.returncode = 0
 
     subprocess.Popen.side_effect = [proc0, proc1]
 
-    with caplog.at_level(logging.WARNING, logger = 'alphatwirl'):
-        assert [b'aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
+    with caplog.at_level(logging.WARNING):
+        assert ['aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'exec_util' in caplog.records[0].name
+    assert 'the command failed' in caplog.records[0].msg
 
 ##__________________________________________________________________||
 def test_compose_shortened_command_for_logging():

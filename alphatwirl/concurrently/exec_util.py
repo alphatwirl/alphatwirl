@@ -15,26 +15,40 @@ def try_executing_until_succeed(procargs, sleep=2):
         logger.debug('execute: {!r}'.format(command_display))
 
         #
-        proc = subprocess.Popen(
-            procargs,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+        try:
+            proc = subprocess.Popen(
+                procargs,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding='utf-8'
+            )
+        except TypeError:
+            # no `encoding` option in Python 2
+            proc = subprocess.Popen(
+                procargs,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+
         stdout, stderr = proc.communicate()
         success = not (proc.returncode or stderr)
 
         #
-        if success: break
+        if success:
+            break
 
         #
-        if stderr: logger.warning(stderr.strip())
+        if stderr:
+            logger.warning(stderr.strip())
         logger.warning('the command failed: {!r}. will try again in {} seconds'.format(command_display, sleep))
 
         #
         time.sleep(sleep)
 
-    if not stdout: return [ ]
-    return stdout.rstrip().split(b'\n')
+    if not stdout:
+        return [ ]
+
+    return stdout.rstrip().split('\n')
 
 ##__________________________________________________________________||
 def compose_shortened_command_for_logging(procargs):
