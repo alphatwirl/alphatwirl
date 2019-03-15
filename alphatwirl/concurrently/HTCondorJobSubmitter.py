@@ -137,7 +137,6 @@ class HTCondorJobSubmitter(object):
         clusterprocid_status_list = query_status_for(clusterids)
         # e.g., [['1730126.0', 2], ['1730127.0', 2], ['1730129.1', 1], ['1730130.0', 1]]
 
-
         if clusterprocid_status_list:
             clusterprocids, statuses = zip(*clusterprocid_status_list)
         else:
