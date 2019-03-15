@@ -45,7 +45,7 @@ def mock_popen(monkeypatch, mock_proc_condor_submit, mock_proc_ondor_prio):
     return ret
 
 @pytest.fixture()
-def obj(mock_popen):
+def obj(mock_popen, mock_pipe):
     job_desc_dict = collections.OrderedDict(
         [('request_memory', '250'), ('Universe', 'chocolate')]
     )
@@ -82,8 +82,7 @@ queue resultdir in task_00000, task_00001, task_00002
 """).strip()
 
 def test_run_multiple(
-        obj, mock_workingarea,
-        mock_popen, mock_pipe,
+        obj, mock_workingarea, mock_popen,
         mock_proc_condor_submit, caplog):
 
     obj.clusterprocids_outstanding = ['3764857.0']
@@ -114,6 +113,37 @@ def test_run_multiple(
         ['condor_submit'],
         ['condor_prio', '-p', '10', '3764858'],
     ]
+    procargs_list = [args[0] for args, kwargs in mock_popen.call_args_list]
+    assert expected == procargs_list
+
+def test_run_multiple_empty(
+        obj, mock_workingarea, mock_popen,
+        mock_proc_condor_submit, caplog):
+
+    obj.clusterprocids_outstanding = ['3764857.0']
+
+    package_indices = [ ]
+
+    with caplog.at_level(logging.DEBUG):
+        clusterprocids = obj.run_multiple(
+            workingArea=mock_workingarea,
+            package_indices=package_indices
+        )
+
+    # assert 6 == len(caplog.records)
+
+    #
+    assert ['3764857.0'] == obj.clusterprocids_outstanding
+
+    #
+    assert [ ] == mock_proc_condor_submit.communicate.call_args_list
+
+    #
+    expected = [ ]
+    assert expected == clusterprocids
+
+    #
+    expected = [ ]
     procargs_list = [args[0] for args, kwargs in mock_popen.call_args_list]
     assert expected == procargs_list
 
