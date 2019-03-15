@@ -13,7 +13,9 @@ def try_executing_until_succeed(procargs, input_=None, sleep=2):
         #
         command_display = compose_shortened_command_for_logging(procargs)
         logger.debug('execute: {!r}'.format(command_display))
-        logger.debug('stdin: {!r}'.format(input_))
+
+        if input_ is not None:
+            logger.debug('stdin: {!r}'.format(input_))
 
         #
         try:
