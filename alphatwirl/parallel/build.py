@@ -5,15 +5,14 @@ import logging
 import atpbar
 
 from alphatwirl import concurrently
-from alphatwirl.misc.deprecation import _deprecated_func_option
-from alphatwirl.misc.removal import _removed
+from alphatwirl.misc.removal import _removed, _removed_func_option
 
 from .parallel import Parallel
 
 ##__________________________________________________________________||
-@_deprecated_func_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
-def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
-                   htcondor_job_desc_extra=[ ], dispatcher_options=dict()):
+@_removed_func_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
+def build_parallel(parallel_mode, quiet=True, processes=4,
+                   user_modules=[ ], dispatcher_options=dict()):
     """initializes `Parallel`
 
     Parameters
@@ -28,10 +27,6 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
     user_modules : list, optional
         The names of modules to be sent to worker nodes when
         parallel_mode is "htcondor"
-    htcondor_job_desc_extra : list
-        deprecated. use `dispatcher_options`; add this option as the
-        value of the key 'job_desc_extra' of `dispatcher_options`,
-        i.e., `dispatcher_options['job_desc_extra'] = htcondor_job_desc_extra`
     dispatcher_options : dict, optional
         Options to dispatcher
 
@@ -57,12 +52,6 @@ def build_parallel(parallel_mode, quiet=True, processes=4, user_modules=[ ],
         if quiet:
             atpbar.disable()
         return _build_parallel_multiprocessing(processes=processes)
-
-    ## TODO: to be deleted as htcondor_job_desc_extra is obsolete
-    dispatcher_options = dispatcher_options.copy()
-    if parallel_mode == 'htcondor':
-        if htcondor_job_desc_extra:
-            dispatcher_options['job_desc_extra'] = htcondor_job_desc_extra
 
     return _build_parallel_dropbox(
         parallel_mode=parallel_mode,

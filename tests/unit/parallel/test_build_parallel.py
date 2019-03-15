@@ -89,18 +89,14 @@ def test_build_parallel_subprocess(user_modules, dispatcher_options):
 
 
 @pytest.mark.parametrize('dispatcher_options', [dict(), dict(job_desc_dict=dict(request_memory='120'))])
-@pytest.mark.parametrize('htcondor_job_desc_extra', [[], ['request_memory = 250']])
 @pytest.mark.parametrize('user_modules', [[], ['scribblers']])
-def test_build_parallel_htcondor(
-        user_modules, htcondor_job_desc_extra,
-        dispatcher_options):
+def test_build_parallel_htcondor(user_modules, dispatcher_options):
 
     parallel_mode = 'htcondor'
 
     parallel = build_parallel(
         parallel_mode=parallel_mode,
         user_modules=user_modules,
-        htcondor_job_desc_extra=htcondor_job_desc_extra,
         dispatcher_options=dispatcher_options
     )
 
@@ -110,7 +106,6 @@ def test_build_parallel_htcondor(
 
     ## dispatcher
     assert 'HTCondorJobSubmitter' == parallel.communicationChannel.dropbox.dispatcher.__class__.__name__
-    assert htcondor_job_desc_extra == parallel.communicationChannel.dropbox.dispatcher.job_desc_extra
     if 'job_desc_dict' in dispatcher_options:
         assert dispatcher_options['job_desc_dict'] == parallel.communicationChannel.dropbox.dispatcher.user_job_desc_dict
 
@@ -123,6 +118,22 @@ def test_build_parallel_htcondor(
 
 
 ##__________________________________________________________________||
+def test_removed_job_desc_extra(caplog):
+    parallel_mode = 'htcondor'
+    htcondor_job_desc_extra = ['request_memory = 250']
+
+    with pytest.raises(TypeError):
+        with caplog.at_level(logging.ERROR):
+            parallel = build_parallel(
+                parallel_mode=parallel_mode,
+                htcondor_job_desc_extra=htcondor_job_desc_extra
+            )
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'ERROR'
+    assert 'parallel.build' in caplog.records[0].name
+    assert '"htcondor_job_desc_extra" is removed.' in caplog.records[0].msg
+
 
 ##__________________________________________________________________||
 def test_build_depricated(caplog):
