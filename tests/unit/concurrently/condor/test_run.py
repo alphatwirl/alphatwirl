@@ -18,7 +18,7 @@ from alphatwirl.concurrently import HTCondorJobSubmitter
 ##__________________________________________________________________||
 @pytest.fixture()
 def mock_proc_condor_submit():
-    ret =  mock.Mock(name='submit')
+    ret =  mock.Mock()
     ret.returncode = 0
     return ret
 
@@ -32,26 +32,16 @@ def mock_proc_ondor_prio():
 @pytest.fixture()
 def mock_pipe(monkeypatch):
     ret = mock.Mock()
-
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module.subprocess, 'PIPE', ret)
-
     module = sys.modules['alphatwirl.concurrently.exec_util']
     monkeypatch.setattr(module.subprocess, 'PIPE', ret)
-
     return ret
 
 @pytest.fixture()
 def mock_popen(monkeypatch, mock_proc_condor_submit, mock_proc_ondor_prio):
     ret = mock.Mock()
     ret.side_effect = [mock_proc_condor_submit, mock_proc_ondor_prio]
-
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module.subprocess, 'Popen', ret)
-
     module = sys.modules['alphatwirl.concurrently.exec_util']
     monkeypatch.setattr(module.subprocess, 'Popen', ret)
-
     return ret
 
 @pytest.fixture()
@@ -96,6 +86,8 @@ def test_run_multiple(
         mock_popen, mock_pipe,
         mock_proc_condor_submit, caplog):
 
+    obj.clusterprocids_outstanding = ['3764857.0']
+
     package_indices = [0, 1, 2]
     mock_proc_condor_submit.communicate.return_value = ('3 job(s) submitted to cluster 3764858.', '')
 
@@ -106,6 +98,9 @@ def test_run_multiple(
         )
 
     # assert 6 == len(caplog.records)
+
+    #
+    assert ['3764857.0', '3764858.0', '3764858.1', '3764858.2'] == obj.clusterprocids_outstanding
 
     #
     assert [mock.call(expected_job_desc)] == mock_proc_condor_submit.communicate.call_args_list
