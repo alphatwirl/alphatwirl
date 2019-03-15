@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.0...master))
+- updated tests
 
 ## [0.24.0] - 2019-03-15
 
