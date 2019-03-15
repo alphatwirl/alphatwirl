@@ -3,7 +3,9 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.1...master))
+- fixed encoding problem in `HTCondorJobSubmitter` in Python 3
 - updated tests
+- cleaned code
 
 ## [0.24.1] - 2019-03-15
 
