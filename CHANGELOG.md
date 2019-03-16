@@ -3,7 +3,19 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.1...master))
-- fixed encoding problem in `HTCondorJobSubmitter` in Python 3
+- updated `concurrently`
+    - `HTCondorJobSubmitter`:
+        - fixed encoding problem in Python 3
+        - stop creating the result dir.
+        - use `try_executing_until_succeed()` in `run_multiple()`
+    - `WorkingArea`:
+        - the result dir will be created in `put_package()`
+        - renamed `package_path()` `package_relpath()`, deprecating `package_path()`
+        - added `package_fullpath()`, `result_relpath()`, `result_fullpath()`
+        - changed the default `python_modules` to `None`, avoiding mutable default
+    - `try_executing_until_succeed()`
+        - added options `input_` and `cwd`
+        - updated `logging`
 - updated tests
 - cleaned code
 
