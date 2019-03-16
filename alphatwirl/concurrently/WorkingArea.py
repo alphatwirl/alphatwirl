@@ -23,6 +23,8 @@ from alphatwirl.misc.deprecation import _renamed_class_method_option
 class WorkingArea(object):
     """A working area for tasks
 
+    This is an area where pickled tasks, pickled results, archived
+    Python modules, etc are placed.
 
     Parameters
     ----------
@@ -30,6 +32,7 @@ class WorkingArea(object):
         a path to a directory in which a new directory will be created
     python_modules :list
         names of Python modules to be shipped to worker nodes
+
     """
 
     @_renamed_class_method_option(old='dir', new='topdir')
@@ -57,12 +60,32 @@ class WorkingArea(object):
         )
 
     def open(self):
+        """Open the working area
+
+        Returns
+        -------
+        None
+        """
+
         self.path = self._prepare_dir(self.topdir)
         self._copy_executable(area_path=self.path)
         self._save_logging_levels(area_path=self.path)
         self._put_python_modules(modules=self.python_modules, area_path=self.path)
 
     def put_package(self, package):
+        """Put a package
+
+        Parameters
+        ----------
+        package :
+            a task package
+
+        Returns
+        -------
+        int
+            A package index
+
+        """
 
         self.last_package_index += 1
         package_index = self.last_package_index
@@ -103,6 +126,19 @@ class WorkingArea(object):
         return ret
 
     def collect_result(self, package_index):
+        """Collect the result of a task
+
+        Parameters
+        ----------
+        package_index :
+            a package index
+
+        Returns
+        -------
+        obj
+            The result of the task
+
+        """
 
         result_path = self.result_path(package_index)
         # e.g., 'results/task_00009/result.p.gz'
@@ -121,6 +157,13 @@ class WorkingArea(object):
         return result
 
     def close(self):
+        """Close the working area
+
+        Returns
+        -------
+        None
+
+        """
         self.path = None
 
     def _prepare_dir(self, dir):
