@@ -21,11 +21,15 @@ from alphatwirl.misc.deprecation import _renamed_class_method_option
 
 ##__________________________________________________________________||
 class WorkingArea(object):
-    """
-        Args:
-        topdir (str): a path to a directory in which a new directory will be created
-        python_modules (list): names of python modules to be shipped to worker nodes
+    """A working area for tasks
 
+
+    Parameters
+    ----------
+    topdir : str
+        a path to a directory in which a new directory will be created
+    python_modules :list
+        names of Python modules to be shipped to worker nodes
     """
 
     @_renamed_class_method_option(old='dir', new='topdir')
