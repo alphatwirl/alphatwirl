@@ -17,7 +17,7 @@ except:
 
 import alphatwirl
 
-from alphatwirl.misc.deprecation import _renamed_class_method_option
+from alphatwirl.misc.deprecation import _deprecated, _renamed_class_method_option
 
 ##__________________________________________________________________||
 class WorkingArea(object):
@@ -100,7 +100,7 @@ class WorkingArea(object):
            pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
            f.close()
 
-        result_path = self.result_path(package_index)
+        result_path = self.result_relpath(package_index)
         # e.g., 'results/task_00009/result.p.gz'
 
         result_fullpath = os.path.join(self.path, result_path)
@@ -110,18 +110,108 @@ class WorkingArea(object):
 
         return package_index
 
-    def package_path(self, package_index):
+    def package_relpath(self, package_index):
+        """Returns the relative path of the package
+
+        This method returns the path to the package relative to the
+        top dir of the working area. This method simply constructs the
+        path based on the convention and doesn't check if the package
+        actually exists.
+
+        Parameters
+        ----------
+        package_index :
+            a package index
+
+        Returns
+        -------
+        str
+            the relative path to the package
+
+        """
+
         ret = 'task_{:05d}.p.gz'.format(package_index)
         # e.g., 'task_00009.p.gz'
 
         return ret
 
-    def result_path(self, package_index):
+    @_deprecated(msg='use package_relpath instead')
+    def package_path(self, package_index):
+        return self.package_relpath(package_index)
+
+    def package_fullpath(self, package_index):
+        """Returns the full path of the package
+
+        This method returns the full path to the package. This method
+        simply constructs the path based on the convention and doesn't
+        check if the package actually exists.
+
+        Parameters
+        ----------
+        package_index :
+            a package index
+
+        Returns
+        -------
+        str
+            the full path to the package
+
+        """
+
+        ret = os.path.join(self.path, self.package_relpath(package_index))
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p.gz'
+
+        return ret
+
+    def result_relpath(self, package_index):
+        """Returns the relative path of the result
+
+        This method returns the path to the result relative to the
+        top dir of the working area. This method simply constructs the
+        path based on the convention and doesn't check if the result
+        actually exists.
+
+        Parameters
+        ----------
+        package_index :
+            a package index
+
+        Returns
+        -------
+        str
+            the relative path to the result
+
+        """
+
         dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
         ret = os.path.join('results', dirname, 'result.p.gz')
         # e.g., 'results/task_00009/result.p.gz'
+
+        return ret
+
+    def result_fullpath(self, package_index):
+        """Returns the full path of the result
+
+        This method returns the full path to the result. This method
+        simply constructs the path based on the convention and doesn't
+        check if the result actually exists.
+
+        Parameters
+        ----------
+        package_index :
+            a package index
+
+        Returns
+        -------
+        str
+            the full path to the result
+
+        """
+
+        ret = os.path.join(self.path, self.result_relpath(package_index))
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
         return ret
 
@@ -140,7 +230,7 @@ class WorkingArea(object):
 
         """
 
-        result_path = self.result_path(package_index)
+        result_path = self.result_relpath(package_index)
         # e.g., 'results/task_00009/result.p.gz'
 
         result_fullpath = os.path.join(self.path, result_path)

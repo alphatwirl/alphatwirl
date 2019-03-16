@@ -45,6 +45,30 @@ def obj(topdir):
 def test_repr(obj):
     repr(obj)
 
+
+def test_deprecated_package_path(obj, caplog):
+    with caplog.at_level(logging.WARNING):
+        obj.package_path(1)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'WorkingArea' in caplog.records[0].name
+    assert 'deprecated' in caplog.records[0].msg
+
+def test_package_relpath(obj):
+    assert 'task_00001.p.gz' == obj.package_relpath(1)
+
+def test_package_fullpath(obj):
+    obj.open()
+    assert os.path.join(obj.path, 'task_00001.p.gz') == obj.package_fullpath(1)
+
+def test_result_relpath(obj):
+    assert os.path.join('results', 'task_00001' , 'result.p.gz') == obj.result_relpath(1)
+
+def test_result_fullpath(obj):
+    obj.open()
+    assert os.path.join(obj.path, 'results', 'task_00001' , 'result.p.gz') == obj.result_fullpath(1)
+
 def test_open(obj):
     assert obj.path is None
 
@@ -81,7 +105,7 @@ def test_put_package(obj):
     with gzip.open(package_fullpath, 'rb') as f:
        assert package1 == pickle.load(f)
 
-    result_path = obj.result_path(package_index)
+    result_path = obj.result_relpath(package_index)
     result_fullpath = os.path.join(obj.path, result_path)
     result_dir = os.path.dirname(result_fullpath)
     assert os.path.isdir(result_dir)
