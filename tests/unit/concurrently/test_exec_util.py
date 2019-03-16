@@ -1,4 +1,5 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
+import os
 import sys
 import logging
 import pytest
@@ -11,16 +12,23 @@ except ImportError:
 from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
-def test_without_monkeypatch_subproces(caplog):
+def test_without_monkeypatch_subproces():
     procargs = ['echo', 'abc\ndef']
     stdout = try_executing_until_succeed(procargs)
     assert ['abc', 'def'] == stdout # shouldn't be [b'abc', b'def']
 
-def test_without_monkeypatch_subproces_with_stdin(caplog):
+def test_without_monkeypatch_subproces_with_stdin():
     procargs = ['cat']
     input_ = 'abc'
     stdout = try_executing_until_succeed(procargs, input_=input_)
     assert ['abc'] == stdout # shouldn't be [b'abc']
+
+def test_without_monkeypatch_subproces_with_cwd(tmpdir):
+    org_dir = os.getcwd()
+    procargs = ['pwd']
+    stdout = try_executing_until_succeed(procargs, cwd=str(tmpdir))
+    assert [str(tmpdir)] == stdout # shouldn't be [b'abc']
+    assert org_dir == os.getcwd()
 
 ##__________________________________________________________________||
 @pytest.fixture()
