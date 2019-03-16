@@ -33,7 +33,11 @@ class WorkingArea(object):
     """
 
     @_renamed_class_method_option(old='dir', new='topdir')
-    def __init__(self, topdir, python_modules=()):
+    def __init__(self, topdir, python_modules=None):
+
+        if python_modules is None:
+            python_modules = ()
+
         self.topdir = topdir
         self.python_modules = python_modules
         self.path = None
