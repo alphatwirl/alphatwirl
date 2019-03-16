@@ -54,6 +54,18 @@ DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
 
 ##__________________________________________________________________||
 class HTCondorJobSubmitter(object):
+    """A dispatcher that dispatches jobs to HTCondor
+
+    Parameters
+    ----------
+    job_desc_dict : dict
+        A dict representing an HTCondor job description. A copy of
+        `DEFAULT_JOB_DESC_DICT` that is updated with this option will
+        be used as a baseline job description for job submissions.
+        This option is typically used to specify requirements, e.g.,
+        `{'request_memory', '250'}`
+
+    """
 
     @_removed_class_method_option('job_desc_extra', msg='use job_desc_dict instead')
     def __init__(self, job_desc_dict=None):
@@ -70,9 +82,44 @@ class HTCondorJobSubmitter(object):
         self.clusterprocids_finished = [ ]
 
     def run(self, workingArea, package_index):
+        """Submit a job
+
+        If you need to submit multiple jobs, it is usually much faster
+        to use `run_multiple()` that to use this method multiple
+        times.
+
+        Parameters
+        ----------
+        workingArea :
+            A workingArea
+        package_index : int
+            A package index
+
+        Returns
+        -------
+        str
+            The run ID of the job
+
+        """
+
         return self.run_multiple(workingArea, [package_index])[0]
 
     def run_multiple(self, workingArea, package_indices):
+        """Submit multiple jobs
+
+        Parameters
+        ----------
+        workingArea :
+            A workingArea
+        package_indices : list(int)
+            A list of package indices
+
+        Returns
+        -------
+        list(str)
+            The list of the run IDs of the jobs
+
+        """
 
         if not package_indices:
             return [ ]
@@ -105,8 +152,12 @@ class HTCondorJobSubmitter(object):
         return job_desc
 
     def poll(self):
-        """check if the jobs are running and return a list of cluster IDs for
-        finished jobs
+        """Return the run IDs of the finished jobs
+
+        Returns
+        -------
+        list(str)
+            The list of the run IDs of the finished jobs
 
         """
 
@@ -136,8 +187,15 @@ class HTCondorJobSubmitter(object):
         return clusterprocids_finished
 
     def wait(self):
-        """wait until all jobs finish and return a list of cluster IDs
+        """Wait until all jobs finish and return the run IDs of the finished jobs
+
+        Returns
+        -------
+        list(str)
+            The list of the run IDs of the finished jobs
+
         """
+
         sleep = 5
         while self.clusterprocids_outstanding:
             self.poll()
@@ -145,6 +203,15 @@ class HTCondorJobSubmitter(object):
         return self.clusterprocids_finished
 
     def failed_runids(self, runids):
+        """Provide the run IDs of failed jobs
+
+
+        Returns
+        -------
+        None
+
+        """
+
         # remove failed clusterprocids from self.clusterprocids_finished
         # so that len(self.clusterprocids_finished)) becomes the number
         # of the successfully finished jobs
@@ -155,6 +222,15 @@ class HTCondorJobSubmitter(object):
                 pass
 
     def terminate(self):
+        """Terminate
+
+
+        Returns
+        -------
+        None
+
+        """
+
         clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
         ids_split = split_ids(clusterids)
         statuses = [ ]
