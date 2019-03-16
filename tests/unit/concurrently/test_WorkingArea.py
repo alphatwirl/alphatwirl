@@ -99,14 +99,12 @@ def test_put_package(obj):
 
     package1 = MockPackage(name='package1')
     package_index = obj.put_package(package1)
-    package_path = obj.package_path(package_index)
-    package_fullpath = os.path.join(obj.path, package_path)
+    package_fullpath = obj.package_fullpath(package_index)
     assert os.path.isfile(package_fullpath)
     with gzip.open(package_fullpath, 'rb') as f:
        assert package1 == pickle.load(f)
 
-    result_path = obj.result_relpath(package_index)
-    result_fullpath = os.path.join(obj.path, result_path)
+    result_fullpath = obj.result_fullpath(package_index)
     result_dir = os.path.dirname(result_fullpath)
     assert os.path.isdir(result_dir)
 
@@ -117,11 +115,9 @@ def test_collect_result(obj):
     result = MockResult(name='result1')
 
     package_index = 9
-    dirname = 'task_{:05d}'.format(package_index)
-    result_dir = os.path.join(obj.path, 'results', dirname)
-    mkdir_p(result_dir)
-    result_path = os.path.join(result_dir, 'result.p.gz')
-    with gzip.open(result_path, 'wb') as f:
+    result_fullpath = obj.result_fullpath(package_index)
+    mkdir_p(os.path.dirname(result_fullpath))
+    with gzip.open(result_fullpath, 'wb') as f:
        pickle.dump(result, f)
        f.close()
 
@@ -152,12 +148,9 @@ def test_collect_result_eoferror(obj):
     obj.open()
 
     package_index = 9
-    dirname = 'task_{:05d}'.format(package_index)
-    result_dir = os.path.join(obj.path, 'results', dirname)
-    mkdir_p(result_dir)
-
-    result_path = os.path.join(result_dir, 'result.p.gz')
-    with open(result_path, 'wb') as f:
+    result_fullpath = obj.result_fullpath(package_index)
+    mkdir_p(os.path.dirname(result_fullpath))
+    with open(result_fullpath, 'wb') as f:
        f.close()
 
     assert obj.collect_result(package_index=package_index) is None
