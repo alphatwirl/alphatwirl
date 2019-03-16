@@ -85,9 +85,6 @@ class HTCondorJobSubmitter(object):
         resultdir_basenames = [os.path.splitext(n)[0] for n in resultdir_basenames]
         resultdirs = [os.path.join('results', n) for n in resultdir_basenames]
 
-        for d in resultdirs:
-            alphatwirl.mkdir_p(d)
-
         job_desc_dict = self.job_desc_dict.copy()
         job_desc_dict['executable'] = workingArea.executable
 
