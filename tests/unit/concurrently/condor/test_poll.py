@@ -43,6 +43,7 @@ def test_poll(
         obj, mock_popen, mock_pipe,
         mock_proc_condor_q, caplog):
 
+    obj.clusterprocids_finished = ['3764857.1', '3764857.2']
     obj.clusterprocids_outstanding = ['3764857.0', '3764858.0', '3764858.1', '3764858.2']
 
     stdout = '\n'.join(['3764857.0 2', '3764858.1 2', '3764858.2 1'])
@@ -55,6 +56,7 @@ def test_poll(
 
     #
     assert ['3764857.0', '3764858.1', '3764858.2'] == obj.clusterprocids_outstanding
+    assert ['3764857.1', '3764857.2', '3764858.0'] == obj.clusterprocids_finished
 
     #
     expected = ['3764858.0']
