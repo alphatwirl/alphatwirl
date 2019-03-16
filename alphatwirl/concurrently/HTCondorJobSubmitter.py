@@ -197,8 +197,11 @@ class HTCondorJobSubmitter(object):
         """
 
         sleep = 5
-        while self.clusterprocids_outstanding:
-            self.poll()
+        while True:
+            if self.clusterprocids_outstanding:
+                self.poll()
+            if not self.clusterprocids_outstanding:
+                break
             time.sleep(sleep)
         return self.clusterprocids_finished
 
