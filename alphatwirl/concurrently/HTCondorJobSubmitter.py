@@ -254,6 +254,8 @@ class HTCondorJobSubmitter(object):
                     stderr=subprocess.PIPE
                 )
             stdout, stderr = proc.communicate()
+            logger.debug('stdout: {!r}'.format(stdout.strip()))
+            logger.debug('stderr: {!r}'.format(stderr.strip()))
 
 ##__________________________________________________________________||
 def clusterprocids2clusterids(clusterprocids):
