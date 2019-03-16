@@ -96,7 +96,7 @@ class HTCondorJobSubmitter(object):
 
         job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in job_desc_dict.items()])
 
-        package_paths = [workingArea.package_path(i) for i in package_indices]
+        package_paths = [workingArea.package_relpath(i) for i in package_indices]
         resultdir_basenames = [os.path.splitext(p)[0] for p in package_paths]
         resultdir_basenames = [os.path.splitext(n)[0] for n in resultdir_basenames]
         job_desc_queue_line = 'queue resultdir in {}'.format(', '.join(resultdir_basenames))

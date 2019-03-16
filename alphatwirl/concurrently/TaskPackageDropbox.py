@@ -41,7 +41,7 @@ class TaskPackageDropbox(object):
         pkgidx = self.workingArea.put_package(package)
 
         logger = logging.getLogger(__name__)
-        logger.info('submitting {}'.format(self.workingArea.package_path(pkgidx)))
+        logger.info('submitting {}'.format(self.workingArea.package_relpath(pkgidx)))
 
         runid = self.dispatcher.run(self.workingArea, pkgidx)
         self.runid_pkgidx_map[runid] = pkgidx
@@ -54,7 +54,7 @@ class TaskPackageDropbox(object):
 
         logger = logging.getLogger(__name__)
         logger.info('submitting {}'.format(
-            ', '.join(['{}'.format(self.workingArea.package_path(i)) for i in pkgidxs])
+            ', '.join(['{}'.format(self.workingArea.package_relpath(i)) for i in pkgidxs])
         ))
 
         runids = self.dispatcher.run_multiple(self.workingArea, pkgidxs)
@@ -144,7 +144,7 @@ class TaskPackageDropbox(object):
         if result is None:
             logger = logging.getLogger(__name__)
             logger.warning('resubmitting {}'.format(
-                self.workingArea.package_path(pkgidx)
+                self.workingArea.package_relpath(pkgidx)
             ))
             self.dispatcher.failed_runids([runid])
             runid = self.dispatcher.run(self.workingArea, pkgidx)

@@ -61,13 +61,13 @@ def package3(taskdir):
 def workingarea(taskdir, package0, package1, package2, package3):
     ret = mock.Mock(spec=WorkingArea, path=taskdir)
     package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc', 3:'ddd'}
-    ret.package_path.side_effect = lambda x: package_path_dict[x]
+    ret.package_relpath.side_effect = lambda x: package_path_dict[x]
     return ret
 
 def test_mockworkingarea(workingarea):
-    assert 'aaa' == workingarea.package_path(0)
-    assert 'bbb' == workingarea.package_path(1)
-    assert 'ccc' == workingarea.package_path(2)
+    assert 'aaa' == workingarea.package_relpath(0)
+    assert 'bbb' == workingarea.package_relpath(1)
+    assert 'ccc' == workingarea.package_relpath(2)
 
 ##__________________________________________________________________||
 @pytest.fixture()

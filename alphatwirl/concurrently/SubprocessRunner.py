@@ -33,7 +33,7 @@ class SubprocessRunner(object):
 
         taskdir = workingArea.path
 
-        package_path = workingArea.package_path(package_index)
+        package_path = workingArea.package_relpath(package_index)
 
         # run_script = os.path.join(taskdir, 'run.py') # This doesn't work.
                                                        # It contradicts with the document https://docs.python.org/2/library/subprocess.html
