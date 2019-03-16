@@ -81,6 +81,11 @@ def test_put_package(obj):
     with gzip.open(package_fullpath, 'rb') as f:
        assert package1 == pickle.load(f)
 
+    result_path = obj.result_path(package_index)
+    result_fullpath = os.path.join(obj.path, result_path)
+    result_dir = os.path.dirname(result_fullpath)
+    assert os.path.isdir(result_dir)
+
 def test_collect_result(obj):
 
     obj.open()

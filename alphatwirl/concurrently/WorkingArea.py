@@ -77,21 +77,41 @@ class WorkingArea(object):
            pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
            f.close()
 
+        result_path = self.result_path(package_index)
+        # e.g., 'results/task_00009/result.p.gz'
+
+        result_fullpath = os.path.join(self.path, result_path)
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
+
+        alphatwirl.mkdir_p(result_fullpath)
+
         return package_index
 
     def package_path(self, package_index):
-        return 'task_{:05d}.p.gz'.format(package_index)
+        ret = 'task_{:05d}.p.gz'.format(package_index)
+        # e.g., 'task_00009.p.gz'
 
-    def collect_result(self, package_index):
+        return ret
 
+    def result_path(self, package_index):
         dirname = 'task_{:05d}'.format(package_index)
         # e.g., 'task_00009'
 
-        result_path = os.path.join(self.path, 'results', dirname, 'result.p.gz')
+        ret = os.path.join('results', dirname, 'result.p.gz')
+        # e.g., 'results/task_00009/result.p.gz'
+
+        return ret
+
+    def collect_result(self, package_index):
+
+        result_path = self.result_path(package_index)
+        # e.g., 'results/task_00009/result.p.gz'
+
+        result_fullpath = os.path.join(self.path, result_path)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
         try:
-           with gzip.open(result_path, 'rb') as f:
+           with gzip.open(result_fullpath, 'rb') as f:
               result = pickle.load(f)
         except (IOError, EOFError) as e:
            logger = logging.getLogger(__name__)
