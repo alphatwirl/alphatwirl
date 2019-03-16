@@ -82,7 +82,7 @@ queue resultdir in task_00000, task_00001, task_00002
 """).strip()
 
 def test_run_multiple(
-        obj, mock_workingarea, mock_popen,
+        obj, mock_workingarea, mock_popen, mock_pipe,
         mock_proc_condor_submit, caplog):
 
     obj.clusterprocids_outstanding = ['3764857.0']
@@ -91,30 +91,33 @@ def test_run_multiple(
     mock_proc_condor_submit.communicate.return_value = ('3 job(s) submitted to cluster 3764858.', '')
 
     with caplog.at_level(logging.DEBUG):
-        clusterprocids = obj.run_multiple(
-            workingArea=mock_workingarea,
-            package_indices=package_indices
-        )
+        ret = obj.run_multiple(
+            workingArea=mock_workingarea, package_indices=package_indices)
 
     # assert 6 == len(caplog.records)
+
+    #
+    assert ['3764858.0', '3764858.1', '3764858.2'] == ret
 
     #
     assert ['3764857.0', '3764858.0', '3764858.1', '3764858.2'] == obj.clusterprocids_outstanding
 
     #
+    expected = [
+        mock.call(
+            ['condor_submit'],
+            stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
+            encoding='utf-8'),
+        mock.call(
+            ['condor_prio', '-p', '10', '3764858'],
+            stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
+            encoding='utf-8'),
+    ]
+    assert expected == mock_popen.call_args_list
+
+    #
     assert [mock.call(expected_job_desc)] == mock_proc_condor_submit.communicate.call_args_list
 
-    #
-    expected = ['3764858.0', '3764858.1', '3764858.2']
-    assert expected == clusterprocids
-
-    #
-    expected = [
-        ['condor_submit'],
-        ['condor_prio', '-p', '10', '3764858'],
-    ]
-    procargs_list = [args[0] for args, kwargs in mock_popen.call_args_list]
-    assert expected == procargs_list
 
 def test_run_multiple_empty(
         obj, mock_workingarea, mock_popen,
