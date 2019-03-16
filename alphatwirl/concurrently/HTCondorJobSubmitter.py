@@ -77,13 +77,15 @@ class HTCondorJobSubmitter(object):
         if not package_indices:
             return [ ]
 
-        cwd = os.getcwd()
-        os.chdir(workingArea.path)
+        job_desc = self._compose_job_desc(workingArea, package_indices)
 
-        package_paths = [workingArea.package_path(i) for i in package_indices]
-        resultdir_basenames = [os.path.splitext(p)[0] for p in package_paths]
-        resultdir_basenames = [os.path.splitext(n)[0] for n in resultdir_basenames]
-        resultdirs = [os.path.join('results', n) for n in resultdir_basenames]
+        clusterprocids = submit_jobs(job_desc, cwd=workingArea.path)
+
+        self.clusterprocids_outstanding.extend(clusterprocids)
+
+        return clusterprocids
+
+    def _compose_job_desc(self, workingArea, package_indices):
 
         job_desc_dict = self.job_desc_dict.copy()
         job_desc_dict['executable'] = workingArea.executable
@@ -93,37 +95,14 @@ class HTCondorJobSubmitter(object):
             job_desc_dict['transfer_input_files'] += ', ' + ', '.join(extra_input_files)
 
         job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in job_desc_dict.items()])
+
+        package_paths = [workingArea.package_path(i) for i in package_indices]
+        resultdir_basenames = [os.path.splitext(p)[0] for p in package_paths]
+        resultdir_basenames = [os.path.splitext(n)[0] for n in resultdir_basenames]
         job_desc_queue_line = 'queue resultdir in {}'.format(', '.join(resultdir_basenames))
 
         job_desc = '\n'.join([job_desc, job_desc_queue_line])
-
-        procargs = ['condor_submit']
-
-        stdout = try_executing_until_succeed(procargs, input_=job_desc)
-        stdout = '\n'.join(stdout)
-        # e.g., '3 job(s) submitted to cluster 3158626.'
-
-        regex = re.compile(r"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
-        match = regex.search(stdout)
-        groups = match.groups()
-        # e.g., ('3', '3158626')
-
-        njobs, clusterid = groups
-        njobs = int(njobs)
-
-        change_job_priority([clusterid], 10) ## need to make configurable
-
-        procid = ['{}'.format(i) for i in range(njobs)]
-        # e.g., ['0', '1', '2', '3']
-
-        clusterprocids = ['{}.{}'.format(clusterid, i) for i in procid]
-        # e.g., ['3158626.0', '3158626.1', '3158626.2', '3158626.3']
-
-        self.clusterprocids_outstanding.extend(clusterprocids)
-
-        os.chdir(cwd)
-
-        return clusterprocids
+        return job_desc
 
     def poll(self):
         """check if the jobs are running and return a list of cluster IDs for
@@ -203,6 +182,41 @@ class HTCondorJobSubmitter(object):
 ##__________________________________________________________________||
 def clusterprocids2clusterids(clusterprocids):
     return sorted(list(set([i.split('.')[0] for i in clusterprocids])))
+
+##__________________________________________________________________||
+def submit_jobs(job_desc, cwd=None):
+
+    procargs = ['condor_submit']
+
+    if cwd is not None:
+        org_dir = os.getcwd()
+        os.chdir(cwd)
+
+    stdout = try_executing_until_succeed(procargs, input_=job_desc)
+
+    if cwd is not None:
+        os.chdir(org_dir)
+
+    stdout = '\n'.join(stdout)
+    # e.g., '3 job(s) submitted to cluster 3158626.'
+
+    regex = re.compile(r"(\d+) job\(s\) submitted to cluster (\d+)", re.MULTILINE)
+    match = regex.search(stdout)
+    groups = match.groups()
+    # e.g., ('3', '3158626')
+
+    njobs, clusterid = groups
+    njobs = int(njobs)
+
+    change_job_priority([clusterid], 10) ## need to make configurable
+
+    procid = ['{}'.format(i) for i in range(njobs)]
+    # e.g., ['0', '1', '2', '3']
+
+    clusterprocids = ['{}.{}'.format(clusterid, i) for i in procid]
+    # e.g., ['3158626.0', '3158626.1', '3158626.2', '3158626.3']
+
+    return clusterprocids
 
 ##__________________________________________________________________||
 def query_status_for(ids, n_at_a_time=500):
