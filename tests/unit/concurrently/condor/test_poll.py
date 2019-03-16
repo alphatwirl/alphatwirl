@@ -1,9 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-import os
 import sys
 import logging
-import textwrap
-import collections
 
 import pytest
 
@@ -12,7 +9,6 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently import WorkingArea
 from alphatwirl.concurrently import HTCondorJobSubmitter
 
 ##__________________________________________________________________||
@@ -66,9 +62,48 @@ def test_poll(
 
     #
     expected = [
-        ['condor_q', '3764857', '3764858', '-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
+        mock.call(
+            ['condor_q', '3764857', '3764858',
+             '-format', '%d.', 'ClusterId',
+             '-format', '%d ', 'ProcId',
+             '-format', '%-2s\n', 'JobStatus'],
+            stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
+            cwd=None, encoding='utf-8'),
     ]
-    procargs_list = [args[0] for args, kwargs in mock_popen.call_args_list]
-    assert expected == procargs_list
+    assert expected == mock_popen.call_args_list
+
+##__________________________________________________________________||
+def test_poll_empty(
+        obj, mock_popen, mock_pipe,
+        mock_proc_condor_q, caplog):
+
+    obj.clusterprocids_outstanding = ['3764857.0', '3764858.0', '3764858.1', '3764858.2']
+
+    stdout = ''
+    mock_proc_condor_q.communicate.return_value = (stdout, '')
+
+    with caplog.at_level(logging.DEBUG):
+        ret = obj.poll()
+
+    # assert 6 == len(caplog.records)
+
+    #
+    assert [ ] == obj.clusterprocids_outstanding
+
+    #
+    expected = ['3764857.0', '3764858.0', '3764858.1', '3764858.2']
+    assert expected == ret
+
+    #
+    expected = [
+        mock.call(
+            ['condor_q', '3764857', '3764858',
+             '-format', '%d.', 'ClusterId',
+             '-format', '%d ', 'ProcId',
+             '-format', '%-2s\n', 'JobStatus'],
+            stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
+            cwd=None, encoding='utf-8'),
+    ]
+    assert expected == mock_popen.call_args_list
 
 ##__________________________________________________________________||
