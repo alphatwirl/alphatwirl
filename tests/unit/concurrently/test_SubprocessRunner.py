@@ -8,6 +8,7 @@ try:
 except ImportError:
     import mock
 
+from alphatwirl.concurrently import WorkingArea
 from alphatwirl.concurrently import SubprocessRunner
 
 ##__________________________________________________________________||
@@ -58,7 +59,7 @@ def package3(taskdir):
 
 @pytest.fixture()
 def workingarea(taskdir, package0, package1, package2, package3):
-    ret = mock.MagicMock(path=taskdir)
+    ret = mock.Mock(spec=WorkingArea, path=taskdir)
     package_path_dict = {0:'aaa', 1:'bbb', 2:'ccc', 3:'ddd'}
     ret.package_path.side_effect = lambda x: package_path_dict[x]
     return ret
