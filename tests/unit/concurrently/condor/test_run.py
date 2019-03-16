@@ -107,11 +107,11 @@ def test_run_multiple(
         mock.call(
             ['condor_submit'],
             stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
-            encoding='utf-8'),
+            cwd=mock_workingarea.path, encoding='utf-8'),
         mock.call(
             ['condor_prio', '-p', '10', '3764858'],
             stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
-            encoding='utf-8'),
+            cwd=None, encoding='utf-8'),
     ]
     assert expected == mock_popen.call_args_list
 
