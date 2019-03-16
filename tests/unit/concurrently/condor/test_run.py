@@ -60,9 +60,6 @@ def mock_workingarea(tmpdir_factory):
     ret.extra_input_files = set(['python_modules.tar.gz', 'logging_levels.json.gz'])
     return ret
 
-def test_repr(obj):
-    repr(obj)
-
 ##__________________________________________________________________||
 expected_job_desc = textwrap.dedent("""
 executable = run.py
