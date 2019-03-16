@@ -85,7 +85,7 @@ class HTCondorJobSubmitter(object):
         """Submit a job
 
         If you need to submit multiple jobs, it is usually much faster
-        to use `run_multiple()` that to use this method multiple
+        to use `run_multiple()` than to use this method multiple
         times.
 
         Parameters
