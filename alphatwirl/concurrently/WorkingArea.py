@@ -167,7 +167,10 @@ class WorkingArea(object):
         result_fullpath = self.result_fullpath(package_index)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
-        alphatwirl.mkdir_p(result_fullpath)
+        result_dir = os.path.dirname(result_fullpath)
+        # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009'
+
+        alphatwirl.mkdir_p(result_dir)
 
         return package_index
 

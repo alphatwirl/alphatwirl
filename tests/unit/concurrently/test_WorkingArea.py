@@ -106,6 +106,7 @@ def test_put_package(obj):
 
     result_fullpath = obj.result_fullpath(package_index)
     result_dir = os.path.dirname(result_fullpath)
+    assert not os.path.exists(result_fullpath)
     assert os.path.isdir(result_dir)
 
 def test_collect_result(obj):
