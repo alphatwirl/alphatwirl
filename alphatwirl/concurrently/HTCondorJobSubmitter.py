@@ -88,13 +88,14 @@ class HTCondorJobSubmitter(object):
         for d in resultdirs:
             alphatwirl.mkdir_p(d)
 
-        self.job_desc_dict['executable'] = workingArea.executable
+        job_desc_dict = self.job_desc_dict.copy()
+        job_desc_dict['executable'] = workingArea.executable
 
         extra_input_files = sorted(list(workingArea.extra_input_files))
         if extra_input_files:
-            self.job_desc_dict['transfer_input_files'] += ', ' + ', '.join(extra_input_files)
+            job_desc_dict['transfer_input_files'] += ', ' + ', '.join(extra_input_files)
 
-        job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in self.job_desc_dict.items()])
+        job_desc = '\n'.join(['{} = {}'.format(k, v) for k, v in job_desc_dict.items()])
         job_desc_queue_line = 'queue resultdir in {}'.format(', '.join(resultdir_basenames))
 
         job_desc = '\n'.join([job_desc, job_desc_queue_line])
