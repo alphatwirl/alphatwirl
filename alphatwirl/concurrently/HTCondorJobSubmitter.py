@@ -309,7 +309,10 @@ def terminate_jobs(clusterids, n_at_a_time=500):
     ids_split = split_list_into_chunks(clusterids)
     for ids_sub in ids_split:
         procargs = ['condor_rm'] + ids_sub
-        exec_command(procargs)
+        try:
+            exec_command(procargs)
+        except RuntimeError:
+            pass
 
 ##__________________________________________________________________||
 def split_list_into_chunks(l, n=500):
