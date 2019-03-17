@@ -13,6 +13,18 @@ except ImportError:
     import mock
 
 from alphatwirl.concurrently import HTCondorJobSubmitter
+from alphatwirl.concurrently.condor.submitter import clusterprocids2clusterids
+
+##__________________________________________________________________||
+def test_clusterprocids2clusterids():
+    clusterprocids = [
+        '3158642.0', '3158642.1', '3158642.2', '3158642.3', '3158643.0',
+        '3158643.1', '3158643.2', '3158643.3', '3158644.0', '3158644.1',
+        '3158644.2', '3158644.3', '3158645.0', '3158645.1', '3158645.2',
+        '3158645.3'
+    ]
+    expected = ['3158642', '3158643', '3158644', '3158645']
+    assert set(expected) == set(clusterprocids2clusterids(clusterprocids))
 
 ##__________________________________________________________________||
 @pytest.fixture()
