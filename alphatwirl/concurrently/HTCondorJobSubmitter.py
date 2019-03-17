@@ -295,9 +295,9 @@ def submit_jobs(job_desc, cwd=None):
     return clusterprocids
 
 ##__________________________________________________________________||
-def query_status_for(ids, n_at_a_time=500):
+def query_status_for(clusterids, n_at_a_time=500):
 
-    ids_split = split_ids(ids, n=n_at_a_time)
+    ids_split = split_ids(clusterids, n=n_at_a_time)
     stdout = [ ]
     for ids_sub in ids_split:
         procargs = ['condor_q'] + ids_sub + ['-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
