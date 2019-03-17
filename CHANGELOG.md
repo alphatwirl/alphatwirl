@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.1...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.2...master))
+
+## [0.24.2] - 2019-03-17
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.24.2/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.1...v0.24.2))
 - updated `concurrently`
     - `HTCondorJobSubmitter`:
         - fixed encoding problem in Python 3
@@ -16,8 +22,8 @@
     - `try_executing_until_succeed()`
         - added options `input_` and `cwd`
         - updated `logging`
-- updated tests
-- cleaned code
+    - updated docstring, tests
+    - cleaned code
 
 ## [0.24.1] - 2019-03-15
 
