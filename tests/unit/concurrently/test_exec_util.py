@@ -45,6 +45,18 @@ def test_exec_command(procargs, input_, expected):
     stdout = exec_command(procargs, input_=input_)
     assert expected == stdout
 
+thisdir =  os.path.dirname(os.path.realpath(__file__))
+
+params = [
+    pytest.param(['false'], None, '', id='false'),
+    pytest.param([os.path.join(thisdir, 'echoerr'), 'error message'], None, 'error message', id='stderr'),
+]
+@pytest.mark.parametrize('procargs, input_, expected', params)
+def test_exec_command_raise(procargs, input_, expected):
+    with pytest.raises(RuntimeError) as einfo:
+        exec_command(procargs, input_=input_)
+    assert expected in str(einfo.value)
+
 ##__________________________________________________________________||
 def test_try_executing_until_succeed_cwd(tmpdir):
     org_dir = os.getcwd()

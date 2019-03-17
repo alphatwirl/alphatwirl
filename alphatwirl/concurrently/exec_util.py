@@ -91,6 +91,12 @@ def exec_command(procargs, input_=None, cwd=None):
     logger.debug('stdout: {!r}'.format(stdout.strip()))
     logger.debug('stderr: {!r}'.format(stderr.strip()))
 
+    success = not (proc.returncode or stderr)
+
+    if not success:
+        logger.warning('the command failed: {!r}'.format(command_display))
+        raise RuntimeError(stderr)
+
     if not stdout:
         return [ ]
 
