@@ -300,7 +300,10 @@ def query_status_for(clusterids, n_at_a_time=500):
     ids_split = split_list_into_chunks(clusterids, n=n_at_a_time)
     stdout = [ ]
     for ids_sub in ids_split:
-        procargs = ['condor_q'] + ids_sub + ['-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
+        procargs = ['condor_q'] + ids_sub
+        procargs += ['-format', '%d.', 'ClusterId',
+                     '-format', '%d ', 'ProcId',
+                     '-format', '%-2s\n', 'JobStatus']
         stdout.extend(try_executing_until_succeed(procargs))
 
     # e.g., stdout = ['688244.0 1 ', '688245.0 1 ', '688246.0 2 ']
