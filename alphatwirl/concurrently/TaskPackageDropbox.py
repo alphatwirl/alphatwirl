@@ -4,8 +4,6 @@ import time
 from operator import itemgetter
 from collections import deque
 
-from .WorkingArea import WorkingArea
-
 ##__________________________________________________________________||
 class TaskPackageDropbox(object):
     """A drop box for task packages.
