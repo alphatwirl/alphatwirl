@@ -3,6 +3,19 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.2...master))
+- updated `concurrently`
+    - moved `HTCondorJobSubmitter` from `HTCondorJobSubmitter.py` to
+      `condor/submitter.py`
+    - moved `submit_jobs()`, `query_status_for()`, `change_job_priority()`
+      `terminate_jobs()` from `HTCondorJobSubmitter.py` to `condor/commands.py`
+    - moved `exec_util.py` to `condor/`
+    - `TaskPackage`
+        - made it callable
+        - moved it to `CommunicationChannel.py`
+        - stopped importing it to `concurrently`
+    - removed outdated script `example_submit_htcondor.py`
+    - updated docstring, tests
+    - cleaned code
 
 ## [0.24.2] - 2019-03-17
 
