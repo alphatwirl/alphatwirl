@@ -240,30 +240,7 @@ class HTCondorJobSubmitter(object):
         """
 
         clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
-        ids_split = split_list_into_chunks(clusterids)
-        statuses = [ ]
-        for ids_sub in ids_split:
-            procargs = ['condor_rm'] + ids_sub
-            command_display = compose_shortened_command_for_logging(procargs)
-            logger = logging.getLogger(__name__)
-            logger.debug('execute: {}'.format(command_display))
-            try:
-                proc = subprocess.Popen(
-                    procargs,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    encoding='utf-8'
-                )
-            except TypeError:
-                # no `encoding` option in Python 2
-                proc = subprocess.Popen(
-                    procargs,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE
-                )
-            stdout, stderr = proc.communicate()
-            logger.debug('stdout: {!r}'.format(stdout.strip()))
-            logger.debug('stderr: {!r}'.format(stderr.strip()))
+        terminate_jobs(clusterids)
 
 ##__________________________________________________________________||
 def clusterprocids2clusterids(clusterprocids):
@@ -326,6 +303,33 @@ def change_job_priority(ids, priority=10, n_at_a_time=500):
     for ids_sub in ids_split:
         procargs = ['condor_prio', '-p', str(priority)] + ids_sub
         try_executing_until_succeed(procargs)
+
+##__________________________________________________________________||
+def terminate_jobs(clusterids, n_at_a_time=500):
+    ids_split = split_list_into_chunks(clusterids)
+    statuses = [ ]
+    for ids_sub in ids_split:
+        procargs = ['condor_rm'] + ids_sub
+        command_display = compose_shortened_command_for_logging(procargs)
+        logger = logging.getLogger(__name__)
+        logger.debug('execute: {}'.format(command_display))
+        try:
+            proc = subprocess.Popen(
+                procargs,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding='utf-8'
+            )
+        except TypeError:
+            # no `encoding` option in Python 2
+            proc = subprocess.Popen(
+                procargs,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+        stdout, stderr = proc.communicate()
+        logger.debug('stdout: {!r}'.format(stdout.strip()))
+        logger.debug('stderr: {!r}'.format(stderr.strip()))
 
 ##__________________________________________________________________||
 def split_list_into_chunks(l, n=500):
