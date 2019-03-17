@@ -71,8 +71,8 @@ def test_terminate(
     expected = [
         mock.call(
             ['condor_rm', '3764857', '3764858'],
-            stdout=mock_pipe, stderr=mock_pipe,
-            encoding='utf-8'),
+            stdin=mock_pipe, stdout=mock_pipe, stderr=mock_pipe,
+            cwd=None, encoding='utf-8'),
     ]
     assert expected == mock_popen.call_args_list
 
