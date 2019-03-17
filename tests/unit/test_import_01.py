@@ -44,7 +44,6 @@ def test_classes():
     assert inspect.isclass(alphatwirl.collector.WriteListToFile)
     assert inspect.isclass(alphatwirl.concurrently.CommunicationChannel)
     assert inspect.isclass(alphatwirl.concurrently.CommunicationChannel0)
-    assert inspect.isclass(alphatwirl.concurrently.TaskPackage)
     assert inspect.isclass(alphatwirl.concurrently.TaskPackageDropbox)
     assert inspect.isclass(alphatwirl.concurrently.MultiprocessingDropbox)
     assert inspect.isclass(alphatwirl.concurrently.SubprocessRunner)
