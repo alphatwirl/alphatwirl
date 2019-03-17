@@ -10,8 +10,18 @@ from .WorkingArea import WorkingArea
 class TaskPackageDropbox(object):
     """A drop box for task packages.
 
-    It puts task packages in a working area and dispatches runners
-    that execute the tasks.
+    This class puts task packages in a working area and have
+    dispatchers execute the tasks.
+
+    Parameters
+    ----------
+    workingArea :
+        A working area, an instance of `WorkingArea`
+    dispatcher :
+        A dispatcher
+    sleep : float
+        A time interval between each query while waiting a task to
+        finish.
 
     """
     def __init__(self, workingArea, dispatcher, sleep=5):
