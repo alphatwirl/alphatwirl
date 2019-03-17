@@ -10,6 +10,7 @@ except ImportError:
     import mock
 
 from alphatwirl.concurrently import TaskPackageDropbox
+from alphatwirl.concurrently import WorkingArea, HTCondorJobSubmitter
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -50,14 +51,14 @@ def collect_results(results):
 
 @pytest.fixture()
 def workingarea(collect_results):
-    ret = mock.MagicMock()
+    ret = mock.Mock(spec=WorkingArea)
     ret.put_package.side_effect = [0, 1, 2, 3, 4] # package indices
     ret.collect_result.side_effect = lambda i: collect_results[i].popleft()
     return ret
 
 @pytest.fixture()
 def dispatcher():
-    ret = mock.MagicMock()
+    ret = mock.Mock(spec=HTCondorJobSubmitter)
     ret.run_multiple.return_value = [1000, 1001, 1002, 1003, 1004]
 
     # jobs finish in steps
