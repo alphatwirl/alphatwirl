@@ -8,7 +8,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.HTCondorJobSubmitter import split_ids, query_status_for, change_job_priority, clusterprocids2clusterids
+from alphatwirl.concurrently.HTCondorJobSubmitter import split_list_into_chunks, query_status_for, change_job_priority, clusterprocids2clusterids
 
 ##__________________________________________________________________||
 @pytest.fixture()
@@ -28,10 +28,10 @@ def test_clusterprocids2clusterids():
     expected = ['3158642', '3158643', '3158644', '3158645']
     assert set(expected) == set(clusterprocids2clusterids(clusterprocids))
 
-def test_split_ids():
+def test_split_list_into_chunks():
     ids = ['3158174', '3158175', '3158176', '3158177', '3158178', '3158179', '3158180', '3158181', '3158182', '3158183', '3158184', '3158185', '3158186', '3158187', '3158188', '3158189']
     expected = [['3158174', '3158175', '3158176', '3158177', '3158178'], ['3158179', '3158180', '3158181', '3158182', '3158183'], ['3158184', '3158185', '3158186', '3158187', '3158188'], ['3158189']]
-    assert expected == split_ids(ids, n=5)
+    assert expected == split_list_into_chunks(ids, n=5)
 
 def test_query_status_for(mock_try_executing_until_succeed):
     ids = ['3158174', '3158175', '3158176', '3158177', '3158178', '3158179', '3158180', '3158181', '3158182', '3158183', '3158184', '3158185', '3158186', '3158187', '3158188', '3158189']

@@ -240,7 +240,7 @@ class HTCondorJobSubmitter(object):
         """
 
         clusterids = clusterprocids2clusterids(self.clusterprocids_outstanding)
-        ids_split = split_ids(clusterids)
+        ids_split = split_list_into_chunks(clusterids)
         statuses = [ ]
         for ids_sub in ids_split:
             procargs = ['condor_rm'] + ids_sub
@@ -297,7 +297,7 @@ def submit_jobs(job_desc, cwd=None):
 ##__________________________________________________________________||
 def query_status_for(clusterids, n_at_a_time=500):
 
-    ids_split = split_ids(clusterids, n=n_at_a_time)
+    ids_split = split_list_into_chunks(clusterids, n=n_at_a_time)
     stdout = [ ]
     for ids_sub in ids_split:
         procargs = ['condor_q'] + ids_sub + ['-format', '%d.', 'ClusterId', '-format', '%d ', 'ProcId', '-format', '%-2s\n', 'JobStatus']
@@ -319,17 +319,17 @@ def change_job_priority(ids, priority=10, n_at_a_time=500):
 
     # http://research.cs.wisc.edu/htcondor/manual/v7.8/2_6Managing_Job.html#sec:job-prio
 
-    ids_split = split_ids(ids, n=n_at_a_time)
+    ids_split = split_list_into_chunks(ids, n=n_at_a_time)
     for ids_sub in ids_split:
         procargs = ['condor_prio', '-p', str(priority)] + ids_sub
         try_executing_until_succeed(procargs)
 
 ##__________________________________________________________________||
-def split_ids(ids, n=500):
+def split_list_into_chunks(l, n=500):
     # e.g.,
-    # ids = [3158174', '3158175', '3158176', '3158177', '3158178']
+    # l = [3158174', '3158175', '3158176', '3158177', '3158178']
     # n = 2
     # return [[3158174', '3158175'], ['3158176', '3158177'], ['3158178']]
-    return [ids[i:(i + n)] for i in range(0, len(ids), n)]
+    return [l[i:(i + n)] for i in range(0, len(l), n)]
 
 ##__________________________________________________________________||
