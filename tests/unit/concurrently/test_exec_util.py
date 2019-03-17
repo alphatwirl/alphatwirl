@@ -9,7 +9,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
+from alphatwirl.concurrently.exec_util import try_executing_until_succeed, exec_command, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
 params = [
@@ -36,15 +36,27 @@ params = [
 ]
 
 @pytest.mark.parametrize('procargs, input_, expected', params)
-def test_without_monkeypatch_subproces(procargs, input_, expected):
+def test_try_executing_until_succeed(procargs, input_, expected):
     stdout = try_executing_until_succeed(procargs, input_=input_)
     assert expected == stdout
 
+@pytest.mark.parametrize('procargs, input_, expected', params)
+def test_exec_command(procargs, input_, expected):
+    stdout = exec_command(procargs, input_=input_)
+    assert expected == stdout
+
 ##__________________________________________________________________||
-def test_without_monkeypatch_subproces_with_cwd(tmpdir):
+def test_try_executing_until_succeed_cwd(tmpdir):
     org_dir = os.getcwd()
     procargs = ['pwd']
     stdout = try_executing_until_succeed(procargs, cwd=str(tmpdir))
+    assert [str(tmpdir)] == stdout # shouldn't be [b'abc']
+    assert org_dir == os.getcwd()
+
+def test_exec_command_cwd(tmpdir):
+    org_dir = os.getcwd()
+    procargs = ['pwd']
+    stdout = exec_command(procargs, cwd=str(tmpdir))
     assert [str(tmpdir)] == stdout # shouldn't be [b'abc']
     assert org_dir == os.getcwd()
 

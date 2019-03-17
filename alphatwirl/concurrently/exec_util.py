@@ -87,9 +87,14 @@ def exec_command(procargs, input_=None, cwd=None):
             cwd=cwd
         )
 
-    stdout, stderr = proc.communicate()
+    stdout, stderr = proc.communicate(input_)
     logger.debug('stdout: {!r}'.format(stdout.strip()))
     logger.debug('stderr: {!r}'.format(stderr.strip()))
+
+    if not stdout:
+        return [ ]
+
+    return stdout.rstrip().split('\n')
 
 ##__________________________________________________________________||
 def compose_shortened_command_for_logging(procargs):
