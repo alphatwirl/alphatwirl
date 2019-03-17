@@ -13,7 +13,8 @@
 - updated `ResumableDatasetLoop`
     - addressed [\57](https://github.com/alphatwirl/alphatwirl/issues/57)
     - pickle `reader` before having it start reading data as `SubprocessRunner`,
-      which is indirectly held by `EventDatasetReader`, becomes unpicklable
+      which is indirectly held by `EventDatasetReader`, becomes unpicklable in
+      Python 3
 - updated `concurrently`
     - moved `HTCondorJobSubmitter` from `HTCondorJobSubmitter.py` to
       `condor/submitter.py`
