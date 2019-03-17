@@ -268,7 +268,6 @@ def clusterprocids2clusterids(clusterprocids):
 def submit_jobs(job_desc, cwd=None):
 
     procargs = ['condor_submit']
-    # procargs = ['/storage/ts14043/work/cms/AlphaTwirl/20180202_condor_submit/condor_submit']
 
     stdout = try_executing_until_succeed(procargs, input_=job_desc, cwd=cwd)
     stdout = '\n'.join(stdout)
