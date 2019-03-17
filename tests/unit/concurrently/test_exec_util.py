@@ -36,15 +36,11 @@ params = [
 ]
 
 @pytest.mark.parametrize('procargs, input_, expected', params)
-def test_try_executing_until_succeed(procargs, input_, expected):
-    stdout = try_executing_until_succeed(procargs, input_=input_)
-    assert expected == stdout
-
-@pytest.mark.parametrize('procargs, input_, expected', params)
 def test_exec_command(procargs, input_, expected):
     stdout = exec_command(procargs, input_=input_)
     assert expected == stdout
 
+##__________________________________________________________________||
 thisdir =  os.path.dirname(os.path.realpath(__file__))
 
 params = [
@@ -58,61 +54,56 @@ def test_exec_command_raise(procargs, input_, expected):
     assert expected in str(einfo.value)
 
 ##__________________________________________________________________||
-def test_try_executing_until_succeed_cwd(tmpdir):
-    org_dir = os.getcwd()
-    procargs = ['pwd']
-    stdout = try_executing_until_succeed(procargs, cwd=str(tmpdir))
-    assert [str(tmpdir)] == stdout # shouldn't be [b'abc']
-    assert org_dir == os.getcwd()
-
 def test_exec_command_cwd(tmpdir):
     org_dir = os.getcwd()
     procargs = ['pwd']
     stdout = exec_command(procargs, cwd=str(tmpdir))
-    assert [str(tmpdir)] == stdout # shouldn't be [b'abc']
+    assert [str(tmpdir)] == stdout
     assert org_dir == os.getcwd()
 
 ##__________________________________________________________________||
 @pytest.fixture()
-def subprocess(monkeypatch):
+def mock_exec_command(monkeypatch):
     module = sys.modules['alphatwirl.concurrently.exec_util']
-    ret = mock.MagicMock(name='subprocess')
-    monkeypatch.setattr(module, 'subprocess', ret)
+    ret = mock.Mock()
+    monkeypatch.setattr(module, 'exec_command', ret)
     return ret
 
-def test_success(subprocess):
-    procargs = ['ls']
+@pytest.fixture()
+def mock_sleep(monkeypatch):
+    module = sys.modules['alphatwirl.concurrently.exec_util']
+    ret = mock.Mock()
+    monkeypatch.setattr(module.time, 'sleep', ret)
+    return ret
 
-    proc = mock.MagicMock(name='ls')
-    proc.communicate.return_value = ('aaa bbb', '')
-    proc.returncode = 0
-    subprocess.Popen.side_effect = [proc]
+@pytest.mark.parametrize('nfails', [0, 1, 5])
+def test_try_executing_until_succeed(
+        nfails, mock_exec_command, mock_sleep, caplog):
+    procargs = mock.sentinel.procargs
+    input_ = mock.sentinel.input_
+    cwd = mock.sentinel.cwd
 
-    assert ['aaa bbb'] == try_executing_until_succeed(procargs)
+    sleep = 0.01
 
-def test_fail_success(subprocess, caplog):
-    procargs = ['ls']
+    ret = mock.sentinel.ret
 
-    proc0 = mock.MagicMock(name='ls')
-    proc0.communicate.return_value = ('', '')
-    proc0.returncode = 1
-
-    proc1 = mock.MagicMock(name='ls')
-    proc1.communicate.return_value = ('aaa bbb', '')
-    proc1.returncode = 0
-
-    subprocess.Popen.side_effect = [proc0, proc1]
+    mock_exec_command.side_effect = [RuntimeError]*nfails + [ret]
 
     with caplog.at_level(logging.WARNING):
-        assert ['aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
+        assert ret == try_executing_until_succeed(
+            procargs=procargs, input_=input_, cwd=cwd, sleep=sleep)
 
-    assert len(caplog.records) == 2
-    assert caplog.records[0].levelname == 'WARNING'
-    assert 'exec_util' in caplog.records[0].name
-    assert 'the command failed' in caplog.records[0].msg
-    assert caplog.records[1].levelname == 'WARNING'
-    assert 'exec_util' in caplog.records[1].name
-    assert 'will try again' in caplog.records[1].msg
+    call_exec_command = mock.call(procargs=procargs, input_=input_, cwd=cwd)
+    assert [call_exec_command]*(nfails+1) == mock_exec_command.call_args_list
+
+    call_sleep = mock.call(sleep)
+    assert [call_sleep]*nfails == mock_sleep.call_args_list
+
+    assert len(caplog.records) == nfails
+    for r in caplog.records:
+        assert r.levelname == 'WARNING'
+        assert 'exec_util' in r.name
+        assert 'will try again' in r.msg
 
 ##__________________________________________________________________||
 def test_compose_shortened_command_for_logging():
