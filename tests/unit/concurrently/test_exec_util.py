@@ -106,10 +106,13 @@ def test_fail_success(subprocess, caplog):
     with caplog.at_level(logging.WARNING):
         assert ['aaa bbb'] == try_executing_until_succeed(procargs, sleep=0.1)
 
-    assert len(caplog.records) == 1
+    assert len(caplog.records) == 2
     assert caplog.records[0].levelname == 'WARNING'
     assert 'exec_util' in caplog.records[0].name
     assert 'the command failed' in caplog.records[0].msg
+    assert caplog.records[1].levelname == 'WARNING'
+    assert 'exec_util' in caplog.records[1].name
+    assert 'will try again' in caplog.records[1].msg
 
 ##__________________________________________________________________||
 def test_compose_shortened_command_for_logging():
