@@ -7,7 +7,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently import CommunicationChannel, TaskPackage
+from alphatwirl.concurrently import CommunicationChannel
 
 ##__________________________________________________________________||
 @pytest.fixture()
