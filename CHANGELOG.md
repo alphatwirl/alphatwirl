@@ -2,7 +2,18 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.2...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.0...master))
+
+
+## [0.25.0] - 2019-03-17
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.0/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.24.2...v0.25.0))
+- updated `ResumableDatasetLoop`
+    - addressed [\57](https://github.com/alphatwirl/alphatwirl/issues/57)
+    - pickle `reader` before having it start reading data as `SubprocessRunner`,
+      which is indirectly held by `EventDatasetReader`, becomes unpicklable
 - updated `concurrently`
     - moved `HTCondorJobSubmitter` from `HTCondorJobSubmitter.py` to
       `condor/submitter.py`
