@@ -22,9 +22,6 @@ def mock_proc_condor_rm():
 def mock_pipe(monkeypatch):
     ret = mock.Mock()
 
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module.subprocess, 'PIPE', ret)
-
     module = sys.modules['alphatwirl.concurrently.exec_util']
     monkeypatch.setattr(module.subprocess, 'PIPE', ret)
 
@@ -34,9 +31,6 @@ def mock_pipe(monkeypatch):
 def mock_popen(monkeypatch, mock_proc_condor_rm):
     ret = mock.Mock()
     ret.side_effect = [mock_proc_condor_rm]
-
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
-    monkeypatch.setattr(module.subprocess, 'PIPE', ret)
 
     module = sys.modules['alphatwirl.concurrently.exec_util']
     monkeypatch.setattr(module.subprocess, 'Popen', ret)

@@ -12,7 +12,7 @@ import logging
 import alphatwirl
 from alphatwirl.misc.removal import _removed_class_method_option
 
-from .exec_util import try_executing_until_succeed, exec_command
+from ..exec_util import try_executing_until_succeed, exec_command
 
 ##__________________________________________________________________||
 # https://htcondor-wiki.cs.wisc.edu/index.cgi/wiki?p=MagicNumbers

@@ -8,13 +8,13 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.HTCondorJobSubmitter import split_list_into_chunks, query_status_for, change_job_priority, clusterprocids2clusterids
+from alphatwirl.concurrently.condor.submitter import split_list_into_chunks, query_status_for, change_job_priority, clusterprocids2clusterids
 
 ##__________________________________________________________________||
 @pytest.fixture()
 def mock_try_executing_until_succeed(monkeypatch):
     ret = mock.MagicMock(name='try_executing_until_succeed')
-    module = sys.modules['alphatwirl.concurrently.HTCondorJobSubmitter']
+    module = sys.modules['alphatwirl.concurrently.condor.submitter']
     monkeypatch.setattr(module, 'try_executing_until_succeed', ret)
     return ret
 
