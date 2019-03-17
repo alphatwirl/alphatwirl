@@ -59,6 +59,29 @@ def try_executing_until_succeed(procargs, input_=None, cwd=None, sleep=2):
     return stdout.rstrip().split('\n')
 
 ##__________________________________________________________________||
+def exec_command(procargs, input_=None, cwd=None):
+    command_display = compose_shortened_command_for_logging(procargs)
+    logger = logging.getLogger(__name__)
+    logger.debug('execute: {}'.format(command_display))
+    try:
+        proc = subprocess.Popen(
+            procargs,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding='utf-8'
+        )
+    except TypeError:
+        # no `encoding` option in Python 2
+        proc = subprocess.Popen(
+            procargs,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+    stdout, stderr = proc.communicate()
+    logger.debug('stdout: {!r}'.format(stdout.strip()))
+    logger.debug('stderr: {!r}'.format(stderr.strip()))
+
+##__________________________________________________________________||
 def compose_shortened_command_for_logging(procargs):
     ellipsis = '...(({} letters))...'
     nfirst = 50

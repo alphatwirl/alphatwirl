@@ -12,7 +12,7 @@ import logging
 import alphatwirl
 from alphatwirl.misc.removal import _removed_class_method_option
 
-from .exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
+from .exec_util import try_executing_until_succeed, exec_command
 
 ##__________________________________________________________________||
 # https://htcondor-wiki.cs.wisc.edu/index.cgi/wiki?p=MagicNumbers
@@ -307,29 +307,9 @@ def change_job_priority(ids, priority=10, n_at_a_time=500):
 ##__________________________________________________________________||
 def terminate_jobs(clusterids, n_at_a_time=500):
     ids_split = split_list_into_chunks(clusterids)
-    statuses = [ ]
     for ids_sub in ids_split:
         procargs = ['condor_rm'] + ids_sub
-        command_display = compose_shortened_command_for_logging(procargs)
-        logger = logging.getLogger(__name__)
-        logger.debug('execute: {}'.format(command_display))
-        try:
-            proc = subprocess.Popen(
-                procargs,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                encoding='utf-8'
-            )
-        except TypeError:
-            # no `encoding` option in Python 2
-            proc = subprocess.Popen(
-                procargs,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-        stdout, stderr = proc.communicate()
-        logger.debug('stdout: {!r}'.format(stdout.strip()))
-        logger.debug('stderr: {!r}'.format(stderr.strip()))
+        exec_command(procargs)
 
 ##__________________________________________________________________||
 def split_list_into_chunks(l, n=500):
