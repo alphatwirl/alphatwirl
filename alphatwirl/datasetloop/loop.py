@@ -51,12 +51,13 @@ class ResumableDatasetLoop(object):
 
     def __call__(self):
         self.reader.begin()
-        for dataset in self.datasets:
-            self.reader.read(dataset)
 
         path = os.path.join(self.workingarea.path, 'reader.p.gz')
         with gzip.open(path, 'wb') as f:
             pickle.dump(self.reader, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+        for dataset in self.datasets:
+            self.reader.read(dataset)
 
         return self.reader.end()
 
