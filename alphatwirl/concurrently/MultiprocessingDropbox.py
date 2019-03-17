@@ -60,12 +60,12 @@ class MultiprocessingDropbox(object):
         self.mcore = None
 
     def put(self, package):
-        return self.mcore.run(package.task, *package.args, **package.kwargs)
+        return self.mcore.run(package)
 
     def put_multiple(self, packages):
         task_idxs = [ ]
         for p in packages:
-            task_idxs.append(self.mcore.run(p.task, *p.args, **p.kwargs))
+            task_idxs.append(self.mcore.run(p))
         return task_idxs
 
     def poll(self):
