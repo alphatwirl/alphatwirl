@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 # Tai Sakuma <sakuma@cern.ch>
 import re
 
-from ..exec_util import try_executing_until_succeed, exec_command
+from .exec_util import try_executing_until_succeed, exec_command
 
 ##__________________________________________________________________||
 def submit_jobs(job_desc, cwd=None):

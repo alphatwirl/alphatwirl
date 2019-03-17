@@ -9,7 +9,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.concurrently.exec_util import try_executing_until_succeed, exec_command, compose_shortened_command_for_logging
+from alphatwirl.concurrently.condor.exec_util import try_executing_until_succeed, exec_command, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
 params = [
@@ -64,14 +64,14 @@ def test_exec_command_cwd(tmpdir):
 ##__________________________________________________________________||
 @pytest.fixture()
 def mock_exec_command(monkeypatch):
-    module = sys.modules['alphatwirl.concurrently.exec_util']
+    module = sys.modules['alphatwirl.concurrently.condor.exec_util']
     ret = mock.Mock()
     monkeypatch.setattr(module, 'exec_command', ret)
     return ret
 
 @pytest.fixture()
 def mock_sleep(monkeypatch):
-    module = sys.modules['alphatwirl.concurrently.exec_util']
+    module = sys.modules['alphatwirl.concurrently.condor.exec_util']
     ret = mock.Mock()
     monkeypatch.setattr(module.time, 'sleep', ret)
     return ret

@@ -32,7 +32,7 @@ def mock_proc_ondor_prio():
 @pytest.fixture()
 def mock_pipe(monkeypatch):
     ret = mock.Mock()
-    module = sys.modules['alphatwirl.concurrently.exec_util']
+    module = sys.modules['alphatwirl.concurrently.condor.exec_util']
     monkeypatch.setattr(module.subprocess, 'PIPE', ret)
     return ret
 
@@ -40,7 +40,7 @@ def mock_pipe(monkeypatch):
 def mock_popen(monkeypatch, mock_proc_condor_submit, mock_proc_ondor_prio):
     ret = mock.Mock()
     ret.side_effect = [mock_proc_condor_submit, mock_proc_ondor_prio]
-    module = sys.modules['alphatwirl.concurrently.exec_util']
+    module = sys.modules['alphatwirl.concurrently.condor.exec_util']
     monkeypatch.setattr(module.subprocess, 'Popen', ret)
     return ret
 
