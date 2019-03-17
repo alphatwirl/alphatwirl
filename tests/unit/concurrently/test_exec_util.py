@@ -12,17 +12,35 @@ except ImportError:
 from alphatwirl.concurrently.exec_util import try_executing_until_succeed, compose_shortened_command_for_logging
 
 ##__________________________________________________________________||
-def test_without_monkeypatch_subproces():
-    procargs = ['echo', 'abc\ndef']
-    stdout = try_executing_until_succeed(procargs)
-    assert ['abc', 'def'] == stdout # shouldn't be [b'abc', b'def']
+params = [
+    pytest.param(
+        ['echo', 'abc\ndef'], None,
+        ['abc', 'def'], # shouldn't be [b'abc', b'def']
+        id='simple'
+    ),
+    pytest.param(
+        ['echo'], None,
+        [''],
+        id='empty-line'
+    ),
+    pytest.param(
+        ['sleep', '0.01'], None,
+        [],
+        id='empty-output'
+    ),
+    pytest.param(
+        ['cat'], 'abc',
+        ['abc'],
+        id='stdin'
+    ),
+]
 
-def test_without_monkeypatch_subproces_with_stdin():
-    procargs = ['cat']
-    input_ = 'abc'
+@pytest.mark.parametrize('procargs, input_, expected', params)
+def test_without_monkeypatch_subproces(procargs, input_, expected):
     stdout = try_executing_until_succeed(procargs, input_=input_)
-    assert ['abc'] == stdout # shouldn't be [b'abc']
+    assert expected == stdout
 
+##__________________________________________________________________||
 def test_without_monkeypatch_subproces_with_cwd(tmpdir):
     org_dir = os.getcwd()
     procargs = ['pwd']
