@@ -128,6 +128,11 @@ class HTCondorJobSubmitter(object):
 
         clusterprocids = submit_jobs(job_desc, cwd=workingArea.path)
 
+        # TODO: make configurable
+        clusterids = clusterprocids2clusterids(clusterprocids)
+        for clusterid in clusterids:
+            change_job_priority([clusterid], 10)
+
         self.clusterprocids_outstanding.extend(clusterprocids)
 
         return clusterprocids
@@ -280,8 +285,6 @@ def submit_jobs(job_desc, cwd=None):
 
     njobs, clusterid = groups
     njobs = int(njobs)
-
-    change_job_priority([clusterid], 10) ## need to make configurable
 
     procid = ['{}'.format(i) for i in range(njobs)]
     # e.g., ['0', '1', '2', '3']
