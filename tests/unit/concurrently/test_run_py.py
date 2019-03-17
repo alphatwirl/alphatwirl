@@ -12,7 +12,6 @@ import pytest
 
 import alphatwirl
 import alphatwirl.concurrently
-from alphatwirl.concurrently import TaskPackage
 from atpbar import atpbar
 
 ##__________________________________________________________________||
@@ -41,24 +40,15 @@ def task_null(*args, **kwargs):
 
 @pytest.fixture()
 def package_rel_path_task_null(workingarea_path):
-
    ret = 'task_00009.p.gz'
-
-   package = TaskPackage(
-      task = task_null,
-      args = [ ],
-      kwargs =   { }
-   )
-
+   task = task_null
    path = os.path.join(workingarea_path, ret)
    with gzip.open(path, 'wb') as f:
-      pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
-
+      pickle.dump(task, f, protocol=pickle.HIGHEST_PROTOCOL)
    return ret
 
 @pytest.mark.script_launch_mode('subprocess')
 def test_run_task_null(script_runner, workingarea_path, package_rel_path_task_null, env):
-
    script_path = os.path.join('.', 'run.py')
    args = [package_rel_path_task_null]
    ret = script_runner.run(script_path, *args, cwd=workingarea_path, env=env)
@@ -74,24 +64,16 @@ def task_atpbar(*args, **kwargs):
 
 @pytest.fixture()
 def package_rel_path_task_atpbar(workingarea_path):
-
    ret = 'task_00009.p.gz'
-
-   package = TaskPackage(
-      task = task_atpbar,
-      args = [ ],
-      kwargs =   { }
-   )
-
+   task = task_atpbar
    path = os.path.join(workingarea_path, ret)
    with gzip.open(path, 'wb') as f:
-      pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
+      pickle.dump(task, f, protocol=pickle.HIGHEST_PROTOCOL)
 
    return ret
 
 @pytest.mark.script_launch_mode('subprocess')
 def test_run_task_atpbar(script_runner, workingarea_path, package_rel_path_task_atpbar, env):
-
    script_path = os.path.join('.', 'run.py')
    args = [package_rel_path_task_atpbar]
    ret = script_runner.run(script_path, *args, cwd=workingarea_path, env=env)
@@ -105,24 +87,15 @@ def task_raise(*args, **kwargs):
 
 @pytest.fixture()
 def package_rel_path_task_raise(workingarea_path):
-
    ret = 'task_00009.p.gz'
-
-   package = TaskPackage(
-      task = task_raise,
-      args = [ ],
-      kwargs =   { }
-   )
-
+   task = task_raise
    path = os.path.join(workingarea_path, ret)
    with gzip.open(path, 'wb') as f:
-      pickle.dump(package, f, protocol = pickle.HIGHEST_PROTOCOL)
-
+      pickle.dump(task, f, protocol=pickle.HIGHEST_PROTOCOL)
    return ret
 
 @pytest.mark.script_launch_mode('subprocess')
 def test_run_task_null(script_runner, workingarea_path, package_rel_path_task_raise, env):
-
    script_path = os.path.join('.', 'run.py')
    args = [package_rel_path_task_raise]
    ret = script_runner.run(script_path, *args, cwd=workingarea_path, env=env)

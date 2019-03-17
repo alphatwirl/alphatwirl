@@ -139,8 +139,8 @@ def try_make_file(filename):
 ##__________________________________________________________________||
 def run(package_path):
     f = gzip.open(package_path, 'rb')
-    package = pickle.load(f)
-    result = package.task(*package.args, **package.kwargs)
+    task = pickle.load(f)
+    result = task()
     return result
 
 ##__________________________________________________________________||
