@@ -244,12 +244,18 @@ class HTCondorJobSubmitter(object):
 
 ##__________________________________________________________________||
 def clusterprocids2clusterids(clusterprocids):
-    return sorted(list(set([i.split('.')[0] for i in clusterprocids])))
+    # e.g., ['3764857.0', '3764858.0', '3764858.1', '3764858.2']
+
+    ret = sorted(list(set([i.split('.')[0] for i in clusterprocids])))
+    # e.g., ['3764857', '3764858']
+
+    return ret
 
 ##__________________________________________________________________||
 def submit_jobs(job_desc, cwd=None):
 
     procargs = ['condor_submit']
+    # procargs = ['/storage/ts14043/work/cms/AlphaTwirl/20180202_condor_submit/condor_submit']
 
     stdout = try_executing_until_succeed(procargs, input_=job_desc, cwd=cwd)
     stdout = '\n'.join(stdout)
