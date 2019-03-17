@@ -11,6 +11,11 @@ class MultiprocessingDropbox(object):
 
     The tasks will be executed in multiprocessing
 
+    The original implementation of this class has been released as an
+    independent package: https://github.com/alphatwirl/mantichora
+
+    The current implementation uses mantichora.
+
     Parameters
     ----------
     nprocesses : int
