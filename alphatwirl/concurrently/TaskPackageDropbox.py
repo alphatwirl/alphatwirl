@@ -38,12 +38,60 @@ class TaskPackageDropbox(object):
         )
 
     def open(self):
+        """open the drop box
+
+        You need to call this method before starting putting packages.
+
+        Returns
+        -------
+        None
+
+        """
+
         self.workingArea.open()
         self.runid_pkgidx_map = { }
         self.runid_to_return = deque() # finished runids
 
+    def terminate(self):
+        """terminate the drop box
+
+        Returns
+        -------
+        None
+
+        """
+        self.dispatcher.terminate()
+
+    def close(self):
+        """close the drop box
+
+        Returns
+        -------
+        None
+
+        """
+        self.workingArea.close()
+
     def put(self, package):
-        """Put a package. Return a package index.
+        """put a task
+
+        This method places a task in the working area and have the
+        dispatcher execute it.
+
+        If you need to put multiple tasks, it can be much faster to
+        use `put_multiple()` than to use this method multiple times
+        depending of the dispatcher.
+
+        Parameters
+        ----------
+        package : callable
+            A task
+
+        Returns
+        -------
+        int
+            A package index assigned by the working area
+
         """
 
         pkgidx = self.workingArea.put_package(package)
@@ -56,8 +104,23 @@ class TaskPackageDropbox(object):
         return pkgidx
 
     def put_multiple(self, packages):
-        """Put multiple packages. Return package indices.
+        """put tasks
+
+        This method places multiple tasks in the working area and have
+        the dispatcher execute them.
+
+        Parameters
+        ----------
+        packages : list(callable)
+            A list of tasks
+
+        Returns
+        -------
+        list(int)
+            Package indices assigned by the working area
+
         """
+
         pkgidxs = [self.workingArea.put_package(p) for p in packages]
 
         logger = logging.getLogger(__name__)
@@ -70,9 +133,15 @@ class TaskPackageDropbox(object):
         return pkgidxs
 
     def receive(self):
-        """Return pairs of package indices and results.
+        """return pairs of package indices and results of all tasks
 
         This method waits until all tasks finish.
+
+        Returns
+        -------
+        list
+            A list of pairs of package indices and results
+
         """
 
         ret = [ ] # a list of (pkgid, result)
@@ -91,18 +160,35 @@ class TaskPackageDropbox(object):
         return ret
 
     def poll(self):
-        """Return pairs of package indices and results of finished tasks.
+        """return pairs of package indices and results of finished tasks
+
+        This method does not wait for tasks to finish.
+
+        Returns
+        -------
+        list
+            A list of pairs of package indices and results
+
         """
+
         self.runid_to_return.extend(self.dispatcher.poll())
         ret = self._collect_all_finished_pkgidx_result_pairs()
         return ret
 
     def receive_one(self):
-        """Return a pair of a package index and result.
+        """return a pair of a package index and result of a task
 
-        This method waits until a task finishes.
-        This method returns None if no task is running.
+        This method waits until a tasks finishes. It returns `None` if
+        no task is running.
+
+        Returns
+        -------
+        tuple or None
+            A pair of a package index and result. `None` if no tasks
+            is running.
+
         """
+
         if not self.runid_pkgidx_map:
             return None
 
@@ -151,11 +237,5 @@ class TaskPackageDropbox(object):
             return None
 
         return pkgidx, result
-
-    def terminate(self):
-        self.dispatcher.terminate()
-
-    def close(self):
-        self.workingArea.close()
 
 ##__________________________________________________________________||
