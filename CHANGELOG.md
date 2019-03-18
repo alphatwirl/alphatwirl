@@ -6,7 +6,7 @@
 - updated `concurrently`
     - `TaskPackageDropbox`:
         - cleaned code 
-        - updated tests
+        - updated docstring, tests
 
 ## [0.25.0] - 2019-03-17
 
