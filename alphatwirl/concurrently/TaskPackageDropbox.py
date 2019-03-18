@@ -69,16 +69,33 @@ class TaskPackageDropbox(object):
         self.runid_pkgidx_map.update(zip(runids, pkgidxs))
         return pkgidxs
 
+    def receive(self):
+        """Return pairs of package indices and results.
+
+        This method waits until all tasks finish.
+        """
+
+        ret = [ ] # a list of (pkgid, result)
+        while True:
+
+            if self.runid_pkgidx_map:
+                self.runid_to_return.extend(self.dispatcher.poll())
+                ret.extend(self._collect_all_finished_pkgidx_result_pairs())
+
+            if not self.runid_pkgidx_map:
+                break
+            time.sleep(self.sleep)
+
+        ret = sorted(ret, key=itemgetter(0))
+
+        return ret
+
     def poll(self):
         """Return pairs of package indices and results of finished tasks.
         """
-        pkgidx_result_pairs = self._collect_all_finished_pkgidx_result_pairs()
-
-        # remove failed results and sort in the order of pkgidx
-        pkgidx_result_pairs = filter(itemgetter(1), pkgidx_result_pairs)
-        pkgidx_result_pairs = sorted(pkgidx_result_pairs, key=itemgetter(0))
-
-        return pkgidx_result_pairs
+        self.runid_to_return.extend(self.dispatcher.poll())
+        ret = self._collect_all_finished_pkgidx_result_pairs()
+        return ret
 
     def receive_one(self):
         """Return a pair of a package index and result.
@@ -89,67 +106,40 @@ class TaskPackageDropbox(object):
         if not self.runid_pkgidx_map:
             return None
 
-        pkgidx_result_pair = None
-        while not pkgidx_result_pair:
+        while True:
 
-            pkgidx_result_pair = self._collect_next_finished_pkgidx_result_pair()
+            if not self.runid_to_return:
+                self.runid_to_return.extend(self.dispatcher.poll())
 
-            if pkgidx_result_pair and not pkgidx_result_pair[1]:
-                pkgidx_result_pair = None
+            ret = self._collect_next_finished_pkgidx_result_pair()
 
-            # Only sleep if there are no pending runs
-            if not self.runid_to_return and self.runid_pkgidx_map:
-                time.sleep(self.sleep)
+            if ret is not None:
+                break
 
-        return pkgidx_result_pair
-
-    def receive(self):
-        """Return pairs of package indices and results.
-
-        This method waits until all tasks finish.
-        """
-
-        pkgidx_result_pairs = []
-        while self.runid_pkgidx_map:
-            pkgidx_result_pairs.extend(
-                self._collect_all_finished_pkgidx_result_pairs()
-            )
-
-            # Only sleep if we're waiting for runs
             if self.runid_pkgidx_map:
                 time.sleep(self.sleep)
 
-        # remove failed results and sort in the order of pkgidx
-        pkgidx_result_pairs = filter(itemgetter(1), pkgidx_result_pairs)
-        pkgidx_result_pairs = sorted(pkgidx_result_pairs, key=itemgetter(0))
-
-        return pkgidx_result_pairs
+        return ret
 
     def _collect_all_finished_pkgidx_result_pairs(self):
-        pkgidx_result_pairs = []
-
-        pairs = self._collect_next_finished_pkgidx_result_pair()
+        ret = [ ]
         while self.runid_to_return:
-            if pairs: pkgidx_result_pairs.append(pairs)
             pairs = self._collect_next_finished_pkgidx_result_pair()
-        if pairs: pkgidx_result_pairs.append(pairs)
-
-        return pkgidx_result_pairs
+            if pairs is None:
+                continue
+            ret.append(pairs)
+        return ret
 
     def _collect_next_finished_pkgidx_result_pair(self):
-        if not self.runid_to_return:
-            self.runid_to_return.extend(self.dispatcher.poll())
 
-        # No finished runs remaining
-        if not self.runid_to_return:
-            return None
+        while self.runid_to_return:
+            runid = self.runid_to_return.popleft()
+            pkgidx = self.runid_pkgidx_map.pop(runid)
+            result = self.workingArea.collect_result(pkgidx)
 
-        runid = self.runid_to_return.popleft()
-        pkgidx = self.runid_pkgidx_map.pop(runid)
-        result = self.workingArea.collect_result(pkgidx)
+            if result is not None:
+                break
 
-        # rerun failed job
-        if result is None:
             logger = logging.getLogger(__name__)
             logger.warning('resubmitting {}'.format(
                 self.workingArea.package_relpath(pkgidx)
@@ -157,8 +147,10 @@ class TaskPackageDropbox(object):
             self.dispatcher.failed_runids([runid])
             runid = self.dispatcher.run(self.workingArea, pkgidx)
             self.runid_pkgidx_map[runid] = pkgidx
+        else:
+            return None
 
-        return (pkgidx, result)
+        return pkgidx, result
 
     def terminate(self):
         self.dispatcher.terminate()

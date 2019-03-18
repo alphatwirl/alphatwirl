@@ -102,8 +102,8 @@ def test_receive_one(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll
     assert obj.receive_one() is None
     assert sorted(expected) == sorted(actual)
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
-    nsleeps = len(dispatcher_poll)-1
-    assert [mock.call(0.01)]*nsleeps == mock_sleep.call_args_list
+    nmaxsleeps = len(dispatcher_poll)-1
+    assert nmaxsleeps >= len(mock_sleep.call_args_list)
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
 def test_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
