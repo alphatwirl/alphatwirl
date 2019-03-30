@@ -2,11 +2,14 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.0...master))
-- updated `concurrently`
-    - `TaskPackageDropbox`:
-        - cleaned code 
-        - updated docstring, tests
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.1...master))
+
+## [0.25.1] - 2019-03-30
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.1/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.0...v0.25.1))
+- cleaned code, docstring, tests for `TaskPackageDropbox`
 
 ## [0.25.0] - 2019-03-17
 
