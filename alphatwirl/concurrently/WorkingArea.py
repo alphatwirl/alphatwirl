@@ -195,7 +195,7 @@ class WorkingArea(object):
         try:
            with gzip.open(result_fullpath, 'rb') as f:
               result = pickle.load(f)
-        except (IOError, EOFError) as e:
+        except Exception as e:
            logger = logging.getLogger(__name__)
            logger.warning(e)
            return None

@@ -1,15 +1,21 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import os
+import sys
 import logging
 import collections
 import gzip
-
-import pytest
 
 try:
     import cPickle as pickle
 except:
     import pickle
+
+import pytest
+
+try:
+    import unittest.mock as mock
+except ImportError:
+    import mock
 
 from alphatwirl.concurrently import WorkingArea
 from alphatwirl import mkdir_p
@@ -155,5 +161,35 @@ def test_collect_result_eoferror(obj):
        f.close()
 
     assert obj.collect_result(package_index=package_index) is None
+
+@pytest.fixture()
+def mock_gzip_open(monkeypatch):
+    ret = mock.Mock()
+    ret.side_effect = Exception()
+    module = sys.modules['alphatwirl.concurrently.WorkingArea']
+    monkeypatch.setattr(module.gzip, 'open', ret)
+    return ret
+
+def test_collect_result_raise(obj, caplog, monkeypatch):
+    obj.open()
+
+    #
+    mock_gzip_open = mock.Mock()
+    mock_gzip_open.side_effect = Exception()
+    module = sys.modules['alphatwirl.concurrently.WorkingArea']
+    monkeypatch.setattr(module.gzip, 'open', mock_gzip_open)
+
+    #
+    package_index = 9
+    caplog.clear()
+    with caplog.at_level(logging.WARNING):
+        ret = obj.collect_result(package_index=package_index)
+
+    assert ret is None
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'WorkingArea' in caplog.records[0].name
+    # assert 'No such file or directory' in caplog.records[0].msg
 
 ##__________________________________________________________________||
