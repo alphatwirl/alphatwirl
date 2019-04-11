@@ -130,46 +130,6 @@ def test_collect_result(obj):
 
     assert result == obj.collect_result(package_index=package_index)
 
-def test_collect_result_ioerror(obj, caplog):
-   # the file 'result.p.gz' doesn't exist
-   # gzip.open() raises IOFError
-
-    obj.open()
-
-    package_index = 9
-    caplog.clear()
-    with caplog.at_level(logging.WARNING):
-        ret = obj.collect_result(package_index=package_index)
-
-    assert ret is None
-
-    assert len(caplog.records) == 1
-    assert caplog.records[0].levelname == 'WARNING'
-    assert 'WorkingArea' in caplog.records[0].name
-    # assert 'No such file or directory' in caplog.records[0].msg
-
-def test_collect_result_eoferror(obj):
-   # the file 'result.p.gz' is empty.
-   # pickle.load() raises EOFError
-
-    obj.open()
-
-    package_index = 9
-    result_fullpath = obj.result_fullpath(package_index)
-    mkdir_p(os.path.dirname(result_fullpath))
-    with open(result_fullpath, 'wb') as f:
-       f.close()
-
-    assert obj.collect_result(package_index=package_index) is None
-
-@pytest.fixture()
-def mock_gzip_open(monkeypatch):
-    ret = mock.Mock()
-    ret.side_effect = Exception()
-    module = sys.modules['alphatwirl.concurrently.WorkingArea']
-    monkeypatch.setattr(module.gzip, 'open', ret)
-    return ret
-
 def test_collect_result_raise(obj, caplog, monkeypatch):
     obj.open()
 
