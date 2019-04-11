@@ -161,8 +161,8 @@ class WorkingArea(object):
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/task_00009.p.gz'
 
         with gzip.open(package_fullpath, 'wb') as f:
-           pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
-           f.close()
+            pickle.dump(package, f, protocol=pickle.HIGHEST_PROTOCOL)
+            f.close()
 
         result_fullpath = self.result_fullpath(package_index)
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
@@ -193,12 +193,12 @@ class WorkingArea(object):
         # e.g., '{path}/tpd_20161129_122841_HnpcmF/results/task_00009/result.p.gz'
 
         try:
-           with gzip.open(result_fullpath, 'rb') as f:
-              result = pickle.load(f)
+            with gzip.open(result_fullpath, 'rb') as f:
+                result = pickle.load(f)
         except Exception as e:
-           logger = logging.getLogger(__name__)
-           logger.warning(e)
-           return None
+            logger = logging.getLogger(__name__)
+            logger.warning(e)
+            return None
 
         return result
 
