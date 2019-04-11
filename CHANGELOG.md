@@ -2,7 +2,17 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.1...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.2...master))
+
+## [0.25.2] - 2019-04-11
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.2/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.1...v0.25.2))
+- updated `WorkingArea`
+    - catch generally `Exception` in `collect_result()` since the job
+      needs to be resubmitted regardless of the error type.
+    - cleaned code, updated test
 
 ## [0.25.1] - 2019-03-30
 
