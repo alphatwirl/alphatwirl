@@ -5,6 +5,38 @@ def create_files_start_length_list(
         files, func_get_nevents_in_file=None,
         max_events=-1, max_events_per_run=-1,
         max_files=-1, max_files_per_run=1):
+    """determines how to split input data into chunks
+
+    Parameters
+    ----------
+    files : list of str
+        Input file names
+    func_get_nevents_in_file : function, optional
+        A function that takes the name of a file and returns the
+        number of the events in the file. A function needs to be
+        provide if at least one of `max_events` or
+        `max_events_per_run` is a positive number.
+    max_events : int, optional
+        The maximum number of events to be processed. No limit if `-1`
+        (default).
+    max_files : int, optional
+        The maximum number of files to be processed. No limit if `-1`
+        (default).
+    max_events_per_run : int, optional
+        The maximum number of events to be processed in each chunk. No
+        limit if `-1` (default).
+    max_files_per_run : int, optional
+        The maximum number of files to be processed in each chunk. No
+        limit if `-1` (default).
+
+    Returns
+    -------
+    list
+        A list of tuples with three elements: a list of file names,
+        the index of the first event to be processed, the number of
+        events to be processed.
+
+    """
 
     files = _apply_max_files(files, max_files)
 
