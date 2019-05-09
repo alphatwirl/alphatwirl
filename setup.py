@@ -24,6 +24,7 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
     packages=find_packages(exclude=['docs', 'images', 'tests']),
     install_requires=[
