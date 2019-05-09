@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.2...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.3...master))
+
+## [0.25.3] - 2019-05-09
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.3/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.2...v0.25.3))
 - updated `.travis.yml`
     - replaced the channel NLeSC with conda-forge
     - added Python 3.7
