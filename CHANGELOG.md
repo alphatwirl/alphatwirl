@@ -4,6 +4,10 @@
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.2...master))
 - updated docstring
+- updated `.travis.yml`
+    - replaced the channel NLeSC with conda-forge
+    - added Python 3.7
+    - updated the versions of ROOT and Pandas.
 
 ## [0.25.2] - 2019-04-11
 
