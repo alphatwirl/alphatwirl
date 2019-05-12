@@ -3,7 +3,7 @@
 from .quote_string import quote_string
 
 ##__________________________________________________________________||
-def list_to_aligned_text(src, format_dict = None, left_align_last_column = False):
+def list_to_aligned_text(src, format_dict=None, left_align_last_column=False):
 
     # e.g.,
     # src = [
