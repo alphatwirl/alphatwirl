@@ -5,6 +5,7 @@
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.3...master))
 - deleted deprecated function `listToAlignedText()`
 - made minor edits to follow pep 8
+- updated unittest
 
 ## [0.25.3] - 2019-05-09
 
