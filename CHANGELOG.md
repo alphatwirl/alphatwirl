@@ -3,6 +3,13 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.4...master))
+- started moving `CollectorComposite` for [\#36](https://github.com/alphatwirl/alphatwirl/issues/36)
+    - `CollectorComposite`
+        - deprecated `alphatwirl.loop.CollectorComposite`
+        - added `alphatwirl.datasetloop.CollectorComposite`
+    - `EventDatasetReader`
+        - deprecated `alphatwirl.loop.EventDatasetReader`
+        - added `alphatwirl.datasetloop.EventDatasetReader`
 
 ## [0.25.4] - 2019-06-17
 
