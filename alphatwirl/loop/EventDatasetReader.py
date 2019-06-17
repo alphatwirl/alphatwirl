@@ -3,10 +3,13 @@ import copy
 import itertools
 from collections import OrderedDict
 
+from alphatwirl.misc.deprecation import _deprecated
+
 from .EventLoop import EventLoop
 from .merge import merge_in_order
 
 ##__________________________________________________________________||
+@_deprecated(msg='replaced with alphatwirl.datasetloop.EventDatasetReader')
 class EventDatasetReader(object):
     """This class manages objects involved in reading events in data sets.
 

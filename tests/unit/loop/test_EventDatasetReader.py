@@ -37,6 +37,17 @@ def obj(eventLoopRunner, reader, collector, split_into_build_events):
                                  split_into_build_events)
 
 ##__________________________________________________________________||
+def test_deprecated(caplog, eventLoopRunner, reader, collector, split_into_build_events):
+    with caplog.at_level(logging.WARNING):
+        EventDatasetReader(eventLoopRunner, reader, collector,
+                                 split_into_build_events)
+
+    assert len(caplog.records) == 1
+    assert caplog.records[0].levelname == 'WARNING'
+    assert 'EventDatasetReader' in caplog.records[0].name
+    assert 'deprecated.' in caplog.records[0].msg
+
+##__________________________________________________________________||
 def test_repr(obj):
     repr(obj)
 
