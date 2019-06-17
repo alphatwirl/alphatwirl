@@ -3,12 +3,14 @@ import logging
 
 from ..progressbar import ProgressReport
 
+from alphatwirl.misc.deprecation import _deprecated
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 import alphatwirl
 
 
 ##__________________________________________________________________||
+@_deprecated(msg='replaced with alphatwirl.datasetloop.CollectorComposite')
 class CollectorComposite(object):
 
     """A composite of collectors.
