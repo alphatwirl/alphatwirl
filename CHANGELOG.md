@@ -2,7 +2,13 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.3...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.4...master))
+
+## [0.25.4] - 2019-06-17
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.4/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.3...v0.25.4))
 - deleted deprecated function `listToAlignedText()`
 - made minor edits to follow pep 8
 - updated unittest
