@@ -7,7 +7,8 @@ from .MPEventLoopRunner import MPEventLoopRunner
 from .NullCollector import NullCollector
 from .ReaderComposite import ReaderComposite
 
-from .EventsInDatasetReader import EventsInDatasetReader
-
 from .deprecated import CollectorComposite
 from .deprecated import EventDatasetReader
+
+from .removed import EventsInDatasetReader
+
