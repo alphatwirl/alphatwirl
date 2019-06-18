@@ -39,11 +39,11 @@ def test_deprecated_option(caplog):
 
     assert len(caplog.records) == 2
     assert caplog.records[0].levelname == 'WARNING'
-    assert 'CollectorComposite' in caplog.records[0].name
+    assert 'alphatwirl.loop.deprecated' in caplog.records[0].name
     assert 'deprecated. replaced with alphatwirl.datasetloop.CollectorComposite' in caplog.records[0].msg
 
     assert caplog.records[1].levelname == 'WARNING'
-    assert 'CollectorComposite' in caplog.records[1].name
+    assert 'alphatwirl.loop.deprecated' in caplog.records[1].name
     assert 'deprecated. "progressReporter=None" is given.' in caplog.records[1].msg
 
 def test_deprecated(caplog):
@@ -52,7 +52,7 @@ def test_deprecated(caplog):
 
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
-    assert 'CollectorComposite' in caplog.records[0].name
+    assert 'alphatwirl.loop.deprecated' in caplog.records[0].name
     assert 'deprecated. replaced with alphatwirl.datasetloop.CollectorComposite' in caplog.records[0].msg
 
 def test_collect():

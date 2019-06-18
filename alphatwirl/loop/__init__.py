@@ -1,5 +1,4 @@
 from .Collector import Collector
-from .CollectorComposite import CollectorComposite
 from .CollectorDelegate import CollectorDelegate
 from .DatasetIntoEventBuildersSplitter import DatasetIntoEventBuildersSplitter
 from .EventLoop import EventLoop
@@ -10,3 +9,5 @@ from .NullCollector import NullCollector
 from .ReaderComposite import ReaderComposite
 
 from .EventsInDatasetReader import EventsInDatasetReader
+
+from .deprecated import CollectorComposite
