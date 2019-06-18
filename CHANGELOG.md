@@ -6,6 +6,8 @@
 - updated for [\#36](https://github.com/alphatwirl/alphatwirl/issues/36)
     - deprecated `CollectorComposite` and `EventDatasetReader` in `loop`
     - added replacements with the same names in `datasetloop`
+- removed the deprecated class `EventsInDatasetReader`
+- reorganized modules in `loop`
 
 ## [0.25.4] - 2019-06-17
 
