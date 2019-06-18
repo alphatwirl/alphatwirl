@@ -44,7 +44,7 @@ def test_deprecated(caplog, eventLoopRunner, reader, collector, split_into_build
 
     assert len(caplog.records) == 1
     assert caplog.records[0].levelname == 'WARNING'
-    assert 'EventDatasetReader' in caplog.records[0].name
+    assert 'alphatwirl.loop.deprecated' in caplog.records[0].name
     assert 'deprecated.' in caplog.records[0].msg
 
 ##__________________________________________________________________||
