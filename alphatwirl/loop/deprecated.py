@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import logging
 
-from ..progressbar import ProgressReport
+from atpbar import atpbar
 
 from alphatwirl.misc.deprecation import _deprecated
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
@@ -56,9 +56,7 @@ class CollectorComposite(object):
         """
 
         ret = [ ]
-        for i, collector in enumerate(self.components):
-            report = ProgressReport(name='collecting results', done=(i + 1), total=len(self.components))
-            alphatwirl.progressbar.report_progress(report)
+        for i, collector in enumerate(atpbar(self.components, name='collecting results')):
             ret.append(collector.collect([(dataset, tuple(r.readers[i] for r in readerComposites))
                                           for dataset, readerComposites in dataset_readers_list]))
         return ret
