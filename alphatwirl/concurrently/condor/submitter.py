@@ -135,7 +135,6 @@ class HTCondorJobSubmitter(object):
     def _compose_job_desc(self, workingArea, package_indices):
 
         job_desc_dict = self.job_desc_dict.copy()
-        job_desc_dict['executable'] = workingArea.executable
 
         extra_input_files = sorted(list(workingArea.extra_input_files))
         if extra_input_files:

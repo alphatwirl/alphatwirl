@@ -47,7 +47,7 @@ def mock_popen(monkeypatch, mock_proc_condor_submit, mock_proc_ondor_prio):
 @pytest.fixture()
 def obj(mock_popen, mock_pipe):
     job_desc_dict = collections.OrderedDict(
-        [('request_memory', '250'), ('Universe', 'chocolate')]
+        [('executable', 'run2.rb'), ('request_memory', '250'), ('Universe', 'chocolate')]
     )
     return HTCondorJobSubmitter(job_desc_dict=job_desc_dict)
 
@@ -56,13 +56,12 @@ def mock_workingarea(tmpdir_factory):
     ret = mock.Mock(spec=WorkingArea)
     ret.path = str(tmpdir_factory.mktemp(''))
     ret.package_relpath.side_effect = ['task_00000', 'task_00001', 'task_00002']
-    ret.executable = 'run.py'
     ret.extra_input_files = set(['python_modules.tar.gz', 'logging_levels.json.gz'])
     return ret
 
 ##__________________________________________________________________||
 expected_job_desc = textwrap.dedent("""
-executable = run.py
+executable = run2.rb
 output = results/$(resultdir)/stdout.$(cluster).$(process).txt
 error = results/$(resultdir)/stderr.$(cluster).$(process).txt
 log = results/$(resultdir)/log.$(cluster).$(process).txt
