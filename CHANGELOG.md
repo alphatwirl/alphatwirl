@@ -2,12 +2,21 @@
 
 ## [Unreleased]
 
-#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.4...master))
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.5...master))
+
+## [0.25.5] - 2019-06-26
+
+**PyPI**: https://pypi.org/project/alphatwirl/0.25.5/
+
+#### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.4...v0.25.5))
+- made it possible to override the executable of HTCondor jobs by
+  the option `dispatcher_options` of `build_parallel()`
 - updated for [\#36](https://github.com/alphatwirl/alphatwirl/issues/36)
     - deprecated `CollectorComposite` and `EventDatasetReader` in `loop`
     - added replacements with the same names in `datasetloop`
 - removed the deprecated class `EventsInDatasetReader`
 - reorganized modules in `loop`
+- updated unittest
 
 ## [0.25.4] - 2019-06-17
 
