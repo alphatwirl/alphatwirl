@@ -12,11 +12,11 @@ matrix:
           env: ROOT=6.14.06 PANDAS=0.22
         - python: 3.6
           env: ROOT=None PANDAS=None
+    allow_failures:
         - python: 2.7
           env: ROOT=6.14.06 PANDAS=0.22
         - python: 2.7
           env: ROOT=None PANDAS=None
-    allow_failures:
         
 install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
