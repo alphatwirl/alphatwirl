@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.5...master))
+- updated `README.md`
 
 ## [0.25.5] - 2019-06-26
 
