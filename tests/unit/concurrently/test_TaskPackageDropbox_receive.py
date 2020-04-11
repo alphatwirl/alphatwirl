@@ -52,14 +52,14 @@ def mock_dispatcher():
     return ret
 
 @pytest.fixture()
-def mock_sleep(monkeypatch):
+def mock_time(monkeypatch):
     ret = mock.Mock()
     module = sys.modules['alphatwirl.concurrently.TaskPackageDropbox']
-    monkeypatch.setattr(module.time, 'sleep', ret)
+    monkeypatch.setattr(module, 'time', ret)
     return ret
 
 @pytest.fixture()
-def obj(mock_workingarea, mock_dispatcher, mock_sleep):
+def obj(mock_workingarea, mock_dispatcher, mock_time):
     ret = TaskPackageDropbox(
         workingArea=mock_workingarea,
         dispatcher=mock_dispatcher, sleep=0.01)
@@ -94,7 +94,7 @@ params_dispatcher_poll = [
 ]
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_receive_one(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_receive_one(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     while len(actual) < len(expected):
@@ -103,28 +103,28 @@ def test_receive_one(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll
     assert sorted(expected) == sorted(actual)
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
     nmaxsleeps = len(dispatcher_poll)-1
-    assert nmaxsleeps >= len(mock_sleep.call_args_list)
+    assert nmaxsleeps >= len(mock_time.sleep.call_args_list)
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_receive(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     assert expected == obj.receive()
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
     nsleeps = len(dispatcher_poll)-1
-    assert [mock.call(0.01)]*nsleeps == mock_sleep.call_args_list
+    assert [mock.call(0.01)]*nsleeps == mock_time.sleep.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_poll(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_poll(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     while len(actual) < len(expected):
         actual.extend(obj.poll())
     assert sorted(expected) == sorted(actual)
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
-    assert [ ] == mock_sleep.call_args_list
+    assert [ ] == mock_time.sleep.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_poll_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_poll_receive(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     actual.extend(obj.poll())
@@ -133,7 +133,7 @@ def test_poll_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_pol
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_receive_one_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_receive_one_receive(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     actual.append(obj.receive_one())
@@ -142,7 +142,7 @@ def test_receive_one_receive(obj, mock_sleep, expected, mock_dispatcher, dispatc
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_receive_one_poll(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_receive_one_poll(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     actual.append(obj.receive_one())
@@ -152,7 +152,7 @@ def test_receive_one_poll(obj, mock_sleep, expected, mock_dispatcher, dispatcher
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_poll_receive_one(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_poll_receive_one(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     actual.extend(obj.poll())
@@ -163,7 +163,7 @@ def test_poll_receive_one(obj, mock_sleep, expected, mock_dispatcher, dispatcher
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
 
 @pytest.mark.parametrize('dispatcher_poll', params_dispatcher_poll)
-def test_receive_one_poll_receive(obj, mock_sleep, expected, mock_dispatcher, dispatcher_poll):
+def test_receive_one_poll_receive(obj, mock_time, expected, mock_dispatcher, dispatcher_poll):
     mock_dispatcher.poll.side_effect = dispatcher_poll
     actual = [ ]
     actual.append(obj.receive_one())
@@ -173,7 +173,7 @@ def test_receive_one_poll_receive(obj, mock_sleep, expected, mock_dispatcher, di
     assert [mock.call([1002]), mock.call([1005])] == mock_dispatcher.failed_runids.call_args_list
 
 # ##__________________________________________________________________||
-def test_receive_logging_resubmission(obj, mock_sleep, mock_dispatcher, caplog):
+def test_receive_logging_resubmission(obj, mock_time, mock_dispatcher, caplog):
     mock_dispatcher.poll.side_effect = [[1001, 1003], [ ], [1002], [1000, 1005], [1006, 1004]]
     with caplog.at_level(logging.WARNING):
         obj.receive()

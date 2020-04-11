@@ -4,23 +4,15 @@ language: python
 
 matrix:
     include:
-        - python: 3.7-dev
-          env: ROOT=6.14.06 PANDAS=0.24.2
-        - python: 3.6
-          env: ROOT=6.14.06 PANDAS=0.24.2
-        - python: 3.6
-          env: ROOT=6.14.06 PANDAS=0.22
-        - python: 3.6
+        - python: 3.8
+          env: ROOT=6.20.4 PANDAS=1.0.3
+        - python: 3.7
+          env: ROOT=6.20.4 PANDAS=1.0.3
+        - python: 3.7
           env: ROOT=None PANDAS=None
-        - python: 2.7
-          env: ROOT=6.14.06 PANDAS=0.22
-        - python: 2.7
-          env: ROOT=None PANDAS=None
+        - python: 3.6
+          env: ROOT=6.20.4 PANDAS=1.0.3
     allow_failures:
-        - python: 2.7
-          env: ROOT=6.14.06 PANDAS=0.22
-        - python: 2.7
-          env: ROOT=None PANDAS=None
         
 install:
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
@@ -45,21 +37,19 @@ install:
   - pip install -r requirements/test.txt
 
 script:
-  - pytest --cov
+  - pytest
+#  - pytest --cov
 
 after_success:
-  - coverage combine
-  - codecov
+#  - coverage combine
+#  - codecov
 
 cache: apt
-# branches:
-#   only:
-#     - v0.9.x
 
 deploy:
   provider: pypi
   user: tai.sakuma
-  distributions: sdist bdist_wheel --universal
+  distributions: sdist bdist_wheel
   password:
     secure: JWJx8WxSHbOVIuj7NFco9tFWE8iehj8tiTgwyML1jVkNzWhqbQIHAut28z5ECJfdj9u1AGT9XMWhVDA5T3znGGHK4k4uDQECwEX1hlkjx4Ji7zCvRCBCOH2qgxQS6/rCn+3AgjVy1Vi76KTk+GpxtTC9dy55e3Wkv+4DCfF9guycH/7Do9Hx3p+TGLcv7FXR3VeI4q/wq52YskmWEshhIsRg8OQ0+xx3erKK73V+W8/w1WcIo6g8BeSSgNMUeXPNgmrJrWHt55/j0CSO7oJkj4F9/JSiTx/rUHBB6NeUkFltqO/cb2FLR4X6GKyBfxdFBSAOMTSjkxn3GorS0daWQKMHyKUA8F0YfgdqcZm3QeaIYtRqKgirsedY+6yA3KYIINuSLc2yKgLpj5qnItgoUBBXICHYeEf9Y0+l2/BWTroQyXofjbqYPt5MiUx/GXGJ3Qqfl/KouBXn5UBtQgCM83u21kOEFKU+Cfp/HQOTOfrdIn/5EsrzJ4n9jRow7KtEdi5jlKFy0jCqsV0Lu7KjUF+zQ2g5rXVHgLgVwCwj2V2tNOj3kSKlrJQAm1AbuRqxjVPQ9IZj5AW4tS3GnMsgEUrKKz1Urc8o2Pll7eg7W2WsYwC//NnjEnkO9VdCwVUjFoDcOCEsN74gCBJrdinsCRywQl0iTejIrdvcWtx3vWU=
   on:

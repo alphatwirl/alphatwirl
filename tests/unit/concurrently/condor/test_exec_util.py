@@ -70,15 +70,15 @@ def mock_exec_command(monkeypatch):
     return ret
 
 @pytest.fixture()
-def mock_sleep(monkeypatch):
+def mock_time(monkeypatch):
     module = sys.modules['alphatwirl.concurrently.condor.exec_util']
     ret = mock.Mock()
-    monkeypatch.setattr(module.time, 'sleep', ret)
+    monkeypatch.setattr(module, 'time', ret)
     return ret
 
 @pytest.mark.parametrize('nfails', [0, 1, 5])
 def test_try_executing_until_succeed(
-        nfails, mock_exec_command, mock_sleep, caplog):
+        nfails, mock_exec_command, mock_time, caplog):
     procargs = mock.sentinel.procargs
     input_ = mock.sentinel.input_
     cwd = mock.sentinel.cwd
@@ -97,7 +97,7 @@ def test_try_executing_until_succeed(
     assert [call_exec_command]*(nfails+1) == mock_exec_command.call_args_list
 
     call_sleep = mock.call(sleep)
-    assert [call_sleep]*nfails == mock_sleep.call_args_list
+    assert [call_sleep]*nfails == mock_time.sleep.call_args_list
 
     assert len(caplog.records) == nfails
     for r in caplog.records:

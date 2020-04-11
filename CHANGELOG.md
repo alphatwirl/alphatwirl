@@ -3,7 +3,9 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.25.5...master))
-- updated `README.md`
+- started testing in Python 3.8
+- stopped testing in Python 2.7
+- updated `README.md`, `.travis.yml`, `setup.py`, unittest
 
 ## [0.25.5] - 2019-06-26
 

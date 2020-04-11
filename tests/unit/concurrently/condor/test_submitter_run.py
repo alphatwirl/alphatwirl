@@ -54,7 +54,7 @@ def obj(mock_popen, mock_pipe):
 @pytest.fixture()
 def mock_workingarea(tmpdir_factory):
     ret = mock.Mock(spec=WorkingArea)
-    ret.path = str(tmpdir_factory.mktemp(''))
+    ret.path = str(tmpdir_factory.mktemp('concurrently'))
     ret.package_relpath.side_effect = ['task_00000', 'task_00001', 'task_00002']
     ret.extra_input_files = set(['python_modules.tar.gz', 'logging_levels.json.gz'])
     return ret

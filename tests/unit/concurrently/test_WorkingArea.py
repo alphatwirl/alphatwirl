@@ -28,7 +28,7 @@ MockResult = collections.namedtuple('MockResult', 'name')
 ##__________________________________________________________________||
 @pytest.fixture()
 def topdir(tmpdir_factory):
-    ret = str(tmpdir_factory.mktemp(''))
+    ret = str(tmpdir_factory.mktemp('concurrently'))
     ret = os.path.join(ret, '_ccsp_temp')
     return ret
 
