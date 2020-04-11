@@ -28,7 +28,7 @@ def env():
 
 @pytest.fixture()
 def workingarea_path(tmpdir_factory):
-   ret = str(tmpdir_factory.mktemp(''))
+   ret = str(tmpdir_factory.mktemp('concurrently'))
    src = os.path.join(os.path.dirname(alphatwirl.concurrently.__file__), 'run.py')
    dest = os.path.join(ret, 'run.py')
    shutil.copy(src, dest)

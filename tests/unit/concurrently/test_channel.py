@@ -35,7 +35,7 @@ def obj(request, tmpdir_factory, monkeypatch):
         dropbox = MultiprocessingDropbox()
         ret = CommunicationChannel(dropbox=dropbox)
     elif name == 'CommunicationChannel-subprocess':
-        topdir = str(tmpdir_factory.mktemp(''))
+        topdir = str(tmpdir_factory.mktemp('concurrently'))
         topdir = os.path.join(topdir, '_ccsp_temp')
         workingarea = WorkingArea(topdir=topdir, python_modules=( ))
         dropbox = TaskPackageDropbox(

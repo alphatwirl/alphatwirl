@@ -43,7 +43,7 @@ def datasets():
 @pytest.fixture()
 def workingarea(tmpdir_factory):
     ret = mock.Mock()
-    ret.path = str(tmpdir_factory.mktemp(''))
+    ret.path = str(tmpdir_factory.mktemp('datasetloop'))
     return ret
 
 @pytest.fixture()

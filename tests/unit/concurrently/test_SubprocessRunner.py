@@ -28,7 +28,7 @@ run_py_content = run_py_content.lstrip()
 ##__________________________________________________________________||
 @pytest.fixture()
 def taskdir(tmpdir_factory):
-    ret = tmpdir_factory.mktemp('')
+    ret = tmpdir_factory.mktemp('concurrently')
     ret = str(ret)
     path_run_py = os.path.join(ret, 'run.py')
     with open(path_run_py, 'w') as f:

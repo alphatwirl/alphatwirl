@@ -25,7 +25,7 @@ def env():
 
 @pytest.fixture()
 def workingarea_path(tmpdir_factory):
-   ret = str(tmpdir_factory.mktemp(''))
+   ret = str(tmpdir_factory.mktemp('datasetloop'))
    return ret
 
 ##__________________________________________________________________||

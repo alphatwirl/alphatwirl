@@ -18,7 +18,7 @@ def test_profile_func():
 
 ##__________________________________________________________________||
 def test_print_profile_func(tmpdir_factory):
-    tmpdir = str(tmpdir_factory.mktemp(''))
+    tmpdir = str(tmpdir_factory.mktemp('misc'))
     func = mock.Mock()
     print(tmpdir)
     profile_out_path = os.path.join(tmpdir, 'profile.txt')
