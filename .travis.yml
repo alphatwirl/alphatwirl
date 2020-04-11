@@ -37,11 +37,12 @@ install:
   - pip install -r requirements/test.txt
 
 script:
-  - pytest --cov
+  - pytest
+#  - pytest --cov
 
 after_success:
-  - coverage combine
-  - codecov
+#  - coverage combine
+#  - codecov
 
 cache: apt
 
