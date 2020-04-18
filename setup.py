@@ -38,5 +38,10 @@ setup(
             'pytest-cov>=2.8',
             'pytest-console-scripts>=0.2',
         ],
+        'doc': [
+            'Sphinx>=1.8.4',
+            'sphinx_rtd_theme>=0.4',
+            'recommonmark>=0.6',
+        ],
     }
 )
