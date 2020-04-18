@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 #### Changes from the previous release: ([diff](https://github.com/alphatwirl/alphatwirl/compare/v0.30.0...master))
+- removed the sub-package `progressbar`, replaced with [atpbar](https://github.com/alphatwirl/atpbar)
 - updated `.travis.yml`
 - reorganized requirements in `requirements` and `setup.py`
 
