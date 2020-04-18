@@ -5,6 +5,7 @@ concurrency = multiprocessing
 omit =
      */_version.py
      */site-packages/*
+     */testenv/*
 
 [report]
 # Regexes for lines to exclude from consideration
