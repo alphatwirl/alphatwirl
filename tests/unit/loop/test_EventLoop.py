@@ -7,8 +7,9 @@ try:
 except ImportError:
     import mock
 
+from atpbar import atpbar
+
 from alphatwirl.loop import EventLoop
-from alphatwirl.progressbar import atpbar
 
 ##__________________________________________________________________||
 @pytest.fixture(params=[0, 3])

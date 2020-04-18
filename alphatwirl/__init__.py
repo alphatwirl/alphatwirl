@@ -18,7 +18,6 @@ from . import selection
 from . import datasetloop
 from . import loop
 from . import parallel
-from . import progressbar
 from . import summary
 from .misc import mkdir_p
 from .misc import list_to_aligned_text
