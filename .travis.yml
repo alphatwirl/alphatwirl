@@ -34,7 +34,7 @@ install:
         pip install jupyter;
     fi
   - python setup.py -q install
-  - pip install -r requirements/test.txt
+  - pip install -e '.[tests]'
 
 script:
   - pytest
