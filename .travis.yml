@@ -15,26 +15,27 @@ matrix:
     allow_failures:
         
 install:
-  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi
-  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi
-
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  - conda info -a
-  - conda config --add channels conda-forge
-  - conda config --set show_channel_urls yes
-  - conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION%-*} $([ "$ROOT" != "None" ] && echo "root=${ROOT}")
-  - export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv
-  - source activate testenv
+  - if [ "$ROOT" != "None" ]; then
+        if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi;
+        if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi;
+        bash miniconda.sh -b -p $HOME/miniconda;
+        export PATH="$HOME/miniconda/bin:$PATH";
+        hash -r;
+        conda config --set always_yes yes --set changeps1 no;
+        conda update -q conda;
+        conda info -a;
+        conda config --add channels conda-forge;
+        conda config --set show_channel_urls yes;
+        conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION%-*} $([ "$ROOT" != "None" ] && echo "root=${ROOT}");
+        export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv;
+        source activate testenv;
+    fi
+  - pip install --upgrade pip
+  - pip install -e '.[tests]'
   - if [ "$PANDAS" != "None" ]; then
         pip install pandas=="${PANDAS}";
-        pip install jupyter;
     fi
-  - python setup.py -q install
-  - pip install -e '.[tests]'
+  - pip install codecov
 
 script:
   - pytest
