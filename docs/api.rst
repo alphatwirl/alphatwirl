@@ -86,23 +86,6 @@ summary
    Summarizer
    WeightCalculatorOne
 
-progressbar
------------
-
-.. currentmodule:: alphatwirl.progressbar
-
-.. autosummary::
-   :toctree: generated
-
-   BProgressMonitor
-   NullProgressMonitor
-   ProgressBar
-   ProgressMonitor
-   ProgressPrint
-   ProgressReport
-   ProgressReportPickup
-   ProgressReporter
-
 concurrently
 ------------
 
