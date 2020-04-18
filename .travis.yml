@@ -38,12 +38,11 @@ install:
   - pip install codecov
 
 script:
-  - pytest
-#  - pytest --cov
+  - pytest --cov
 
 after_success:
-#  - coverage combine
-#  - codecov
+  - coverage combine
+  - codecov
 
 cache: apt
 
