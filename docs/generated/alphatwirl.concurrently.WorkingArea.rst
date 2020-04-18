@@ -17,8 +17,12 @@ alphatwirl.concurrently.WorkingArea
       ~WorkingArea.close
       ~WorkingArea.collect_result
       ~WorkingArea.open
+      ~WorkingArea.package_fullpath
       ~WorkingArea.package_path
+      ~WorkingArea.package_relpath
       ~WorkingArea.put_package
+      ~WorkingArea.result_fullpath
+      ~WorkingArea.result_relpath
    
    
 
