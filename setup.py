@@ -32,4 +32,11 @@ setup(
         'atpbar>=1.0.8',
         'mantichora>=0.10.0',
     ],
+    extras_require={
+        'tests': [
+            'pytest>-5.4',
+            'pytest-cov>=2.8',
+            'pytest-console-scripts>=0.2',
+        ],
+    }
 )
