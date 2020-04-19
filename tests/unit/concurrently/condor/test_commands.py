@@ -3,10 +3,7 @@ import sys
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.concurrently.condor.commands import split_list_into_chunks, query_status_for, change_job_priority
 

@@ -3,10 +3,7 @@ import os
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.misc import profile_func, print_profile_func
 

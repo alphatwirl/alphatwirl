@@ -1,10 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.concurrently import TaskPackageDropbox
 from alphatwirl.concurrently import WorkingArea, HTCondorJobSubmitter

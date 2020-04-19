@@ -1,10 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.loop.splitfuncs import create_files_start_length_list
 from alphatwirl.loop.splitfuncs import _full_path

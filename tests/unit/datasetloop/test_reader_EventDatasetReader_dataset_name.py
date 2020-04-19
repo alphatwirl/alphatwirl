@@ -5,10 +5,7 @@ from collections import OrderedDict
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.datasetloop import EventDatasetReader
 from alphatwirl.loop import EventLoop

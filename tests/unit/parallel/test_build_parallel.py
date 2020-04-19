@@ -4,10 +4,7 @@ import sys
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.parallel import build_parallel
 from alphatwirl.parallel.build import build_parallel_multiprocessing

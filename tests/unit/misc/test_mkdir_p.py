@@ -4,10 +4,7 @@ import errno
 import logging
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl import mkdir_p
 

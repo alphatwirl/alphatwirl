@@ -4,10 +4,7 @@ import copy
 import numpy as np
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.summary import Summarizer
 from alphatwirl.summary import Sum

@@ -3,10 +3,7 @@ import copy
 import collections
 import logging
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.loop import CollectorComposite, ReaderComposite
 

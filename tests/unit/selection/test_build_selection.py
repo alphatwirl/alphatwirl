@@ -2,10 +2,7 @@
 import sys
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.selection import build_selection
 from alphatwirl.selection.modules import All

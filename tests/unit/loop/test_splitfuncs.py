@@ -2,10 +2,7 @@
 import sys
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.loop.splitfuncs import create_files_start_length_list
 from alphatwirl.loop.splitfuncs import _apply_max_files

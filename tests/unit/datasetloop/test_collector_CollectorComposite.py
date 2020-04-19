@@ -2,12 +2,8 @@
 import sys
 import pytest
 
-try:
-    import unittest.mock as mock
-    from unittest.mock import call, sentinel
-except ImportError:
-    import mock
-    from mock import call, sentinel
+import unittest.mock as mock
+from unittest.mock import call, sentinel
 
 from alphatwirl.datasetloop import CollectorComposite
 from atpbar import atpbar

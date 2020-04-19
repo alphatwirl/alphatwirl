@@ -2,10 +2,7 @@
 import copy
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 import alphatwirl
 from alphatwirl.summary import Reader

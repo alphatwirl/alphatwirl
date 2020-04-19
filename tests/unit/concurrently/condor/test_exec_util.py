@@ -4,10 +4,7 @@ import sys
 import logging
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.concurrently.condor.exec_util import try_executing_until_succeed, exec_command, compose_shortened_command_for_logging
 

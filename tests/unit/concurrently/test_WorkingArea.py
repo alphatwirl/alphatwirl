@@ -12,10 +12,7 @@ except:
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 from alphatwirl.concurrently import WorkingArea
 from alphatwirl import mkdir_p

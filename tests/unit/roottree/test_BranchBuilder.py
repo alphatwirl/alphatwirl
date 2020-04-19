@@ -4,10 +4,7 @@ import logging
 
 import pytest
 
-try:
-    import unittest.mock as mock
-except ImportError:
-    import mock
+import unittest.mock as mock
 
 has_no_ROOT = False
 try:
