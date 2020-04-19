@@ -5,13 +5,13 @@ language: python
 matrix:
     include:
         - python: 3.8
-          env: ROOT=6.20.4 PANDAS=1.0.3
+          env: ROOT=6.20.2 PANDAS=1.0.3
         - python: 3.7
-          env: ROOT=6.20.4 PANDAS=1.0.3
+          env: ROOT=6.20.2 PANDAS=1.0.3
         - python: 3.7
           env: ROOT=None PANDAS=None
         - python: 3.6
-          env: ROOT=6.20.4 PANDAS=1.0.3
+          env: ROOT=6.20.2 PANDAS=1.0.3
     allow_failures:
         
 install:
@@ -19,16 +19,18 @@ install:
         if [ "${TRAVIS_OS_NAME}" == "osx" ]; then curl --silent http://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh -o miniconda.sh; fi;
         if [ "${TRAVIS_OS_NAME}" == "linux" ]; then wget -nv http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh; fi;
         bash miniconda.sh -b -p $HOME/miniconda;
-        export PATH="$HOME/miniconda/bin:$PATH";
-        hash -r;
+        source "$HOME/miniconda/etc/profile.d/conda.sh";
         conda config --set always_yes yes --set changeps1 no;
-        conda update -q conda;
-        conda info -a;
         conda config --add channels conda-forge;
+        conda config --set channel_priority strict;
         conda config --set show_channel_urls yes;
-        conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION%-*} $([ "$ROOT" != "None" ] && echo "root=${ROOT}");
-        export CONDA_ENV_PATH=$HOME/miniconda/envs/testenv;
-        source activate testenv;
+        conda create -q -n testenv python=${TRAVIS_PYTHON_VERSION%-*};
+        conda activate testenv;
+        if [ "$ROOT" != "None" ]; then
+            conda install root="${ROOT}";
+        fi;
+        conda info -a;
+        root -b -q;
     fi
   - pip install --upgrade pip
   - pip install -e '.[tests]'
