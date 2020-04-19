@@ -15,11 +15,11 @@ if not has_no_ROOT:
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
-class MockFile(object):
+class MockFile:
     pass
 
 ##__________________________________________________________________||
-class MockTree(object):
+class MockTree:
     def __init__(self, entries=100):
         self.entries = entries
         self.ievent = -1
@@ -44,11 +44,11 @@ class MockTree(object):
         self.branchstatus.append((bname, status))
 
 ##__________________________________________________________________||
-class MockBranch(object):
+class MockBranch:
     pass
 
 ##__________________________________________________________________||
-class MockBranchBuilder(object):
+class MockBranchBuilder:
     def __init__(self):
         self.next = None
     def __call__(self, tree, name):

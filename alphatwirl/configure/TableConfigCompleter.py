@@ -4,7 +4,7 @@ from .TableFileNameComposer import TableFileNameComposer
 from ..summary import Count, WeightCalculatorOne
 
 ##__________________________________________________________________||
-class TableConfigCompleter(object):
+class TableConfigCompleter:
     """
     an example complete config::
 

@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class Branch(object):
+class Branch:
     """This class encloses an array.array object, which is typically used
     to set the address of a branch of a ROOT TTree. This class is
     useful for fast access to contents of TTree.

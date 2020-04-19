@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class WeightCalculatorOne(object):
+class WeightCalculatorOne:
     def __call__(self, event):
         return 1
 

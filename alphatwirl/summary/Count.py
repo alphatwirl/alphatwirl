@@ -4,7 +4,7 @@ import numpy as np
 import copy
 
 ##__________________________________________________________________||
-class Count(object):
+class Count:
     """
     Args:
         val : If None, initialize with 0. i.e., not counted. Otherwise,

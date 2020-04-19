@@ -2,7 +2,7 @@
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 ##__________________________________________________________________||
-class CommunicationChannel0(object):
+class CommunicationChannel0:
     """A communication channel for the single process mode
 
     An alternative to `CommunicationChannel`. However, unlike

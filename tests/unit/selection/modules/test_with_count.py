@@ -27,7 +27,7 @@ def test_not_init_collector():
     assert obj.collector is col
 
 ##__________________________________________________________________||
-class MockEventSelection(object):
+class MockEventSelection:
     def begin(self, event): pass
     def __call__(self, event): pass
     def end(self): pass

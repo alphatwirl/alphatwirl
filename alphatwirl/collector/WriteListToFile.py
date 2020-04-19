@@ -4,7 +4,7 @@ from ..misc import list_to_aligned_text
 import os
 
 ##__________________________________________________________________||
-class WriteListToFile(object):
+class WriteListToFile:
     def __init__(self, outPath):
         self._outPath = outPath
 

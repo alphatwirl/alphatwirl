@@ -3,7 +3,7 @@ from alphatwirl.selection.modules.LambdaStr import LambdaStr
 import unittest
 
 ##__________________________________________________________________||
-class MockEvent(object): pass
+class MockEvent: pass
 
 ##__________________________________________________________________||
 class Test_LambdaStr(unittest.TestCase):

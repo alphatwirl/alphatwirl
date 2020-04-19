@@ -5,7 +5,7 @@ import numpy as np
 import copy
 
 ##__________________________________________________________________||
-class Scan(object):
+class Scan:
     def __init__(self, val=None, weight=1, contents=None):
 
         if contents is not None:

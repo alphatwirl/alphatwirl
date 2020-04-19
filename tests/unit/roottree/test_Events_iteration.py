@@ -20,10 +20,10 @@ if not has_no_ROOT:
 events_classes_ids = [c.__name__ for c in events_classes]
 
 ##__________________________________________________________________||
-class MockFile(object):
+class MockFile:
     pass
 
-class MockTree(object):
+class MockTree:
     def __init__(self, entries=100):
         self.entries = entries
         self.ievent = -1

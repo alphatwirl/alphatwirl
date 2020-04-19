@@ -4,7 +4,7 @@ import pytest
 
 from alphatwirl.collector import WriteListToFile
 
-class MockOpen(object):
+class MockOpen:
     def __init__(self, out):
         self._out = out
     def __call__(self, path):

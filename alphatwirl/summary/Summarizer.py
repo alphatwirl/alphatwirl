@@ -7,7 +7,7 @@ import copy
 from .convert import key_vals_dict_to_tuple_list
 
 ##__________________________________________________________________||
-class Summarizer(object):
+class Summarizer:
     def __init__(self, Summary):
         self._results = collections.defaultdict(Summary)
         self.Summary = Summary

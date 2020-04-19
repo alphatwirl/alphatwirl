@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class ToTupleListWithDatasetColumn(object):
+class ToTupleListWithDatasetColumn:
     def __init__(self, summaryColumnNames,
                  datasetColumnName='component'
                  ):

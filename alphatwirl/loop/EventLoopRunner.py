@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class EventLoopRunner(object):
+class EventLoopRunner:
     """This class runs instances of `EventLoop` and keeps the results. It
     will return the results when `end()` is called.
 

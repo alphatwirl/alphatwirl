@@ -11,7 +11,7 @@ except ImportError:
 from alphatwirl.selection.modules import AllwCount, AnywCount, NotwCount
 
 ##__________________________________________________________________||
-class MockEventSelection(object):
+class MockEventSelection:
     def begin(self, event): pass
     def __call__(self, event): pass
     def end(self): pass

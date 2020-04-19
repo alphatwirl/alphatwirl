@@ -10,11 +10,11 @@ except ImportError:
 
 import alphatwirl
 
-class A(object):
+class A:
     def __init__(self, a):
         pass
 
-class B(object):
+class B:
     def __init__(self):
         self._repr = 'B'
 

@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class NextKeyComposer(object):
+class NextKeyComposer:
     def __init__(self, binnings):
         self._binnings = binnings
 

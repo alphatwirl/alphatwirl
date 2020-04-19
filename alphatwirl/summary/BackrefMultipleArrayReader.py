@@ -3,7 +3,7 @@ import itertools
 import numbers
 
 ##__________________________________________________________________||
-class BackrefMultipleArrayReader(object):
+class BackrefMultipleArrayReader:
     def __init__(self, arrays, idxs_conf, backref_idxs=None):
 
         # e.g.,

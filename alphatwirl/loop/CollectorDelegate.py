@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class CollectorDelegate(object):
+class CollectorDelegate:
 
     """
     """

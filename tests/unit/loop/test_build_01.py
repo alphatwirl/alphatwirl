@@ -7,7 +7,7 @@ from alphatwirl.loop import ReaderComposite
 from alphatwirl.loop import Collector, CollectorComposite, CollectorDelegate
 
 ##__________________________________________________________________||
-class MockResultsCombinationMethod(object):
+class MockResultsCombinationMethod:
     def combine(self, pairs) :pass
 
 ##__________________________________________________________________||

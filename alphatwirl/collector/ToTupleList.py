@@ -2,7 +2,7 @@
 import itertools
 
 ##__________________________________________________________________||
-class ToTupleList(object):
+class ToTupleList:
     def __init__(self, summaryColumnNames
                  ):
 

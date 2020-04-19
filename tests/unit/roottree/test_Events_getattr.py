@@ -4,10 +4,10 @@ import pytest
 from alphatwirl.roottree import Events
 
 ##__________________________________________________________________||
-class MockFile(object):
+class MockFile:
     pass
 
-class MockTree(object):
+class MockTree:
     def __init__(self, entries=100):
         self.entries = entries
         self.ievent = -1

@@ -25,7 +25,7 @@ if not has_no_ROOT:
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 
 ##__________________________________________________________________||
-class MockLeaf(object):
+class MockLeaf:
     def __init__(self, name, typename):
         self.name = name
         self.typename = typename
@@ -36,7 +36,7 @@ class MockLeaf(object):
     def GetTypeName(self):
         return self.typename
 
-class MockTree(object):
+class MockTree:
     def __init__(self, *_, **__):
         self.leaf_names = ('run', 'evt', 'njet', 'jet_pt', 'met_pt', 'trigger_path', 'EventAuxiliary')
         self.leaf_type_names = ('Int_t', 'Int_t', 'Int_t', 'Double_t', 'Double_t', 'vector<string>', 'edm::EventAuxiliary')

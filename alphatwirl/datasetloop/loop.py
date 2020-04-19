@@ -8,7 +8,7 @@ except:
    import pickle
 
 ##__________________________________________________________________||
-class DatasetLoop(object):
+class DatasetLoop:
 
     def __init__(self, datasets, reader):
         self.datasets = datasets
@@ -31,7 +31,7 @@ class DatasetLoop(object):
         return self.reader.end()
 
 ##__________________________________________________________________||
-class ResumableDatasetLoop(object):
+class ResumableDatasetLoop:
 
     def __init__(self, datasets, reader, workingarea):
         self.datasets = datasets

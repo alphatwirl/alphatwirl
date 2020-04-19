@@ -11,14 +11,14 @@ except ImportError:
 from alphatwirl.summary import KeyValueComposer
 
 ##__________________________________________________________________||
-class MockEvent(object):
+class MockEvent:
     pass
 
-class MockBinningEcho(object):
+class MockBinningEcho:
     def __call__(self, val):
         return val
 
-class MockBinningFloor(object):
+class MockBinningFloor:
     def __init__(self, max=None):
         self.max = max
 
@@ -30,7 +30,7 @@ class MockBinningFloor(object):
         return int(math.floor(val))
 
 ##__________________________________________________________________||
-class MockArrayReader(object):
+class MockArrayReader:
     def __init__(self, arrays=None, idxs_conf=None, backref_idxs=None):
         self.ret = ( )
         pass
@@ -38,7 +38,7 @@ class MockArrayReader(object):
     def read(self):
         return self.ret
 
-class MockArrayReaderRaise(object):
+class MockArrayReaderRaise:
     def __init__(self, arrays=None, idxs_conf=None, backref_idxs=None):
         pass
 

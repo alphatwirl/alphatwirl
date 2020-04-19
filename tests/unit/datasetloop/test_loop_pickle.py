@@ -16,7 +16,7 @@ except ImportError:
 from alphatwirl.datasetloop import ResumableDatasetLoop
 
 ##__________________________________________________________________||
-class MockReader(object):
+class MockReader:
     def begin(self):
         pass
 

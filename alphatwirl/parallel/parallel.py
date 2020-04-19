@@ -2,7 +2,7 @@
 import logging
 
 ##__________________________________________________________________||
-class Parallel(object):
+class Parallel:
     def __init__(self, progressMonitor=None, communicationChannel=None, workingarea=None):
         self.communicationChannel = communicationChannel
         self.workingarea = workingarea

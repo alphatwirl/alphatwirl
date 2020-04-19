@@ -3,7 +3,7 @@
 from .splitfuncs import create_files_start_length_list
 
 ##__________________________________________________________________||
-class DatasetIntoEventBuildersSplitter(object):
+class DatasetIntoEventBuildersSplitter:
 
     def __init__(self, EventBuilder, eventBuilderConfigMaker,
                  maxEvents=-1, maxEventsPerRun=-1,

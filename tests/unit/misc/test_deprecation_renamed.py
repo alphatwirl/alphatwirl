@@ -44,7 +44,7 @@ def test_class_pickle():
 ##__________________________________________________________________||
 
 ##__________________________________________________________________||
-class Class(object):
+class Class:
     @_renamed_class_method_option(old='B', new='C')
     def __init__(self, A=123, C=None):
         self.A = A

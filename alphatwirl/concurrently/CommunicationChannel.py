@@ -2,7 +2,7 @@
 import logging
 
 ##__________________________________________________________________||
-class TaskPackage(object):
+class TaskPackage:
     """A task package
 
     Note: This class will be replaced with `functools.partial`
@@ -16,7 +16,7 @@ class TaskPackage(object):
         return self.task(*self.args, **self.kwargs)
 
 ##__________________________________________________________________||
-class CommunicationChannel(object):
+class CommunicationChannel:
     """A communication channel with workers in other processes.
 
     (This docstring is outdated.)

@@ -98,7 +98,7 @@ def test_func_option_used_double_BC(caplog):
     assert 'func_03(): the option "C" is removed.' in caplog.records[1].msg
 
 ##__________________________________________________________________||
-class Class(object):
+class Class:
     @_deprecated_class_method_option('B')
     @_removed_class_method_option('C')
     def __init__(self, A=123, B=456, C=None):

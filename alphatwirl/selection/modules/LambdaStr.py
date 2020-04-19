@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class LambdaStr(object):
+class LambdaStr:
     """select events to which a lambda returns True.
 
     A lambda should be given as a string to ``__init__`` and will be

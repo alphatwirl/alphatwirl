@@ -2,7 +2,7 @@
 from atpbar import atpbar
 
 ##__________________________________________________________________||
-class CollectorComposite(object):
+class CollectorComposite:
     """A composite of collectors
 
     To be paired with `alphatwirl.loop.ReaderComposite`

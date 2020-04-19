@@ -6,7 +6,7 @@ from alphatwirl.loop import EventLoop
 from alphatwirl.loop.merge import merge_in_order
 
 ##__________________________________________________________________||
-class DatasetReaderComposite(object):
+class DatasetReaderComposite:
 
     def __init__(self):
         self.readers = [ ]
@@ -35,7 +35,7 @@ class DatasetReaderComposite(object):
         return [reader.end() for reader in self.readers]
 
 ##__________________________________________________________________||
-class EventDatasetReader(object):
+class EventDatasetReader:
     """This class manages objects involved in reading events in data sets.
 
     On receiving a data set, this class calls the function

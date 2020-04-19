@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class Combine(object):
+class Combine:
     """A combine two binnings.
 
     This class uses *low* for the values below *at* and otherwise uses

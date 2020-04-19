@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class MPEventLoopRunner(object):
+class MPEventLoopRunner:
 
     """This class (concurrently) runs instances of `EventLoop`.
 

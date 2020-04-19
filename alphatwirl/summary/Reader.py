@@ -4,7 +4,7 @@ import logging
 from .WeightCalculatorOne import WeightCalculatorOne
 
 ##__________________________________________________________________||
-class Reader(object):
+class Reader:
     def __init__(self, keyValComposer, summarizer,
                  nextKeyComposer=None,
                  weightCalculator=WeightCalculatorOne(),

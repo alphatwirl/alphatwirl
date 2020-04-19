@@ -12,7 +12,7 @@ branchAddressManager = BranchAddressManager()
 branchAddressManagerForVector = BranchAddressManagerForVector()
 
 ##__________________________________________________________________||
-class BranchBuilder(object):
+class BranchBuilder:
     """This class builds a branch.
 
     A branch is an object with data whose address is set in a tree.

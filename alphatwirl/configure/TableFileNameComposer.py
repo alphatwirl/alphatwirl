@@ -2,7 +2,7 @@
 import functools
 
 ##__________________________________________________________________||
-class TableFileNameComposer(object):
+class TableFileNameComposer:
     """Compose a name of a file to store the table from the column names
        and indices.
 

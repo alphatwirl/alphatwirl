@@ -9,7 +9,7 @@ import collections
 ##__________________________________________________________________||
 MockResult = collections.namedtuple('MockResult', 'name args kwargs')
 
-class MockTask(object):
+class MockTask:
     def __init__(self, name, time):
         self.name = name
         self.time = time

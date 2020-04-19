@@ -15,7 +15,7 @@ if not has_no_pandas:
     from alphatwirl.collector import WritePandasDataFrameToFile
 
 ##__________________________________________________________________||
-class MockOpen(object):
+class MockOpen:
     def __init__(self, out):
         self._out = out
 

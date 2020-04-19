@@ -3,7 +3,7 @@ import ROOT
 import re
 
 ##__________________________________________________________________||
-class BranchAddressManagerForVector(object):
+class BranchAddressManagerForVector:
     """The branch address manager for ROOT TTree
 
     This class manages ROOT.vector objects used for branch addresses

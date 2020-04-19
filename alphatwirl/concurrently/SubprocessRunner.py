@@ -5,7 +5,7 @@ import subprocess
 import collections
 
 ##__________________________________________________________________||
-class SubprocessRunner(object):
+class SubprocessRunner:
     """An example dispatcher which runs tasks in subprocesses
 
     This class is an example of a dispatcher.

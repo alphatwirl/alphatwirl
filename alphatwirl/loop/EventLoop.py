@@ -3,7 +3,7 @@ from alphatwirl.misc.deprecation import _renamed_class_method_option
 from atpbar import atpbar
 
 ##__________________________________________________________________||
-class EventLoop(object):
+class EventLoop:
     """An event loop
 
     Args:

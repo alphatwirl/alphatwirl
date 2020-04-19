@@ -5,7 +5,7 @@ import collections
 from alphatwirl.loop import Collector
 
 ##__________________________________________________________________||
-class MockResultsCombinationMethod(object):
+class MockResultsCombinationMethod:
     def __init__(self, ret = None):
         self.ret = ret
 
@@ -14,7 +14,7 @@ class MockResultsCombinationMethod(object):
         return self.ret
 
 ##__________________________________________________________________||
-class MockDeliveryMethod(object):
+class MockDeliveryMethod:
     def __init__(self):
         self.results = None
 

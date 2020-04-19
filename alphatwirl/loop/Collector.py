@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class Collector(object):
+class Collector:
 
     """This class collects results, i.e., this class combines results
     of readers and deliver them.
@@ -47,7 +47,7 @@ class Collector(object):
         return results
 
 ##__________________________________________________________________||
-class NullDeliveryMethod(object):
+class NullDeliveryMethod:
     def deliver(self, results): pass
 
 ##__________________________________________________________________||

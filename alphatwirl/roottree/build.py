@@ -6,7 +6,7 @@ import ROOT
 from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
-class BuildEvents(object):
+class BuildEvents:
     def __init__(self, config):
         self.config = config
 

@@ -29,7 +29,7 @@ def workingarea_path(tmpdir_factory):
    return ret
 
 ##__________________________________________________________________||
-class Reader(object):
+class Reader:
    def end(self):
       pass
 

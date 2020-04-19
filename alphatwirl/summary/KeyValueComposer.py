@@ -5,7 +5,7 @@ from .parse_indices_config import parse_indices_config
 from .BackrefMultipleArrayReader import BackrefMultipleArrayReader
 
 ##__________________________________________________________________||
-class KeyValueComposer(object):
+class KeyValueComposer:
     """This class composes keys and values for the event
 
     (this docstring is under development.)

@@ -53,21 +53,21 @@ def test_func_deprecated_pickle():
 
 ##__________________________________________________________________||
 @_deprecated(msg='extra message')
-class ClassWithInit(object):
+class ClassWithInit:
     def __init__(self):
         pass
 
 @_deprecated(msg='extra message')
-class ClassWithoutInit(object):
+class ClassWithoutInit:
     pass
 
 @_deprecated()
-class ClassWithInitNoMsg(object):
+class ClassWithInitNoMsg:
     def __init__(self):
         pass
 
 @_deprecated()
-class ClassWithoutInitNoMsg(object):
+class ClassWithoutInitNoMsg:
     pass
 
 @pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
@@ -101,7 +101,7 @@ def test_class_pickle(Class):
     o = pickle.loads(p)
 
 ##__________________________________________________________________||
-class ClassWithDeprecatedMethod(object):
+class ClassWithDeprecatedMethod:
     @_deprecated(msg='extra message')
     def method(self):
         return 'run'

@@ -6,7 +6,7 @@ import ROOT
 from .inspect import is_ROOT_null_pointer
 
 ##__________________________________________________________________||
-class BranchAddressManager(object):
+class BranchAddressManager:
     """The branch address manager for ROOT TTree
 
     This class manages array.array objects used for branch addresses

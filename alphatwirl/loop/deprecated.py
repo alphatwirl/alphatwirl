@@ -14,7 +14,7 @@ from .merge import merge_in_order
 
 ##__________________________________________________________________||
 @_deprecated(msg='replaced with alphatwirl.datasetloop.CollectorComposite')
-class CollectorComposite(object):
+class CollectorComposite:
 
     """A composite of collectors.
 
@@ -71,7 +71,7 @@ class CollectorComposite(object):
 
 ##__________________________________________________________________||
 @_deprecated(msg='replaced with alphatwirl.datasetloop.EventDatasetReader')
-class EventDatasetReader(object):
+class EventDatasetReader:
     """This class manages objects involved in reading events in data sets.
 
     On receiving a data set, this class calls the function

@@ -7,7 +7,7 @@ import logging
 from .search import binary_search
 
 ##__________________________________________________________________||
-class Round(object):
+class Round:
     """Equal width binning
 
     Parameters

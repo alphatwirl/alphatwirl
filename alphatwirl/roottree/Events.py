@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class Events(object):
+class Events:
     """An iterative object for events.
 
     You can use this class to iterate over entries in a ROOT TTree.

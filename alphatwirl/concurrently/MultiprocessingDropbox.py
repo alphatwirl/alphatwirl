@@ -4,7 +4,7 @@ import mantichora
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
 ##__________________________________________________________________||
-class MultiprocessingDropbox(object):
+class MultiprocessingDropbox:
     """A drop box for task packages.
 
     The tasks will be executed in multiprocessing

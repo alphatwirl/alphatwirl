@@ -11,7 +11,7 @@ except ImportError:
 from alphatwirl.loop import CollectorComposite, ReaderComposite
 
 ##__________________________________________________________________||
-class MockCollector(object):
+class MockCollector:
     def __init__(self, ret=None):
         self.collected = None
         self.ret = ret
@@ -21,11 +21,11 @@ class MockCollector(object):
         return self.ret
 
 ##__________________________________________________________________||
-class MockReader(object):
+class MockReader:
     pass
 
 ##__________________________________________________________________||
-class MockDataset(object):
+class MockDataset:
     pass
 
 ##__________________________________________________________________||

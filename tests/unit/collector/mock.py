@@ -1,7 +1,7 @@
 import copy
 
 ##__________________________________________________________________||
-class MockReader(object):
+class MockReader:
     def __init__(self, summarizer):
         self.summarizer = summarizer
 
@@ -15,7 +15,7 @@ class MockReader(object):
         )
 
 ##__________________________________________________________________||
-class MockSummarizer(object):
+class MockSummarizer:
     def __init__(self, results):
         self._results = results
 

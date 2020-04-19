@@ -48,7 +48,7 @@ DEFAULT_JOB_DESC_DICT = collections.OrderedDict([
 ])
 
 ##__________________________________________________________________||
-class HTCondorJobSubmitter(object):
+class HTCondorJobSubmitter:
     """A dispatcher that dispatches jobs to HTCondor
 
     Parameters

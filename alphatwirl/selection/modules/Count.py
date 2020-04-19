@@ -9,7 +9,7 @@ IDX_PASS = 3
 IDX_TOTAL = 4
 
 ##__________________________________________________________________||
-class Count(object):
+class Count:
     def __init__(self, selections=None):
         if selections is None:
             selections = [ ]

@@ -29,7 +29,7 @@ def mock_atpbar(monkeypatch):
     return ret
 
 ##__________________________________________________________________||
-class MockCollector(object):
+class MockCollector:
    def __init__(self, name):
       self.name = name
    def __call__(self, dataset_reader_list):

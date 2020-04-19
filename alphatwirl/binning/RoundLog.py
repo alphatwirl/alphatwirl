@@ -4,7 +4,7 @@ import math
 from .Round import Round
 
 ##__________________________________________________________________||
-class RoundLog(object):
+class RoundLog:
     """Binning with equal width in log scale
 
     Parameters

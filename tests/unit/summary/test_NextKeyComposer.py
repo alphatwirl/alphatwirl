@@ -2,7 +2,7 @@ import alphatwirl.summary as summary
 import unittest
 
 ##__________________________________________________________________||
-class MockBinningPlusOneNext(object):
+class MockBinningPlusOneNext:
     def __call__(self, val):
         return val
 
@@ -10,7 +10,7 @@ class MockBinningPlusOneNext(object):
         return val + 1
 
 ##__________________________________________________________________||
-class MockBinningNoneNext(object):
+class MockBinningNoneNext:
     def __call__(self, val):
         return val
 
@@ -18,7 +18,7 @@ class MockBinningNoneNext(object):
         return None
 
 ##__________________________________________________________________||
-class MockBinningSameNext(object):
+class MockBinningSameNext:
     def __call__(self, val):
         return val
 

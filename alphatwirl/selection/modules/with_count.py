@@ -4,7 +4,7 @@ import copy
 from .Count import Count
 
 ##__________________________________________________________________||
-class WithCountBase(object):
+class WithCountBase:
     """The base class of the classes AllwCount and AnywCount
 
     """
@@ -130,7 +130,7 @@ class AnywCount(WithCountBase):
         return ret
 
 ##__________________________________________________________________||
-class NotwCount(object):
+class NotwCount:
     """select events that do NOT pass the selection
 
     """

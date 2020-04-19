@@ -12,7 +12,7 @@ if hasROOT:
     from alphatwirl.roottree import BranchAddressManager
 
 ##__________________________________________________________________||
-class MockLeaf(object):
+class MockLeaf:
     def __init__(self, name, typename, leafcount = None, maximum = None):
         self.name = name
         self.typename = typename
@@ -24,11 +24,11 @@ class MockLeaf(object):
     def GetMaximum(self): return self.maximum
 
 ##__________________________________________________________________||
-class MockNullLeaf(object):
+class MockNullLeaf:
     def GetName(self): raise ReferenceError('null object')
 
 ##__________________________________________________________________||
-class MockTree(object):
+class MockTree:
 
     def __init__(self, leaves):
         self.leaves = leaves

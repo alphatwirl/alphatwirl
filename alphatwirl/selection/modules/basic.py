@@ -2,7 +2,7 @@
 import itertools
 
 ##__________________________________________________________________||
-class Base(object):
+class Base:
     """The base class of the classes All and Any
 
     """
@@ -86,7 +86,7 @@ class Any(Base):
         return False
 
 ##__________________________________________________________________||
-class Not(object):
+class Not:
     """select events that do NOT pass the selection
 
     """

@@ -3,7 +3,7 @@ from ..misc import mkdir_p
 import os
 
 ##__________________________________________________________________||
-class WritePandasDataFrameToFile(object):
+class WritePandasDataFrameToFile:
     def __init__(self, outPath):
         self._outPath = outPath
 

@@ -8,7 +8,7 @@ def genFunc():
     yield 103
 
 ##__________________________________________________________________||
-class IteClass(object):
+class IteClass:
     def __init__(self):
         self.val = 100
         pass

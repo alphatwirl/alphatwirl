@@ -20,7 +20,7 @@ import alphatwirl
 from alphatwirl.misc.deprecation import _deprecated, _renamed_class_method_option
 
 ##__________________________________________________________________||
-class WorkingArea(object):
+class WorkingArea:
     """A working area for tasks
 
     This is an area where pickled tasks, pickled results, archived

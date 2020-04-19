@@ -5,7 +5,7 @@ from operator import itemgetter
 from collections import deque
 
 ##__________________________________________________________________||
-class TaskPackageDropbox(object):
+class TaskPackageDropbox:
     """A drop box for task packages.
 
     This class puts task packages in a working area and have

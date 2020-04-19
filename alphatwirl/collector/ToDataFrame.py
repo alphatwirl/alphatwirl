@@ -5,7 +5,7 @@ import pandas as pd
 from .ToTupleList import ToTupleList
 
 ##__________________________________________________________________||
-class ToDataFrame(object):
+class ToDataFrame:
     def __init__(self, summaryColumnNames):
 
         self.summaryColumnNames = summaryColumnNames

@@ -48,21 +48,21 @@ def test_func_logging_without_msg(caplog):
 
 ##__________________________________________________________________||
 @_removed(msg='extra message')
-class ClassWithInit(object):
+class ClassWithInit:
     def __init__(self):
         pass
 
 @_removed(msg='extra message')
-class ClassWithoutInit(object):
+class ClassWithoutInit:
     pass
 
 @_removed()
-class ClassWithInitNoMsg(object):
+class ClassWithInitNoMsg:
     def __init__(self):
         pass
 
 @_removed()
-class ClassWithoutInitNoMsg(object):
+class ClassWithoutInitNoMsg:
     pass
 
 @pytest.mark.parametrize('Class', (ClassWithInit, ClassWithoutInit))
@@ -88,7 +88,7 @@ def test_class_logging_no_msg(Class, caplog):
     assert expected in caplog.records[0].msg
 
 ##__________________________________________________________________||
-class ClassWithRemovedMethod(object):
+class ClassWithRemovedMethod:
     @_removed(msg='extra message')
     def method(self):
        pass

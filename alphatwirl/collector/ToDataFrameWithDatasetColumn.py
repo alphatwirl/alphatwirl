@@ -5,7 +5,7 @@ import pandas as pd
 from .ToTupleListWithDatasetColumn import ToTupleListWithDatasetColumn
 
 ##__________________________________________________________________||
-class ToDataFrameWithDatasetColumn(object):
+class ToDataFrameWithDatasetColumn:
     def __init__(self, summaryColumnNames,
                  datasetColumnName = 'component'
                  ):

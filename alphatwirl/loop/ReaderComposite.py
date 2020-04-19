@@ -3,7 +3,7 @@
 from atpbar import atpbar
 
 ##__________________________________________________________________||
-class ReaderComposite(object):
+class ReaderComposite:
 
     """A composite of event readers"
 

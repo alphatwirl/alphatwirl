@@ -2,7 +2,7 @@ import alphatwirl.summary as summary
 import unittest
 
 ##__________________________________________________________________||
-class MockEvent(object): pass
+class MockEvent: pass
 
 ##__________________________________________________________________||
 class TestWeightCalculatorOne(unittest.TestCase):

@@ -4,7 +4,7 @@ import collections
 from alphatwirl.loop import CollectorDelegate
 
 ##__________________________________________________________________||
-class MockCollector(object):
+class MockCollector:
     def __init__(self, ret = None):
         self.ret = ret
 

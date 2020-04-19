@@ -4,7 +4,7 @@ import numpy as np
 import copy
 
 ##__________________________________________________________________||
-class Sum(object):
+class Sum:
 
     def __init__(self, val = None, weight = 1, contents = None):
 

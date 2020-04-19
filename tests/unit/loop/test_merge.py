@@ -6,7 +6,7 @@ import pytest
 from alphatwirl.loop.merge import merge_in_order
 
 ##__________________________________________________________________||
-class MockData(object):
+class MockData:
     def __init__(self, name):
         self.name = name
         self.merged = [ ]
@@ -67,7 +67,7 @@ def test_merge_in_order_one_data():
     assert [ ] == data[0].merged
 
 ##__________________________________________________________________||
-class MockDataWoMerge(object):
+class MockDataWoMerge:
     def __init__(self, name):
         self.name = name
         self.merged = [ ]

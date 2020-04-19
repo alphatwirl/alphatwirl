@@ -3,7 +3,7 @@
 from .ReturnTrue import ReturnTrue
 
 ##__________________________________________________________________||
-class Binning(object):
+class Binning:
     def __init__(self, boundaries=None, lows=None, ups=None,
                  retvalue='lowedge', bins=None, underflow_bin=None, overflow_bin=None,
                  valid=ReturnTrue()):

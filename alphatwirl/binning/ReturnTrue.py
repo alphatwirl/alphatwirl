@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 
 ##__________________________________________________________________||
-class ReturnTrue(object):
+class ReturnTrue:
     def __repr__(self):
         return '{}()'.format(
             self.__class__.__name__,
