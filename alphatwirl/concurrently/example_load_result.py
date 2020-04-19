@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # Tai Sakuma <tai.sakuma@gmail.com>
-from __future__ import print_function
 import os, sys
 import argparse
 import tarfile

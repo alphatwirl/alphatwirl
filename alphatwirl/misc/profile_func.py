@@ -1,5 +1,4 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
-from __future__ import print_function
 import cProfile, pstats
 from io import StringIO, BytesIO
 

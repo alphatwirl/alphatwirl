@@ -1,6 +1,4 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-from __future__ import print_function
-
 import mantichora
 
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
