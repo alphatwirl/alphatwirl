@@ -8,7 +8,7 @@
 - updated `.travis.yml`
 - reorganized requirements in `requirements` and `setup.py`
 
-## [0.30.0] - 2019-04-11
+## [0.30.0] - 2020-04-11
 
 **PyPI**: https://pypi.org/project/alphatwirl/0.30.0/
 
